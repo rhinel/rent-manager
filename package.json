@@ -1,0 +1,22 @@
+{
+  "name": "rent-manager",
+  "version": "1.0.0",
+  "description": "rent manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhinel/rent-manager.git"
+  },
+  "author": "Rhinel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rhinel/rent-manager/issues"
+  },
+  "homepage": "https://github.com/rhinel/rent-manager#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
