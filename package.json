@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/rhinel/rent-manager#readme",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "mongodb": "^2.2.20",
+    "mongoose": "^4.7.6"
   }
 }
