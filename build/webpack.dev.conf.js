@@ -27,10 +27,22 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.NoErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
+      filename: 'dist/pcside.html',
+      template: 'pcside.html',
+      chunks: ['pcside'],
+      inject: true
+    }),
+    /*new HtmlWebpackPlugin({
+      filename: 'dist/mobileside.html',
+      template: 'mobileside.html',
+      chunks: ['mobileside'],
+      inject: true
+    }),*/
+    /*new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
       inject: true
-    }),
+    }),*/
     new FriendlyErrors()
   ]
 })

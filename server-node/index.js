@@ -17,7 +17,7 @@ app.use(express.static(__dirname + '/'))
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 //处理路由
-require('./routes')(app)
+require('./routes')(app, express)
 
 //启动监听
 app.listen(port, ()=>{
