@@ -27,7 +27,7 @@ module.exports = (code, data)=>{
 	if (!data.type) {
 		return {
 			code: code,
-			msg: data.data || codeList[code]
+			msg: data.data || codeList[code] || '未定义错误'
 		}
 	} else {
 		return {

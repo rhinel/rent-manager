@@ -4,6 +4,8 @@ let express = require('express')
 let bodyParser = require('body-parser')
 let db = require('./models')
 
+//启动缓存链接
+db.redisct()
 //启动数据库链接
 db.connect()
 

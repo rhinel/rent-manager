@@ -68,8 +68,12 @@ module.exports = {
 			})
 	},
 	removeData: (req, res, callback)=>{
-
-
+		if (!req.body.name) {
+			return callback({
+				type: false,
+				data: '未定义删除关键字'
+			})
+		}
 		db
 			.dbModel('admin')
 			.remove({}, (err, db)=>{
@@ -85,5 +89,39 @@ module.exports = {
 					})
 				}
 			})
+	},
+	redisSet: (req, res, callback)=>{
+
+
+		db.redisSet(req.body.setname, req.body.setval, req.body.settime || 0, (err, reply)=>{
+			if (err) {
+				callback({
+					type: false,
+					data: err
+				})
+			} else {
+				callback({
+					type: true,
+					data: reply
+				})
+			}
+		})
+	},
+	redisGet: (req, res, callback)=>{
+
+
+		db.redisGet(req.body.setname, (err, reply)=>{
+			if (err) {
+				callback({
+					type: false,
+					data: err
+				})
+			} else {
+				callback({
+					type: true,
+					data: reply
+				})
+			}
+		})
 	}
 }

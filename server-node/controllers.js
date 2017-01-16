@@ -52,7 +52,15 @@ const inner = (req, res, next)=>{
 		service.removeData(req, res, (data)=>{
 			res.json(code(1005, data))
 		})
-	}  else {
+	} else if (req.params.class === 'redisSet') {
+		service.redisSet(req, res, (data)=>{
+			res.json(code(1006, data))
+		})
+	} else if (req.params.class === 'redisGet') {
+		service.redisGet(req, res, (data)=>{
+			res.json(code(1007, data))
+		})
+	} else {
 		next()
 	}
 }
