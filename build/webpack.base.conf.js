@@ -12,8 +12,8 @@ var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
 
 module.exports = {
   entry: {
-    'pcside': ['./src/pcside/main.js']//,
-    //'mobileside': ['./src/mobileside/main.js']
+    'pcside': ['./src/pcside/js/main.js']//,
+    //'mobileside': ['./src/mobileside/js/main.js']
   },
   output: {
     path: config.build.assetsRoot,
@@ -34,7 +34,7 @@ module.exports = {
     fallback: [path.join(__dirname, '../node_modules')]
   },
   module: {
-    preLoaders: [
+    /*preLoaders: [
       {
         test: /\.vue$/,
         loader: 'eslint',
@@ -51,7 +51,7 @@ module.exports = {
         ],
         exclude: /node_modules/
       }
-    ],
+    ],*/
     loaders: [
       {
         test: /\.vue$/,

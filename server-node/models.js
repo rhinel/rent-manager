@@ -4,12 +4,13 @@ let mongoose = require('mongoose')
 let redis = require('redis')
 let auth = require('./auth')
 let db
-let client
+let rds
 
 //链接缓存
 const redisct = (callback)=>{
-	client = redis.createClient(auth.redisPo, auth.redisIp, {auth_pass: auth.redisPa})
-	client.on('ready',(err)=>{
+	rds = redis.createClient(auth.redisPo, auth.redisIp, {auth_pass: auth.redisPa})
+	rds.on('error', console.error.bind(console, 'redis connection error:'))
+	rds.on('ready',()=>{
 		callback && callback()
 		console.log('redis ready!')
 	})
@@ -17,8 +18,8 @@ const redisct = (callback)=>{
 
 //get
 const redisSet = (key, val, expire, callback)=>{
-	client.set(key, val, (err, reply)=>{
-		expire && client.expire(key, expire)
+	rds.set(key, val, (err, reply)=>{
+		expire && rds.expire(key, expire)
 		callback && callback(err, reply)
 	})
 
@@ -26,7 +27,7 @@ const redisSet = (key, val, expire, callback)=>{
 
 //set
 const redisGet = (key, callback)=>{
-	client.get(key, (err, reply)=>{
+	rds.get(key, (err, reply)=>{
 		callback && callback(err, reply)
 	})
 }
@@ -35,7 +36,7 @@ const redisGet = (key, callback)=>{
 const connect = (callback)=>{
 	mongoose.connect(auth.mongodbPs, {auto_reconnect: true})
 	db = mongoose.connection
-	db.on('error', console.error.bind(console, 'connection error:'))
+	db.on('error', console.error.bind(console, 'mongoose connection error:'))
 	db.once('open', ()=>{
 		callback && callback()
 		console.log('mongoose opened!')
