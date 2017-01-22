@@ -14,6 +14,10 @@ const outer = (req, res, next)=>{
 			service.login(req, res, (data)=>{
 				res.json(code(1001, data))
 			})
+		} else if (req.params.function==='bingBg') {
+			service.bingBg(req, res, (data)=>{
+				res.json(code(1002, data))
+			})
 		} else {
 			next()
 		}
@@ -26,11 +30,11 @@ const outer = (req, res, next)=>{
 const auth = (req, res, next)=>{
 	let _secret = req.body.secret || req.query.secret || ''
 	if (!_secret) {
-		res.json(code(1002))
+		res.json(code(2001))
 	} else {
 		service.auth(req, res, (data)=>{
 			if (!data.type) {
-				res.json(code(1002, data))
+				res.json(code(2001, data))
 			} else {
 				next()
 			}
@@ -42,23 +46,23 @@ const auth = (req, res, next)=>{
 const inner = (req, res, next)=>{
 	if (req.params.class === 'getData') {
 		service.getData(req, res, (data)=>{
-			res.json(code(1003, data))
+			res.json(code(3001, data))
 		})
 	} else if (req.params.class === 'saveData') {
 		service.saveData(req, res, (data)=>{
-			res.json(code(1004, data))
+			res.json(code(3002, data))
 		})
 	} else if (req.params.class === 'removeData') {
 		service.removeData(req, res, (data)=>{
-			res.json(code(1005, data))
+			res.json(code(3003, data))
 		})
 	} else if (req.params.class === 'redisSet') {
 		service.redisSet(req, res, (data)=>{
-			res.json(code(1006, data))
+			res.json(code(3004, data))
 		})
 	} else if (req.params.class === 'redisGet') {
 		service.redisGet(req, res, (data)=>{
-			res.json(code(1007, data))
+			res.json(code(3005, data))
 		})
 	} else {
 		next()

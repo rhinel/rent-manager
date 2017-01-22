@@ -1,6 +1,7 @@
 'use strict'
 
 let db = require('./models')
+let superagent = require('superagent')
 
 module.exports = {
 	login: (req, res, callback)=>{
@@ -15,6 +16,21 @@ module.exports = {
 				data: 'nok'
 			})
 		}
+	},
+	bingBg: (req, res, callback)=>{
+		let bingBg = superagent.get('http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&nc=' + new Date().getTime() + '&pid=hp&video=1&fav=1&setmkt=en-us&setlang=en-us').end((err, res)=>{
+			if (!err) {
+				callback({
+					type: true,
+					data: res.body
+				})
+			} else {
+				callback({
+					type: false,
+					data: err
+				})
+			}
+		})
 	},
 	auth: (req, res, callback)=>{
 		if (req.body.secret=='abc') {
