@@ -39,7 +39,7 @@
 </style>
 
 <template>
-	<div class="auth-login" :style="{backgroundImage:'url('+ bingBg +')'}" theme="dark">
+	<div class="auth-login" :style="{backgroundImage:'url('+ bingBg +')'}">
 		<el-card class="login-wrap">
 			<div class="login-hello">Hello {{name}} <i></i></div>
 			<el-input
@@ -76,12 +76,8 @@
 		methods: {
 			getBingBg () {
 				let _this = this
-				this.ajax.post('/api/outer/log/bingBg').send({}).end((err, res)=>{
-					if (res.body.code == '0') {
-						_this.bingBg = res.body.data.fav.murl
-					} else {
-						console.log(err)
-					}
+				this.Ajax('/outer/log/bingBg', {}, (res)=>{
+					_this.bingBg = res.body.data.fav.murl
 				})
 			}
 		}

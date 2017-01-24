@@ -28,7 +28,7 @@ const outer = (req, res, next)=>{
 
 //auth类，成功则跳过
 const auth = (req, res, next)=>{
-	let _secret = req.body.secret || req.query.secret || ''
+	let _secret = req.body.token || req.query.token || ''
 	if (!_secret) {
 		res.json(code(2001))
 	} else {
@@ -44,7 +44,9 @@ const auth = (req, res, next)=>{
 
 //inner类，失败则跳过
 const inner = (req, res, next)=>{
-	if (req.params.class === 'getData') {
+	if (req.params.class == 'auth') {
+		res.json(code(0, {type:true}))
+	} else if (req.params.class === 'getData') {
 		service.getData(req, res, (data)=>{
 			res.json(code(3001, data))
 		})

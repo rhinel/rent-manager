@@ -3,7 +3,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import ElementUI from 'element-ui'
-import Superagent from 'superagent'
 import 'normalize.css'
 import 'element-ui/lib/theme-default/index.css'
 
@@ -11,18 +10,21 @@ import 'element-ui/lib/theme-default/index.css'
 import App from '../index'
 import stores from './stores'
 import routes from './routes'
+import routerEach from './routerEach'
+import Ajax from './request'
 
 //载入应用层
 Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(ElementUI)
-Vue.prototype.ajax = Superagent
+Vue.prototype.Ajax = Ajax
 
 //全局存储配置
 const store = new Vuex.Store(stores)
 
 //路由配置
-const router = new VueRouter(routes)
+window.router = new VueRouter(routes)
+router.beforeEach(routerEach.beforeEach)
 
 //页面初始化
 const app = new Vue({

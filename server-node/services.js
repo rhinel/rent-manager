@@ -33,14 +33,13 @@ module.exports = {
 		})
 	},
 	auth: (req, res, callback)=>{
-		if (req.body.secret=='abc') {
+		if (req.body.token=='abc') {
 			callback({
 				type: true
 			})
 		} else {
 			callback({
-				type: false,
-				data: '没有权限啊'
+				type: false
 			})
 		}
 	},

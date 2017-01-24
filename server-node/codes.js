@@ -7,7 +7,7 @@ const codeList = {
 	1001: '登录失败',
 	1002: 'bing接口失败',
 	//auth类
-	2001: '未登录',
+	2001: '长时间无操作或登陆失效，请重新登陆',
 	//inner类
 	3001: '数据获取失败',
 	3002: '数据保存失败',
@@ -36,7 +36,7 @@ module.exports = (code, data)=>{
 	} else {
 		return {
 			code: 0,
-			data: data.data
+			data: data.data || ''
 		}
 	}
 }

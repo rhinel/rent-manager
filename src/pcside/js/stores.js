@@ -1,13 +1,21 @@
+import Superagent from 'superagent'
+
 module.exports = {
-	state : {
-		token : '',
+	strict: process.env.NODE_ENV !== 'production',
+	//数据
+	state: {
+		
 	},
-	mutations : {
-		signup (token, id) {
-			token = id
-		},
-		logout (token) {
-			token = ''
-		}
+	//处理
+	getters: {
+
+	},
+	//提交
+	mutations: {
+
+	},
+	//行为
+	actions: {
+		
 	}
 }

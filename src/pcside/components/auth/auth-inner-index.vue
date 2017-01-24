@@ -57,12 +57,6 @@
 <script>
 	export default {
 		name: 'auth-inner-index',
-		beforeCreate () {
-			this.ajax.post('/api/outer/log/login').send({a:'a'}).end((err, res)=>{
-				console.log(err)
-				console.log(res)
-			})
-		},
 		methods: {
 			handleOpen(key, keyPath) {
 				console.log(key, keyPath);
