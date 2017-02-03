@@ -16,24 +16,59 @@ const redisct = (callback)=>{
 	})
 }
 
-//get
-const redisSet = (key, val, expire, callback)=>{
-	rds.set(key, val, (err, reply)=>{
-		expire && rds.expire(key, expire)
-		callback && callback(err, reply)
+//set
+const redisSet = (key, val, expire)=>{
+	return new Promise((resolve, reject)=>{
+		rds.set(key, val, (err, reply)=>{
+			err && reject(err)
+			!err && expire && rds.expire(key, expire)
+			!err && resolve(reply)
+		})
 	})
-
+}
+//set time
+const redisSetTime = (key, expire)=>{
+	return new Promise((resolve, reject)=>{
+		rds.expire(key, expire, (err, reply)=>{
+			err && reject(err)
+			!err && resolve(reply)
+		})
+	})
 }
 
-//set
-const redisGet = (key, callback)=>{
-	rds.get(key, (err, reply)=>{
-		callback && callback(err, reply)
+//get
+const redisGet = (key)=>{
+	return new Promise((resolve, reject)=>{
+		rds.get(key, (err, reply)=>{
+			err && reject(err)
+			!err && resolve(reply)
+		})
+	})
+}
+
+//get keys
+const redisGetKeys = (keys)=>{
+	return new Promise((resolve, reject)=>{
+		rds.keys(keys, (err, reply)=>{
+			err && reject(err)
+			!err && resolve(reply)
+		})
+	})
+}
+
+//del keys
+const redisDelKeys = (keys)=>{
+	return new Promise((resolve, reject)=>{
+		rds.del(keys, (err, reply)=>{
+			err && reject(err)
+			!err && resolve(reply)
+		})
 	})
 }
 
 //链接数据库
 const connect = (callback)=>{
+	mongoose.Promise = global.Promise
 	mongoose.connect(auth.mongodbPs, {auto_reconnect: true})
 	db = mongoose.connection
 	db.on('error', console.error.bind(console, 'mongoose connection error:'))
@@ -88,7 +123,10 @@ const dbEntity = (dbName, dataType, data)=>{
 module.exports = {
 	redisct: redisct,
 	redisSet: redisSet,
+	redisSetTime: redisSetTime,
 	redisGet: redisGet,
+	redisGetKeys: redisGetKeys,
+	redisDelKeys: redisDelKeys,
 	connect: connect,
 	dbModel: dbModel,
 	dbEntity: dbEntity

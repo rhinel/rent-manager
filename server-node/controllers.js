@@ -5,15 +5,18 @@ let code = require('./codes')
 
 //res.json([req.params,req.query,req.body])
 //res.json([req.params==url,req.query==get,req.body==post])
+//data是一个设计的返回对象，包含编码和内容，使用codes进行封装
 
 //outer类，失败则跳过
 const outer = (req, res, next)=>{
+	//登陆类
 	if (req.params.class==='log') {
 		//登录接口
 		if (req.params.function==='login') {
 			service.login(req, res, (data)=>{
 				res.json(code(1001, data))
 			})
+		//首页背景图
 		} else if (req.params.function==='bingBg') {
 			service.bingBg(req, res, (data)=>{
 				res.json(code(1002, data))
@@ -28,8 +31,9 @@ const outer = (req, res, next)=>{
 
 //auth类，成功则跳过
 const auth = (req, res, next)=>{
-	let _secret = req.body.token || req.query.token || ''
-	if (!_secret) {
+	//接口校验
+	let _token = req.body.token || req.query.token || ''
+	if (!_token) {
 		res.json(code(2001))
 	} else {
 		service.auth(req, res, (data)=>{

@@ -21,9 +21,8 @@ const request = (path, data, callscue, callerr)=>{
 					message: '状态：' + err.status + '，网络/服务器错误',
 					duration: 2000
 				})
-				console.log()
 			} else if (res.body.code == '2001' && path.indexOf('/auth') < 0) {
-				//非auth接口，登陆失效或者未登陆，先报错后，清除旧登录信息，跳转
+				//非auth接口，登陆失效或者未登陆，先报错后，清除旧登陆信息，跳转
 				Message.error({
 					message: '编号：' + res.body.code + '，' + res.body.msg,
 					duration: 2000

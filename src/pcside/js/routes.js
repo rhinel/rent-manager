@@ -1,7 +1,7 @@
 module.exports = {
 	routes: [
 		//outer层，默认层
-		{//登录层
+		{//登陆层
 			path: '/login',
 			component: require('../components/auth/auth-login')
 		},

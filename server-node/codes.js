@@ -4,7 +4,7 @@
 const codeList = {
 	//outer类
 	1000: '接口失败，请联系管理员',
-	1001: '登录失败',
+	1001: '登陆失败',
 	1002: 'bing接口失败',
 	//auth类
 	2001: '长时间无操作或登陆失效，请重新登陆',
@@ -30,7 +30,7 @@ module.exports = (code, data)=>{
 
 	if (!data.type) {
 		return {
-			code: code,
+			code: data.code || code,
 			msg: data.data || codeList[code] || '未定义错误'
 		}
 	} else {
