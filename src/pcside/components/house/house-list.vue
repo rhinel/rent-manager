@@ -179,7 +179,7 @@
 						this.Ajax('/inner/house/add', _data, (res)=>{
 							this.$message({
 								type: 'success',
-								message: '添加成功',
+								message: this.editHouseId? '修改成功' : '添加成功',
 								duration: 2000
 							})
 							this.getAddHouseDialog()
