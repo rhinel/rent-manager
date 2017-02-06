@@ -113,12 +113,12 @@
 								message: '登陆成功',
 								duration: 2000
 							})
-							this.logininfo.loading = false
 							if (this.$route.query.backurl) {
 								this.$router.push(this.$route.query.backurl)
 							} else {
 								this.$router.push('/inner')
 							}
+							this.logininfo.loading = false
 						}, (res)=>{
 							this.$message({
 								type: 'error',

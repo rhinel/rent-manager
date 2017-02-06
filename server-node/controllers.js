@@ -17,9 +17,13 @@ const outer = (req, res, next)=>{
 				res.json(code(1001, data))
 			})
 		//首页背景图
+		} else if (req.params.function==='logout') {
+			service.logout(req, res, (data)=>{
+				res.json(code(1002, data))
+			})
 		} else if (req.params.function==='bingBg') {
 			service.bingBg(req, res, (data)=>{
-				res.json(code(1002, data))
+				res.json(code(1003, data))
 			})
 		} else {
 			next()
@@ -50,6 +54,34 @@ const auth = (req, res, next)=>{
 const inner = (req, res, next)=>{
 	if (req.params.class == 'auth') {
 		res.json(code(0, {type:true}))
+	} else if (req.params.class === 'house') {
+		//添加房屋接口
+		if (req.params.function==='add') {
+			service.houseAdd(req, res, (data)=>{
+				res.json(code(3011, data))
+			})
+		} else if (req.params.function==='getList') {
+			service.houseGetList(req, res, (data)=>{
+				res.json(code(3012, data))
+			})
+		} else if (req.params.function==='del') {
+			service.houseDel(req, res, (data)=>{
+				res.json(code(3013, data))
+			})
+		} else {
+			next()
+		}
+
+
+
+
+
+
+
+
+
+
+
 	} else if (req.params.class === 'getData') {
 		service.getData(req, res, (data)=>{
 			res.json(code(3001, data))

@@ -29,7 +29,7 @@ const request = (path, data, callscue, callerr)=>{
 				})
 				localStorage.removeItem('token')
 				window.router.push({
-					path: 'login', 
+					path: '/login',
 					query: {backurl: window.router.currentRoute.fullPath}
 				})
 			} else if (res.body.code) {

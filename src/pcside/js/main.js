@@ -11,13 +11,15 @@ import App from '../index'
 import stores from './stores'
 import routes from './routes'
 import routerEach from './routerEach'
-import Ajax from './request'
+import ajax from './request'
+import plugin from './plugin'
 
 //载入应用层
 Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(ElementUI)
-Vue.prototype.Ajax = Ajax
+Vue.prototype.Ajax = ajax
+Vue.prototype.GetTimeFormat = plugin.getTimeFormat
 
 //全局存储配置
 const store = new Vuex.Store(stores)

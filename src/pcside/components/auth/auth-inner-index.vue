@@ -5,11 +5,26 @@
 		.inner-header{
 			width: 100%;
 			height: 50px;
+			line-height: 50px;
+			color: #F9FAFC;
 			position: fixed;
 			top: 0;
 			left: 0;
 			right: 0;
 			background-color: #324157;
+			display: flex;
+			padding: 0 20px;
+			.header-left{
+				flex: 1;
+			}
+			.header-right{
+				width: 100px;
+				cursor: pointer;
+				color: #D3DCE6;
+				&:hover{
+					color: #fff;
+				}
+			}
 		}
 		.inner-sidebar{
 			width: 200px;
@@ -29,26 +44,17 @@
 <template>
 	<div class="auth-inner-index">
 		<div class="inner-header">
-			
+			<div class="header-left">
+				Rent Manager
+			</div>
+			<div class="header-right" @click="logout">
+				<i class="el-icon-star-on"></i> 登出
+			</div>
 		</div>
-		<el-menu default-active="2" class="el-menu-vertical-demo inner-sidebar" @open="handleOpen" @close="handleClose" theme="dark">
-			<el-submenu index="1">
-				<template slot="title"><i class="el-icon-message"></i>导航一</template>
-				<el-menu-item-group>
-					<template slot="title">分组一</template>
-					<el-menu-item index="1-1">选项1</el-menu-item>
-					<el-menu-item index="1-2">选项2</el-menu-item>
-				</el-menu-item-group>
-				<el-menu-item-group title="分组2">
-					<el-menu-item index="1-3">选项3</el-menu-item>
-				</el-menu-item-group>
-				<el-submenu index="1-4">
-					<template slot="title">选项4</template>
-					<el-menu-item index="1-4-1">选项1</el-menu-item>
-				</el-submenu>
-			</el-submenu>
-			<el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
-			<el-menu-item index="3"><i class="el-icon-setting"></i>导航三</el-menu-item>
+		<el-menu :default-active="menuing" class="el-menu-vertical-demo inner-sidebar" theme="dark" :router="true">
+			<el-menu-item index="/inner/dashboard/index"><i class="el-icon-star-on"></i>主控面板</el-menu-item>
+			<el-menu-item index="/inner/house/index"><i class="el-icon-star-on"></i>房屋管理</el-menu-item>
+			<el-menu-item index="9"><i class="el-icon-setting"></i>系统设置</el-menu-item>
 		</el-menu>
 		<router-view class="inner-body"></router-view>
 	</div>
@@ -57,12 +63,16 @@
 <script>
 	export default {
 		name: 'auth-inner-index',
+		computed: {
+			menuing () {
+				return this.$store.state.menuing
+			}
+		},
 		methods: {
-			handleOpen(key, keyPath) {
-				console.log(key, keyPath);
-			},
-			handleClose(key, keyPath) {
-				console.log(key, keyPath);
+			logout () {
+				this.Ajax('/outer/log/logout', {}, (res)=>{
+					this.$router.push('/login')
+				})
 			}
 		}
 	}

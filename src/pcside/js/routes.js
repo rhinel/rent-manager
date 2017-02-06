@@ -20,6 +20,17 @@ module.exports = {
 							alias: ''
 						}
 					]
+				},
+				{//房屋管理
+					path: 'house',
+					component: require('../components/house/house-index'),
+					children: [
+						{
+							path: 'index',
+							component: require('../components/house/house-list'),
+							alias: ''
+						}
+					]
 				}
 			]
 		}
