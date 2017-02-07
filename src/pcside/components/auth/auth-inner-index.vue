@@ -54,6 +54,7 @@
 		<el-menu :default-active="menuing" class="el-menu-vertical-demo inner-sidebar" theme="dark" :router="true">
 			<el-menu-item index="/inner/dashboard/index"><i class="el-icon-star-on"></i>主控面板</el-menu-item>
 			<el-menu-item index="/inner/house/index"><i class="el-icon-star-on"></i>房屋管理</el-menu-item>
+			<el-menu-item index="/inner/water/index"><i class="el-icon-star-on"></i>水费管理</el-menu-item>
 			<el-menu-item index="9"><i class="el-icon-setting"></i>系统设置</el-menu-item>
 		</el-menu>
 		<router-view class="inner-body"></router-view>

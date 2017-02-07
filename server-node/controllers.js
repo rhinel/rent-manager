@@ -60,8 +60,8 @@ const inner = (req, res, next)=>{
 			service.houseAdd(req, res, (data)=>{
 				res.json(code(3011, data))
 			})
-		} else if (req.params.function==='getList') {
-			service.houseGetList(req, res, (data)=>{
+		} else if (req.params.function==='list') {
+			service.houseList(req, res, (data)=>{
 				res.json(code(3012, data))
 			})
 		} else if (req.params.function==='del') {

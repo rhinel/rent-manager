@@ -253,7 +253,7 @@ module.exports = {
 			})
 		}
 	},
-	houseGetList: (req, res, callback)=> {
+	houseList: (req, res, callback)=> {
 		db
 		//数据库查询
 		.dbModel('house')

@@ -9,6 +9,11 @@
 			text-align: center;
 			padding-right: 18px;
 		}
+		.table-btn-input{
+			max-width: 300px;
+			display: inline-block;
+			margin-left: 10px;
+		}
 		.add-house-dialog{
 			.el-input{
 				max-width: 300px;
@@ -28,10 +33,13 @@
 		<div class="table-btn">
 			<el-button type="primary" @click="getAddHouseDialog">新增</el-button>
 			<el-button type="primary" @click="getListRefresh" :loading="gettingListRefresh">刷新</el-button>
+			<div class="table-btn-input">
+				<el-input v-model="houseDataSearch" placeholder="搜索"></el-input>
+			</div>
 		</div>
 		
 		<!-- 新增弹窗 -->
-		<el-dialog :title="ahdDialogTitle" v-model="addHouseFlag" size="tiny" class="add-house-dialog" :close-on-click-modal="false">
+		<el-dialog :title="ahdDialogTitle" v-model="addHouseFlag" size="tiny" class="add-house-dialog" :close-on-click-modal="false" @close="onAddHouseDialogClose">
 			<el-form :model="addHouse" ref="addHouse" :rules="addHouserules">
 				<el-form-item label="坊号" :label-width="ahdLabelWidth" prop="fang">
 					<el-select v-model="addHouse.fang" placeholder="选择坊号">
@@ -54,7 +62,7 @@
 		<!-- 房屋数据表 -->
 		<el-table
 			class="house-table"
-			:data="houseData"
+			:data="filterHouseData"
 			v-loading.body="gettingListRefresh"
 			stripe
 			border>
@@ -124,7 +132,6 @@
 		data () {
 			return {
 				addHouseFlag: false,
-				editHouseFlag: false,
 				gettingAddHouse: false,
 				gettingListRefresh: false,
 
@@ -146,12 +153,32 @@
 				},
 				editHouseId: '',
 				houseData: [],
+				houseDataSearch: ''
+			}
+		},
+		computed: {
+			filterHouseData () {
+				if (!this.houseDataSearch) {
+					return this.houseData
+				} else {
+					let _houseDataSearch = new RegExp(this.houseDataSearch, 'i')
+					return this.houseData.filter((item)=>{
+						for (var i in item) {
+							if (i == 'gettingdelHouse' || i == 'createTime' || i == 'updateTime' || i == '_id') {
+								continue
+							} else if (item[i].match(_houseDataSearch)) {
+								return true
+							}
+						}
+						return false
+					})
+				}
 			}
 		},
 		methods: {
+			//打开关闭添加/修改弹窗
 			getAddHouseDialog (index, row) {
 				this.addHouseFlag = !this.addHouseFlag
-				!this.addHouseFlag && this.getResetHouse()
 				if (row) {
 					this.addHouse.fang = row.fang
 					this.addHouse.hao = row.hao
@@ -160,6 +187,7 @@
 					this.editHouseId = row._id
 				}
 			},
+			//弹窗数据初始化
 			getResetHouse () {
 				this.addHouse.fang = this.houseFang[0]
 				this.addHouse.hao = ''
@@ -167,6 +195,12 @@
 				this.ahdDialogTitle = '新增房间'
 				this.editHouseId = ''
 			},
+			//关闭弹窗回调
+			onAddHouseDialogClose () {
+				this.$refs.addHouse.resetFields()
+				this.getResetHouse()
+			},
+			//添加/修改房屋
 			getAddHouse () {
 				if (this.gettingAddHouse) {
 					return true
@@ -198,12 +232,13 @@
 					}
 				})
 			},
+			//获取房屋列表
 			getListRefresh () {
 				if (this.gettingListRefresh) {
 					return true
 				}
 				this.gettingListRefresh = true
-				this.Ajax('/inner/house/getList', {}, (res)=>{
+				this.Ajax('/inner/house/list', {}, (res)=>{
 					this.houseData = res.body.data
 					this.gettingListRefresh = false
 				}, (res)=>{
@@ -215,9 +250,11 @@
 					this.gettingListRefresh = false
 				})
 			},
+			//时间格式化
 			getTime (t) {
 				return t? this.GetTimeFormat(t) : '--'
 			},
+			//删除房屋
 			getDelHouse (index, row) {
 				if (row.gettingdelHouse) {
 					return true

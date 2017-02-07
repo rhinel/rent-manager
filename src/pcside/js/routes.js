@@ -31,6 +31,17 @@ module.exports = {
 							alias: ''
 						}
 					]
+				},
+				{//水费管理
+					path: 'water',
+					component: require('../components/water/water-index'),
+					children: [
+						{
+							path: 'index',
+							component: require('../components/water/water-main'),
+							alias: ''
+						}
+					]
 				}
 			]
 		}
