@@ -129,5 +129,6 @@ module.exports = {
 	redisDelKeys: redisDelKeys,
 	connect: connect,
 	dbModel: dbModel,
-	dbEntity: dbEntity
+	dbEntity: dbEntity,
+	db: mongoose
 }

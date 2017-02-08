@@ -50,6 +50,9 @@
 				<el-form-item label="水表数" :label-width="awdLabelWidth" prop="water">
 					<el-input v-model="addWater.water" auto-complete="off" placeholder="输入水表数"></el-input>
 				</el-form-item>
+				<el-form-item label="备注" :label-width="awdLabelWidth">
+					<el-input v-model="addWater.remark" auto-complete="off" placeholder="备注"></el-input>
+				</el-form-item>
 				<el-form-item label="抄表时间" :label-width="awdLabelWidth" prop="addTime">
 					<el-date-picker v-model="addWater.addTime" type="datetime" placeholder="输入抄表时间"></el-date-picker>
 				</el-form-item>
@@ -68,28 +71,25 @@
 			stripe
 			border>
 			<el-table-column
-				prop="fang"
-				label="坊号"
-				width="100"
+				prop="fanghao"
+				label="房屋"
+				width="180"
 				sortable>
 			</el-table-column>
 			<el-table-column
-				prop="hao"
-				label="房间号"
-				width="100"
-				sortable>
-			</el-table-column>
-			<el-table-column
-				prop="hao"
+				prop="waterId.water"
 				label="最新抄表数"
 				width="180"
 				sortable>
 			</el-table-column>
 			<el-table-column
-				prop="hao"
+				prop="waterId.addTime"
 				label="最新抄表时间"
 				width="180"
 				sortable>
+				<template scope="scope">
+					{{ getTime(scope.row.waterId && scope.row.waterId.addTime) }}
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="hao"
@@ -157,11 +157,12 @@
 				addWater: {
 					haoId: '',
 					water: '',
+					remark: '',
 					addTime: '',
 				},
 				addWaterrules: {
 					haoId: [
-						{ required: true, message: '请填写', trigger: 'blur' }
+						{ required: true, message: '请选择', trigger: 'change' }
 					],
 					water: [
 						{ required: true, message: '请填写', trigger: 'blur' }
@@ -214,6 +215,7 @@
 			//弹窗数据初始化
 			getResetWater () {
 				this.addWater.addTime = ''
+				this.addWater.remark = ''
 			},
 			//关闭弹窗回调
 			onAddWaterDialogClose () {
@@ -226,10 +228,48 @@
 					return true
 				}
 				this.gettingAddWater = true
+				this.$refs.addWater.validate((valid)=>{
+					if (valid) {
+						let _data = Object.assign({}, this.addWater)
+						this.Ajax('/inner/water/add', _data, (res)=>{
+							this.$message({
+								type: 'success',
+								message: '抄表成功',
+								duration: 2000
+							})
+							this.getAddWaterDialog()
+							this.gettingAddWater = false
+							this.getListRefresh()
+						}, (res)=>{
+							this.$message({
+								type: 'error',
+								message: '编号：' + res.body.code + '，' + res.body.msg,
+								duration: 2000
+							})
+							this.gettingAddWater = false
+						})
+					} else {
+						this.gettingAddWater = false
+					}
+				})
 			},
 			//拉取水费信息列表
 			getListRefresh () {
-				
+				if (this.gettingListRefresh) {
+					return true
+				}
+				this.gettingListRefresh = true
+				this.Ajax('/inner/water/mainList', {}, (res)=>{
+					this.waterData = res.body.data
+					this.gettingListRefresh = false
+				}, (res)=>{
+					this.$message({
+						type: 'error',
+						message: '编号：' + res.body.code + '，' + res.body.msg,
+						duration: 2000
+					})
+					this.gettingListRefresh = false
+				})
 			},
 			//时间格式化
 			getTime (t) {

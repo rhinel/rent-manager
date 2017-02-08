@@ -159,7 +159,7 @@ module.exports = {
 		if (!req.body.fang) {
 			callback({
 				type: false,
-				data: '请填写坊号'
+				data: '请选择坊号'
 			})
 		} else if (!req.body.hao) {
 			callback({
@@ -169,7 +169,7 @@ module.exports = {
 		} else if (req.body._id) {
 			db
 			//根据ID修改内容
-			.dbModel('house', {
+			.dbModel('house', {//*//标记，初始房屋数据类，修改类型
 				fang: String, //坊号，全拼
 				hao: String, //房间号，全拼
 				detail: String, //说明
@@ -217,7 +217,7 @@ module.exports = {
 			//插入数据
 			.then(()=>{
 				return db
-				.dbModel('house', {
+				.dbModel('house', {//*//标记，初始房屋数据类，创建类型
 					userId: String, //用户ID
 					fang: String, //坊号，全拼
 					hao: String, //房间号，全拼
@@ -274,6 +274,8 @@ module.exports = {
 			data.forEach((i)=>{
 				//loading字段提供
 				!i.gettingdelHouse && (i.gettingdelHouse = false)
+				//del提示字段提供
+				!i.dHousePopFlag && (i.dHousePopFlag = false)
 			})
 			return Promise.reject({
 				type: true,
@@ -295,14 +297,14 @@ module.exports = {
 		} else {
 			db
 			//根据ID修改状态
-			.dbModel('house', {
+			.dbModel('house', {//*//标记，初始房屋数据类，删除类型
 				status: Number, //状态
 				updateTime: Number //更新时间
 			})
-			.findOneAndUpdate({_id: req.body._id}, {'$set': {
+			.findOneAndUpdate({_id: req.body._id}, {
 				status: 0,
 				updateTime: Date.now()
-			}})
+			})
 			.exec()
 			.then((data)=>{
 				return Promise.reject({
@@ -318,9 +320,123 @@ module.exports = {
 		}
 	},
 
-	/***inner类******************************************************************************************************************/
+	/***inner类****水费管理********************************************************************************************************/
 
+	waterAdd: (req, res, callback)=>{
+		if (!req.body.haoId) {
+			callback({
+				type: false,
+				data: '请选择房屋'
+			})
+		} else if (!req.body.water) {
+			callback({
+				type: false,
+				data: '请填写水表数'
+			})
+		} else if (!req.body.addTime) {
+			callback({
+				type: false,
+				data: '请填写抄表时间'
+			})
+		} else {
+			let addData
+			db
+			//插入水表抄表记录
+			.dbModel('water', {//*//标记，初始水表数数据类，新增类型
+				userId: String, //用户ID
+				haoId: String, //房屋ID，全拼
+				water: String, //水表数，全拼
+				remark: String, //备注，全拼
+				addTime: String, //抄表时间
+				status: Number, //状态
+				createTime: Number //创建时间
+			})
+			.create({
+				userId: req.userId,
+				haoId: req.body.haoId,
+				water: req.body.water,
+				remark: req.body.remark,
+				addTime: req.body.addTime,
+				status: 1,
+				createTime: Date.now()
+			})
+			.then((data)=>{
+				if (data) {
+					addData = data
+					return Promise.resolve(data)
+				} else {			
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+			//更新房屋最新水表数信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄表数引用类型
+					waterId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
 
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					waterId: addData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					return Promise.reject({
+						type: true,
+						data: addData
+					})
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	waterMainList: (req, res, callback)=>{
+		//初始化该库
+		db.dbModel('water')
+		db
+		//数据库查询
+		.dbModel('house')
+		.find({}, {
+			fang: 1,
+			hao: 1,
+			waterId: 1
+		})
+		.populate({
+			path: 'waterId',
+			model: 'water',
+			select: 'water addTime'
+		})
+		.where('userId').equals(req.userId)
+		.where('status').equals(1)
+		.sort('fang hao')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//字段提供
+				!i.fanghao && (i.fanghao = i.fang + i.hao)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
 
 
 

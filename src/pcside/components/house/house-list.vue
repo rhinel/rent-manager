@@ -24,6 +24,10 @@
 			}
 		}
 	}
+	.d-house-pop-cont{
+		text-align: right;
+		margin: 0;
+	}
 </style>
 
 <template>
@@ -108,11 +112,22 @@
 						size="small"
 						type="primary"
 						@click="getAddHouseDialog(scope.$index, scope.row)">修改</el-button>
+					<el-popover
+						ref="dHousePop"
+						placement="top"
+						width="150"
+						v-model="scope.row.dHousePopFlag">
+						<p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
+						<div class="d-house-pop-cont">
+							<el-button size="mini" type="text" @click="scope.row.dHousePopFlag = false">取消</el-button>
+							<el-button type="primary" size="mini" @click="(scope.row.dHousePopFlag = false) || getDelHouse(scope.$index, scope.row)">确定</el-button>
+						</div>
+					</el-popover>
 					<el-button
 						size="small"
 						type="danger"
-						:loading="scope.row.gettingdelHouse"
-						@click="getDelHouse(scope.$index, scope.row)">删除</el-button>
+						v-popover:dHousePop
+						:loading="scope.row.gettingdelHouse">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -148,7 +163,7 @@
 						{ required: true, message: '请填写', trigger: 'blur' }
 					],
 					fang: [
-						{ required: true, message: '请填写', trigger: 'blur' }
+						{ required: true, message: '请选择', trigger: 'change' }
 					]
 				},
 				editHouseId: '',

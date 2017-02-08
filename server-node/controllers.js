@@ -10,18 +10,18 @@ let code = require('./codes')
 //outer类，失败则跳过
 const outer = (req, res, next)=>{
 	//登陆类
-	if (req.params.class==='log') {
+	if (req.params.class === 'log') {
 		//登录接口
-		if (req.params.function==='login') {
+		if (req.params.function === 'login') {
 			service.login(req, res, (data)=>{
 				res.json(code(1001, data))
 			})
 		//首页背景图
-		} else if (req.params.function==='logout') {
+		} else if (req.params.function === 'logout') {
 			service.logout(req, res, (data)=>{
 				res.json(code(1002, data))
 			})
-		} else if (req.params.function==='bingBg') {
+		} else if (req.params.function === 'bingBg') {
 			service.bingBg(req, res, (data)=>{
 				res.json(code(1003, data))
 			})
@@ -56,28 +56,34 @@ const inner = (req, res, next)=>{
 		res.json(code(0, {type:true}))
 	} else if (req.params.class === 'house') {
 		//添加房屋接口
-		if (req.params.function==='add') {
+		if (req.params.function === 'add') {
 			service.houseAdd(req, res, (data)=>{
 				res.json(code(3011, data))
 			})
-		} else if (req.params.function==='list') {
+		} else if (req.params.function === 'list') {
 			service.houseList(req, res, (data)=>{
 				res.json(code(3012, data))
 			})
-		} else if (req.params.function==='del') {
+		} else if (req.params.function === 'del') {
 			service.houseDel(req, res, (data)=>{
 				res.json(code(3013, data))
 			})
 		} else {
 			next()
 		}
-
-
-
-
-
-
-
+	} else if (req.params.class === 'water') {
+		//添加水表数接口
+		if (req.params.function === 'add') {
+			service.waterAdd(req, res, (data)=>{
+				res.json(code(3021, data))
+			})
+		} else if (req.params.function === 'mainList') {
+			service.waterMainList(req, res, (data)=>{
+				res.json(code(3022, data))
+			})
+		} else {
+			next()
+		}
 
 
 
