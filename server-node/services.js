@@ -183,9 +183,16 @@ module.exports = {
 			}})
 			.exec()
 			.then((data)=>{
-				return Promise.reject({
-					type: true
-				})
+				if (data) {
+					return Promise.reject({
+						type: true
+					})
+				} else {	
+					return Promise.reject({
+						type: false,
+						data: '修改失败，数据不存在'
+					})
+				}
 			})
 			.catch((err)=>{
 				callback({
@@ -345,7 +352,7 @@ module.exports = {
 			.dbModel('water', {//*//标记，初始水表数数据类，新增类型
 				userId: String, //用户ID
 				haoId: String, //房屋ID，全拼
-				water: String, //水表数，全拼
+				water: Number, //水表数，全拼
 				remark: String, //备注，全拼
 				addTime: String, //抄表时间
 				status: Number, //状态
@@ -376,7 +383,6 @@ module.exports = {
 				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄表数引用类型
 					waterId: db.db.Schema.Types.ObjectId,
 					updateTime: Number //更新时间
-
 				})
 				.findOneAndUpdate({_id: req.body.haoId}, {
 					waterId: addData._id,
@@ -412,7 +418,7 @@ module.exports = {
 		.populate({
 			path: 'waterId',
 			model: 'water',
-			select: 'water addTime'
+			select: 'water remark addTime'
 		})
 		.where('userId').equals(req.userId)
 		.where('status').equals(1)
