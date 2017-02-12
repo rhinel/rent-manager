@@ -3,12 +3,6 @@
 		.table-btn{
 			margin-bottom: 20px;
 		}
-		.table-span{
-			display: inline-block;
-			vertical-align: middle;
-			text-align: center;
-			padding-right: 18px;
-		}
 		.table-btn-input{
 			max-width: 300px;
 			display: inline-block;
@@ -23,8 +17,12 @@
 				max-width: 300px;
 			}
 		}
+		.house-show-pop{
+			display: inline-block;
+			margin-left: 10px;
+		}
 	}
-	.d-house-pop-cont{
+	.house-list-d-house-pop-cont{
 		text-align: right;
 		margin: 0;
 	}
@@ -113,21 +111,22 @@
 						type="primary"
 						@click="getAddHouseDialog(scope.$index, scope.row)">修改</el-button>
 					<el-popover
-						ref="dHousePop"
 						placement="top"
 						width="150"
+						trigger="click"
 						v-model="scope.row.dHousePopFlag">
 						<p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
-						<div class="d-house-pop-cont">
+						<div class="house-list-d-house-pop-cont">
 							<el-button size="mini" type="text" @click="scope.row.dHousePopFlag = false">取消</el-button>
-							<el-button type="primary" size="mini" @click="(scope.row.dHousePopFlag = false) || getDelHouse(scope.$index, scope.row)">确定</el-button>
+							<el-button type="danger" size="mini" @click="(scope.row.dHousePopFlag = false) || getDelHouse(scope.$index, scope.row)">确定</el-button>
+						</div>
+						<div slot="reference" class="house-show-pop">
+							<el-button
+								size="small"
+								type="danger"
+								:loading="scope.row.gettingdelHouse">删除</el-button>
 						</div>
 					</el-popover>
-					<el-button
-						size="small"
-						type="danger"
-						v-popover:dHousePop
-						:loading="scope.row.gettingdelHouse">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -179,9 +178,9 @@
 					let _houseDataSearch = new RegExp(this.houseDataSearch, 'i')
 					return this.houseData.filter((item)=>{
 						for (var i in item) {
-							if (i == 'gettingdelHouse' || i == 'createTime' || i == 'updateTime' || i == '_id') {
+							if (i != 'fang' && i != 'hao' && i != 'detail') {
 								continue
-							} else if (item[i].match(_houseDataSearch)) {
+							} else if (String(item[i]).match(_houseDataSearch)) {
 								return true
 							}
 						}

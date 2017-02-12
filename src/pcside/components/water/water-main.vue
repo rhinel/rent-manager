@@ -3,12 +3,6 @@
 		.table-btn{
 			margin-bottom: 20px;
 		}
-		.table-span{
-			display: inline-block;
-			vertical-align: middle;
-			text-align: center;
-			padding-right: 18px;
-		}
 		.table-btn-input{
 			max-width: 300px;
 			display: inline-block;
@@ -53,7 +47,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="水表数" :label-width="awdLabelWidth" prop="water">
-					<el-input v-model.number="addWater.water" auto-complete="off" placeholder="输入水表数"></el-input>
+					<el-input v-model.number="addWater.water" auto-complete="off" placeholder="输入水表数"><template slot="append">吨</template></el-input>
 				</el-form-item>
 				<el-form-item label="备注" :label-width="awdLabelWidth">
 					<el-input v-model="addWater.remark" auto-complete="off" placeholder="备注"></el-input>
@@ -83,7 +77,7 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="抄表数" :label-width="cwdLabelWidth" prop="tnew.water">
-							<el-input v-model.number="calWater.tnew.water" auto-complete="off" placeholder="输入抄表数"></el-input>
+							<el-input v-model.number="calWater.tnew.water" auto-complete="off" placeholder="输入抄表数"><template slot="append">吨</template></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -101,7 +95,7 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="底表数" :label-width="cwdLabelWidth" prop="old.water">
-							<el-input v-model.number="calWater.old.water" auto-complete="off" placeholder="输入底表数"></el-input>
+							<el-input v-model.number="calWater.old.water" auto-complete="off" placeholder="输入底表数"><template slot="append">吨</template></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -136,7 +130,7 @@
 				</el-row>
 				<!-- 单价计费 -->
 				<el-form-item label="单价" :label-width="cwdLabelWidth" v-if="calWater.calWater.calType == 'single'" prop="calWater.singlePrice">
-					<el-input v-model.number="calWater.calWater.singlePrice" auto-complete="off" placeholder="输入单价"><template slot="append">元/吨</template></el-input>
+					<el-input v-model.number="calWater.calWater.singlePrice" auto-complete="off" placeholder="输入单价"><template slot="prepend">￥</template><template slot="append">元/吨</template></el-input>
 				</el-form-item>
 				<!-- 阶梯计费 -->
 				<el-form-item
@@ -151,7 +145,7 @@
 							:rules="{
 								type: 'number', required: true, message: '请填写', trigger: 'blur'
 							}">
-							<el-input v-model.number="step.step" auto-complete="off" placeholder="本阶梯最大值"><template slot="append">度</template></el-input>
+							<el-input v-model.number="step.step" auto-complete="off" placeholder="本阶梯最大值"><template slot="append">吨</template></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col class="line" :span="1"></el-col>
@@ -160,7 +154,7 @@
 							:rules="{
 								type: 'number', required: true, message: '请填写', trigger: 'blur'
 							}">
-							<el-input v-model.number="step.price" auto-complete="off" placeholder="本阶梯单价"><template slot="append">元</template></el-input>
+							<el-input v-model.number="step.price" auto-complete="off" placeholder="本阶梯单价"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col class="line" :span="1"></el-col>
@@ -184,8 +178,8 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
-				<el-form-item label="金额" :label-width="cwdLabelWidth" prop="calResult">
-					<el-input v-model.number="calWaterResult" auto-complete="off" placeholder="输入金额"><template slot="append">元</template></el-input>
+				<el-form-item :label="calWater.fix ? '修正结果' : '计算结果'" :label-width="cwdLabelWidth" prop="calWaterResult">
+					<el-input v-model.number="calWater.calWaterResult" auto-complete="off" placeholder="输入金额"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -209,7 +203,7 @@
 			</el-table-column>
 			<el-table-column
 				prop="waterId.water"
-				label="最新抄表数"
+				label="最新抄表数(吨)"
 				width="180"
 				sortable>
 			</el-table-column>
@@ -224,7 +218,7 @@
 			</el-table-column>
 			<el-table-column
 				prop="calWaterId.water"
-				label="上次计费底表数"
+				label="上次计费底表数(吨)"
 				width="180"
 				sortable>
 			</el-table-column>
@@ -238,11 +232,10 @@
 				</template>
 			</el-table-column>
 			<el-table-column
-				label="本期实用数"
-				width="180">
-				<template scope="scope">
-					{{ (scope.row.waterId ? scope.row.waterId.water : 0) - (scope.row.calWaterId ? scope.row.calWaterId.water : 0) }}
-				</template>
+				prop="gap"
+				label="本期实用数(吨)"
+				width="180"
+				sortable>
 			</el-table-column>
 			<el-table-column
 				label="小计"
@@ -332,7 +325,8 @@
 						}]
 					},
 					remark: '',
-					addTime:'',
+					addTime: '',
+					fix: false,
 					calWaterResult: 0
 				},
 				calWaterrules: {
@@ -355,9 +349,9 @@
 					let _waterDataSearch = new RegExp(this.waterDataSearch, 'i')
 					return this.waterData.filter((item)=>{
 						for (var i in item) {
-							if (i == 'gettingdelHouse' || i == 'createTime' || i == 'updateTime' || i == '_id') {
+							if (i != 'fanghao' && i != 'remark') {
 								continue
-							} else if (item[i].match(_waterDataSearch)) {
+							} else if (String(item[i]).match(_waterDataSearch)) {
 								return true
 							}
 						}
@@ -384,8 +378,16 @@
 					})
 					theGap != 0 && this.calWater.calWater.stepPrice.length && (result += theGap*this.calWater.calWater.stepPrice[this.calWater.calWater.stepPrice.length-1].price)
 				}
-				this.calWater.calWaterResult = result
 				return result
+			}
+		},
+		watch: {
+			calWaterResult (n, o) {
+				this.calWater.calWaterResult = n
+			},
+			'calWater.calWaterResult' (n, o) {
+				n == this.calWaterResult && (this.calWater.fix = false)
+				n != this.calWaterResult && (this.calWater.fix = true)
 			}
 		},
 		methods: {
@@ -480,11 +482,11 @@
 					//tnew
 					this.calWater.tnew.water = row.waterId && row.waterId.water || 0
 					this.calWater.tnew.remark = row.waterId && row.waterId.remark || ''
-					this.calWater.tnew.addTime = row.waterId && new Date(row.waterId.addTime) || new Date()
+					this.calWater.tnew.addTime = row.waterId && row.waterId.addTime && new Date(row.waterId.addTime) || new Date()
 					//old
 					this.calWater.old.water = row.calWaterId && row.calWaterId.water || 0
 					this.calWater.old.remark = row.calWaterId && row.calWaterId.remark || ''
-					this.calWater.old.addTime = row.calWaterId && new Date(row.calWaterId.addTime) || new Date()
+					this.calWater.old.addTime = row.calWaterId && row.calWaterId.addTime && new Date(row.calWaterId.addTime) || new Date()
 					//calWater
 					this.calWater.calWater.minPrice = row.calWaterPriceId && row.calWaterPriceId.minPrice || 0
 					this.calWater.calWater.calType = row.calWaterPriceId && row.calWaterPriceId.calType || 'single'
@@ -492,13 +494,13 @@
 					this.calWater.calWater.stepPrice = row.calWaterPriceId && row.calWaterPriceId.stepPrice || []
 					!this.calWater.calWater.stepPrice.length && this.addStep()
 				}
-
 			},
 			//计费弹窗数据初始化
 			getResetCalWater () {
 				this.calWater.tnew.addTime = ''
 				this.calWater.old.addTime = ''
 				this.calWater.addTime = ''
+				this.calWater.remark = ''
 			},
 			//关闭计费弹窗回调
 			onCalWaterDialogClose () {
@@ -528,10 +530,10 @@
 				this.$refs.calWater.validate((valid)=>{
 					if (valid) {
 						let _data = Object.assign({}, this.calWater)
-						this.Ajax('/inner/water/calWater', _data, (res)=>{
+						this.Ajax('/inner/water/cal', _data, (res)=>{
 							this.$message({
 								type: 'success',
-								message: '抄表成功',
+								message: '计费成功',
 								duration: 2000
 							})
 							this.getCalWaterDialog()
@@ -552,7 +554,7 @@
 			},
 			//进入历史
 			getWaterHistory (index, row) {
-
+				this.$router.push('/inner/water/history?haoid=' + row._id)
 			}
 		}
 	}

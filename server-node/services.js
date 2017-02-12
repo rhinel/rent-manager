@@ -185,9 +185,10 @@ module.exports = {
 			.then((data)=>{
 				if (data) {
 					return Promise.reject({
-						type: true
+						type: true,
+						data: data
 					})
-				} else {	
+				} else {
 					return Promise.reject({
 						type: false,
 						data: '修改失败，数据不存在'
@@ -225,7 +226,7 @@ module.exports = {
 			.then(()=>{
 				return db
 				.dbModel('house', {//*//标记，初始房屋数据类，创建类型
-					userId: String, //用户ID
+					userId: db.db.Schema.Types.ObjectId, //用户ID
 					fang: String, //坊号，全拼
 					hao: String, //房间号，全拼
 					detail: String, //说明
@@ -243,7 +244,8 @@ module.exports = {
 				.then((data)=>{
 					if (data) {
 						return Promise.reject({
-							type: true
+							type: true,
+							data: data
 						})
 					} else {			
 						return Promise.reject({
@@ -260,6 +262,34 @@ module.exports = {
 			})
 		}
 	},
+	houseFind: (req, res, callback)=> {
+		db
+		//数据库查询
+		.dbModel('house')
+		.findOne({_id: req.body._id})
+		.where('status').equals(1)
+		.exec()
+		.then((data)=>{
+			if (data) {
+				return Promise.reject({
+					type: true,
+					data: data
+				})
+			} else {
+				return Promise.reject({
+					code: 30141,
+					type: false,
+					data: '数据不存在'
+				})
+			}	
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
 	houseList: (req, res, callback)=> {
 		db
 		//数据库查询
@@ -271,7 +301,7 @@ module.exports = {
 			createTime: 1,
 			updateTime: 1
 		})
-		.where('userId').equals(req.userId)
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
 		.sort('fang hao')
 		.lean()
@@ -315,7 +345,8 @@ module.exports = {
 			.exec()
 			.then((data)=>{
 				return Promise.reject({
-					type: true
+					type: true,
+					data: data
 				})
 			})
 			.catch((err)=>{
@@ -350,8 +381,8 @@ module.exports = {
 			db
 			//插入水表抄表记录
 			.dbModel('water', {//*//标记，初始水表数数据类，新增类型
-				userId: String, //用户ID
-				haoId: String, //房屋ID，全拼
+				userId: db.db.Schema.Types.ObjectId, //用户ID
+				haoId: db.db.Schema.Types.ObjectId, //房屋ID
 				water: Number, //水表数，全拼
 				remark: String, //备注，全拼
 				addTime: String, //抄表时间
@@ -390,10 +421,16 @@ module.exports = {
 				})
 				.exec()
 				.then((data)=>{
-					return Promise.reject({
-						type: true,
-						data: addData
-					})
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: addData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
 				})
 			})
 			.catch((err)=>{
@@ -407,20 +444,28 @@ module.exports = {
 	waterMainList: (req, res, callback)=>{
 		//初始化该库
 		db.dbModel('water')
+		db.dbModel('watercal')
 		db
 		//数据库查询
 		.dbModel('house')
 		.find({}, {
 			fang: 1,
 			hao: 1,
-			waterId: 1
+			waterId: 1,
+			calWaterId: 1
 		})
 		.populate({
 			path: 'waterId',
 			model: 'water',
 			select: 'water remark addTime'
 		})
-		.where('userId').equals(req.userId)
+		.populate({
+			path: 'calWaterId',
+			model: 'watercal',
+			select: 'tnew addTime'
+		})
+		//TODO 尚未添加计费信息从用户资料处获取
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
 		.sort('fang hao')
 		.lean()
@@ -430,6 +475,12 @@ module.exports = {
 			data.forEach((i)=>{
 				//字段提供
 				!i.fanghao && (i.fanghao = i.fang + i.hao)
+				!i.calWaterId && (i.calWaterId = {})
+				i.calWaterId.tnew && (i.calWaterId.tnew.addTime = i.calWaterId.addTime)
+				i.calWaterId.tnew && (i.calWaterId = i.calWaterId.tnew)
+				!i.waterId && (i.waterId = {})
+				!i.gap && (i.gap = (i.waterId.water ? i.waterId.water : 0) - (i.calWaterId.water ? i.calWaterId.water : 0))
+				i.gap <= 0 && (i.gap = 0)
 			})
 			return Promise.reject({
 				type: true,
@@ -443,7 +494,337 @@ module.exports = {
 			})
 		})
 	},
-
+	waterList: (req, res, callback)=>{
+		//不做数据校验
+		//初始化该库
+		db.dbModel('house')
+		db
+		//数据库查询
+		.dbModel('water')
+		.find({haoId: db.db.Types.ObjectId(req.body.haoId)})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime'
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-addTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//loading字段提供
+				!i.gettingdelWater && (i.gettingdelWater = false)
+				//del提示字段提供
+				!i.dWaterPopFlag && (i.dWaterPopFlag = false)
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	waterCalList: (req, res, callback)=>{
+		//不做数据校验
+		//初始化该库
+		db.dbModel('house')
+		db
+		//数据库查询
+		.dbModel('watercal')
+		.find({haoId: db.db.Types.ObjectId(req.body.haoId)})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime'
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-addTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//loading字段提供
+				!i.gettingdelCalWater && (i.gettingdelCalWater = false)
+				//del提示字段提供
+				!i.dCalWaterPopFlag && (i.dCalWaterPopFlag = false)
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+				//小计
+				!i.gap && (i.gap = (i.tnew.water ? i.tnew.water : 0) - (i.old.water ? i.old.water : 0))
+				i.gap <= 0 && (i.gap = 0)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	watercalWater: (req, res, callback)=>{
+		let addData
+		//不做数据校验
+		db
+		.dbModel('watercal', {//*//标记，初始水表计费数数据类，新增类型
+			userId: db.db.Schema.Types.ObjectId, //用户ID
+			haoId: db.db.Schema.Types.ObjectId, //房屋ID，全拼
+			tnew: {
+				water: Number, //抄表数
+				remark: String, //抄表备注
+				addTime: String //抄表时间
+			},
+			old: {
+				water: Number, //底表数
+				remark: String, //底表备注
+				addTime: String //底表时间
+			},
+			calWater: {
+				minPrice: Number, //本次计费低消
+				calType: String, //计费类型
+				singlePrice: Number, //single单价
+				stepPrice: [{ //阶梯价格
+					step: Number, //阶梯
+					price: Number //单价
+				}]
+			},
+			remark: String, //计费备注
+			addTime: String, //计费时间
+			fix: Boolean, //结果是否修正
+			calWaterResult: Number, //计算结果
+			status: Number, //状态
+			createTime: Number //创建时间
+		})
+		.create({
+			userId: req.userId,
+			haoId: req.body.haoId,
+			tnew: req.body.tnew,
+			old: req.body.old,
+			calWater: req.body.calWater,
+			remark: req.body.remark,
+			addTime: req.body.addTime,
+			fix: req.body.fix,
+			calWaterResult: req.body.calWaterResult,
+			status: 1,
+			createTime: Date.now()
+		})
+		.then((data)=>{
+			if (data) {
+				addData = data
+				return Promise.resolve(data)
+			} else {			
+				return Promise.reject({
+					type: false
+				})
+			}
+		})
+		//更新房屋最新水表数信息
+		.then((data)=>{
+			return db
+			.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄表数引用类型
+				calWaterId: db.db.Schema.Types.ObjectId,
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body.haoId}, {
+				calWaterId: addData._id,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					return Promise.reject({
+						type: true,
+						data: addData
+					})
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	waterDel: (req, res, callback)=>{
+		if (!req.body._id) {
+			callback({
+				type: false
+			})
+		} else {
+			let delData
+			let moveData
+			db
+			//根据ID修改状态
+			.dbModel('water', {//*//标记，初始水表类型数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					delData = data
+					return Promise.resolve(data)
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+			//查询上一条水表数据
+			.then((data)=>{
+				return db
+				.dbModel('water')
+				.findOne({})
+				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('status').equals(1)
+				.sort('-addTime')
+				.exec()
+				.then((data)=>{
+					if (data) {
+						moveData = data
+					} else {
+						moveData = {_id: null}
+					}
+					return Promise.resolve(data)
+				})
+			})
+			//更新房屋最新水表数信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄水表数引用类型
+					waterId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					waterId: moveData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: delData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	waterCalDel: (req, res, callback)=>{
+		if (!req.body._id) {
+			callback({
+				type: false
+			})
+		} else {
+			let delData
+			let moveData
+			db
+			//根据ID修改状态
+			.dbModel('watercal', {//*//标记，初始水费计费数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					delData = data
+					return Promise.resolve(data)
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+			//查询上一条水表计费数据
+			.then((data)=>{
+				return db
+				.dbModel('watercal')
+				.findOne({})
+				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('status').equals(1)
+				.sort('-addTime')
+				.exec()
+				.then((data)=>{
+					if (data) {
+						moveData = data
+					} else {
+						moveData = {_id: null}
+					}
+					return Promise.resolve(data)
+				})
+			})
+			//更新房屋最新水表计费信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新水表计费引用类型
+					calWaterId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					calWaterId: moveData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: delData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
 
 
 

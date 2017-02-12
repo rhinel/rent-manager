@@ -40,6 +40,10 @@ module.exports = {
 							path: 'index',
 							component: require('../components/water/water-main'),
 							alias: ''
+						},
+						{
+							path: 'history',
+							component: require('../components/water/water-history')
 						}
 					]
 				}

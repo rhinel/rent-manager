@@ -68,6 +68,10 @@ const inner = (req, res, next)=>{
 			service.houseDel(req, res, (data)=>{
 				res.json(code(3013, data))
 			})
+		} else if (req.params.function === 'find') {
+			service.houseFind(req, res, (data)=>{
+				res.json(code(3014, data))
+			})
 		} else {
 			next()
 		}
@@ -81,9 +85,31 @@ const inner = (req, res, next)=>{
 			service.waterMainList(req, res, (data)=>{
 				res.json(code(3022, data))
 			})
+		} else if (req.params.function === 'cal') {
+			service.watercalWater(req, res, (data)=>{
+				res.json(code(3023, data))
+			})
+		} else if (req.params.function === 'list') {
+			service.waterList(req, res, (data)=>{
+				res.json(code(3024, data))
+			})
+		} else if (req.params.function === 'calList') {
+			service.waterCalList(req, res, (data)=>{
+				res.json(code(3025, data))
+			})
+		} else if (req.params.function === 'del') {
+			service.waterDel(req, res, (data)=>{
+				res.json(code(3026, data))
+			})
+		} else if (req.params.function === 'delCal') {
+			service.waterCalDel(req, res, (data)=>{
+				res.json(code(3027, data))
+			})
 		} else {
 			next()
 		}
+
+
 
 
 
