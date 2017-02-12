@@ -100,7 +100,7 @@
 				<div class="table-btn">
 					<el-button type="primary" @click="getwaterCalList" :loading="gettingListRefresh2">刷新</el-button>
 					<div class="table-btn-input">
-						<el-input v-model="waterDataSearch" placeholder="搜索"></el-input>
+						<el-input v-model="waterCalDataSearch" placeholder="搜索"></el-input>
 					</div>
 				</div>
 
