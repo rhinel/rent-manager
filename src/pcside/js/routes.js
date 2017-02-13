@@ -3,7 +3,8 @@ module.exports = {
 		//outer层，默认层
 		{//登陆层
 			path: '/login',
-			component: require('../components/auth/auth-login')
+			component: require('../components/auth/auth-login'),
+			alias: ''
 		},
 		{//inner层
 			path: '/inner',
@@ -45,6 +46,24 @@ module.exports = {
 							path: 'history',
 							component: require('../components/water/water-history')
 						}
+					]
+				},
+
+
+
+
+
+				{//租住管理
+					path: 'lease',
+					component: require('../components/lease/lease-index'),
+					children: [
+						{
+							path: 'index',
+							component: require('../components/lease/lease-main'),
+							alias: ''
+						}
+
+
 					]
 				}
 			]

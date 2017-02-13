@@ -108,6 +108,20 @@ const inner = (req, res, next)=>{
 		} else {
 			next()
 		}
+	} else if (req.params.class === 'lease') {
+		//租住管理接口
+		if (req.params.function === 'mainList') {
+			service.leaseMainList(req, res, (data)=>{
+				res.json(code(3031, data))
+			})
+		} else {
+			next()
+		}
+
+
+
+
+
 
 
 

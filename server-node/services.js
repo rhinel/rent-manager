@@ -826,6 +826,51 @@ module.exports = {
 		}
 	},
 
+	/***inner类****租住管理********************************************************************************************************/
+
+	leaseMainList: (req, res, callback)=>{
+		//初始化该库
+		db.dbModel('lease')
+		db
+		//数据库查询
+		.dbModel('house')
+		.find({}, {
+			fang: 1,
+			hao: 1,
+			leaseId: 1
+		})
+		.populate({
+			path: 'leaseId',
+			model: 'lease'
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('fang hao')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//字段提供
+				!i.fanghao && (i.fanghao = i.fang + i.hao)
+				!i.leaseId && (i.leaseId = {})
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+
+
+
+
 
 
 
