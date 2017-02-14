@@ -360,6 +360,7 @@
 				}
 			},
 			calWaterResult () {
+				//水表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
 				let result = 0
 				let theGap = this.calWater.tnew.water - this.calWater.old.water
 				theGap = theGap > 0 ? theGap : 0

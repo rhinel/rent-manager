@@ -5,6 +5,7 @@
 		position: relative;
 		background-size: cover;
 		background-position: center center;
+		background-image: url(../../img/index_intro_bg.jpg);
 		.login-wrap{
 			width: 500px;
 			position: absolute;
@@ -33,11 +34,18 @@
 		.login-go{
 			width: 100%;
 		}
+		#index-canvas{
+			width: 100vw;
+			height: 100vh;
+			display: block;
+		}
 	}
 </style>
 
 <template>
-	<div class="auth-login" :style="{backgroundImage:'url('+ bingBg +')'}" @keyup.enter="getLogin">
+	<div class="auth-login" id="large-header" @keyup.enter="getLogin">
+		<!--  :style="{backgroundImage:'url('+ bingBg +')'}" -->
+		<canvas id="index-canvas"></canvas>
 		<el-card class="login-wrap">
 			<div class="login-hello">Hello {{logininfo.name}} <i></i></div>
 			<el-form :model="logininfo" ref="logininfo" :rules="loginrules">
@@ -65,11 +73,17 @@
 
 <script>
 	import Md5 from 'md5'
+	import Circ from '../../js/indexCanvas/easePack.min.js'
+	import TweenLite from '../../js/indexCanvas/tweenLite.min.js'
+	import indexCanvas from '../../js/indexCanvas/indexCanvas.js'
 
 	export default {
 		name: 'auth-login',
 		created () {
-			this.getBingBg()
+			//this.getBingBg()
+		},
+		mounted () {
+			indexCanvas()
 		},
 		data () {
 			return {

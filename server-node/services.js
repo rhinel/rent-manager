@@ -867,6 +867,9 @@ module.exports = {
 			})
 		})
 	},
+	leaseIn: (req, res, callback)=>{
+		
+	},
 
 
 

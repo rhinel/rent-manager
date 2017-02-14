@@ -114,6 +114,10 @@ const inner = (req, res, next)=>{
 			service.leaseMainList(req, res, (data)=>{
 				res.json(code(3031, data))
 			})
+		} else if (req.params.function === 'in') {
+			service.leaseIn(req, res, (data)=>{
+				res.json(code(3032, data))
+			})
 		} else {
 			next()
 		}
