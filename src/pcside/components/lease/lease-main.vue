@@ -280,15 +280,15 @@
 					width="180">
 					<template scope="scope">
 						<div v-if="scope.row.leaseId.calWaterPrice">
-							<div>低消：{{ scope.row.leaseId.calWaterPrice.minPrice }}吨</div>
+							<div>低消：￥{{ scope.row.leaseId.calWaterPrice.minPrice }}吨</div>
 							<div v-if="scope.row.leaseId.calWaterPrice.calType == 'single'">
-								单价：{{ scope.row.leaseId.calWaterPrice.singlePrice }}元/吨
+								单价：￥{{ scope.row.leaseId.calWaterPrice.singlePrice }}元/吨
 							</div>
 							<div v-else>
 								<el-popover
 									placement="right"
 									trigger="hover">
-									<div v-for="item in scope.row.leaseId.calWaterPrice.stepPrice">{{item.step}}吨及以下{{item.price}}元/吨；</div>超出按最后阶梯计算。
+									<div v-for="item in scope.row.leaseId.calWaterPrice.stepPrice">{{item.step}}吨及以下￥{{item.price}}元/吨；</div>超出按最后阶梯计算。
 									<div slot="reference" class="lease-show-tag">
 										<el-tag>阶梯</el-tag>
 									</div>
@@ -303,15 +303,15 @@
 					width="180">
 					<template scope="scope">
 						<div v-if="scope.row.leaseId.calElePrice">
-							<div>低消：{{ scope.row.leaseId.calElePrice.minPrice }}度</div>
+							<div>低消：￥{{ scope.row.leaseId.calElePrice.minPrice }}度</div>
 							<div v-if="scope.row.leaseId.calElePrice.calType == 'single'">
-								单价：{{ scope.row.leaseId.calElePrice.singlePrice }}元/度
+								单价：￥{{ scope.row.leaseId.calElePrice.singlePrice }}元/度
 							</div>
 							<div v-else>
 								<el-popover
 									placement="right"
 									trigger="hover">
-									<div v-for="item in scope.row.leaseId.calElePrice.stepPrice">{{item.step}}度及以下{{item.price}}元/度；</div>超出按最后阶梯计算。
+									<div v-for="item in scope.row.leaseId.calElePrice.stepPrice">{{item.step}}度及以下￥{{item.price}}元/度；</div>超出按最后阶梯计算。
 									<div slot="reference" class="lease-show-tag">
 										<el-tag>阶梯</el-tag>
 									</div>
@@ -325,8 +325,8 @@
 					label="当前租金/押金"
 					width="180">
 					<template scope="scope">
-						<div>{{ '租金：' + (scope.row.leaseId.rent || 0) + '元/月' }}</div>
-						<div>{{ '押金：' + (scope.row.leaseId.deposit || 0) + '元' }}</div>
+						<div>{{ '租金：￥' + (scope.row.leaseId.rent || 0) + '元/月' }}</div>
+						<div>{{ '押金：￥' + (scope.row.leaseId.deposit || 0) + '元' }}</div>
 					</template>
 				</el-table-column>
 			</el-table-column>

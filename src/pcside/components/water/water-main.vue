@@ -244,23 +244,26 @@
 			</el-table-column>
 			<el-table-column
 				prop="result"
-				label="小计(元)"
+				label="小计"
 				width="180"
 				sortable>
+				<template scope="scope">
+					￥{{ scope.row.result || 0 }}元
+				</template>
 			</el-table-column>
 			<el-table-column
 				label="当前计费方式">
 				<template scope="scope">
 					<div v-if="scope.row.leaseId.calType">
-						<div>低消：{{ scope.row.leaseId.minPrice }}吨</div>
+						<div>低消：￥{{ scope.row.leaseId.minPrice }}吨</div>
 						<div v-if="scope.row.leaseId.calType == 'single'">
-							单价：{{ scope.row.leaseId.singlePrice }}元/吨
+							单价：￥{{ scope.row.leaseId.singlePrice }}元/吨
 						</div>
 						<div v-else>
 							<el-popover
 								placement="right"
 								trigger="hover">
-								<div v-for="item in scope.row.leaseId.stepPrice">{{item.step}}吨及以下{{item.price}}元/吨；</div>超出按最后阶梯计算。
+								<div v-for="item in scope.row.leaseId.stepPrice">{{item.step}}吨及以下￥{{item.price}}元/吨；</div>超出按最后阶梯计算。
 								<div slot="reference" class="water-show-tag">
 									<el-tag>阶梯</el-tag>
 								</div>
