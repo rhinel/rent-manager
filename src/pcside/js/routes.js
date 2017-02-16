@@ -65,6 +65,21 @@ module.exports = {
 
 
 					]
+				},
+
+
+
+
+				{//系统管理
+					path: 'system',
+					component: require('../components/system/system-index'),
+					children: [
+						{
+							path: 'index',
+							component: require('../components/system/system-main'),
+							alias: ''
+						}
+					]
 				}
 			]
 		}

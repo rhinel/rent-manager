@@ -23,6 +23,10 @@
 				height: 14px;
 			}
 		}
+		.water-show-tag{
+			display: inline-block;
+			cursor: pointer;
+		}
 	}
 </style>
 
@@ -138,7 +142,8 @@
 					v-for="(step, index) in calWater.calWater.stepPrice"
 					:label="'阶梯' + (index + 1)"
 					:label-width="cwdLabelWidth"
-					:key="index"
+					:key="'calWater'+ index"
+					:ref="'calWater' + index"
 					required>
 					<el-col :span="5">
 						<el-form-item :prop="'calWater.stepPrice.' + index + '.step'"
@@ -238,12 +243,32 @@
 				sortable>
 			</el-table-column>
 			<el-table-column
-				label="小计"
+				prop="result"
+				label="小计(元)"
 				width="180"
 				sortable>
 			</el-table-column>
 			<el-table-column
 				label="当前计费方式">
+				<template scope="scope">
+					<div v-if="scope.row.leaseId.calType">
+						<div>低消：{{ scope.row.leaseId.minPrice }}吨</div>
+						<div v-if="scope.row.leaseId.calType == 'single'">
+							单价：{{ scope.row.leaseId.singlePrice }}元/吨
+						</div>
+						<div v-else>
+							<el-popover
+								placement="right"
+								trigger="hover">
+								<div v-for="item in scope.row.leaseId.stepPrice">{{item.step}}吨及以下{{item.price}}元/吨；</div>超出按最后阶梯计算。
+								<div slot="reference" class="water-show-tag">
+									<el-tag>阶梯</el-tag>
+								</div>
+							</el-popover>
+						</div>
+					</div>
+					<div v-else>暂无</div>
+				</template>
 			</el-table-column>
 			<el-table-column
 				label="操作"
@@ -363,21 +388,28 @@
 				//水表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
 				let result = 0
 				let theGap = this.calWater.tnew.water - this.calWater.old.water
+				let restGap = theGap
 				theGap = theGap > 0 ? theGap : 0
 				theGap = theGap > this.calWater.calWater.minPrice ? theGap : this.calWater.calWater.minPrice
 				if (this.calWater.calWater.calType == 'single') {
-					result = theGap*this.calWater.calWater.singlePrice
+					result = theGap * this.calWater.calWater.singlePrice
 				} else {
 					this.calWater.calWater.stepPrice.forEach((item, i)=>{
-						if (theGap >= item.step) {
-							result += item.step*item.price
-							theGap -= item.step
-						} else {
-							result += theGap*item.price
-							theGap = 0
+						//let lastStep = this.calWater.calWater.stepPrice[i-1] ? this.calWater.calWater.stepPrice[i-1].step : 0
+						//假阶梯
+						if (theGap >= item.step && item.price != 0) {
+							result = theGap * item.price
 						}
+						//真阶梯
+						/*if (theGap >= item.step) {
+							result += (item.step - lastStep) * item.price
+							theGap -= (item.step - lastStep)
+						} else {
+							result += (theGap - lastStep) * item.price
+							theGap = 0
+						}*/
 					})
-					theGap != 0 && this.calWater.calWater.stepPrice.length && (result += theGap*this.calWater.calWater.stepPrice[this.calWater.calWater.stepPrice.length-1].price)
+					//theGap != 0 && this.calWater.calWater.stepPrice.length && (result += theGap * this.calWater.calWater.stepPrice[this.calWater.calWater.stepPrice.length-1].price)
 				}
 				return result
 			}
@@ -489,10 +521,10 @@
 					this.calWater.old.remark = row.calWaterId && row.calWaterId.remark || ''
 					this.calWater.old.addTime = row.calWaterId && row.calWaterId.addTime && new Date(row.calWaterId.addTime) || new Date()
 					//calWater
-					this.calWater.calWater.minPrice = row.calWaterPriceId && row.calWaterPriceId.minPrice || 0
-					this.calWater.calWater.calType = row.calWaterPriceId && row.calWaterPriceId.calType || 'single'
-					this.calWater.calWater.singlePrice = row.calWaterPriceId && row.calWaterPriceId.singlePrice || 0
-					this.calWater.calWater.stepPrice = row.calWaterPriceId && row.calWaterPriceId.stepPrice || []
+					this.calWater.calWater.minPrice = row.leaseId && row.leaseId.minPrice || 0
+					this.calWater.calWater.calType = row.leaseId && row.leaseId.calType || 'single'
+					this.calWater.calWater.singlePrice = row.leaseId && row.leaseId.singlePrice || 0
+					this.calWater.calWater.stepPrice = row.leaseId && row.leaseId.stepPrice || []
 					!this.calWater.calWater.stepPrice.length && this.addStep()
 				}
 			},

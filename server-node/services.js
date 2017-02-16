@@ -445,6 +445,7 @@ module.exports = {
 		//初始化该库
 		db.dbModel('water')
 		db.dbModel('watercal')
+		db.dbModel('lease')
 		db
 		//数据库查询
 		.dbModel('house')
@@ -452,7 +453,8 @@ module.exports = {
 			fang: 1,
 			hao: 1,
 			waterId: 1,
-			calWaterId: 1
+			calWaterId: 1,
+			leaseId: 1
 		})
 		.populate({
 			path: 'waterId',
@@ -464,7 +466,11 @@ module.exports = {
 			model: 'watercal',
 			select: 'tnew addTime'
 		})
-		//TODO 尚未添加计费信息从用户资料处获取
+		.populate({
+			path: 'leaseId',
+			model: 'lease',
+			select: 'calWaterPrice'
+		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
 		.sort('fang hao')
@@ -475,12 +481,36 @@ module.exports = {
 			data.forEach((i)=>{
 				//字段提供
 				!i.fanghao && (i.fanghao = i.fang + i.hao)
+				//上次水费ID初始化
 				!i.calWaterId && (i.calWaterId = {})
 				i.calWaterId.tnew && (i.calWaterId.tnew.addTime = i.calWaterId.addTime)
 				i.calWaterId.tnew && (i.calWaterId = i.calWaterId.tnew)
+				//抄水ID初始化
 				!i.waterId && (i.waterId = {})
+				//收费方式初始化
+				!i.leaseId && (i.leaseId = {})
+				i.leaseId.calWaterPrice && (i.leaseId = i.leaseId.calWaterPrice)
+				//差距计算
 				!i.gap && (i.gap = (i.waterId.water ? i.waterId.water : 0) - (i.calWaterId.water ? i.calWaterId.water : 0))
 				i.gap <= 0 && (i.gap = 0)
+				//小计计算
+				//水表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
+				let result = 0
+				let theGap = (i.waterId.water || 0) - (i.calWaterId.water || 0)
+				let restGap = theGap
+				theGap = theGap > 0 ? theGap : 0
+				theGap = theGap > i.leaseId.minPrice ? theGap : i.leaseId.minPrice
+				if (i.leaseId.calType == 'single') {
+					result = theGap * i.leaseId.singlePrice
+				} else {
+					i.leaseId.stepPrice && i.leaseId.stepPrice.forEach((item, i)=>{
+						//假阶梯
+						if (theGap >= item.step && item.price != 0) {
+							result = theGap * item.price
+						}
+					})
+				}
+				!i.result && (i.result = result)
 			})
 			return Promise.reject({
 				type: true,
@@ -854,6 +884,10 @@ module.exports = {
 				//字段提供
 				!i.fanghao && (i.fanghao = i.fang + i.hao)
 				!i.leaseId && (i.leaseId = {})
+				//loading字段提供
+				!i.gettingLeaseOut && (i.gettingLeaseOut = false)
+				//del提示字段提供
+				!i.leaseoPopFlag && (i.leaseoPopFlag = false)
 			})
 			return Promise.reject({
 				type: true,
@@ -868,7 +902,143 @@ module.exports = {
 		})
 	},
 	leaseIn: (req, res, callback)=>{
-		
+		let leaseModel = {
+			name: String, //租户姓名
+			call: String, //租户电话
+			leaserange: Array, //租住周期
+			payDay: Number, //付租时间
+			payType: Number, //付租方式
+			remark: String, //备注
+
+			calWaterPrice: {
+				minPrice: Number, //本次计费低消
+				calType: String, //计费类型
+				singlePrice: Number, //single单价
+				stepPrice: [{ //阶梯价格
+					step: Number, //阶梯
+					price: Number //单价
+				}]
+			},
+			calElePrice: {
+				minPrice: Number, //本次计费低消
+				calType: String, //计费类型
+				singlePrice: Number, //single单价
+				stepPrice: [{ //阶梯价格
+					step: Number, //阶梯
+					price: Number //单价
+				}]
+			},
+
+			rent: Number, //租金
+			deposit: Number //押金
+		}
+		if (req.body._id) {
+			let editLeaseModel = leaseModel
+			editLeaseModel.updateTime = Number
+			let editLease = req.body
+			editLease.updateTime = Date.now()
+			db
+			//根据ID修改内容
+			.dbModel('lease', editLeaseModel)
+			.findOneAndUpdate({_id: req.body._id}, {'$set': editLease})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					return Promise.reject({
+						type: true,
+						data: data
+					})
+				} else {
+					return Promise.reject({
+						type: false,
+						data: '修改失败，数据不存在'
+					})
+				}
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		} else {
+			let addData
+			db
+			//数据库查询是否已存在
+			.dbModel('lease')
+			.find({
+				userId: req.userId,
+				fang: req.body.haoId,
+				status: 1
+			})
+			.exec()
+			.then((data)=>{
+				if (data.length) {
+					return Promise.reject({
+						type: false,
+						data: '房间已有人租住'
+					})
+				} else {
+					return Promise.resolve()
+				}
+			})
+			.then(()=>{
+				let createLeaseModel = leaseModel
+				createLeaseModel.createTime = Number
+				createLeaseModel.haoId = db.db.Schema.Types.ObjectId
+				createLeaseModel.userId = db.db.Schema.Types.ObjectId
+				createLeaseModel.fanghao = String
+				createLeaseModel.status = Number
+				let createLease = req.body
+				createLease.createTime = Date.now()
+				createLease.userId = req.userId
+				createLease.status = 1
+				return db
+				.dbModel('lease', createLeaseModel)
+				.create(createLease)
+				.then((data)=>{
+					if (data) {
+						addData = data
+						return Promise.resolve(data)
+					} else {			
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			//更新房屋最新水表数信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄表数引用类型
+					leaseId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					leaseId: addData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: addData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
 	},
 
 

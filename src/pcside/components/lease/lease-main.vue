@@ -16,6 +16,27 @@
 				height: 14px;
 			}
 		}
+		.lease-show-tag{
+			display: inline-block;
+			cursor: pointer;
+			&.pop {
+				margin-left: 10px;
+			}
+		}
+		.lease-remark-tag{
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+	}
+	.lease-list-lease-o-pop-cont{
+		text-align: right;
+		margin: 0;
+	}
+	.lease-remark{
+		max-width: 300px;
 	}
 </style>
 
@@ -96,7 +117,8 @@
 					v-for="(step, index) in lease.calWaterPrice.stepPrice"
 					:label="'阶梯' + (index + 1)"
 					:label-width="lidLabelWidth"
-					:key="index"
+					:key="'calWaterPrice' + index"
+					:ref="'calWaterPrice' + index"
 					required>
 					<el-col :span="5">
 						<el-form-item :prop="'calWaterPrice.stepPrice.' + index + '.step'"
@@ -148,7 +170,8 @@
 					v-for="(step, index) in lease.calElePrice.stepPrice"
 					:label="'阶梯' + (index + 1)"
 					:label-width="lidLabelWidth"
-					:key="index"
+					:key="'calElePrice' + index"
+					:ref="'calElePrice' + index"
 					required>
 					<el-col :span="5">
 						<el-form-item :prop="'calElePrice.stepPrice.' + index + '.step'"
@@ -209,19 +232,45 @@
 			</el-table-column>
 			<el-table-column label="租户信息">
 				<el-table-column
+					prop="leaseId.name"
 					label="姓名/联系方式"
 					width="180">
+					<template scope="scope">
+						<div>{{ scope.row.leaseId.name || '--' }}</div>
+						<div>{{ scope.row.leaseId.call || '--' }}</div>
+					</template>
 				</el-table-column>
 				<el-table-column
+					prop="leaseId.leaserange"
 					label="租住周期"
 					width="180">
+					<template scope="scope">
+						<div>{{ getTime(scope.row.leaseId.leaserange && scope.row.leaseId.leaserange[0]) }}</div>
+						<div>{{ getTime(scope.row.leaseId.leaserange && scope.row.leaseId.leaserange[1]) }}</div>
+					</template>
 				</el-table-column>
 				<el-table-column
+					prop="leaseId.payDay"
 					label="交租时间/交租方式"
 					width="180">
+					<template scope="scope">
+						<div>{{ scope.row.leaseId.payDay ? ('每月' + scope.row.leaseId.payDay + '日') : '--' }}</div>
+						<div>{{ payTypeVal[scope.row.leaseId.payType] || '--' }}</div>
+					</template>
 				</el-table-column>
 				<el-table-column
+					prop="leaseId.remark"
 					label="备注">
+					<template scope="scope">
+						<el-popover
+							placement="right"
+							trigger="hover">
+							<div class="lease-remark">{{ scope.row.leaseId.remark }}</div>
+							<div slot="reference" class="lease-show-tag">
+								<div class="lease-remark-tag">{{ scope.row.leaseId.remark }}</div>
+							</div>
+						</el-popover>
+					</template>
 				</el-table-column>
 			</el-table-column>
 			<el-table-column
@@ -229,19 +278,61 @@
 				<el-table-column
 					label="水费"
 					width="180">
+					<template scope="scope">
+						<div v-if="scope.row.leaseId.calWaterPrice">
+							<div>低消：{{ scope.row.leaseId.calWaterPrice.minPrice }}吨</div>
+							<div v-if="scope.row.leaseId.calWaterPrice.calType == 'single'">
+								单价：{{ scope.row.leaseId.calWaterPrice.singlePrice }}元/吨
+							</div>
+							<div v-else>
+								<el-popover
+									placement="right"
+									trigger="hover">
+									<div v-for="item in scope.row.leaseId.calWaterPrice.stepPrice">{{item.step}}吨及以下{{item.price}}元/吨；</div>超出按最后阶梯计算。
+									<div slot="reference" class="lease-show-tag">
+										<el-tag>阶梯</el-tag>
+									</div>
+								</el-popover>
+							</div>
+						</div>
+						<div v-else>暂无</div>
+					</template>
 				</el-table-column>
 				<el-table-column
 					label="电费"
 					width="180">
+					<template scope="scope">
+						<div v-if="scope.row.leaseId.calElePrice">
+							<div>低消：{{ scope.row.leaseId.calElePrice.minPrice }}度</div>
+							<div v-if="scope.row.leaseId.calElePrice.calType == 'single'">
+								单价：{{ scope.row.leaseId.calElePrice.singlePrice }}元/度
+							</div>
+							<div v-else>
+								<el-popover
+									placement="right"
+									trigger="hover">
+									<div v-for="item in scope.row.leaseId.calElePrice.stepPrice">{{item.step}}度及以下{{item.price}}元/度；</div>超出按最后阶梯计算。
+									<div slot="reference" class="lease-show-tag">
+										<el-tag>阶梯</el-tag>
+									</div>
+								</el-popover>
+							</div>
+						</div>
+						<div v-else>暂无</div>
+					</template>
 				</el-table-column>
 				<el-table-column
-					label="租金/押金"
+					label="当前租金/押金"
 					width="180">
+					<template scope="scope">
+						<div>{{ '租金：' + (scope.row.leaseId.rent || 0) + '元/月' }}</div>
+						<div>{{ '押金：' + (scope.row.leaseId.deposit || 0) + '元' }}</div>
+					</template>
 				</el-table-column>
 			</el-table-column>
 			<el-table-column
 				label="操作"
-				width="180">
+				width="200">
 				<template scope="scope">
 					<el-button
 						size="small"
@@ -250,13 +341,25 @@
 					<el-button
 						size="small"
 						type="primary"
-						v-if="!scope.row.leaseId.type || scope.row.leaseId.type == 0"
-						@click="getLeaseInDialog(scope.$index, scope.row)">入住</el-button>
-					<el-button
-						size="small"
-						type="primary"
-						v-if="scope.row.leaseId.type == 1"
-						@click="getLeaseOutDialog(scope.$index, scope.row)">搬出</el-button>
+						@click="getLeaseInDialog(scope.$index, scope.row)">{{ scope.row.leaseId._id ? '修改' : '入住' }}</el-button>
+					<el-popover
+							placement="top"
+							width="150"
+							trigger="click"
+							v-if="scope.row.leaseId._id"
+							v-model="scope.row.leaseoPopFlag">
+							<p>确认已经结清所有费用？此行为不可撤销</p>
+							<div class="lease-list-lease-o-pop-cont">
+								<el-button size="mini" type="text" @click="scope.row.leaseoPopFlag = false">取消</el-button>
+								<el-button type="danger" size="mini" @click="(scope.row.leaseoPopFlag = false) || getLeaseOutDialog(scope.$index, scope.row)">确定</el-button>
+							</div>
+							<div slot="reference" class="lease-show-tag pop">
+								<el-button
+									size="small"
+									type="danger"
+									:loading="scope.row.gettingLeaseOut">搬出</el-button>
+							</div>
+						</el-popover>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -378,7 +481,7 @@
 				defaultCalElePrice: {
 					minPrice: 0,
 					calType: 'step',
-					singlePrice: 6,
+					singlePrice: 0,
 					stepPrice: [{
 							step: 100,
 							price: 1
@@ -434,6 +537,10 @@
 					this.gettingListRefresh = false
 				})
 			},
+			//时间格式化
+			getTime (t) {
+				return t? this.GetTimeFormat(t) : '--'
+			},
 			getLeaseHistory (index, row) {
 
 			},
@@ -446,14 +553,14 @@
 					this.lease.haoId = row._id
 					this.lease.fanghao = row.fanghao
 
-					this.lease.name = row.leaseId && row.leaseId.name || '',
-					this.lease.call = row.leaseId && row.leaseId.call || '',
-					this.lease.leaserange = row.leaseId && row.leaseId.leaserange || [],
-					this.lease.payDay = row.leaseId && row.leaseId.payDay || new Date().getDate(),
-					this.lease.payType = row.leaseId && row.leaseId.payType || 3,
-					this.lease.remark = row.leaseId && row.leaseId.remark || '',
-					this.lease.rent = row.leaseId && row.leaseId.rent || 0,
-					this.lease.deposit = row.leaseId && row.leaseId.deposit || 0,
+					this.lease.name = row.leaseId && row.leaseId.name || ''
+					this.lease.call = row.leaseId && row.leaseId.call || ''
+					this.lease.leaserange = row.leaseId && row.leaseId.leaserange || []
+					this.lease.payDay = row.leaseId && row.leaseId.payDay || new Date().getDate()
+					this.lease.payType = row.leaseId && row.leaseId.payType || 3
+					this.lease.remark = row.leaseId && row.leaseId.remark || ''
+					this.lease.rent = row.leaseId && row.leaseId.rent || 0
+					this.lease.deposit = row.leaseId && row.leaseId.deposit || 0
 					//calWater
 					this.lease.calWaterPrice.minPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.minPrice || this.defaultCalWaterPrice.minPrice
 					this.lease.calWaterPrice.calType = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.calType || this.defaultCalWaterPrice.calType
@@ -461,10 +568,10 @@
 					this.lease.calWaterPrice.stepPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.stepPrice || JSON.parse(JSON.stringify(this.defaultCalWaterPrice.stepPrice))
 					!this.lease.calWaterPrice.stepPrice.length && this.addStep(this.lease.calWaterPrice)
 					//calEle
-					this.lease.calElePrice.minPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.minPrice || this.defaultCalElePrice.minPrice
-					this.lease.calElePrice.calType = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.calType || this.defaultCalElePrice.calType
-					this.lease.calElePrice.singlePrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.singlePrice || this.defaultCalElePrice.singlePrice
-					this.lease.calElePrice.stepPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.stepPrice || JSON.parse(JSON.stringify(this.defaultCalElePrice.stepPrice))
+					this.lease.calElePrice.minPrice = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.minPrice || this.defaultCalElePrice.minPrice
+					this.lease.calElePrice.calType = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.calType || this.defaultCalElePrice.calType
+					this.lease.calElePrice.singlePrice = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.singlePrice || this.defaultCalElePrice.singlePrice
+					this.lease.calElePrice.stepPrice = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.stepPrice || JSON.parse(JSON.stringify(this.defaultCalElePrice.stepPrice))
 					!this.lease.calElePrice.stepPrice.length && this.addStep(this.lease.calElePrice)
 				}
 			},
