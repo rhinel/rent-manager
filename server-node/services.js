@@ -459,17 +459,20 @@ module.exports = {
 		.populate({
 			path: 'waterId',
 			model: 'water',
-			select: 'water remark addTime'
+			select: 'water remark addTime',
+			match: {status: { $gte: 1 }}
 		})
 		.populate({
 			path: 'calWaterId',
 			model: 'watercal',
-			select: 'tnew addTime'
+			select: 'tnew addTime',
+			match: {status: { $gte: 1 }}
 		})
 		.populate({
 			path: 'leaseId',
 			model: 'lease',
-			select: 'calWaterPrice'
+			select: 'calWaterPrice',
+			match: {status: { $gte: 1 }}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -535,7 +538,8 @@ module.exports = {
 		.populate({
 			path: 'haoId',
 			model: 'house',
-			select: 'fang hao haoId addTime'
+			select: 'fang hao haoId addTime',
+			match: {status: { $gte: 1 }}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -575,7 +579,8 @@ module.exports = {
 		.populate({
 			path: 'haoId',
 			model: 'house',
-			select: 'fang hao haoId addTime'
+			select: 'fang hao haoId addTime',
+			match: {status: { $gte: 1 }}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -871,7 +876,8 @@ module.exports = {
 		})
 		.populate({
 			path: 'leaseId',
-			model: 'lease'
+			model: 'lease',
+			match: {status: { $gte: 1 }}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -902,6 +908,7 @@ module.exports = {
 		})
 	},
 	leaseIn: (req, res, callback)=>{
+		//不做数据校验
 		let leaseModel = {
 			name: String, //租户姓名
 			call: String, //租户电话
@@ -1031,6 +1038,47 @@ module.exports = {
 						})
 					}
 				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	leaseOut: (req, res, callback)=>{
+		if (!req.body.haoId || !req.body.leaseId) {
+			callback({
+				type: false,
+				data: '缺少参数'
+			})
+		} else {
+			let delData
+			db
+			//根据ID修改状态
+			//由于不需要读取上一条信息，因此houseId上并没有清除租住者ID
+			.dbModel('lease', {//*//标记，初始水表类型数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body.leaseId}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					delData = data
+					return Promise.reject({
+						type: true,
+						data: data
+					})
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
 			})
 			.catch((err)=>{
 				callback({

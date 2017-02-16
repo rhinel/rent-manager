@@ -118,6 +118,10 @@ const inner = (req, res, next)=>{
 			service.leaseIn(req, res, (data)=>{
 				res.json(code(3032, data))
 			})
+		} else if (req.params.function === 'out') {
+			service.leaseOut(req, res, (data)=>{
+				res.json(code(3033, data))
+			})
 		} else {
 			next()
 		}

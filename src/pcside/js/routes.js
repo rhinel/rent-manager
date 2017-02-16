@@ -61,9 +61,11 @@ module.exports = {
 							path: 'index',
 							component: require('../components/lease/lease-main'),
 							alias: ''
+						},
+						{
+							path: 'history',
+							component: require('../components/lease/lease-history')
 						}
-
-
 					]
 				},
 

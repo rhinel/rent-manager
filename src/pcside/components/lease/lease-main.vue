@@ -332,7 +332,7 @@
 			</el-table-column>
 			<el-table-column
 				label="操作"
-				width="200">
+				width="220">
 				<template scope="scope">
 					<el-button
 						size="small"
@@ -351,7 +351,7 @@
 							<p>确认已经结清所有费用？此行为不可撤销</p>
 							<div class="lease-list-lease-o-pop-cont">
 								<el-button size="mini" type="text" @click="scope.row.leaseoPopFlag = false">取消</el-button>
-								<el-button type="danger" size="mini" @click="(scope.row.leaseoPopFlag = false) || getLeaseOutDialog(scope.$index, scope.row)">确定</el-button>
+								<el-button type="danger" size="mini" @click="(scope.row.leaseoPopFlag = false) || getLeaseOut(scope.$index, scope.row)">确定</el-button>
 							</div>
 							<div slot="reference" class="lease-show-tag pop">
 								<el-button
@@ -542,7 +542,7 @@
 				return t? this.GetTimeFormat(t) : '--'
 			},
 			getLeaseHistory (index, row) {
-
+				this.$router.push('/inner/lease/history?haoid=' + row._id)
 			},
 			getLeaseInDialog (index, row) {
 				this.leaseInflag = !this.leaseInflag
@@ -624,8 +624,30 @@
 					}
 				})
 			},
-			getLeaseOutDialog (index, row) {
-
+			getLeaseOut (index, row) {
+				if (row.gettingLeaseOut) {
+					return true
+				}
+				row.gettingLeaseOut = true
+				this.Ajax('/inner/lease/out', {
+					haoId: row._id,
+					leaseId: row.leaseId._id
+				}, (res)=>{
+					this.$message({
+						type: 'success',
+						message: '退租成功',
+						duration: 2000
+					})
+					row.gettingLeaseOut = false
+					this.getListRefresh()
+				}, (res)=>{
+					this.$message({
+						type: 'error',
+						message: '编号：' + res.body.code + '，' + res.body.msg,
+						duration: 2000
+					})
+					row.gettingLeaseOu = false
+				})
 			}
 		}
 	}
