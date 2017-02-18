@@ -48,11 +48,21 @@ module.exports = {
 						}
 					]
 				},
-
-
-
-
-
+				{//电费管理
+					path: 'electric',
+					component: require('../components/electric/electric-index'),
+					children: [
+						{
+							path: 'index',
+							component: require('../components/electric/electric-main'),
+							alias: ''
+						},
+						{
+							path: 'history',
+							component: require('../components/electric/electric-history')
+						}
+					]
+				},
 				{//租住管理
 					path: 'lease',
 					component: require('../components/lease/lease-index'),
@@ -68,10 +78,21 @@ module.exports = {
 						}
 					]
 				},
-
-
-
-
+				{//收租管理
+					path: 'rent',
+					component: require('../components/rent/rent-index'),
+					children: [
+						{
+							path: 'index',
+							component: require('../components/rent/rent-main'),
+							alias: ''
+						},
+						{
+							path: 'history',
+							component: require('../components/rent/rent-history')
+						}
+					]
+				},
 				{//系统管理
 					path: 'system',
 					component: require('../components/system/system-index'),

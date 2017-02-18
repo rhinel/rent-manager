@@ -58,7 +58,9 @@
 			<el-menu-item index="/inner/dashboard/index"><i class="el-icon-star-on"></i>主控面板<i class="el-icon-loading" v-show="menuCheck.indexOf('inner/dashboard/') > 0"></el-menu-item>
 			<el-menu-item index="/inner/house/index"><i class="el-icon-star-on"></i>房屋管理<i class="el-icon-loading" v-show="menuCheck.indexOf('inner/house/') > 0"></el-menu-item>
 			<el-menu-item index="/inner/water/index"><i class="el-icon-star-on"></i>水费管理<i class="el-icon-loading" v-show="menuCheck.indexOf('inner/water/') > 0"></el-menu-item>
+			<el-menu-item index="/inner/electric/index"><i class="el-icon-star-on"></i>电费管理<i class="el-icon-loading" v-show="menuCheck.indexOf('inner/electric/') > 0"></el-menu-item>
 			<el-menu-item index="/inner/lease/index"><i class="el-icon-star-on"></i>租住管理<i class="el-icon-loading" v-show="menuCheck.indexOf('inner/lease/') > 0"></el-menu-item>
+			<el-menu-item index="/inner/rent/index"><i class="el-icon-star-on"></i>收租管理<i class="el-icon-loading" v-show="menuCheck.indexOf('inner/rent/') > 0"></el-menu-item>
 			<el-menu-item index="/inner/system/index"><i class="el-icon-setting"></i>系统设置<i class="el-icon-loading" v-show="menuCheck.indexOf('inner/system/') > 0"></el-menu-item>
 		</el-menu>
 		<router-view class="inner-body"></router-view>
