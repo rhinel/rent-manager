@@ -95,10 +95,10 @@
 				},
 				loginrules: {
 					name: [
-						{ required: true, message: '请填写', trigger: 'blur' }
+						{ required: true, message: '请填写', trigger: 'blur change' }
 					],
 					pwd: [
-						{ required: true, message: '请填写', trigger: 'blur' },
+						{ required: true, message: '请填写', trigger: 'blur change' },
 						{ min: 3, message: '太短了', trigger: 'blur' }
 					]
 				}
