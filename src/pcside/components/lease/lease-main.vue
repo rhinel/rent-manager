@@ -227,7 +227,7 @@
 			<el-table-column
 				prop="fanghao"
 				label="房屋"
-				width="180"
+				width="120"
 				sortable>
 			</el-table-column>
 			<el-table-column label="租户信息">

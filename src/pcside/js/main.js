@@ -25,7 +25,7 @@ Vue.prototype.GetTimeFormat = plugin.getTimeFormat
 const store = new Vuex.Store(stores)
 
 //路由配置
-window.router = new VueRouter(routes)
+const router = new VueRouter(routes)
 router.beforeEach(routerEach.beforeEach)
 
 //页面初始化

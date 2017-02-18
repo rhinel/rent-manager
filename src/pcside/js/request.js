@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 const rootPath = '/api'
 
 //方法封装
-const request = (path, data, callscue, callerr)=>{
+const request = function(path, data, callscue, callerr) {
 	let token = localStorage.getItem('token')
 	path  = rootPath + path
 	data = Object.assign({}, data)
@@ -28,7 +28,7 @@ const request = (path, data, callscue, callerr)=>{
 					duration: 2000
 				})
 				localStorage.removeItem('token')
-				window.router.push({
+				this.$router.push({
 					path: '/login',
 					query: {backurl: window.router.currentRoute.fullPath}
 				})

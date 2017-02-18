@@ -460,19 +460,19 @@ module.exports = {
 			path: 'waterId',
 			model: 'water',
 			select: 'water remark addTime',
-			match: {status: { $gte: 1 }}
+			match: {status: 1}
 		})
 		.populate({
 			path: 'calWaterId',
 			model: 'watercal',
 			select: 'tnew addTime',
-			match: {status: { $gte: 1 }}
+			match: {status: 1}
 		})
 		.populate({
 			path: 'leaseId',
 			model: 'lease',
 			select: 'calWaterPrice',
-			match: {status: { $gte: 1 }}
+			match: {status: 1}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -539,7 +539,7 @@ module.exports = {
 			path: 'haoId',
 			model: 'house',
 			select: 'fang hao haoId addTime',
-			match: {status: { $gte: 1 }}
+			match: {status: 1}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -580,7 +580,7 @@ module.exports = {
 			path: 'haoId',
 			model: 'house',
 			select: 'fang hao haoId addTime',
-			match: {status: { $gte: 1 }}
+			match: {status: 1}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -877,7 +877,7 @@ module.exports = {
 		.populate({
 			path: 'leaseId',
 			model: 'lease',
-			match: {status: { $gte: 1 }}
+			match: {status: 1}
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
@@ -1063,7 +1063,7 @@ module.exports = {
 				updateTime: Number //更新时间
 			})
 			.findOneAndUpdate({_id: req.body.leaseId}, {
-				status: 0,
+				status: 2,
 				updateTime: Date.now()
 			})
 			.exec()
@@ -1072,13 +1072,85 @@ module.exports = {
 					delData = data
 					return Promise.reject({
 						type: true,
-						data: data
+						data: delData
 					})
 				} else {
 					return Promise.reject({
 						type: false
 					})
 				}
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	leaseList: (req, res, callback)=>{
+		//不做数据校验
+		//初始化该库
+		db.dbModel('house')
+		db
+		//数据库查询
+		.dbModel('lease')
+		.find({haoId: db.db.Types.ObjectId(req.body.haoId)})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime',
+			match: {status: 1}
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(2)
+		.sort('-addTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//loading字段提供
+				!i.gettingdelLease && (i.gettingdelLease = false)
+				//del提示字段提供
+				!i.dLeasePopFlag && (i.dLeasePopFlag = false)
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	leaseDel: (req, res, callback)=>{
+		if (!req.body._id) {
+			callback({
+				type: false
+			})
+		} else {
+			db
+			//根据ID修改状态
+			.dbModel('lease', {//*//标记，租住数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				return Promise.reject({
+					type: true,
+					data: data
+				})
 			})
 			.catch((err)=>{
 				callback({

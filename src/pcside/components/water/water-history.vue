@@ -46,8 +46,7 @@
 					<el-table-column
 						prop="fanghao"
 						label="房屋"
-						width="180"
-						sortable>
+						width="180">
 					</el-table-column>
 					<el-table-column
 						prop="water"
@@ -66,8 +65,7 @@
 					</el-table-column>
 					<el-table-column
 						prop="remark"
-						label="备注"
-						sortable>
+						label="备注">
 					</el-table-column>
 					<el-table-column
 						label="操作"
@@ -114,8 +112,7 @@
 					<el-table-column
 						prop="fanghao"
 						label="房屋"
-						width="180"
-						sortable>
+						width="180">
 					</el-table-column>
 					<el-table-column label="今次(吨)">
 						<el-table-column
@@ -244,7 +241,7 @@
 			this.$store.dispatch('updateMenu', '/inner/water/index')
 		},
 		created () {
-			this.getHouseDetail()
+			// this.getHouseDetail()
 			this.activeName == 'water' && this.getWaterList()
 			this.activeName == 'waterCal' && this.getwaterCalList()
 		},

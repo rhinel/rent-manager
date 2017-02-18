@@ -10,6 +10,10 @@ const beforeEach = (to, from, next)=>{
 
 	if (to.path.indexOf('/inner') > -1 && !localStorage.getItem('token')) {
 		//不存在token，进入登陆页，中断后继续
+		Message.error({
+			message: '请重新登陆',
+			duration: 2000
+		})
 		next(nextConfig)
 	} else if (to.path.indexOf('/inner') > -1) {
 		//校验token，进入登陆页，中断后继续

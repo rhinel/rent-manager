@@ -122,6 +122,14 @@ const inner = (req, res, next)=>{
 			service.leaseOut(req, res, (data)=>{
 				res.json(code(3033, data))
 			})
+		} else if (req.params.function === 'list') {
+			service.leaseList(req, res, (data)=>{
+				res.json(code(3034, data))
+			})
+		} else if (req.params.function === 'del') {
+			service.leaseDel(req, res, (data)=>{
+				res.json(code(3035, data))
+			})
 		} else {
 			next()
 		}
