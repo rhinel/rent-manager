@@ -26,7 +26,12 @@ const store = new Vuex.Store(stores)
 
 //路由配置
 const router = new VueRouter(routes)
-router.beforeEach(routerEach.beforeEach)
+router.beforeEach((to, from, next)=>{
+	routerEach.beforeEach(to, from, next, app)
+})
+router.afterEach((to, from)=>{
+	routerEach.afterEach(to, from, app)
+})
 
 //页面初始化
 const app = new Vue({

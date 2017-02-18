@@ -1,8 +1,9 @@
 import Ajax from './request'
 import { Message } from 'element-ui'
 
-const beforeEach = (to, from, next)=>{
+const beforeEach = function(to, from, next, vue) {
 	//继承或直接记录目的地
+	vue && vue.$store.dispatch('menuCheck', to.fullPath)
 	let nextConfig = {
 		path: 'login',
 		query: {backurl: to.fullPath}
@@ -47,6 +48,11 @@ const beforeEach = (to, from, next)=>{
 	}
 }
 
+const afterEach = function (to, from, vue) {
+	vue && vue.$store.dispatch('menuCheck', '')
+}
+
 module.exports = {
-	beforeEach: beforeEach
+	beforeEach: beforeEach,
+	afterEach: afterEach
 }
