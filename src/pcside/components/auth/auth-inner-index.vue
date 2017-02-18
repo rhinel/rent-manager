@@ -2,6 +2,9 @@
 	.auth-inner-index{
 		padding-left: 200px;
 		padding-top: 50px;
+		.el-icon-loading{
+			margin-left: 10px;
+		}
 		.inner-header{
 			width: 100%;
 			height: 50px;
@@ -18,9 +21,12 @@
 				flex: 1;
 			}
 			.header-right{
-				width: 100px;
+				width: 120px;
 				cursor: pointer;
 				color: #D3DCE6;
+				.el-icon-star-on{
+					margin-right: 10px;
+				}
 				&:hover{
 					color: #fff;
 				}
@@ -34,9 +40,6 @@
 			top: 50px;
 			left: 0;
 			bottom: 0;
-			.el-icon-loading{
-				margin-left: 10px;
-			}
 		}
 		.inner-body{
 			padding: 20px;
@@ -51,7 +54,7 @@
 				Rent Manager
 			</div>
 			<div class="header-right" @click="logout">
-				<i class="el-icon-star-on"></i> 登出
+				<i class="el-icon-star-on"></i>登出<i v-show="logouting" class="el-icon-loading">
 			</div>
 		</div>
 		<el-menu :default-active="menuing" class="inner-sidebar" theme="dark" :router="true">
@@ -70,6 +73,11 @@
 <script>
 	export default {
 		name: 'auth-inner-index',
+		data() {
+			return {
+				logouting: false
+			}
+		},
 		computed: {
 			menuing () {
 				return this.$store.state.menuing
@@ -80,6 +88,10 @@
 		},
 		methods: {
 			logout () {
+				if (this.logouting) {
+					return true
+				}
+				this.logouting = true
 				this.Ajax('/outer/log/logout', {}, (res)=>{
 					this.$router.push('/login')
 				})
