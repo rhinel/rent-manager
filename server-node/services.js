@@ -9,6 +9,13 @@ module.exports = {
 	/***登陆类******************************************************************************************************************/
 
 	login: (req, res, callback)=>{
+		//校验字段，错误退出
+		//根据MD5(IP，用户名，密码，时间)生成token
+		//查询数据库用户名密码，错误退出
+		//查出登陆缓存
+		//失效旧缓存
+		//写入缓存新token
+		//返回token
 		if (!req.body.name) {
 			callback({
 				type: false,
@@ -73,6 +80,9 @@ module.exports = {
 		}
 	},
 	logout: (req, res, callback)=>{
+		//校验字段，错误true退出
+		//清除缓存
+		//返回空
 		if (!req.body.token) {
 			callback({
 				type: true
@@ -82,7 +92,7 @@ module.exports = {
 			db
 			//查询
 			.redisGetKeys('*$' + req.body.token)
-			//清除
+			//清除缓存
 			.then((reKeysData)=>{
 				if (reKeysData.length) {
 					return db.redisDelKeys(reKeysData)
@@ -104,6 +114,8 @@ module.exports = {
 		}
 	},
 	bingBg: (req, res, callback)=>{
+		//查询api，错误退出
+		//返回bg对象
 		let bingBg = superagent.get('http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&nc=' + Date.now() + '&pid=hp&video=1&fav=1&setmkt=en-us&setlang=en-us').end((err, res)=>{
 			if (!err) {
 				callback({
@@ -122,6 +134,10 @@ module.exports = {
 	/***权限类******************************************************************************************************************/
 
 	auth: (req, res, callback)=>{
+		//不校验字段
+		//查询缓存，错误退出
+		//更新缓存
+		//返回空
 		//db类操作，异步同步化
 		db
 		//查询缓存token
@@ -135,7 +151,7 @@ module.exports = {
 				})
 			}
 		})
-		//刷新缓存时间
+		//刷新缓存时间，获取USERID
 		.then((reKeysData)=>{
 			req.userId = reKeysData.split('$')[0]
 			return db.redisSetTime(reKeysData, 1800)
@@ -155,7 +171,23 @@ module.exports = {
 
 	/***inner类***房屋管理-增删改查***************************************************************************************************/
 
+	/*
+		房屋对象挂载
+		用户ID ok
+		水费抄表ID ok
+		水费计费ID ok
+		电费抄表ID
+		电费计费ID
+		租户ID ok
+		收租ID
+	*/
+
 	houseAdd: (req, res, callback)=>{
+		//校验字段，错误退出
+		//ID存在修改数据，错误退出
+		//ID不存在查询数据是否存在，存在->错误退出
+		//插入数据，错误退出
+		//返回add对象
 		if (!req.body.fang) {
 			callback({
 				type: false,
@@ -263,6 +295,9 @@ module.exports = {
 		}
 	},
 	houseFind: (req, res, callback)=> {
+		//不校验字段
+		//查询数据，错误退出
+		//返回find对象
 		db
 		//数据库查询
 		.dbModel('house')
@@ -291,6 +326,8 @@ module.exports = {
 		})
 	},
 	houseList: (req, res, callback)=> {
+		//查询数据
+		//返回list对象
 		db
 		//数据库查询
 		.dbModel('house')
@@ -327,6 +364,9 @@ module.exports = {
 		})
 	},
 	houseDel: (req, res, callback)=>{
+		//校验字段，错误提出
+		//修改状态
+		//返回del对象
 		if (!req.body._id) {
 			callback({
 				type: false
@@ -360,7 +400,20 @@ module.exports = {
 
 	/***inner类****水费管理********************************************************************************************************/
 
+	/*
+		水费抄表对象挂载
+		用户ID ok
+		房屋ID ok
+		水费计费对象挂载
+		用户ID ok
+		房屋ID ok
+	*/
+
 	waterAdd: (req, res, callback)=>{
+		//校验数据，错误退出
+		//插入数据，错误退出
+		//更新房屋挂载ID，错误退出
+		//返回add对象
 		if (!req.body.haoId) {
 			callback({
 				type: false,
@@ -442,6 +495,9 @@ module.exports = {
 		}
 	},
 	waterMainList: (req, res, callback)=>{
+		//查询房屋数据，抄表记录，计费记录，租户信息
+		//水费小计计费
+		//返回list对象
 		//初始化该库
 		db.dbModel('water')
 		db.dbModel('watercal')
@@ -528,7 +584,9 @@ module.exports = {
 		})
 	},
 	waterList: (req, res, callback)=>{
-		//不做数据校验
+		//不校验字段
+		//查询抄表记录，房屋数据
+		//返回list对象
 		//初始化该库
 		db.dbModel('house')
 		db
@@ -569,7 +627,9 @@ module.exports = {
 		})
 	},
 	waterCalList: (req, res, callback)=>{
-		//不做数据校验
+		//不校验字段
+		//查询计费记录，房屋数据
+		//返回list对象
 		//初始化该库
 		db.dbModel('house')
 		db
@@ -613,8 +673,11 @@ module.exports = {
 		})
 	},
 	watercalWater: (req, res, callback)=>{
-		let addData
 		//不做数据校验
+		//插入数据（存储新抄表记录，旧抄表记录，计费信息），错误退出
+		//更新房屋挂载ID，错误提出
+		//返回add对象
+		let addData
 		db
 		.dbModel('watercal', {//*//标记，初始水表计费数数据类，新增类型
 			userId: db.db.Schema.Types.ObjectId, //用户ID
@@ -668,10 +731,10 @@ module.exports = {
 				})
 			}
 		})
-		//更新房屋最新水表数信息
+		//更新房屋最新水表计费数信息
 		.then((data)=>{
 			return db
-			.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄表数引用类型
+			.dbModel('house', {//*//标记，更新房屋数据类，扩增最新计费数据引用类型
 				calWaterId: db.db.Schema.Types.ObjectId,
 				updateTime: Number //更新时间
 			})
@@ -701,6 +764,11 @@ module.exports = {
 		})
 	},
 	waterDel: (req, res, callback)=>{
+		//校验数据，错误退出
+		//修改状态，错误退出
+		//查询上一条数据
+		//更新房屋挂载ID，错误退出
+		//返回del对象
 		if (!req.body._id) {
 			callback({
 				type: false
@@ -781,6 +849,11 @@ module.exports = {
 		}
 	},
 	waterCalDel: (req, res, callback)=>{
+		//校验数据，错误退出
+		//修改状态，错误退出
+		//查询上一条数据
+		//更新房屋挂载ID，错误退出
+		//返回del对象
 		if (!req.body._id) {
 			callback({
 				type: false
@@ -863,7 +936,15 @@ module.exports = {
 
 	/***inner类****租住管理********************************************************************************************************/
 
+	/*
+		租户对象挂载
+		用户ID ok
+		房屋ID ok
+	*/
+
 	leaseMainList: (req, res, callback)=>{
+		//查询房屋数据，租户信息
+		//返回list对象
 		//初始化该库
 		db.dbModel('lease')
 		db
@@ -909,6 +990,11 @@ module.exports = {
 	},
 	leaseIn: (req, res, callback)=>{
 		//不做数据校验
+		//ID存在更新数据，错误退出
+		//ID不存查询数据是否存在，存在->错误退出
+		//插入数据，错误退出
+		//更新房屋挂载ID，错误退出
+		//返回add对象
 		let leaseModel = {
 			name: String, //租户姓名
 			call: String, //租户电话
@@ -1014,10 +1100,10 @@ module.exports = {
 					}
 				})
 			})
-			//更新房屋最新水表数信息
+			//更新房屋最新租户信息
 			.then((data)=>{
 				return db
-				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄表数引用类型
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新租户信息引用类型
 					leaseId: db.db.Schema.Types.ObjectId,
 					updateTime: Number //更新时间
 				})
@@ -1048,6 +1134,9 @@ module.exports = {
 		}
 	},
 	leaseOut: (req, res, callback)=>{
+		//校验字段，错误退出
+		//修改状态（无需更新房屋挂载ID）
+		//返回out对象
 		if (!req.body.haoId || !req.body.leaseId) {
 			callback({
 				type: false,
@@ -1063,7 +1152,7 @@ module.exports = {
 				updateTime: Number //更新时间
 			})
 			.findOneAndUpdate({_id: req.body.leaseId}, {
-				status: 2,
+				status: 2,//搬出为2，正常为1
 				updateTime: Date.now()
 			})
 			.exec()
@@ -1089,7 +1178,8 @@ module.exports = {
 		}
 	},
 	leaseList: (req, res, callback)=>{
-		//不做数据校验
+		//查询房屋数据，租户信息（状态2）
+		//返回list对象
 		//初始化该库
 		db.dbModel('house')
 		db
@@ -1130,6 +1220,9 @@ module.exports = {
 		})
 	},
 	leaseDel: (req, res, callback)=>{
+		//校验字段，错误退出
+		//修改状态（无需更新房屋挂载ID）
+		//返回del对象
 		if (!req.body._id) {
 			callback({
 				type: false
@@ -1161,9 +1254,40 @@ module.exports = {
 		}
 	},
 
+	/***inner类****电费管理********************************************************************************************************/
 
+	/*
+		电费抄表对象挂载
+		用户ID
+		房屋ID
+		电费计费对象挂载
+		用户ID
+		房屋ID
+	*/
 
+	/***inner类****收租管理********************************************************************************************************/
 
+	/*
+		收租周期表对象挂载
+		用户ID
+		收租对象挂载
+		用户ID
+		收租周期表ID
+		房屋ID
+	*/
+
+	//收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
+	//
+	//
+	//收租周期表add
+	//根据收租周期表list，进列表
+	//根据房屋，带挂载收租信息list，进历史
+	//
+	//收租add，必须最新唯一，更新房屋挂载ID，上一个必须为状态全选
+	//收租type多选：交租、给单据、给房东
+	//收租del，需要回退房屋挂载ID
+	//根据收租周期表收租列表list，可添加，可修改收租状态，可删除收租
+	//根据房屋收租历史list，可删除收租
 
 
 

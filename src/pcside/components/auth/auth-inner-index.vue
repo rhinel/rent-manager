@@ -93,6 +93,11 @@
 				}
 				this.logouting = true
 				this.Ajax('/outer/log/logout', {}, (res)=>{
+					this.$message({
+						type: 'success',
+						message: '退出成功',
+						duration: 2000
+					})
 					this.$router.push('/login')
 				})
 			}
