@@ -995,7 +995,7 @@ module.exports = {
 		//插入数据，错误退出
 		//更新房屋挂载ID，错误退出
 		//返回add对象
-		let leaseModel = {
+		let leaseModel = {//*//标记，租住数据类型
 			name: String, //租户姓名
 			call: String, //租户电话
 			leaserange: Array, //租住周期
@@ -1032,7 +1032,7 @@ module.exports = {
 			editLease.updateTime = Date.now()
 			db
 			//根据ID修改内容
-			.dbModel('lease', editLeaseModel)
+			.dbModel('lease', editLeaseModel)//*//标记，更新数据类型
 			.findOneAndUpdate({_id: req.body._id}, {'$set': editLease})
 			.exec()
 			.then((data)=>{
@@ -1061,7 +1061,7 @@ module.exports = {
 			.dbModel('lease')
 			.find({
 				userId: req.userId,
-				fang: req.body.haoId,
+				haoId: req.body.haoId,
 				status: 1
 			})
 			.exec()
@@ -1087,7 +1087,7 @@ module.exports = {
 				createLease.userId = req.userId
 				createLease.status = 1
 				return db
-				.dbModel('lease', createLeaseModel)
+				.dbModel('lease', createLeaseModel)//*//标记，新增数据类型
 				.create(createLease)
 				.then((data)=>{
 					if (data) {
@@ -1147,7 +1147,7 @@ module.exports = {
 			db
 			//根据ID修改状态
 			//由于不需要读取上一条信息，因此houseId上并没有清除租住者ID
-			.dbModel('lease', {//*//标记，初始水表类型数据类，删除类型
+			.dbModel('lease', {//*//标记，初始租住类型数据类，删除类型
 				status: Number, //状态
 				updateTime: Number //更新时间
 			})
@@ -1230,6 +1230,7 @@ module.exports = {
 		} else {
 			db
 			//根据ID修改状态
+			//由于不需要读取上一条信息，因此houseId上并没有清除租住者ID
 			.dbModel('lease', {//*//标记，租住数据类，删除类型
 				status: Number, //状态
 				updateTime: Number //更新时间
@@ -1283,7 +1284,7 @@ module.exports = {
 	//根据收租周期表list，进列表
 	//根据房屋，带挂载收租信息list，进历史
 	//
-	//收租add，必须最新唯一，更新房屋挂载ID，上一个必须为状态全选
+	//收租add，更新房屋挂载ID
 	//收租type多选：交租、给单据、给房东
 	//收租del，需要回退房屋挂载ID
 	//根据收租周期表收租列表list，可添加，可修改收租状态，可删除收租

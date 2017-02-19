@@ -72,7 +72,7 @@
 
 				<!-- 房屋信息 -->
 				<el-form-item>
-					<el-alert title="本操作作为单独计费结费操作，如是搬入搬出、月缴费请使用租住管理和月度缴费管理" type="info"></el-alert>
+					<el-alert title="本操作作为单独计费结费操作，水电（非周期，每次按照计费信息结算），每次收租一个租户（或空置）针对一个计费" type="info"></el-alert>
 				</el-form-item>
 				<!-- 水底信息 -->
 				<el-form-item>

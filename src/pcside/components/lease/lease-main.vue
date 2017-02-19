@@ -53,6 +53,9 @@
 		<!-- 入住弹窗 -->
 		<el-dialog :title="lease.fanghao + lidDialogTitle" v-model="leaseInflag" size="small" top="50px" class="lease-in-dialog" :close-on-click-modal="false" @close="onLeaseInDialogClose">
 			<el-form :model="lease" ref="leaseIn" :rules="leaserules">
+				<el-form-item>
+					<el-alert title="搬出入住/修改：计费信息初始化，必须为上次收租结束/空置处理结束/本次计费之前，用户自行确认" type="info"></el-alert>
+				</el-form-item>
 				<!-- 基本信息 -->
 				<el-row :gutter="20">
 					<el-col :span="7">
@@ -340,7 +343,7 @@
 						@click="getLeaseHistory(scope.$index, scope.row)">历史</el-button>
 					<el-button
 						size="small"
-						type="primary"
+						type="danger"
 						@click="getLeaseInDialog(scope.$index, scope.row)">{{ scope.row.leaseId._id ? '修改' : '入住' }}</el-button>
 					<el-popover
 							placement="top"
