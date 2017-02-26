@@ -589,7 +589,7 @@
 				})
 			},
 			//进入历史
-			getelectricHistory (index, row) {
+			getElectricHistory (index, row) {
 				this.$router.push('/inner/electric/history?haoid=' + row._id)
 			}
 		}
