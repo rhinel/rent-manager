@@ -17,6 +17,7 @@ module.exports = {
 					children: [
 						{//页面层，默认首页
 							path: 'index',
+							meta: { name: '主控面板' },
 							component: require('../components/dashboard/dashboard-main'),
 							alias: ''
 						}
@@ -28,6 +29,7 @@ module.exports = {
 					children: [
 						{
 							path: 'index',
+							meta: { name: '房屋管理' },
 							component: require('../components/house/house-list'),
 							alias: ''
 						}
@@ -39,11 +41,13 @@ module.exports = {
 					children: [
 						{
 							path: 'index',
+							meta: { name: '水费管理' },
 							component: require('../components/water/water-main'),
 							alias: ''
 						},
 						{
 							path: 'history',
+							meta: { name: '水费历史' },
 							component: require('../components/water/water-history')
 						}
 					]
@@ -54,11 +58,13 @@ module.exports = {
 					children: [
 						{
 							path: 'index',
+							meta: { name: '电费管理' },
 							component: require('../components/electric/electric-main'),
 							alias: ''
 						},
 						{
 							path: 'history',
+							meta: { name: '电费历史' },
 							component: require('../components/electric/electric-history')
 						}
 					]
@@ -69,11 +75,13 @@ module.exports = {
 					children: [
 						{
 							path: 'index',
+							meta: { name: '租住管理' },
 							component: require('../components/lease/lease-main'),
 							alias: ''
 						},
 						{
 							path: 'history',
+							meta: { name: '租住历史' },
 							component: require('../components/lease/lease-history')
 						}
 					]
@@ -84,11 +92,13 @@ module.exports = {
 					children: [
 						{
 							path: 'index',
+							meta: { name: '收租管理' },
 							component: require('../components/rent/rent-main'),
 							alias: ''
 						},
 						{
 							path: 'history',
+							meta: { name: '收租历史' },
 							component: require('../components/rent/rent-history')
 						}
 					]
@@ -99,6 +109,7 @@ module.exports = {
 					children: [
 						{
 							path: 'index',
+							meta: { name: '系统管理' },
 							component: require('../components/system/system-main'),
 							alias: ''
 						}

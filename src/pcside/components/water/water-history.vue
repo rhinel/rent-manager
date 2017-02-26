@@ -96,7 +96,7 @@
 
 				<!-- 顶部按钮组 -->
 				<div class="table-btn">
-					<el-button type="primary" @click="getwaterCalList" :loading="gettingListRefresh2">刷新</el-button>
+					<el-button type="primary" @click="getWaterCalList" :loading="gettingListRefresh2">刷新</el-button>
 					<div class="table-btn-input">
 						<el-input v-model="waterCalDataSearch" placeholder="搜索"></el-input>
 					</div>
@@ -243,7 +243,7 @@
 		created () {
 			// this.getHouseDetail()
 			this.activeName == 'water' && this.getWaterList()
-			this.activeName == 'waterCal' && this.getwaterCalList()
+			this.activeName == 'waterCal' && this.getWaterCalList()
 		},
 		data () {
 			return {
@@ -299,7 +299,7 @@
 		watch: {
 			activeName (n, o) {
 				n == 'water' && this.getWaterList()
-				n == 'waterCal' && this.getwaterCalList()
+				n == 'waterCal' && this.getWaterCalList()
 			}
 		},
 		methods: {
@@ -327,7 +327,7 @@
 					this.gettingListRefresh = false
 				})
 			},
-			getwaterCalList () {
+			getWaterCalList () {
 				if (this.gettingListRefresh2) {
 					return true
 				}
@@ -381,7 +381,7 @@
 						duration: 2000
 					})
 					row.gettingdelCalWater = false
-					this.getwaterCalList()
+					this.getWaterCalList()
 				}, (res)=>{
 					this.$message({
 						type: 'error',

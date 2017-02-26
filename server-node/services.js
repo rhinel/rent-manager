@@ -934,6 +934,542 @@ module.exports = {
 		}
 	},
 
+	/***inner类****电费管理********************************************************************************************************/
+
+	/*
+		电费抄表对象挂载
+		用户ID ok
+		房屋ID ok
+		电费计费对象挂载
+		用户ID ok
+		房屋ID ok
+	*/
+
+	electricAdd: (req, res, callback)=>{
+		//校验数据，错误退出
+		//插入数据，错误退出
+		//更新房屋挂载ID，错误退出
+		//返回add对象
+		if (!req.body.haoId) {
+			callback({
+				type: false,
+				data: '请选择房屋'
+			})
+		} else if (!req.body.electric) {
+			callback({
+				type: false,
+				data: '请填写电表数'
+			})
+		} else if (!req.body.addTime) {
+			callback({
+				type: false,
+				data: '请填写抄表时间'
+			})
+		} else {
+			let addData
+			db
+			//插入电表抄表记录
+			.dbModel('electric', {//*//标记，初始电表数数据类，新增类型
+				userId: db.db.Schema.Types.ObjectId, //用户ID
+				haoId: db.db.Schema.Types.ObjectId, //房屋ID
+				electric: Number, //电表数，全拼
+				remark: String, //备注，全拼
+				addTime: String, //抄表时间
+				status: Number, //状态
+				createTime: Number //创建时间
+			})
+			.create({
+				userId: req.userId,
+				haoId: req.body.haoId,
+				electric: req.body.electric,
+				remark: req.body.remark,
+				addTime: req.body.addTime,
+				status: 1,
+				createTime: Date.now()
+			})
+			.then((data)=>{
+				if (data) {
+					addData = data
+					return Promise.resolve(data)
+				} else {			
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+			//更新房屋最新电表数信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄表数引用类型
+					electricId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					electricId: addData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: addData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	electricMainList: (req, res, callback)=>{
+		//查询房屋数据，抄表记录，计费记录，租户信息
+		//电费小计计费
+		//返回list对象
+		//初始化该库
+		db.dbModel('electric')
+		db.dbModel('electriccal')
+		db.dbModel('lease')
+		db
+		//数据库查询
+		.dbModel('house')
+		.find({}, {
+			fang: 1,
+			hao: 1,
+			electricId: 1,
+			calElectricId: 1,
+			leaseId: 1
+		})
+		.populate({
+			path: 'electricId',
+			model: 'electric',
+			select: 'electric remark addTime',
+			match: {status: 1}
+		})
+		.populate({
+			path: 'calElectricId',
+			model: 'electriccal',
+			select: 'tnew addTime',
+			match: {status: 1}
+		})
+		.populate({
+			path: 'leaseId',
+			model: 'lease',
+			select: 'calElePrice',
+			match: {status: 1}
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('fang hao')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//字段提供
+				!i.fanghao && (i.fanghao = i.fang + i.hao)
+				//上次电费ID初始化
+				!i.calElectricId && (i.calElectricId = {})
+				i.calElectricId.tnew && (i.calElectricId.tnew.addTime = i.calElectricId.addTime)
+				i.calElectricId.tnew && (i.calElectricId = i.calElectricId.tnew)
+				//抄电ID初始化
+				!i.electricId && (i.electricId = {})
+				//收费方式初始化
+				!i.leaseId && (i.leaseId = {})
+				i.leaseId.calElePrice && (i.leaseId = i.leaseId.calElePrice)
+				//差距计算
+				!i.gap && (i.gap = (i.electricId.electric ? i.electricId.electric : 0) - (i.calElectricId.electric ? i.calElectricId.electric : 0))
+				i.gap <= 0 && (i.gap = 0)
+				//小计计算
+				//电表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
+				let result = 0
+				let theGap = (i.electricId.electric || 0) - (i.calElectricId.electric || 0)
+				let restGap = theGap
+				theGap = theGap > 0 ? theGap : 0
+				theGap = theGap > i.leaseId.minPrice ? theGap : i.leaseId.minPrice
+				if (i.leaseId.calType == 'single') {
+					result = theGap * i.leaseId.singlePrice
+				} else {
+					i.leaseId.stepPrice && i.leaseId.stepPrice.forEach((item, i)=>{
+						//假阶梯
+						if (theGap >= item.step && item.price != 0) {
+							result = theGap * item.price
+						}
+					})
+				}
+				!i.result && (i.result = result)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	electricList: (req, res, callback)=>{
+		//不校验字段
+		//查询抄表记录，房屋数据
+		//返回list对象
+		//初始化该库
+		db.dbModel('house')
+		db
+		//数据库查询
+		.dbModel('electric')
+		.find({haoId: db.db.Types.ObjectId(req.body.haoId)})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime',
+			match: {status: 1}
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-addTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//loading字段提供
+				!i.gettingdelElectric && (i.gettingdelElectric = false)
+				//del提示字段提供
+				!i.dElectricPopFlag && (i.dElectricPopFlag = false)
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	electricCalList: (req, res, callback)=>{
+		//不校验字段
+		//查询计费记录，房屋数据
+		//返回list对象
+		//初始化该库
+		db.dbModel('house')
+		db
+		//数据库查询
+		.dbModel('electriccal')
+		.find({haoId: db.db.Types.ObjectId(req.body.haoId)})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime',
+			match: {status: 1}
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-addTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//loading字段提供
+				!i.gettingdelCalElectric && (i.gettingdelCalElectric = false)
+				//del提示字段提供
+				!i.dCalElectricPopFlag && (i.dCalElectricPopFlag = false)
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+				//小计
+				!i.gap && (i.gap = (i.tnew.electric ? i.tnew.electric : 0) - (i.old.electric ? i.old.electric : 0))
+				i.gap <= 0 && (i.gap = 0)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	electriccalElectric: (req, res, callback)=>{
+		//不做数据校验
+		//插入数据（存储新抄表记录，旧抄表记录，计费信息），错误退出
+		//更新房屋挂载ID，错误提出
+		//返回add对象
+		let addData
+		db
+		.dbModel('electriccal', {//*//标记，初始电表计费数数据类，新增类型
+			userId: db.db.Schema.Types.ObjectId, //用户ID
+			haoId: db.db.Schema.Types.ObjectId, //房屋ID，全拼
+			tnew: {
+				electric: Number, //抄表数
+				remark: String, //抄表备注
+				addTime: String //抄表时间
+			},
+			old: {
+				electric: Number, //底表数
+				remark: String, //底表备注
+				addTime: String //底表时间
+			},
+			calElectric: {
+				minPrice: Number, //本次计费低消
+				calType: String, //计费类型
+				singlePrice: Number, //single单价
+				stepPrice: [{ //阶梯价格
+					step: Number, //阶梯
+					price: Number //单价
+				}]
+			},
+			remark: String, //计费备注
+			addTime: String, //计费时间
+			fix: Boolean, //结果是否修正
+			calElectricResult: Number, //计算结果
+			status: Number, //状态
+			createTime: Number //创建时间
+		})
+		.create({
+			userId: req.userId,
+			haoId: req.body.haoId,
+			tnew: req.body.tnew,
+			old: req.body.old,
+			calElectric: req.body.calElectric,
+			remark: req.body.remark,
+			addTime: req.body.addTime,
+			fix: req.body.fix,
+			calElectricResult: req.body.calElectricResult,
+			status: 1,
+			createTime: Date.now()
+		})
+		.then((data)=>{
+			if (data) {
+				addData = data
+				return Promise.resolve(data)
+			} else {			
+				return Promise.reject({
+					type: false
+				})
+			}
+		})
+		//更新房屋最新电表计费数信息
+		.then((data)=>{
+			return db
+			.dbModel('house', {//*//标记，更新房屋数据类，扩增最新计费数据引用类型
+				calElectricId: db.db.Schema.Types.ObjectId,
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body.haoId}, {
+				calElectricId: addData._id,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					return Promise.reject({
+						type: true,
+						data: addData
+					})
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	electricDel: (req, res, callback)=>{
+		//校验数据，错误退出
+		//修改状态，错误退出
+		//查询上一条数据
+		//更新房屋挂载ID，错误退出
+		//返回del对象
+		if (!req.body._id) {
+			callback({
+				type: false
+			})
+		} else {
+			let delData
+			let moveData
+			db
+			//根据ID修改状态
+			.dbModel('electric', {//*//标记，初始电表类型数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					delData = data
+					return Promise.resolve(data)
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+			//查询上一条电表数据
+			.then((data)=>{
+				return db
+				.dbModel('electric')
+				.findOne({})
+				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('status').equals(1)
+				.sort('-addTime')
+				.exec()
+				.then((data)=>{
+					if (data) {
+						moveData = data
+					} else {
+						moveData = {_id: null}
+					}
+					return Promise.resolve(data)
+				})
+			})
+			//更新房屋最新电表数信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新抄电表数引用类型
+					electricId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					electricId: moveData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: delData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	electricCalDel: (req, res, callback)=>{
+		//校验数据，错误退出
+		//修改状态，错误退出
+		//查询上一条数据
+		//更新房屋挂载ID，错误退出
+		//返回del对象
+		if (!req.body._id) {
+			callback({
+				type: false
+			})
+		} else {
+			let delData
+			let moveData
+			db
+			//根据ID修改状态
+			.dbModel('electriccal', {//*//标记，初始电费计费数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					delData = data
+					return Promise.resolve(data)
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+			//查询上一条电表计费数据
+			.then((data)=>{
+				return db
+				.dbModel('electriccal')
+				.findOne({})
+				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('status').equals(1)
+				.sort('-addTime')
+				.exec()
+				.then((data)=>{
+					if (data) {
+						moveData = data
+					} else {
+						moveData = {_id: null}
+					}
+					return Promise.resolve(data)
+				})
+			})
+			//更新房屋最新电表计费信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新电表计费引用类型
+					calElectricId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					calElectricId: moveData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: delData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+
 	/***inner类****租住管理********************************************************************************************************/
 
 	/*
@@ -1254,17 +1790,6 @@ module.exports = {
 			})
 		}
 	},
-
-	/***inner类****电费管理********************************************************************************************************/
-
-	/*
-		电费抄表对象挂载
-		用户ID
-		房屋ID
-		电费计费对象挂载
-		用户ID
-		房屋ID
-	*/
 
 	/***inner类****收租管理********************************************************************************************************/
 

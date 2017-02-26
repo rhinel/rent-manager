@@ -18,6 +18,9 @@
 			display: flex;
 			padding: 0 20px;
 			.header-left{
+				width: 200px;
+			}
+			.header-name{
 				flex: 1;
 			}
 			.header-right{
@@ -52,6 +55,9 @@
 		<div class="inner-header">
 			<div class="header-left">
 				Rent Manager
+			</div>
+			<div class="header-name">
+				{{$route.meta.name}}
 			</div>
 			<div class="header-right" @click="logout">
 				<i class="el-icon-star-on"></i>登出<i v-show="logouting" class="el-icon-loading">

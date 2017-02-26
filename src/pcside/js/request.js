@@ -1,4 +1,5 @@
 import Superagent from 'superagent'
+import { Message } from 'element-ui'
 
 //定义负载常量
 const rootPath = '/api'
@@ -16,14 +17,14 @@ const request = function(path, data, callscue, callerr) {
 		.end((err, res)=>{
 			if (err) {
 				//接口错误，报错退出
-				this.$message({
+				Message({
 					type: 'error',
 					message: '状态：' + err.status + '，网络/服务器错误',
 					duration: 2000
 				})
 			} else if (res.body.code == '2001' && path.indexOf('/auth') < 0) {
 				//非auth接口，登陆失效或者未登陆，先报错后，清除旧登陆信息，跳转
-				this.$message({
+				Message({
 					type: 'error',
 					message: '编号：' + res.body.code + '，' + res.body.msg,
 					duration: 2000
@@ -36,7 +37,7 @@ const request = function(path, data, callscue, callerr) {
 			} else if (res.body.code) {
 				//接口返回错误代码，继续执行，由方法自行判断，默认报错退出
 				if (!callerr) {
-					this.$message({
+					Message({
 						type: 'error',
 						message: '编号：' + res.body.code + '，' + res.body.msg,
 						duration: 2000
@@ -47,7 +48,7 @@ const request = function(path, data, callscue, callerr) {
 			} else {
 				//返回成功，直接执行，没有默认行为
 				if (!callscue) {
-					this.$message({
+					Message({
 						type: 'success',
 						message: '操作成功',
 						duration: 2000

@@ -108,6 +108,39 @@ const inner = (req, res, next)=>{
 		} else {
 			next()
 		}
+	} else if (req.params.class === 'electric') {
+		//添加电表数接口
+		if (req.params.function === 'add') {
+			service.electricAdd(req, res, (data)=>{
+				res.json(code(3041, data))
+			})
+		} else if (req.params.function === 'mainList') {
+			service.electricMainList(req, res, (data)=>{
+				res.json(code(3042, data))
+			})
+		} else if (req.params.function === 'cal') {
+			service.electriccalElectric(req, res, (data)=>{
+				res.json(code(3043, data))
+			})
+		} else if (req.params.function === 'list') {
+			service.electricList(req, res, (data)=>{
+				res.json(code(3044, data))
+			})
+		} else if (req.params.function === 'calList') {
+			service.electricCalList(req, res, (data)=>{
+				res.json(code(3045, data))
+			})
+		} else if (req.params.function === 'del') {
+			service.electricDel(req, res, (data)=>{
+				res.json(code(3046, data))
+			})
+		} else if (req.params.function === 'delCal') {
+			service.electricCalDel(req, res, (data)=>{
+				res.json(code(3047, data))
+			})
+		} else {
+			next()
+		}
 	} else if (req.params.class === 'lease') {
 		//租住管理接口
 		if (req.params.function === 'mainList') {
