@@ -166,8 +166,22 @@ const inner = (req, res, next)=>{
 		} else {
 			next()
 		}
-
-
+	} else if (req.params.class === 'month') {
+		if (req.params.function === 'add') {
+			service.monthAdd(req, res, (data)=>{
+				res.json(code(3051, data))
+			})
+		} else if (req.params.function === 'list') {
+			service.monthList(req, res, (data)=>{
+				res.json(code(3052, data))
+			})
+		} else if (req.params.function === 'del') {
+			service.monthDel(req, res, (data)=>{
+				res.json(code(3053, data))
+			})
+		} else {
+			next()
+		}
 
 
 

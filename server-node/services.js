@@ -238,7 +238,7 @@ module.exports = {
 			//数据库查询是否已存在
 			.dbModel('house')
 			.find({
-				userId: req.userId,
+				userId: db.db.Types.ObjectId(req.userId),
 				fang: req.body.fang,
 				hao: req.body.hao,
 				status: 1
@@ -1596,7 +1596,7 @@ module.exports = {
 			//数据库查询是否已存在
 			.dbModel('lease')
 			.find({
-				userId: req.userId,
+				userId: db.db.Types.ObjectId(req.userId),
 				haoId: req.body.haoId,
 				status: 1
 			})
@@ -1802,12 +1802,183 @@ module.exports = {
 		房屋ID
 	*/
 
+	monthAdd (req, res, callback) {
+		//校验字段
+		if (!req.body.month) {
+			callback({
+				type: false,
+				data: '请填写月份'
+			})
+		} else if (req.body._id) {
+			db
+			//根据ID修改内容
+			.dbModel('month', {//*//标记，初始月度周期数据类，修改类型
+				month: String, //月份
+				remark: String, //备注
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {'$set': {
+				month: req.body.month,
+				remark: req.body.remark,
+				updateTime: Date.now()
+			}})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					return Promise.reject({
+						type: true,
+						data: data
+					})
+				} else {
+					return Promise.reject({
+						type: false,
+						data: '修改失败，数据不存在'
+					})
+				}
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		} else {
+			db
+			//数据库查询是否已存在
+			.dbModel('month')
+			.find({
+				userId: db.db.Types.ObjectId(req.userId),
+				month: req.body.month,
+				status: 1
+			})
+			.exec()
+			.then((data)=>{
+				if (data.length) {
+					return Promise.reject({
+						type: false,
+						data: '月份周期已存在'
+					})
+				} else {
+					return Promise.resolve()
+				}
+			})
+			//插入数据
+			.then(()=>{
+				return db
+				.dbModel('month', {//*//标记，初始月度周期数据类，创建类型
+					userId: db.db.Schema.Types.ObjectId, //用户ID
+					month: String, //月份
+					remark: String, //备注
+					status: Number, //状态
+					createTime: Number //创建时间
+				})
+				.create({
+					userId: req.userId,
+					month: req.body.month,
+					remark: req.body.remark,
+					status: 1,
+					createTime: Date.now()
+				})
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: data
+						})
+					} else {			
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	monthList: (req, res, callback)=> {
+		//查询数据
+		//返回list对象
+		db
+		//数据库查询
+		.dbModel('month')
+		.find({}, {
+			month: 1,
+			remark: 1,
+			createTime: 1,
+			updateTime: 1
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-month')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//loading字段提供
+				!i.gettingdelMonth && (i.gettingdelMonth = false)
+				//del提示字段提供
+				!i.dMonthPopFlag && (i.dMonthPopFlag = false)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	monthDel: (req, res, callback)=>{
+		//校验字段，错误提出
+		//修改状态
+		//返回del对象
+		if (!req.body._id) {
+			callback({
+				type: false
+			})
+		} else {
+			db
+			//根据ID修改状态
+			.dbModel('month', {//*//标记，初始房屋数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				return Promise.reject({
+					type: true,
+					data: data
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+
 	//收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
 	//
 	//
-	//收租周期表add
+	//收租周期表add OK
 	//根据收租周期表list，进列表
 	//根据房屋，带挂载收租信息list，进历史
+	//
 	//
 	//收租add，更新房屋挂载ID
 	//收租type多选：交租、给单据、给房东
@@ -1815,13 +1986,7 @@ module.exports = {
 	//根据收租周期表收租列表list，可添加，可修改收租状态，可删除收租
 	//根据房屋收租历史list，可删除收租
 
-
-
-
-
-
-
-
+	/***inner类****其他********************************************************************************************************/
 
 	getData: (req, res, callback)=>{
 
