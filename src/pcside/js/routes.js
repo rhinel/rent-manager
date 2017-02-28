@@ -97,6 +97,11 @@ module.exports = {
 							alias: ''
 						},
 						{
+							path: 'month',
+							meta: { name: '月租周期' },
+							component: require('../components/rent/rent-month'),
+						},
+						{
 							path: 'history',
 							meta: { name: '收租历史' },
 							component: require('../components/rent/rent-history')

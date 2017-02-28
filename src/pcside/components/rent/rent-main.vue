@@ -18,7 +18,7 @@
 				max-width: 300px;
 			}
 		}
-		.month-show-pop{
+		.month-list-show-pop{
 			display: inline-block;
 			margin-left: 10px;
 		}
@@ -36,7 +36,7 @@
 			<el-button type="primary" @click="getAddMonthListDialog">新增</el-button>
 			<el-button type="primary" @click="getListRefresh" :loading="gettingListRefresh">刷新</el-button>
 			<div class="table-btn-input">
-				<el-input v-model="MonthListSearch" placeholder="搜索"></el-input>
+				<el-input v-model="monthListDataSearch" placeholder="搜索"></el-input>
 			</div>
 		</div>
 
@@ -64,7 +64,7 @@
 		<!-- 月份数据表 -->
 		<el-table
 			class="month-table"
-			:data="filterMonthData"
+			:data="filterMonthListData"
 			v-loading.body="gettingListRefresh"
 			stripe
 			border>
@@ -73,6 +73,11 @@
 				label="月份"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<router-link :to="{ path: '/inner/rent/month', query: { id: scope.row._id }}">
+						<el-button type="text">{{scope.row.month}}</el-button>
+					</router-link>
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="remark"
@@ -114,7 +119,7 @@
 							<el-button size="mini" type="text" @click="scope.row.dMonthPopFlag = false">取消</el-button>
 							<el-button type="danger" size="mini" @click="(scope.row.dMonthPopFlag = false) || getDelMonth(scope.$index, scope.row)">确定</el-button>
 						</div>
-						<div slot="reference" class="month-show-pop">
+						<div slot="reference" class="month-list-show-pop">
 							<el-button
 								size="small"
 								type="danger"
@@ -142,7 +147,6 @@
 				addMonthListflag: false,
 				gettingAddMonthList: false,
 				gettingListRefresh: false,
-				MonthListSearch: '',
 
 				amldDialogTitle: '新增收租周期',
 				amldInput: true,
@@ -155,21 +159,21 @@
 					month: [{ type: 'date', required: true, message: '请选择', trigger: 'change' }]
 				},
 				editMonthId: '',
-				monthData: [],
-				monthDataSearch: ''
+				monthListData: [],
+				monthListDataSearch: ''
 			}
 		},
 		computed: {
-			filterMonthData () {
-				if (!this.monthDataSearch) {
-					return this.monthData
+			filterMonthListData () {
+				if (!this.monthListDataSearch) {
+					return this.monthListData
 				} else {
-					let _monthDataSearch = new RegExp(this.monthDataSearch, 'i')
-					return this.monthData.filter((item)=>{
+					let _monthListDataSearch = new RegExp(this.monthListDataSearch, 'i')
+					return this.monthListData.filter((item)=>{
 						for (var i in item) {
 							if (i != 'month' && i != 'remark') {
 								continue
-							} else if (String(item[i]).match(_monthDataSearch)) {
+							} else if (String(item[i]).match(_monthListDataSearch)) {
 								return true
 							}
 						}
@@ -208,7 +212,7 @@
 				}
 				this.gettingListRefresh = true
 				this.Ajax('/inner/month/list', {}, (res)=>{
-					this.monthData = res.body.data
+					this.monthListData = res.body.data
 					this.gettingListRefresh = false
 				}, (res)=>{
 					this.$message({
