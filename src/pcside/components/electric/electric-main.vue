@@ -397,10 +397,12 @@
 				if (this.calElectric.calElectric.calType == 'single') {
 					result = theGap * this.calElectric.calElectric.singlePrice
 				} else {
-					this.calElectric.calElectric.stepPrice.forEach((item, i)=>{
+					this.calElectric.calElectric.stepPrice.forEach((item, i, arr)=>{
 						//let lastStep = this.calElectric.calElectric.stepPrice[i-1] ? this.calElectric.calElectric.stepPrice[i-1].step : 0
 						//假阶梯
-						if (theGap >= item.step && item.price != 0) {
+						if (theGap > (arr[i-1] ? arr[i-1].step : 0) && theGap <= item.step && item.price != 0) {
+							result = theGap * item.price
+						} else if (i == (arr.length - 1) && theGap >= item.step && item.price != 0) {
 							result = theGap * item.price
 						}
 						//真阶梯
@@ -413,6 +415,7 @@
 						}*/
 					})
 					//theGap != 0 && this.calElectric.calElectric.stepPrice.length && (result += theGap * this.calElectric.calElectric.stepPrice[this.calElectric.calElectric.stepPrice.length-1].price)
+					result = Math.round(result * 100) / 100
 				}
 				return result
 			}

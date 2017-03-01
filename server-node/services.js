@@ -562,12 +562,15 @@ module.exports = {
 				if (i.leaseId.calType == 'single') {
 					result = theGap * i.leaseId.singlePrice
 				} else {
-					i.leaseId.stepPrice && i.leaseId.stepPrice.forEach((item, i)=>{
+					i.leaseId.stepPrice && i.leaseId.stepPrice.forEach((item, i, arr)=>{
 						//假阶梯
-						if (theGap >= item.step && item.price != 0) {
+						if (theGap > (arr[i-1] ? arr[i-1].step : 0) && theGap <= item.step && item.price != 0) {
+							result = theGap * item.price
+						} else if (i == (arr.length - 1) && theGap >= item.step && item.price != 0) {
 							result = theGap * item.price
 						}
 					})
+					result = Math.round(result * 100) / 100
 				}
 				!i.result && (i.result = result)
 			})
@@ -1098,12 +1101,15 @@ module.exports = {
 				if (i.leaseId.calType == 'single') {
 					result = theGap * i.leaseId.singlePrice
 				} else {
-					i.leaseId.stepPrice && i.leaseId.stepPrice.forEach((item, i)=>{
+					i.leaseId.stepPrice && i.leaseId.stepPrice.forEach((item, i, arr)=>{
 						//假阶梯
-						if (theGap >= item.step && item.price != 0) {
+						if (theGap > (arr[i-1] ? arr[i-1].step : 0) && theGap <= item.step && item.price != 0) {
+							result = theGap * item.price
+						} else if (i == (arr.length - 1) && theGap >= item.step && item.price != 0) {
 							result = theGap * item.price
 						}
 					})
+					result = Math.round(result * 100) / 100
 				}
 				!i.result && (i.result = result)
 			})

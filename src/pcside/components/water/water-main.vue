@@ -397,10 +397,12 @@
 				if (this.calWater.calWater.calType == 'single') {
 					result = theGap * this.calWater.calWater.singlePrice
 				} else {
-					this.calWater.calWater.stepPrice.forEach((item, i)=>{
+					this.calWater.calWater.stepPrice.forEach((item, i, arr)=>{
 						//let lastStep = this.calWater.calWater.stepPrice[i-1] ? this.calWater.calWater.stepPrice[i-1].step : 0
 						//假阶梯
-						if (theGap >= item.step && item.price != 0) {
+						if (theGap > (arr[i-1] ? arr[i-1].step : 0) && theGap <= item.step && item.price != 0) {
+							result = theGap * item.price
+						} else if (i == (arr.length - 1) && theGap >= item.step && item.price != 0) {
 							result = theGap * item.price
 						}
 						//真阶梯
@@ -413,6 +415,7 @@
 						}*/
 					})
 					//theGap != 0 && this.calWater.calWater.stepPrice.length && (result += theGap * this.calWater.calWater.stepPrice[this.calWater.calWater.stepPrice.length-1].price)
+					result = Math.round(result * 100) / 100
 				}
 				return result
 			}

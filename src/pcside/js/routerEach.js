@@ -5,7 +5,7 @@ const beforeEach = function(to, from, next, vue) {
 	//继承或直接记录目的地
 	vue && vue.$store.dispatch('menuCheck', to.fullPath)
 	let nextConfig = {
-		path: 'login',
+		path: '/login',
 		query: {backurl: to.fullPath}
 	}
 
