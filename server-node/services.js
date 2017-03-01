@@ -1971,12 +1971,70 @@ module.exports = {
 			})
 		}
 	},
+	rentListByMonth (req, res, callback) {
+		//通过房屋查询所有最新挂载信息：电费计费，水费计费，租约信息
+		//
+		db.dbModel('watercal')
+		db.dbModel('electriccal')
+		db.dbModel('lease')
+		db
+		//数据库查询
+		.dbModel('house')
+		.find({}, {
+			fang: 1,
+			hao: 1,
+			calWaterId: 1,
+			calElectricId: 1,
+			leaseId: 1
+		})
+		.populate({
+			path: 'calWaterId',
+			model: 'watercal',
+			match: {status: 1}
+		})
+		.populate({
+			path: 'calElectricId',
+			model: 'electriccal',
+			match: {status: 1}
+		})
+		.populate({
+			path: 'leaseId',
+			model: 'lease',
+			match: {status: 1}
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('fang hao')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//字段提供
+				!i.fanghao && (i.fanghao = i.fang + i.hao)
+				//字段初始化
+				!i.calWaterId && (i.calWaterId = {})
+				!i.calElectricId && (i.calElectricId = {})
+				!i.leaseId && (i.leaseId = {})
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
 
 	//收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
 	//
 	//
 	//收租周期表add OK
-	//根据收租周期表list，进列表
+	//根据收租周期表list，进列表 OK
 	//根据房屋，带挂载收租信息list，进历史
 	//
 	//

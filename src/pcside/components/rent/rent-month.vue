@@ -51,6 +51,11 @@
 				label="房屋"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<router-link :to="{ path: '/inner/rent/history', query: { id: scope.row._id }}">
+						<el-button type="text">{{scope.row.fanghao}}</el-button>
+					</router-link>
+				</template>
 			</el-table-column>
 			<el-table-column
 				label="计租信息">
@@ -58,7 +63,9 @@
 			<el-table-column
 				label="操作"
 				width="180">
-				计租/状态
+				<template scope="scope">
+					计租/状态/删除
+				</template>
 			</el-table-column>
 		</el-table>
 	</div>
@@ -85,10 +92,10 @@
 		computed: {
 			filterMonthDetData () {
 				if (!this.monthDetSearch) {
-					return this.monthListData
+					return this.monthDetData
 				} else {
 					let _monthDetSearch = new RegExp(this.monthDetSearch, 'i')
-					return this.monthListData.filter((item)=>{
+					return this.monthDetData.filter((item)=>{
 						for (var i in item) {
 							if (i != 'fanghao' && i != 'remark') {
 								continue

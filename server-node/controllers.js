@@ -182,8 +182,14 @@ const inner = (req, res, next)=>{
 		} else {
 			next()
 		}
-
-
+	} else if (req.params.class === 'rent') {
+		if (req.params.function === 'listByMonth') {
+			service.rentListByMonth(req, res, (data)=>{
+				res.json(code(3061, data))
+			})
+		} else {
+			next()
+		}
 
 
 
