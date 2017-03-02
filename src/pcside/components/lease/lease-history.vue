@@ -10,6 +10,7 @@
 		}
 		.lease-show-tag{
 			display: inline-block;
+			vertical-align: middle;
 			cursor: pointer;
 			&.pop {
 				margin-left: 10px;

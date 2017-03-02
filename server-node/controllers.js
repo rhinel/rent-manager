@@ -167,6 +167,7 @@ const inner = (req, res, next)=>{
 			next()
 		}
 	} else if (req.params.class === 'month') {
+		//月度周期管理
 		if (req.params.function === 'add') {
 			service.monthAdd(req, res, (data)=>{
 				res.json(code(3051, data))
@@ -183,7 +184,12 @@ const inner = (req, res, next)=>{
 			next()
 		}
 	} else if (req.params.class === 'rent') {
-		if (req.params.function === 'listByMonth') {
+		//计租管理
+		if (req.params.function === 'add') {
+			service.rentAdd(req, res, (data)=>{
+				res.json(code(3062, data))
+			})
+		} else if (req.params.function === 'listByMonth') {
 			service.rentListByMonth(req, res, (data)=>{
 				res.json(code(3061, data))
 			})

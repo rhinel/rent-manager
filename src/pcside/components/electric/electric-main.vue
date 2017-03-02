@@ -473,7 +473,7 @@
 								duration: 2000
 							})
 							this.getAddElectricDialog()
-							this.gettingAddelectric = false
+							this.gettingAddElectric = false
 							this.getListRefresh()
 						}, (res)=>{
 							this.$message({

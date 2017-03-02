@@ -2023,9 +2023,107 @@ module.exports = {
 				!i.calElectricId && (i.calElectricId = {})
 				!i.leaseId && (i.leaseId = {})
 			})
-			return Promise.reject({
-				type: true,
-				data: data
+			return Promise.resolve(data)
+		})
+		.then((house)=>{
+			return db
+			.dbModel('rent')
+			.find({monthId: db.db.Types.ObjectId(req.body.monthId)})
+			.where('status').equals(1)
+			.lean()
+			.exec()
+			.then((data)=>{
+				house.forEach((i)=>{
+					i.rents = []
+					data.forEach((j)=>{
+						if (j.haoId.toString() == i._id.toString()) {
+							i.rents.push(j)
+						}
+					})
+				})
+				return Promise.reject({
+					type: true,
+					data: house
+				})
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	rentAdd (req, res, callback) {
+		//不做数据校验
+		//插入数据（存储新水费记录，电费记录，租住信息），错误退出
+		//更新房屋挂载ID，错误提出
+		//返回add对象
+		let addData
+		db
+		.dbModel('rent', {//*//标记，初始计租数据数数据类，新增类型
+			userId: db.db.Schema.Types.ObjectId, //用户ID
+			haoId: db.db.Schema.Types.ObjectId, //房屋ID，全拼
+			monthId: db.db.Schema.Types.ObjectId, //月度周期ID，全拼
+			calWater: Object, //水费计费
+			calElectric: Object, //电费计费
+			lease: Object, //租住信息
+			fanghao: String, //房屋
+			remark: String, //计费备注
+			addTime: String, //计费时间
+			fix: Boolean, //结果是否修正
+			calRentResult: Number, //计算结果
+			status: Number, //状态
+			createTime: Number //创建时间
+		})
+		.create({
+			userId: req.userId,
+			haoId: req.body.haoId,
+			monthId: req.body.monthId,
+			calWater: req.body.calWater,
+			calElectric: req.body.calElectric,
+			lease: req.body.lease,
+			fanghao: req.body.fanghao,
+			remark: req.body.remark,
+			addTime: req.body.addTime,
+			fix: req.body.fix,
+			calRentResult: req.body.calRentResult,
+			status: 1,
+			createTime: Date.now()
+		})
+		.then((data)=>{
+			if (data) {
+				addData = data
+				return Promise.resolve(data)
+			} else {			
+				return Promise.reject({
+					type: false
+				})
+			}
+		})
+		//更新房屋最新电表计费数信息
+		.then((data)=>{
+			return db
+			.dbModel('house', {//*//标记，更新房屋数据类，扩增最新计费数据引用类型
+				rentId: db.db.Schema.Types.ObjectId,
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body.haoId}, {
+				rentId: addData._id,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					return Promise.reject({
+						type: true,
+						data: addData
+					})
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
 			})
 		})
 		.catch((err)=>{
