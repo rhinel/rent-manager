@@ -13,11 +13,18 @@
 		.add-month-det-dialog{
 			.el-input{
 				width: 100%;
+				vertical-align: top;
 				// max-width: 300px;
 			}
 			.el-select{
 				width: 100%;
 				max-width: 300px;
+			}
+			.el-checkbox-group{
+				overflow: hidden;
+			}
+			.el-row-margin{
+				margin-bottom: 20px;
 			}
 		}
 		// 删除pop样式
@@ -135,7 +142,7 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="计租时间" :label-width="ardLabelWidth" prop="addTime">
-							<el-date-picker v-model="addRent.addTime" type="datetime" placeholder="输入计费时间"></el-date-picker>
+							<el-date-picker v-model="addRent.addTime" type="datetime" placeholder="输入计租时间"></el-date-picker>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -152,7 +159,7 @@
 		</el-dialog>
 
 		<!-- 状态修改表单 -->
-		<el-dialog :title="changeType.fanghao + ctdDialogTitle" v-model="changeTypeflag" size="tiny" class="add-month-det-dialog" :close-on-click-modal="false" @close="onChangeRentDialogClose">
+		<el-dialog :title="changeType.fanghao + ctdDialogTitle" v-model="changeTypeflag" size="tiny" class="add-month-det-dialog" :close-on-click-modal="false" @close="onChangeTypeDialogClose">
 			<el-form :model="changeType" ref="changeType">
 				<el-form-item>
 					<el-alert title="多选状态信息" type="info"></el-alert>
@@ -160,7 +167,14 @@
 				<el-form-item label="状态" :label-width="ctdLabelWidth">
 					<div>
 						<el-checkbox-group v-model="changeType.type" @change="onChangeType">
-							<el-checkbox v-for="type in types" :label="type.type">{{type.value}}</el-checkbox>
+							<el-row :gutter="20" v-for="type in types" class="el-row-margin">
+								<el-col :span="4">
+									<el-checkbox :label="type.value">{{type.label}}</el-checkbox>
+								</el-col>
+								<el-col :span="20">
+									<el-date-picker v-if="changeType.type.indexOf(type.value) > -1" v-model="changeType.typeTime[type.value]" type="datetime" placeholder="输入状态时间"></el-date-picker>
+								</el-col>
+							</el-row>
 						</el-checkbox-group>
 					</div>
 					<div>
@@ -169,8 +183,8 @@
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="getChangeRentDialog" :loading="gettingChangeType">取消</el-button>
-				<el-button type="primary" @click="getChangeRent" :loading="gettingChangeType">确定</el-button>
+				<el-button @click="getChangeTypeDialog" :loading="gettingChangeType">取消</el-button>
+				<el-button type="primary" @click="getChangeType" :loading="gettingChangeType">确定</el-button>
 			</div>
 		</el-dialog>
 
@@ -343,7 +357,7 @@
 						size="small"
 						type="primary"
 						v-if="scope.row.rents.length"
-						@click="getChangeRentDialog(scope.$index, scope.row)">状态</el-button>
+						@click="getChangeTypeDialog(scope.$index, scope.row)">状态</el-button>
 					<el-popover
 						placement="top"
 						width="150"
@@ -377,7 +391,7 @@
 		created () {
 			this.getListRefresh()
 			this.getResetAddRent()
-			this.getResetChangeRent()
+			this.getResetChangeType()
 		},
 		data () {
 			return {
@@ -413,14 +427,19 @@
 				ctdDialogTitle: '状态修改',
 				ctdLabelWidth: '90px',
 				types: [
-					{type: 0, value: '已交'},
-					{type: 1, value: '给单'},
-					{type: 2, value: '房东'}
+					{label: '已交', value: 1},
+					{label: '给单', value: 2},
+					{label: '房东', value: 3}	
 				],
 				changeType: {
 					fanghao: '',
 					rentId: '',
 					type: [],
+					typeTime: {
+						1: '',
+						2: '',
+						3: ''
+					},
 					isIndeterminate: false,
 					checkAll: false
 				},
@@ -541,7 +560,7 @@
 								duration: 2000
 							})
 							this.getAddRentDialog()
-							this.gettingAddelectric = false
+							this.gettingAddRent = false
 							this.getListRefresh()
 						}, (res)=>{
 							this.$message({
@@ -556,33 +575,75 @@
 					}
 				})
 			},
-			getChangeRentDialog (index, row) {
+			getChangeTypeDialog (index, row) {
 				this.changeTypeflag = !this.changeTypeflag
 				if (this.changeTypeflag && row) {
 					this.changeType.fanghao = row.rents[row.rents.length - 1].fanghao
 					this.changeType.rentId = row.rents[row.rents.length - 1]._id
 					this.changeType.type = row.rents[row.rents.length - 1].type || []
+					this.changeType.typeTime = row.rents[row.rents.length - 1].typeTime || {
+						1: '',
+						2: '',
+						3: ''
+					}
+					this.changeType.isIndeterminate = row.rents[row.rents.length - 1].isIndeterminate || false
+					this.changeType.checkAll = row.rents[row.rents.length - 1].checkAll || false
 				}
 			},
-			getResetChangeRent () {
+			getResetChangeType () {
 				this.changeType.fanghao = ''
 				this.changeType.rentId = ''
 				this.changeType.type = []
+				this.changeType.typeTime = {
+					1: '',
+					2: '',
+					3: ''
+				}
+				this.changeType.isIndeterminate = false
+				this.changeType.checkAll = false
 			},
-			onChangeRentDialogClose () {
-				this.getResetChangeRent()
+			onChangeTypeDialogClose () {
+				this.getResetChangeType()
 			},
 			onChangeType (value) {
 				let checkedCount = value.length
+				value[checkedCount - 1] && !this.changeType.typeTime[value[checkedCount - 1]] && (this.changeType.typeTime[value[checkedCount - 1]] = new Date())
+				this.types.forEach((i)=>{
+					value.indexOf(i.value) === -1 && (this.changeType.typeTime[i.value] = '')
+				})
         		this.changeType.checkAll = checkedCount === this.types.length
         		this.changeType.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
 			},
 			onCheckAllChange (event) {
-				this.changeType.type = event.target.checked ? [0, 1, 2] : []
+				this.changeType.type = event.target.checked ? [1, 2, 3] : []
+				for (var i in this.changeType.typeTime) {
+					this.changeType.typeTime[i] = !this.changeType.typeTime[i] && event.target.checked ? new Date() : (!event.target.checked ? '' : this.changeType.typeTime[i])
+				}
         		this.changeType.isIndeterminate = false
 			},
-			getChangeRent () {
-
+			getChangeType () {
+				if (this.gettingChangeType) {
+					return true
+				}
+				this.gettingChangeType = true
+				let _data = Object.assign({}, this.changeType)
+				this.Ajax('/inner/rent/type', _data, (res)=>{
+					this.$message({
+						type: 'success',
+						message: '状态更新成功',
+						duration: 2000
+					})
+					this.getChangeTypeDialog()
+					this.gettingChangeType = false
+					this.getListRefresh()
+				}, (res)=>{
+					this.$message({
+						type: 'error',
+						message: '编号：' + res.body.code + '，' + res.body.msg,
+						duration: 2000
+					})
+					this.gettingChangeType = false
+				})
 			},
 			getDelRent (index, row) {
 
