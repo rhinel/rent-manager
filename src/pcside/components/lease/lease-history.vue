@@ -24,6 +24,9 @@
 			-webkit-box-orient: vertical;
 		}
 	}
+	.lease-remark{
+		max-width: 200px;
+	}
 </style>
 
 <template>

@@ -2022,6 +2022,10 @@ module.exports = {
 				!i.calWaterId && (i.calWaterId = {})
 				!i.calElectricId && (i.calElectricId = {})
 				!i.leaseId && (i.leaseId = {})
+				//loading字段提供
+				!i.gettingdelRent && (i.gettingdelRent = false)
+				//del提示字段提供
+				!i.dRentPopFlag && (i.dRentPopFlag = false)
 			})
 			return Promise.resolve(data)
 		})
@@ -2132,6 +2136,9 @@ module.exports = {
 				data: err.data || err.message
 			})
 		})
+	},
+	rentType: (req, res, callback)=>{
+		
 	},
 
 	//收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
