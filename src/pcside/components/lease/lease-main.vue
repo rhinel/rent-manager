@@ -266,7 +266,7 @@
 					label="备注">
 					<template scope="scope">
 						<el-popover
-							placement="right"
+							placement="top"
 							trigger="hover">
 							<div class="lease-remark">{{ scope.row.leaseId.remark }}</div>
 							<div slot="reference" class="lease-show-tag">
@@ -335,7 +335,7 @@
 			</el-table-column>
 			<el-table-column
 				label="操作"
-				width="200">
+				width="230">
 				<template scope="scope">
 					<el-button
 						size="small"

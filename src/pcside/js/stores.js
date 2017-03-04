@@ -5,7 +5,8 @@ module.exports = {
 	//数据
 	state: {
 		menuing: '',
-		menuCheck: ''
+		menuCheck: '',
+		titleAdd: ''
 	},
 	//处理
 	getters: {
@@ -18,6 +19,9 @@ module.exports = {
 		},
 		menuCheck (state, path) {
 			state.menuCheck = path
+		},
+		titleAdd (state, add) {
+			state.titleAdd = add
 		}
 	},
 	//行为
@@ -27,6 +31,9 @@ module.exports = {
 		},
 		menuCheck (context, path) {
 			context.commit('menuCheck', path)
+		},
+		titleAdd (context, add) {
+			context.commit('titleAdd', add)
 		}
 	}
 }

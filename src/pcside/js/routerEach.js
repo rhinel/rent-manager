@@ -50,6 +50,7 @@ const beforeEach = function(to, from, next, vue) {
 
 const afterEach = function (to, from, vue) {
 	vue && vue.$store.dispatch('menuCheck', '')
+	vue && vue.$store.dispatch('titleAdd', '')
 }
 
 module.exports = {

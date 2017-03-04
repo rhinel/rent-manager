@@ -176,10 +176,10 @@ module.exports = {
 		用户ID ok
 		水费抄表ID ok
 		水费计费ID ok
-		电费抄表ID
-		电费计费ID
+		电费抄表ID ok
+		电费计费ID ok
 		租户ID ok
-		收租ID
+		收租ID ok
 	*/
 
 	houseAdd: (req, res, callback)=>{
@@ -806,6 +806,7 @@ module.exports = {
 				.dbModel('water')
 				.findOne({})
 				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('haoId').equals(db.db.Types.ObjectId(req.body.haoId))
 				.where('status').equals(1)
 				.sort('-addTime')
 				.exec()
@@ -891,6 +892,7 @@ module.exports = {
 				.dbModel('watercal')
 				.findOne({})
 				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('haoId').equals(db.db.Types.ObjectId(req.body.haoId))
 				.where('status').equals(1)
 				.sort('-addTime')
 				.exec()
@@ -1345,6 +1347,7 @@ module.exports = {
 				.dbModel('electric')
 				.findOne({})
 				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('haoId').equals(db.db.Types.ObjectId(req.body.haoId))
 				.where('status').equals(1)
 				.sort('-addTime')
 				.exec()
@@ -1430,6 +1433,7 @@ module.exports = {
 				.dbModel('electriccal')
 				.findOne({})
 				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('haoId').equals(db.db.Types.ObjectId(req.body.haoId))
 				.where('status').equals(1)
 				.sort('-addTime')
 				.exec()
@@ -1736,7 +1740,7 @@ module.exports = {
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(2)
-		.sort('-addTime')
+		.sort('-createTime')
 		.lean()
 		.exec()
 		.then((data)=>{
@@ -1801,11 +1805,11 @@ module.exports = {
 
 	/*
 		收租周期表对象挂载
-		用户ID
+		用户ID ok
 		收租对象挂载
-		用户ID
-		收租周期表ID
-		房屋ID
+		用户ID ok
+		收租周期表ID ok
+		房屋ID ok
 	*/
 
 	monthAdd (req, res, callback) {
@@ -1943,6 +1947,38 @@ module.exports = {
 			})
 		})
 	},
+	monthFind: (req, res, callback)=> {
+		//不校验字段
+		//查询数据，错误退出
+		//返回find对象
+		db
+		//数据库查询
+		.dbModel('month')
+		.findOne({_id: req.body._id})
+		.where('status').equals(1)
+		.exec()
+		.then((data)=>{
+			if (data) {
+				return Promise.reject({
+					type: true,
+					data: data
+				})
+			} else {
+				return Promise.reject({
+					code: 30541,
+					type: false,
+					data: '数据不存在'
+				})
+			}	
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				code: err.code || '',
+				data: err.data || err.message
+			})
+		})
+	},
 	monthDel: (req, res, callback)=>{
 		//校验字段，错误提出
 		//修改状态
@@ -1979,7 +2015,10 @@ module.exports = {
 	},
 	rentListByMonth (req, res, callback) {
 		//通过房屋查询所有最新挂载信息：电费计费，水费计费，租约信息
-		//
+		//初始化字段后
+		//再根据monthId查询月度信息
+		//根据房屋Id插入monthId信息
+		//返回list对象
 		db.dbModel('watercal')
 		db.dbModel('electriccal')
 		db.dbModel('lease')
@@ -2105,10 +2144,10 @@ module.exports = {
 				})
 			}
 		})
-		//更新房屋最新电表计费数信息
+		//更新房屋最新计租数信息
 		.then((data)=>{
 			return db
-			.dbModel('house', {//*//标记，更新房屋数据类，扩增最新计费数据引用类型
+			.dbModel('house', {//*//标记，更新房屋数据类，扩增最新计租数据引用类型
 				rentId: db.db.Schema.Types.ObjectId,
 				updateTime: Number //更新时间
 			})
@@ -2138,7 +2177,138 @@ module.exports = {
 		})
 	},
 	rentType: (req, res, callback)=>{
-		
+		//校验字段，错误退出
+		//修改字段状态
+		//返回del对象
+		if (!req.body.rentId) {
+			callback({
+				type: false
+			})
+		} else {
+			db
+			//根据ID修改状态
+			.dbModel('rent', {//*//标记，计租数据类，状态修改类型
+				type: {
+					checkAll: Boolean,
+					isIndeterminate: Boolean,
+					type: Array,
+					typeTime: {
+						'1': String,
+						'2': String,
+						'3': String
+					}
+				},
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body.rentId}, {
+				type: {
+					checkAll: req.body.checkAll,
+					isIndeterminate: req.body.isIndeterminate,
+					type: req.body.type,
+					typeTime: req.body.typeTime
+				},
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				return Promise.reject({
+					type: true,
+					data: data
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
+	},
+	rentDel: (req, res, callback)=>{
+		//校验数据，错误退出
+		//修改状态，错误退出
+		//查询上一条数据
+		//更新房屋挂载ID，错误退出
+		//返回del对象
+		if (!req.body._id || !req.body.haoId) {
+			callback({
+				type: false
+			})
+		} else {
+			let delData
+			let moveData
+			db
+			//根据ID修改状态
+			.dbModel('rent', {//*//标记，初始电费计费数据类，删除类型
+				status: Number, //状态
+				updateTime: Number //更新时间
+			})
+			.findOneAndUpdate({_id: req.body._id}, {
+				status: 0,
+				updateTime: Date.now()
+			})
+			.exec()
+			.then((data)=>{
+				if (data) {
+					delData = data
+					return Promise.resolve(data)
+				} else {
+					return Promise.reject({
+						type: false
+					})
+				}
+			})
+			//查询上一条电表计费数据
+			.then((data)=>{
+				return db
+				.dbModel('rent')
+				.findOne({})
+				.where('userId').equals(db.db.Types.ObjectId(req.userId))
+				.where('haoId').equals(db.db.Types.ObjectId(req.body.haoId))
+				.where('status').equals(1)
+				.sort('-addTime')
+				.exec()
+				.then((data)=>{
+					if (data) {
+						moveData = data
+					} else {
+						moveData = {_id: null}
+					}
+					return Promise.resolve(data)
+				})
+			})
+			//更新房屋最新电表计费信息
+			.then((data)=>{
+				return db
+				.dbModel('house', {//*//标记，更新房屋数据类，扩增最新电表计费引用类型
+					rentId: db.db.Schema.Types.ObjectId,
+					updateTime: Number //更新时间
+				})
+				.findOneAndUpdate({_id: req.body.haoId}, {
+					rentId: moveData._id,
+					updateTime: Date.now()
+				})
+				.exec()
+				.then((data)=>{
+					if (data) {
+						return Promise.reject({
+							type: true,
+							data: delData
+						})
+					} else {
+						return Promise.reject({
+							type: false
+						})
+					}
+				})
+			})
+			.catch((err)=>{
+				callback({
+					type: err.type || false,
+					data: err.data || err.message
+				})
+			})
+		}
 	},
 
 	//收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
@@ -2149,11 +2319,11 @@ module.exports = {
 	//根据房屋，带挂载收租信息list，进历史
 	//
 	//
-	//收租add，更新房屋挂载ID
-	//收租type多选：交租、给单据、给房东
-	//收租del，需要回退房屋挂载ID
-	//根据收租周期表收租列表list，可添加，可修改收租状态，可删除收租
-	//根据房屋收租历史list，可删除收租
+	//收租add，更新房屋挂载ID OK
+	//收租type多选：交租、给单据、给房东 OK
+	//收租del，需要回退房屋挂载ID OK
+	//根据收租周期表收租列表list，可添加，可修改收租状态，最新一期可删除收租
+	//根据房屋收租历史list，最新一个可删除收租
 
 	/***inner类****其他********************************************************************************************************/
 

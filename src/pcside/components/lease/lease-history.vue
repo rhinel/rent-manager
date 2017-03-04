@@ -10,11 +10,6 @@
 		}
 		.lease-show-tag{
 			display: inline-block;
-			vertical-align: middle;
-			cursor: pointer;
-			&.pop {
-				margin-left: 10px;
-			}
 		}
 		.lease-remark-tag{
 			overflow: hidden;
@@ -84,7 +79,7 @@
 					label="备注">
 					<template scope="scope">
 						<el-popover
-							placement="right"
+							placement="top"
 							trigger="hover">
 							<div class="lease-remark">{{ scope.row.remark }}</div>
 							<div slot="reference" class="lease-show-tag">

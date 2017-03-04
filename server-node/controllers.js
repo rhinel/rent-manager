@@ -180,6 +180,10 @@ const inner = (req, res, next)=>{
 			service.monthDel(req, res, (data)=>{
 				res.json(code(3053, data))
 			})
+		} else if (req.params.function === 'find') {
+			service.monthFind(req, res, (data)=>{
+				res.json(code(3054, data))
+			})
 		} else {
 			next()
 		}
@@ -192,6 +196,14 @@ const inner = (req, res, next)=>{
 		} else if (req.params.function === 'listByMonth') {
 			service.rentListByMonth(req, res, (data)=>{
 				res.json(code(3061, data))
+			})
+		} else if (req.params.function === 'type') {
+			service.rentType(req, res, (data)=>{
+				res.json(code(3063, data))
+			})
+		} else if (req.params.function === 'del') {
+			service.rentDel(req, res, (data)=>{
+				res.json(code(3064, data))
 			})
 		} else {
 			next()

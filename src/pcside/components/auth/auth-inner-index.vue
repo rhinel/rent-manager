@@ -57,7 +57,7 @@
 				Rent Manager
 			</div>
 			<div class="header-name">
-				{{$route.meta.name}}
+				{{$route.meta.name + ' ' + titleAdd}}
 			</div>
 			<div class="header-right" @click="logout">
 				<i class="el-icon-star-on"></i>登出<i v-show="logouting" class="el-icon-loading"></i>
@@ -90,6 +90,9 @@
 			},
 			menuCheck () {
 				return this.$store.state.menuCheck
+			},
+			titleAdd () {
+				return this.$store.state.titleAdd
 			}
 		},
 		methods: {
