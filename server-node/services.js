@@ -1569,7 +1569,8 @@ module.exports = {
 			},
 
 			rent: Number, //租金
-			deposit: Number //押金
+			deposit: Number, //押金
+			addTime: String //入住时间
 		}
 		if (req.body._id) {
 			let editLeaseModel = leaseModel
@@ -1740,7 +1741,7 @@ module.exports = {
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(2)
-		.sort('-createTime')
+		.sort('-addTime')
 		.lean()
 		.exec()
 		.then((data)=>{

@@ -12,6 +12,9 @@
 			.el-date-editor--daterange.el-input{
 				width: 100%;
 			}
+			.el-select{
+				width: 100%;
+			}
 			.line{
 				height: 14px;
 			}
@@ -19,7 +22,7 @@
 		.lease-show-tag{
 			display: inline-block;
 			cursor: pointer;
-			&.pop {
+			&.pop{
 				margin-left: 10px;
 			}
 		}
@@ -112,7 +115,9 @@
 				</el-row>
 				<!-- 单价计费 -->
 				<el-form-item label="水费单价" :label-width="lidLabelWidth" v-if="lease.calWaterPrice.calType == 'single'" prop="calWaterPrice.singlePrice">
-					<el-input v-model.number="lease.calWaterPrice.singlePrice" auto-complete="off" placeholder="输入单价"><template slot="prepend">￥</template><template slot="append">元/吨</template></el-input>
+					<el-col :span="13">
+						<el-input v-model.number="lease.calWaterPrice.singlePrice" auto-complete="off" placeholder="输入单价"><template slot="prepend">￥</template><template slot="append">元/吨</template></el-input>
+					</el-col>
 				</el-form-item>
 				<!-- 阶梯计费 -->
 				<el-form-item
@@ -165,7 +170,9 @@
 				</el-row>
 				<!-- 单价计费 -->
 				<el-form-item label="电费单价" :label-width="lidLabelWidth" v-if="lease.calElePrice.calType == 'single'" prop="calElePrice.singlePrice">
-					<el-input v-model.number="lease.calElePrice.singlePrice" auto-complete="off" placeholder="输入单价"><template slot="prepend">￥</template><template slot="append">元/度</template></el-input>
+					<el-col :span="13">
+						<el-input v-model.number="lease.calElePrice.singlePrice" auto-complete="off" placeholder="输入单价"><template slot="prepend">￥</template><template slot="append">元/度</template></el-input>
+					</el-col>
 				</el-form-item>
 				<!-- 阶梯计费 -->
 				<el-form-item
@@ -202,14 +209,19 @@
 					<el-button type="primary" @click="addStep(lease.calElePrice)">新增阶梯</el-button>
 				</el-form-item>
 				<el-row :gutter="20">
-					<el-col :span="12">
+					<el-col :span="7">
 						<el-form-item label="租金(月)" :label-width="lidLabelWidth" prop="rent">
 							<el-input v-model.number="lease.rent" auto-complete="off" placeholder="输入租金"><template slot="prepend">￥</template><template slot="append">元/月</template></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
+					<el-col :span="8">
 						<el-form-item label="押金" :label-width="lidLabelWidth" prop="deposit">
 							<el-input v-model.number="lease.deposit" auto-complete="off" placeholder="输入押金"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="9">
+						<el-form-item label="入住时间" :label-width="lidLabelWidth" prop="addTime">
+							<el-date-picker v-model="lease.addTime" type="datetime" placeholder="输入入住时间" style="width: 100%;"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -237,7 +249,7 @@
 				<el-table-column
 					prop="leaseId.name"
 					label="姓名/联系方式"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div>{{ scope.row.leaseId.name || '--' }}</div>
 						<div>{{ scope.row.leaseId.call || '--' }}</div>
@@ -250,6 +262,14 @@
 					<template scope="scope">
 						<div>{{ getTime(scope.row.leaseId.leaserange && scope.row.leaseId.leaserange[0]) }}</div>
 						<div>{{ getTime(scope.row.leaseId.leaserange && scope.row.leaseId.leaserange[1]) }}</div>
+					</template>
+				</el-table-column>
+				<el-table-column
+					prop="leaseId.addTime"
+					label="入住时间"
+					width="180">
+					<template scope="scope">
+						<div>{{ getTime(scope.row.leaseId.addTime) }}</div>
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -280,7 +300,7 @@
 				label="计费信息">
 				<el-table-column
 					label="水费"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div v-if="scope.row.leaseId.calWaterPrice">
 							<div>低消：￥{{ scope.row.leaseId.calWaterPrice.minPrice }}吨</div>
@@ -303,7 +323,7 @@
 				</el-table-column>
 				<el-table-column
 					label="电费"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div v-if="scope.row.leaseId.calElePrice">
 							<div>低消：￥{{ scope.row.leaseId.calElePrice.minPrice }}度</div>
@@ -326,7 +346,7 @@
 				</el-table-column>
 				<el-table-column
 					label="当前租金/押金"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div>{{ '租金：￥' + (scope.row.leaseId.rent || 0) + '元/月' }}</div>
 						<div>{{ '押金：￥' + (scope.row.leaseId.deposit || 0) + '元' }}</div>
@@ -425,7 +445,8 @@
 					},
 
 					rent: 0,
-					deposit: 0
+					deposit: 0,
+					addTime: ''
 				},
 				leaserules: {
 					'name': [{ required: true, message: '请填写', trigger: 'blur' }],
@@ -438,7 +459,8 @@
 					'calElePrice.minPrice': [{ type: 'number', required: true, message: '请填写', trigger: 'blur' }],
 					'calElePrice.singlePrice': [{ type: 'number', required: true, message: '请填写', trigger: 'blur' }],
 					'rent': [{ type: 'number', required: true, message: '请填写', trigger: 'blur' }],
-					'deposit': [{ type: 'number', required: true, message: '请填写', trigger: 'blur' }]
+					'deposit': [{ type: 'number', required: true, message: '请填写', trigger: 'blur' }],
+					'addTime': [{ type: 'date', required: true, message: '请填写', trigger: 'change' }]
 				},
 				payTypeVal: ['微信', '支付宝', '银行转账', '现金'],
 				leasePickerOptions: {
@@ -564,6 +586,7 @@
 					this.lease.remark = row.leaseId && row.leaseId.remark || ''
 					this.lease.rent = row.leaseId && row.leaseId.rent || 0
 					this.lease.deposit = row.leaseId && row.leaseId.deposit || 0
+					this.lease.addTime = row.leaseId && new Date(row.leaseId.addTime) || new Date()
 					//calWater
 					this.lease.calWaterPrice.minPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.minPrice || this.defaultCalWaterPrice.minPrice
 					this.lease.calWaterPrice.calType = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.calType || this.defaultCalWaterPrice.calType

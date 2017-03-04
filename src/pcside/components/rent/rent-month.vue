@@ -99,8 +99,8 @@
 								最低消费：{{addRent.calWater.calWater.minPrice}}吨<br>
 								本次表数：{{addRent.calWater.tnew.water}}吨（{{getTime(addRent.calWater.tnew.addTime)}}）<br>
 								上次表数：{{addRent.calWater.old.water}}吨（{{getTime(addRent.calWater.old.addTime)}}）<br>
-								计费单价：{{addRent.calWater.calWater.calType == 'single' ? addRent.calWater.calWater.singlePrice : getPrice(addRent.calWater.calWater.stepPrice, addRent.calWater.tnew.water - addRent.calWater.old.water)}}元/吨<br>
-								水费：{{addRent.calWater.calWaterResult}}元（{{addRent.calWater.fix ? '修' : '计'}}）<br>
+								计费单价：￥{{addRent.calWater.calWater.calType == 'single' ? addRent.calWater.calWater.singlePrice : getPrice(addRent.calWater.calWater.stepPrice, addRent.calWater.tnew.water - addRent.calWater.old.water)}}元/吨<br>
+								水费：￥{{addRent.calWater.calWaterResult}}元（{{addRent.calWater.fix ? '修' : '计'}}）<br>
 								计费时间：{{getTime(addRent.calWater.addTime)}}
 							</div>
 							<div v-else>
@@ -115,8 +115,8 @@
 								最低消费：{{addRent.calElectric.calElectric.minPrice}}度<br>
 								本次表数：{{addRent.calElectric.tnew.electric}}度（{{getTime(addRent.calElectric.tnew.addTime)}}）<br>
 								上次表数：{{addRent.calElectric.old.electric}}度（{{getTime(addRent.calElectric.old.addTime)}}）<br>
-								计费单价：{{addRent.calElectric.calElectric.calType == 'single' ? addRent.calElectric.calElectric.singlePrice : getPrice(addRent.calElectric.calElectric.stepPrice, addRent.calElectric.tnew.electric - addRent.calElectric.old.electric)}}元/度<br>
-								电费：{{addRent.calElectric.calElectricResult}}元（{{addRent.calElectric.fix ? '修' : '计'}}）<br>
+								计费单价：￥{{addRent.calElectric.calElectric.calType == 'single' ? addRent.calElectric.calElectric.singlePrice : getPrice(addRent.calElectric.calElectric.stepPrice, addRent.calElectric.tnew.electric - addRent.calElectric.old.electric)}}元/度<br>
+								电费：￥{{addRent.calElectric.calElectricResult}}元（{{addRent.calElectric.fix ? '修' : '计'}}）<br>
 								计费时间：{{getTime(addRent.calElectric.addTime)}}
 							</div>
 							<div v-else>
@@ -135,12 +135,12 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="本月租金" :label-width="ardLabelWidth" prop="lease.rent">
-							<el-input v-model.number="addRent.lease.rent" auto-complete="off" placeholder="输入本月租金"><template slot="append">元</template></el-input>
+							<el-input v-model.number="addRent.lease.rent" auto-complete="off" placeholder="输入本月租金"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item :label="addRent.fix ? '租金修正' : '租金合计'" :label-width="ardLabelWidth" prop="calRentResult">
-							<el-input v-model.number="addRent.calRentResult" auto-complete="off" placeholder="输入本月租金合计"><template slot="append">元</template></el-input>
+							<el-input v-model.number="addRent.calRentResult" auto-complete="off" placeholder="输入本月租金合计"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -234,7 +234,7 @@
 								</el-popover>
 							</div>
 							<div v-if="scope.row.rents.length && getRent(scope).calWater">
-								<span>{{getRent(scope).calWater.calWater.calType == 'single' ? getRent(scope).calWater.calWater.singlePrice : getPrice(getRent(scope).calWater.calWater.stepPrice, getRent(scope).calWater.tnew.water - getRent(scope).calWater.old.water)}}元/吨</span>
+								<span>￥{{getRent(scope).calWater.calWater.calType == 'single' ? getRent(scope).calWater.calWater.singlePrice : getPrice(getRent(scope).calWater.calWater.stepPrice, getRent(scope).calWater.tnew.water - getRent(scope).calWater.old.water)}}元/吨</span>
 							</div>
 							<div v-if="scope.row.rents.length && !getRent(scope).calWater">
 								暂无
@@ -247,7 +247,7 @@
 						<template scope="scope">
 							<div v-if="scope.row.rents.length && getRent(scope).calWater">
 								<el-tag>{{getRent(scope).calWater.fix ? '修' : '计'}}</el-tag>
-								<span>{{getRent(scope).calWater.calWaterResult}}元</span>
+								<span>￥{{getRent(scope).calWater.calWaterResult}}元</span>
 							</div>
 							<div v-if="scope.row.rents.length && getRent(scope).calWater">
 								<span>{{getTime(getRent(scope).calWater.addTime)}}</span>
@@ -278,7 +278,7 @@
 								</el-popover>
 							</div>
 							<div v-if="scope.row.rents.length && getRent(scope).calElectric">
-								<span>{{getRent(scope).calElectric.calElectric.calType == 'single' ? getRent(scope).calElectric.calElectric.singlePrice : getPrice(getRent(scope).calElectric.calElectric.stepPrice, getRent(scope).calElectric.tnew.electric - getRent(scope).calElectric.old.electric)}}元/度</span>
+								<span>￥{{getRent(scope).calElectric.calElectric.calType == 'single' ? getRent(scope).calElectric.calElectric.singlePrice : getPrice(getRent(scope).calElectric.calElectric.stepPrice, getRent(scope).calElectric.tnew.electric - getRent(scope).calElectric.old.electric)}}元/度</span>
 							</div>
 							<div v-if="scope.row.rents.length && !getRent(scope).calElectric">
 								暂无
@@ -291,7 +291,7 @@
 						<template scope="scope">
 							<div v-if="scope.row.rents.length && getRent(scope).calElectric">
 								<el-tag>{{getRent(scope).calElectric.fix ? '修' : '计'}}</el-tag>
-								<span>{{getRent(scope).calElectric.calElectricResult}}元</span>
+								<span>￥{{getRent(scope).calElectric.calElectricResult}}元</span>
 							</div>
 							<div v-if="scope.row.rents.length && getRent(scope).calElectric">
 								<span>{{getTime(getRent(scope).calElectric.addTime)}}</span>
@@ -321,7 +321,7 @@
 							</el-popover>
 						</div>
 						<div v-if="scope.row.rents.length && getRent(scope).lease.name">
-							<span>{{getRent(scope).lease.rent}}元</span>
+							<span>￥{{getRent(scope).lease.rent}}元</span>
 						</div>
 						<div v-if="scope.row.rents.length && !getRent(scope).lease.name">
 							暂无
@@ -334,7 +334,7 @@
 					<template scope="scope">
 						<div v-if="scope.row.rents.length">
 							<el-tag>{{getRent(scope).fix ? '修' : '计'}}</el-tag>
-							<span>{{getRent(scope).calRentResult}}元</span>
+							<span>￥{{getRent(scope).calRentResult}}元</span>
 						</div>
 						<div v-if="scope.row.rents.length">{{getTime(getRent(scope).addTime)}}</div>
 					</template>

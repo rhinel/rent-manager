@@ -10,6 +10,7 @@
 		}
 		.lease-show-tag{
 			display: inline-block;
+			cursor: pointer;
 		}
 		.lease-remark-tag{
 			overflow: hidden;
@@ -50,7 +51,7 @@
 				<el-table-column
 					prop="name"
 					label="姓名/联系方式"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div>{{ scope.row.name || '--' }}</div>
 						<div>{{ scope.row.call || '--' }}</div>
@@ -90,10 +91,10 @@
 				</el-table-column>
 				<el-table-column
 					prop="leaseId.leaserange"
-					label="入住-添加/搬出时间"
+					label="入住/搬出时间"
 					width="180">
 					<template scope="scope">
-						<div>{{ getTime(scope.row.createTime) }}</div>
+						<div>{{ getTime(scope.row.addTime) }}</div>
 						<div>{{ getTime(scope.row.updateTime) }}</div>
 					</template>
 				</el-table-column>
@@ -102,7 +103,7 @@
 				label="计费信息">
 				<el-table-column
 					label="水费"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div v-if="scope.row.calWaterPrice">
 							<div>低消：￥{{ scope.row.calWaterPrice.minPrice }}吨</div>
@@ -125,7 +126,7 @@
 				</el-table-column>
 				<el-table-column
 					label="电费"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div v-if="scope.row.calElePrice">
 							<div>低消：￥{{ scope.row.calElePrice.minPrice }}度</div>
@@ -148,7 +149,7 @@
 				</el-table-column>
 				<el-table-column
 					label="当前租金/押金"
-					width="180">
+					width="150">
 					<template scope="scope">
 						<div>{{ '租金：￥' + (scope.row.rent || 0) + '元/月' }}</div>
 						<div>{{ '押金：￥' + (scope.row.deposit || 0) + '元' }}</div>
