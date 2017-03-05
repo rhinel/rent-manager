@@ -1954,13 +1954,11 @@ module.exports = {
 		.dbModel('month')
 		.findOne({_id: req.body._id})
 		.where('status').equals(1)
+		.lean()
 		.exec()
 		.then((data)=>{
 			if (data) {
-				return Promise.reject({
-					type: true,
-					data: data
-				})
+				return Promise.resolve(data)
 			} else {
 				return Promise.reject({
 					code: 30541,
@@ -1968,6 +1966,26 @@ module.exports = {
 					data: '数据不存在'
 				})
 			}	
+		})
+		.then((data)=>{
+			return db
+			.dbModel('month')
+			.findOne({})
+			.where('userId').equals(db.db.Types.ObjectId(req.userId))
+			.where('status').equals(1)
+			.sort('-month')
+			.exec()
+			.then((one)=>{
+				if (one._id.toString() == data._id.toString()) {
+					data.newest = true
+				} else {
+					data.newest = false
+				}
+				return Promise.reject({
+					type: true,
+					data: data
+				})
+			})
 		})
 		.catch((err)=>{
 			callback({
@@ -2308,20 +2326,63 @@ module.exports = {
 			})
 		}
 	},
+	rentListByHao: (req, res, callback)=>{
+		//查询数据
+		//返回list对象
+		db.dbModel('house')
+		db.dbModel('month')
+		db
+		.dbModel('rent')
+		.find({haoId: db.db.Types.ObjectId(req.body.haoId)})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime',
+			match: {status: 1}
+		})
+		.populate({
+			path: 'monthId',
+			model: 'month',
+			select: 'month',
+			match: {status: 1}
+		})
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-addTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			//字段初始化
+			data.forEach((i)=>{
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
 
 	//收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
 	//
 	//
 	//收租周期表add OK
 	//根据收租周期表list，进列表 OK
-	//根据房屋，带挂载收租信息list，进历史
+	//根据房屋，带挂载收租信息list，进历史 OK
 	//
 	//
 	//收租add，更新房屋挂载ID OK
 	//收租type多选：交租、给单据、给房东 OK
 	//收租del，需要回退房屋挂载ID OK
-	//根据收租周期表收租列表list，可添加，可修改收租状态，最新一期可删除收租
-	//根据房屋收租历史list，最新一个可删除收租
+	//根据收租周期表收租列表list，可添加，可修改收租状态，最新一期可删除收租 OK
+	//根据房屋收租历史list OK
 
 	/***inner类****其他********************************************************************************************************/
 

@@ -205,16 +205,13 @@ const inner = (req, res, next)=>{
 			service.rentDel(req, res, (data)=>{
 				res.json(code(3064, data))
 			})
+		} else if (req.params.function === 'listByHao') {
+			service.rentListByHao(req, res, (data)=>{
+				res.json(code(3065, data))
+			})
 		} else {
 			next()
 		}
-
-
-
-
-
-
-
 	} else if (req.params.class === 'getData') {
 		service.getData(req, res, (data)=>{
 			res.json(code(3001, data))

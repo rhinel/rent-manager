@@ -319,6 +319,7 @@
 								<div>联系方式：{{getRent(scope).lease.call}}</div>
 								<div>租住起始：{{getTime(getRent(scope).lease.leaserange[0])}}</div>
 								<div>租住结束：{{getTime(getRent(scope).lease.leaserange[1])}}</div>
+								<div>入住时间：{{getTime(getRent(scope).lease.addTime)}}</div>
 								<div>备注：{{getRent(scope).lease.remark || '--'}}</div>
 								<div slot="reference" class="rent-show-tag">
 									<el-tag>{{payTypeVal[getRent(scope).lease.payType]}}</el-tag>
@@ -385,6 +386,7 @@
 					<el-button
 						size="small"
 						type="primary"
+						v-if="monthDet.newest"
 						@click="getAddRentDialog(scope.$index, scope.row)">计租</el-button>
 					<el-button
 						size="small"
@@ -395,7 +397,7 @@
 						placement="top"
 						width="150"
 						trigger="click"
-						v-if="scope.row.rents.length"
+						v-if="scope.row.rents.length && monthDet.newest"
 						v-model="scope.row.dRentPopFlag">
 						<p>确认删除该计租信息吗？其他数据不受影响，但无法恢复关联信息</p>
 						<div class="month-det-d-rent-pop-cont">
