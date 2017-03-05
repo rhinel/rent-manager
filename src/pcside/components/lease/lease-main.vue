@@ -231,6 +231,22 @@
 				<el-button type="primary" @click="getLeaseIn" :loading="gettingLeaseIn">确定</el-button>
 			</div>
 		</el-dialog>
+
+		<!-- 搬出弹窗 -->
+		<el-dialog :title="out.fanghao + lodDialogTitle" v-model="leaseOutflag" size="tiny" class="lease-out-dialog" :close-on-click-modal="false" @close="onLeaseOutDialogClose">
+			<el-form :model="out" ref="leaseOut" :rules="outrules">
+				<el-form-item>
+					<el-alert title="确认已经结清所有费用？此行为不可撤销" type="info"></el-alert>
+				</el-form-item>
+				<el-form-item label="搬出时间" :label-width="lodLabelWidth" prop="outTime">
+					<el-date-picker v-model="out.outTime" type="datetime" placeholder="输入搬出时间" style="width: 100%; max-width: 300px;"></el-date-picker>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="getLeaseOutDialog" :loading="gettingLeaseOut">取消</el-button>
+				<el-button type="primary" @click="getLeaseOut" :loading="gettingLeaseOut">确定</el-button>
+			</div>
+		</el-dialog>
 		
 		<!-- 租住数据表 -->
 		<el-table
@@ -363,26 +379,13 @@
 						@click="getLeaseHistory(scope.$index, scope.row)">历史</el-button>
 					<el-button
 						size="small"
-						type="danger"
+						type="primary"
 						@click="getLeaseInDialog(scope.$index, scope.row)">{{ scope.row.leaseId._id ? '修改' : '入住' }}</el-button>
-					<el-popover
-							placement="top"
-							width="150"
-							trigger="click"
-							v-if="scope.row.leaseId._id"
-							v-model="scope.row.leaseoPopFlag">
-							<p>确认已经结清所有费用？此行为不可撤销</p>
-							<div class="lease-list-lease-o-pop-cont">
-								<el-button size="mini" type="text" @click="scope.row.leaseoPopFlag = false">取消</el-button>
-								<el-button type="danger" size="mini" @click="(scope.row.leaseoPopFlag = false) || getLeaseOut(scope.$index, scope.row)">确定</el-button>
-							</div>
-							<div slot="reference" class="lease-show-tag pop">
-								<el-button
-									size="small"
-									type="danger"
-									:loading="scope.row.gettingLeaseOut">搬出</el-button>
-							</div>
-						</el-popover>
+					<el-button
+						size="small"
+						type="danger"
+						v-if="scope.row.leaseId._id"
+						@click="getLeaseOutDialog(scope.$index, scope.row)">搬出</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -521,7 +524,22 @@
 						}]
 				},
 				gettingLeaseIn: false,
-				editLeaseId: ''
+				editLeaseId: '',
+
+				lodDialogTitle: '搬出',
+				lodLabelWidth: '90px',
+				leaseOutflag: false,
+				out: {
+					_id: '',
+					haoId: '',
+					fanghao: '',
+					outTime: ''
+				},
+				outrules: {
+					'outTime': [{ type: 'date', required: true, message: '请填写', trigger: 'change' }]
+				},
+				gettingLeaseOut: false
+				
 			}
 		},
 		computed: {
@@ -586,7 +604,7 @@
 					this.lease.remark = row.leaseId && row.leaseId.remark || ''
 					this.lease.rent = row.leaseId && row.leaseId.rent || 0
 					this.lease.deposit = row.leaseId && row.leaseId.deposit || 0
-					this.lease.addTime = row.leaseId && new Date(row.leaseId.addTime) || new Date()
+					this.lease.addTime = row.leaseId.addTime && new Date(row.leaseId.addTime) || new Date()
 					//calWater
 					this.lease.calWaterPrice.minPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.minPrice || this.defaultCalWaterPrice.minPrice
 					this.lease.calWaterPrice.calType = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.calType || this.defaultCalWaterPrice.calType
@@ -650,21 +668,31 @@
 					}
 				})
 			},
-			getLeaseOut (index, row) {
-				if (row.gettingLeaseOut) {
+			getLeaseOutDialog (index, row) {
+				this.leaseOutflag = !this.leaseOutflag
+				if (this.leaseOutflag && row) {
+					this.out.haoId = row._id
+					this.out.fanghao = row.fanghao
+					this.out._id = row.leaseId._id
+					this.out.outTime = new Date()
+				}
+			},
+			onLeaseOutDialogClose () {
+				this.$refs.leaseOut.resetFields()
+			},
+			getLeaseOut () {
+				if (this.gettingLeaseOut) {
 					return true
 				}
-				row.gettingLeaseOut = true
-				this.Ajax('/inner/lease/out', {
-					haoId: row._id,
-					leaseId: row.leaseId._id
-				}, (res)=>{
+				this.gettingLeaseOut = true
+				this.Ajax('/inner/lease/out', this.out, (res)=>{
 					this.$message({
 						type: 'success',
 						message: '退租成功',
 						duration: 2000
 					})
-					row.gettingLeaseOut = false
+					this.getLeaseOutDialog()
+					this.gettingLeaseOut = false
 					this.getListRefresh()
 				}, (res)=>{
 					this.$message({
@@ -672,7 +700,7 @@
 						message: '编号：' + res.body.code + '，' + res.body.msg,
 						duration: 2000
 					})
-					row.gettingLeaseOu = false
+					this.gettingLeaseOut = false
 				})
 			}
 		}

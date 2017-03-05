@@ -1516,12 +1516,7 @@ module.exports = {
 			data.forEach((i)=>{
 				//字段提供
 				!i.fanghao && (i.fanghao = i.fang + i.hao)
-				!i.leaseId && (i.leaseId = {})
-				//loading字段提供
-				!i.gettingLeaseOut && (i.gettingLeaseOut = false)
-				//del提示字段提供
-				!i.leaseoPopFlag && (i.leaseoPopFlag = false)
-			})
+				!i.leaseId && (i.leaseId = {})			})
 			return Promise.reject({
 				type: true,
 				data: data
@@ -1684,7 +1679,7 @@ module.exports = {
 		//校验字段，错误退出
 		//修改状态（无需更新房屋挂载ID）
 		//返回out对象
-		if (!req.body.haoId || !req.body.leaseId) {
+		if (!req.body.haoId || !req.body._id || !req.body.outTime) {
 			callback({
 				type: false,
 				data: '缺少参数'
@@ -1695,10 +1690,12 @@ module.exports = {
 			//根据ID修改状态
 			//由于不需要读取上一条信息，因此houseId上并没有清除租住者ID
 			.dbModel('lease', {//*//标记，初始租住类型数据类，删除类型
+				outTime: String, //搬出时间
 				status: Number, //状态
 				updateTime: Number //更新时间
 			})
-			.findOneAndUpdate({_id: req.body.leaseId}, {
+			.findOneAndUpdate({_id: req.body._id}, {
+				outTime: req.body.outTime,
 				status: 2,//搬出为2，正常为1
 				updateTime: Date.now()
 			})

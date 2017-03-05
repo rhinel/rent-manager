@@ -95,7 +95,7 @@
 					width="180">
 					<template scope="scope">
 						<div>{{ getTime(scope.row.addTime) }}</div>
-						<div>{{ getTime(scope.row.updateTime) }}</div>
+						<div>{{ getTime(scope.row.outTime) }}</div>
 					</template>
 				</el-table-column>
 			</el-table-column>

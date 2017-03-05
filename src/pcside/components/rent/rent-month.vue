@@ -10,7 +10,7 @@
 			margin-left: 10px;
 		}
 		// 弹窗表单样式
-		.add-month-det-dialog{
+		.add-month-det-dialog, .change-type-dialog{
 			.el-input{
 				width: 100%;
 				vertical-align: top;
@@ -25,6 +25,11 @@
 			}
 			.el-row-margin{
 				margin-bottom: 20px;
+			}
+		}
+		.change-type-dialog{
+			.el-input{
+				max-width: 300px;
 			}
 		}
 		// 删除pop样式
@@ -164,7 +169,7 @@
 		</el-dialog>
 
 		<!-- 状态修改表单 -->
-		<el-dialog :title="changeType.fanghao + ctdDialogTitle" v-model="changeTypeflag" size="tiny" class="add-month-det-dialog" :close-on-click-modal="false" @close="onChangeTypeDialogClose">
+		<el-dialog :title="changeType.fanghao + ctdDialogTitle" v-model="changeTypeflag" size="tiny" class="change-type-dialog" :close-on-click-modal="false" @close="onChangeTypeDialogClose">
 			<el-form :model="changeType" ref="changeType">
 				<el-form-item>
 					<el-alert title="多选状态信息" type="info"></el-alert>
@@ -355,7 +360,7 @@
 							</el-popover>
 						</div>
 						<el-tag v-if="scope.row.rents.length && (getRent(scope).type && !getRent(scope).type.type.length || !getRent(scope).type)">新建</el-tag>
-						<div v-if="scope.row.rents.length">{{getTime(getRent(scope).addTime)}}</div>
+						<div v-if="scope.row.rents.length">{{getTime(getRent(scope).updateTime)}}</div>
 					</template>
 				</el-table-column>
 				<el-table-column
