@@ -1,6 +1,7 @@
 <style lang="scss">
 	.auth-inner-index{
-		padding-left: 200px;
+		padding-left: 180px;
+		transition: padding-left .3s;
 		padding-top: 50px;
 		.el-icon-loading{
 			margin-left: 10px;
@@ -14,19 +15,42 @@
 			top: 0;
 			left: 0;
 			right: 0;
+			z-index: 3;
 			background-color: #324157;
 			display: flex;
-			padding: 0 20px;
 			.header-left{
-				width: 200px;
+				width: 160px;
+				position: relative;
+				background-color: #1F2D3D;
+				padding-left: 20px;
+				.el-button{
+					position: absolute;
+					right: 20px;
+					top: 50%;
+					transform: translateY(-50%);
+					background: transparent;
+    				color: #fff;
+    				.el-icon-d-arrow-left{
+    					transition: transform .3s;
+    					transform: rotateZ(0deg);
+    				}
+    				&:hover, &:focus{
+    					color: #20a0ff;
+    				}
+				}
 			}
 			.header-name{
+				// background: #475669;
+				padding-left: 20px;
 				flex: 1;
 			}
 			.header-right{
+				// background: #475669;
 				width: 120px;
 				cursor: pointer;
 				color: #D3DCE6;
+				text-align: right;
+				padding-right: 20px;
 				.el-icon-star-on{
 					margin-right: 10px;
 				}
@@ -36,25 +60,36 @@
 			}
 		}
 		.inner-sidebar{
-			width: 200px;
+			width: 180px;
 			height: calc( 100vh - 50px );
 			border-radius: 0;
 			position: fixed;
 			top: 50px;
 			left: 0;
+			transition: left .3s;
 			bottom: 0;
 		}
 		.inner-body{
 			padding: 20px;
 		}
+		&.in{
+			padding-left: 0;
+			.header-left .el-button	.el-icon-d-arrow-left{
+				transform: rotateZ(180deg);
+			}
+			.inner-sidebar{
+				left: -180px;
+			}
+		}
 	}
 </style>
 
 <template>
-	<div class="auth-inner-index">
+	<div class="auth-inner-index" :class="{ 'in': !Navtg }">
 		<div class="inner-header">
 			<div class="header-left">
-				Rent Manager
+				<span>Rent Manager</span>
+				<el-button size="small" icon="d-arrow-left" class="nav-flag" @click="getNavtg"></el-button>
 			</div>
 			<div class="header-name">
 				{{$route.meta.name + ' ' + titleAdd}}
@@ -81,7 +116,8 @@
 		name: 'auth-inner-index',
 		data() {
 			return {
-				logouting: false
+				logouting: false,
+				Navtg: true
 			}
 		},
 		computed: {
@@ -96,6 +132,9 @@
 			}
 		},
 		methods: {
+			getNavtg () {
+				this.Navtg = !this.Navtg
+			},
 			logout () {
 				if (this.logouting) {
 					return true

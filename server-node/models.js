@@ -12,7 +12,7 @@ const redisct = (callback)=>{
 	rds.on('error', console.error.bind(console, 'redis connection error:'))
 	rds.on('ready',()=>{
 		callback && callback()
-		console.log('redis ready!')
+		console.log(auth.redisIp + ':' + auth.redisPo + ' redis ready!')
 	})
 }
 
@@ -74,7 +74,7 @@ const connect = (callback)=>{
 	db.on('error', console.error.bind(console, 'mongoose connection error:'))
 	db.once('open', ()=>{
 		callback && callback()
-		console.log('mongoose opened!')
+		console.log(auth.mongodbPs + ' mongoose opened!')
 	})
 }
 
