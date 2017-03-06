@@ -1,6 +1,7 @@
 'use strict'
 
 let service = require('./services')
+let serviceDashb = require('./services-dashboard')
 let code = require('./codes')
 
 //res.json([req.params,req.query,req.body])
@@ -208,6 +209,15 @@ const inner = (req, res, next)=>{
 		} else if (req.params.function === 'listByHao') {
 			service.rentListByHao(req, res, (data)=>{
 				res.json(code(3065, data))
+			})
+		} else {
+			next()
+		}
+	} else if (req.params.class === 'dash') {
+		//主控面板
+		if (req.params.function === 'count') {
+			serviceDashb.count(req, res, (data)=>{
+				res.json(code(3071, data))
 			})
 		} else {
 			next()
