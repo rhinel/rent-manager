@@ -37,6 +37,13 @@
 
 <template>
 	<div class="dashboard-main">
+		<!-- 记事本弹窗 -->
+		<el-dialog :title="ndDialogTitle" v-model="noteflag" size="small" top="50px" class="note-dialog" :close-on-click-modal="false" @close="onNoteDialogClose">
+			<el-form :model="note" ref="note" :rules="noterules">
+				
+			</el-form>
+		</el-dialog>
+
 		<el-row :gutter="20">
 			<el-col :span="18" :xs="24">
 				<el-row>
@@ -142,6 +149,7 @@
 					<el-card class="detail-wrap">
 						<div slot="header">
 							<span class="card-header">记事本</span>
+							<el-button class="card-btn" type="primary" @click="getNoteAddDialog">添加</el-button>
 						</div>
 					</el-card>
 				</el-row>
@@ -172,7 +180,18 @@
 					houseCount: 0
 				},
 				rentList: [],
-				rentList2: []
+				rentList2: [],
+
+				ndDialogTitle: '添加记事',
+				noteflag: false,
+				note: {
+					haoId: '',
+					content: '',
+					addTime: ''
+				},
+				noterules: {
+
+				}
 			}
 		},
 		watch: {
@@ -202,6 +221,12 @@
 						duration: 2000
 					})
 				})
+			},
+			getNoteAddDialog () {
+				this.noteflag = !this.noteflag
+			},
+			onNoteDialogClose () {
+
 			}
 		}
 	}
