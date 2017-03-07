@@ -73,7 +73,7 @@
 					</el-col>
 					<el-col :span="9">
 						<el-form-item label="租住周期" :label-width="lidLabelWidth" prop="leaserange">
-							<el-date-picker v-model="lease.leaserange" type="daterange" placeholder="选择日期范围" :picker-options="leasePickerOptions" align="right"></el-date-picker>
+							<el-date-picker v-model="lease.leaserange" type="daterange" placeholder="选择日期范围" :picker-options="leasePickerOptions" align="right" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -221,7 +221,7 @@
 					</el-col>
 					<el-col :span="9">
 						<el-form-item label="入住时间" :label-width="lidLabelWidth" prop="addTime">
-							<el-date-picker v-model="lease.addTime" type="datetime" placeholder="输入入住时间" style="width: 100%;"></el-date-picker>
+							<el-date-picker v-model="lease.addTime" type="datetime" placeholder="输入入住时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -239,7 +239,7 @@
 					<el-alert title="确认已经结清所有费用？此行为不可撤销" type="info"></el-alert>
 				</el-form-item>
 				<el-form-item label="搬出时间" :label-width="lodLabelWidth" prop="outTime">
-					<el-date-picker v-model="out.outTime" type="datetime" placeholder="输入搬出时间" style="width: 100%; max-width: 300px;"></el-date-picker>
+					<el-date-picker v-model="out.outTime" type="datetime" placeholder="输入搬出时间" style="width: 100%; max-width: 300px;" :editable="false"></el-date-picker>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">

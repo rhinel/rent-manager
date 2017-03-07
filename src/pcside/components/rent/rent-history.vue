@@ -94,7 +94,7 @@
 									<el-checkbox :label="type.value">{{type.label}}</el-checkbox>
 								</el-col>
 								<el-col :span="20">
-									<el-date-picker v-if="changeType.type.indexOf(type.value) > -1" v-model="changeType.typeTime[type.value]" type="datetime" placeholder="输入状态时间"></el-date-picker>
+									<el-date-picker v-if="changeType.type.indexOf(type.value) > -1" v-model="changeType.typeTime[type.value]" type="datetime" placeholder="输入状态时间" :editable="false"></el-date-picker>
 								</el-col>
 							</el-row>
 						</el-checkbox-group>

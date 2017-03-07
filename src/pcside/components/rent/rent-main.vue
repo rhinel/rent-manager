@@ -48,6 +48,7 @@
 					v-model="addMonthList.month"
 					type="month"
 					:disabled="!amldInput"
+					:editable="false"
 					placeholder="选择月份">
 					</el-date-picker>
 				</el-form-item>

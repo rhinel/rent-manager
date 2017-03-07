@@ -46,7 +46,7 @@
 		<el-dialog :title="aedDialogTitle" v-model="addElectricflag" size="tiny" class="add-electric-dialog" :close-on-click-modal="false" @close="onAddElectricDialogClose">
 			<el-form :model="addElectric" ref="addElectric" :rules="addElectricrules">
 				<el-form-item label="房屋" :label-width="aedLabelWidth" prop="haoId">
-					<el-select v-model="addElectric.haoId" placeholder="选择房屋">
+					<el-select v-model="addElectric.haoId" placeholder="选择房屋" :filterable="true">
 						<el-option v-for="item in houseData" :label="item.fang + item.hao" :value="item._id"></el-option>
 					</el-select>
 				</el-form-item>
@@ -57,7 +57,7 @@
 					<el-input v-model="addElectric.remark" auto-complete="off" placeholder="备注"></el-input>
 				</el-form-item>
 				<el-form-item label="抄表时间" :label-width="aedLabelWidth" prop="addTime">
-					<el-date-picker v-model="addElectric.addTime" type="datetime" placeholder="输入抄表时间"></el-date-picker>
+					<el-date-picker v-model="addElectric.addTime" type="datetime" placeholder="输入抄表时间" :editable="false"></el-date-picker>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -86,7 +86,7 @@
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="抄表时间" :label-width="cedLabelWidth" prop="tnew.addTime">
-							<el-date-picker v-model="calElectric.tnew.addTime" type="datetime" placeholder="输入抄表时间" style="width: 100%;"></el-date-picker>
+							<el-date-picker v-model="calElectric.tnew.addTime" type="datetime" placeholder="输入抄表时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -104,7 +104,7 @@
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="底表时间" :label-width="cedLabelWidth" prop="old.addTime">
-							<el-date-picker v-model="calElectric.old.addTime" type="datetime" placeholder="输入底表时间" style="width: 100%;"></el-date-picker>
+							<el-date-picker v-model="calElectric.old.addTime" type="datetime" placeholder="输入底表时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -174,7 +174,7 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="计费时间" :label-width="cedLabelWidth" prop="addTime">
-							<el-date-picker v-model="calElectric.addTime" type="datetime" placeholder="输入计费时间" style="width: 100%;"></el-date-picker>
+							<el-date-picker v-model="calElectric.addTime" type="datetime" placeholder="输入计费时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">

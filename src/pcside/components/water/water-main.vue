@@ -46,7 +46,7 @@
 		<el-dialog :title="awdDialogTitle" v-model="addWaterflag" size="tiny" class="add-water-dialog" :close-on-click-modal="false" @close="onAddWaterDialogClose">
 			<el-form :model="addWater" ref="addWater" :rules="addWaterrules">
 				<el-form-item label="房屋" :label-width="awdLabelWidth" prop="haoId">
-					<el-select v-model="addWater.haoId" placeholder="选择房屋">
+					<el-select v-model="addWater.haoId" placeholder="选择房屋" :filterable="true">
 						<el-option v-for="item in houseData" :label="item.fang + item.hao" :value="item._id"></el-option>
 					</el-select>
 				</el-form-item>
@@ -57,7 +57,7 @@
 					<el-input v-model="addWater.remark" auto-complete="off" placeholder="备注"></el-input>
 				</el-form-item>
 				<el-form-item label="抄表时间" :label-width="awdLabelWidth" prop="addTime">
-					<el-date-picker v-model="addWater.addTime" type="datetime" placeholder="输入抄表时间"></el-date-picker>
+					<el-date-picker v-model="addWater.addTime" type="datetime" placeholder="输入抄表时间" :editable="false"></el-date-picker>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -86,7 +86,7 @@
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="抄表时间" :label-width="cwdLabelWidth" prop="tnew.addTime">
-							<el-date-picker v-model="calWater.tnew.addTime" type="datetime" placeholder="输入抄表时间" style="width: 100%;"></el-date-picker>
+							<el-date-picker v-model="calWater.tnew.addTime" type="datetime" placeholder="输入抄表时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -104,7 +104,7 @@
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="底表时间" :label-width="cwdLabelWidth" prop="old.addTime">
-							<el-date-picker v-model="calWater.old.addTime" type="datetime" placeholder="输入底表时间" style="width: 100%;"></el-date-picker>
+							<el-date-picker v-model="calWater.old.addTime" type="datetime" placeholder="输入底表时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -174,7 +174,7 @@
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="计费时间" :label-width="cwdLabelWidth" prop="addTime">
-							<el-date-picker v-model="calWater.addTime" type="datetime" placeholder="输入计费时间" style="width: 100%;"></el-date-picker>
+							<el-date-picker v-model="calWater.addTime" type="datetime" placeholder="输入计费时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
