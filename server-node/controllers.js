@@ -219,6 +219,14 @@ const inner = (req, res, next)=>{
 			serviceDashb.count(req, res, (data)=>{
 				res.json(code(3071, data))
 			})
+		} else if (req.params.function === 'addNote') {
+			serviceDashb.addNote(req, res, (data)=>{
+				res.json(code(3072, data))
+			})
+		} else if (req.params.function === 'notes') {
+			serviceDashb.notes(req, res, (data)=>{
+				res.json(code(3073, data))
+			})
 		} else {
 			next()
 		}
