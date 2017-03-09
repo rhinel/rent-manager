@@ -140,5 +140,52 @@ module.exports = {
 				data: err.data || err.message
 			})
 		})
+	},
+	waitingList: (req, res, callback)=>{
+		//判断类型
+		//查询列表
+		//
+		let seach
+		if (req.body.type == 1) {
+			seach = {
+				$or: [
+					{
+						type: null
+					},
+					{
+						'type.type': { '$ne': 1 }
+					}
+				]
+			}
+		} else {
+			seach = {
+				'type.type': { '$nin': [null, req.body.type] }
+			}
+		}
+		db.dbModel('month')
+		db
+		.dbModel('rent')
+		.find(seach)
+		.populate({
+			path: 'monthId',
+			model: 'month',
+			select: 'month',
+			match: {status: 1}
+		})
+		.where('status').equals(1)
+		.lean()
+		.exec()
+		.then((data)=>{
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
 	}
 }

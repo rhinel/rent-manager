@@ -227,6 +227,10 @@ const inner = (req, res, next)=>{
 			serviceDashb.notes(req, res, (data)=>{
 				res.json(code(3073, data))
 			})
+		} else if (req.params.function === 'waitingList') {
+			serviceDashb.waitingList(req, res, (data)=>{
+				res.json(code(3074, data))
+			})
 		} else {
 			next()
 		}
