@@ -20,6 +20,7 @@ Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.prototype.Ajax = ajax
 Vue.prototype.GetTimeFormat = plugin.getTimeFormat
+Vue.prototype.GetDateFormat = plugin.getDateFormat
 
 //全局存储配置
 const store = new Vuex.Store(stores)

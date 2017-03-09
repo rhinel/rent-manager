@@ -2326,6 +2326,46 @@ module.exports = {
 			})
 		}
 	},
+	rentListByLandord: (req, res, callback)=>{
+		//查询数据
+		//返回list对象
+		db.dbModel('month')
+		db
+		.dbModel('rent')
+		.find({
+			'type.type': 3
+		})
+		.populate({
+			path: 'monthId',
+			model: 'month',
+			select: 'month',
+			match: {status: 1}
+		})
+		.where('status').equals(1)
+		.sort('-type.typeTime.3')
+		.lean()
+		.exec()
+		.then((data)=>{
+			let list = {}
+			data.forEach((i)=>{
+				let _date = new Date(i.type.typeTime[3]).toLocaleDateString()
+				if (!list[_date]) {
+					list[_date] = []
+				}
+				list[_date].push(i)
+			})
+			return Promise.reject({
+				type: true,
+				data: list
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
 	rentListByHao: (req, res, callback)=>{
 		//查询数据
 		//返回list对象

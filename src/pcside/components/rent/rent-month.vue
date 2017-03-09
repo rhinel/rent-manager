@@ -68,6 +68,16 @@
 			-webkit-line-clamp: 2;
 			-webkit-box-orient: vertical;
 		}
+		.landord-content{
+			font-size: 14px;
+			& > span {
+				display: inline-block;
+				line-height: 1;
+				padding: 10px 0;
+				width: 180px;
+				vertical-align: top;
+			}
+		}
 	}
 	// 信息悬浮窗弹窗样式
 	.rent-remark{
@@ -420,11 +430,24 @@
 			<el-tab-pane label="交房东历史" name="landordHistory">
 				<!-- 顶部按钮组 -->
 				<div class="table-btn">
-					<el-button type="primary">刷新</el-button>
+					<el-button type="primary" @click="getLandordRent" :loading="gettingLandordRent">刷新</el-button>
 					<div class="table-btn-input">
-						<el-date-picker v-model="landordHistorySearch" type="date" placeholder="选择日期" :editable="false"></el-date-picker>
+						<el-date-picker v-model="landordHistorySearch" type="date" placeholder="选择日期" :editable="false" @change="getfilterLandordData"></el-date-picker>
 					</div>
 				</div>
+				<el-collapse v-model="activeDate" v-loading.body="gettingLandordRent">
+				  <el-collapse-item v-for="(item, index) in landordData" :name="index">
+				  		<template slot="title">
+				  			{{index}} 合计：￥{{getCount(item)}}元
+				  		</template>
+						<div v-for="i in item" class="landord-content">
+							<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+								<el-button type="text">[{{i.fanghao}}]</el-button>
+							</router-link>
+							<span>[￥{{i.calRentResult}}元]</span><span>备注：{{i.remark}}</span>
+						</div>
+				  </el-collapse-item>
+				</el-collapse>
 			</el-tab-pane>
 		</el-tabs>
 	</div>
@@ -503,7 +526,10 @@
 				typesVal: ['', '已交', '给单', '房东'],
 
 				//房东列表
-				landordHistorySearch: ''
+				activeDate: [],
+				landordHistorySearch: '',
+				gettingLandordRent: false,
+				landordData: {}
 			}
 		},
 		computed: {
@@ -551,7 +577,7 @@
 				this.getResetChangeType()
 			},
 			landordHistoryActive () {
-
+				this.getLandordRent()
 			},
 			getMonthDet () {
 				this.Ajax('/inner/month/find', {
@@ -756,6 +782,39 @@
 					})
 					row.gettingdelRent = false
 				})
+			},
+			getLandordRent () {
+				if (this.gettingLandordRent) {
+					return true
+				}
+				this.gettingLandordRent = true
+				this.Ajax('/inner/rent/listByLandord', {
+					monthId: this.$route.query.id
+				}, (res)=>{
+					this.landordData = res.body.data
+					this.gettingLandordRent = false
+				}, (res)=>{
+					this.$message({
+						type: 'error',
+						message: '编号：' + res.body.code + '，' + res.body.msg,
+						duration: 2000
+					})
+					this.gettingLandordRent = false
+				})
+			},
+			getCount (arr) {
+				let count = 0
+				arr.forEach((i)=>{
+					count += i.calRentResult
+				})
+				return count
+			},
+			getfilterLandordData (v) {
+				if (!v) {
+					return
+				} else {
+					this.activeDate = [this.GetDateFormat(v)]
+				}
 			}
 		}
 	}

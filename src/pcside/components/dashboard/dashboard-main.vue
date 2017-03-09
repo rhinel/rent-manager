@@ -54,6 +54,11 @@
 					}
 			    }
 			}
+			.card-nodata{
+				color: #5e7382;
+				text-align: center;
+				line-height: 20px;
+			}
 			.detail-content{
 				line-height: 2;
 				margin: -7px 0;
@@ -156,7 +161,7 @@
 						</div>
 						<div class="count">
 							<div>待交房东</div>
-							<span>{{countDown.rentList2Count}}</span>
+							<span>{{countDown.rentList3Count}}</span>
 							<span>户</span>
 						</div>
 					</el-card>
@@ -188,6 +193,11 @@
 								label="房屋"
 								width="180"
 								sortable>
+								<template scope="scope">
+									<router-link :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
+										<el-button type="text">{{scope.row.fanghao}}</el-button>
+									</router-link>
+								</template>
 							</el-table-column>
 							<el-table-column
 								prop="calRentResult"
@@ -268,13 +278,13 @@
 				<el-row>
 					<el-card>
 						<div slot="header">
-							<span class="card-header">待交租金列表</span>
-							<el-button class="card-btn" type="primary" :loading="gettingRentList2" @click="getList(3)">刷新</el-button>
+							<span class="card-header">待交房东列表</span>
+							<el-button class="card-btn" type="primary" :loading="gettingRentList3" @click="getList(3)">刷新</el-button>
 						</div>
 						<el-table
 							class="rent-list-table"
-							:data="rentList2"
-							v-loading.body="gettingRentList2"
+							:data="rentList3"
+							v-loading.body="gettingRentList3"
 							stripe>
 							<el-table-column
 								prop="monthId.month"
@@ -292,6 +302,11 @@
 								label="房屋"
 								width="180"
 								sortable>
+								<template scope="scope">
+									<router-link :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
+										<el-button type="text">{{scope.row.fanghao}}</el-button>
+									</router-link>
+								</template>
 							</el-table-column>
 							<el-table-column
 								prop="calRentResult"
@@ -377,13 +392,16 @@
 							<span class="card-header">记事本</span>
 							<el-button class="card-btn" type="primary" @click="getNoteAddDialog">添加</el-button>
 						</div>
-						<ul class="card-list">
+						<ul class="card-list" v-show="noteList.length">
 							<li v-for="(item, index) in noteList" :class="{'done': item.status == 2}">
 								<span>[{{ item.haoId.fang + item.haoId.hao }}]</span>
 								<el-button type="text" class="card-list-item" @click="getNoteAddDialog(index, item)">{{ item.content }}</el-button>
 								<span>[{{ getDate(item.addTime) }}]</span>
 							</li>
 						</ul>
+						<div class="card-nodata" v-show="!noteList.length">
+							暂无数据
+						</div>
 					</el-card>
 				</el-row>
 				<el-row>
@@ -429,20 +447,20 @@
 			return {
 				//获取统计和数据列表
 				gettingRentList1: false,
-				gettingRentList2: false,
+				gettingRentList3: false,
 				gettingCount: false,
 				count: {
 					houseCount: 0,
 					rentList1Count: 0,
-					rentList2Count: 0
+					rentList3Count: 0
 				},
 				countDown: {
 					houseCount: 0,
 					rentList1Count: 0,
-					rentList2Count: 0
+					rentList3Count: 0
 				},
 				rentList1: [],
-				rentList2: [],
+				rentList3: [],
 				payTypeVal: ['微信', '支付宝', '银行转账', '现金'],
 				typesVal: ['', '已交', '给单', '房东'],
 				//添加记事
@@ -474,8 +492,8 @@
 			'count.rentList1Count' (n, o) {
 				this.onCount('rentList1Count', n, o)
 			},
-			'count.rentList2Count' (n, o) {
-				this.onCount('rentList2Count', n, o)
+			'count.rentList3Count' (n, o) {
+				this.onCount('rentList3Count', n, o)
 			}
 		},
 		methods: {

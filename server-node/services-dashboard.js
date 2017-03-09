@@ -159,7 +159,7 @@ module.exports = {
 			}
 		} else {
 			seach = {
-				'type.type': { '$nin': [null, req.body.type] }
+				'type.type': { '$ne': req.body.type, '$in': [1] }
 			}
 		}
 		db.dbModel('month')

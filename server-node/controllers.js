@@ -210,6 +210,10 @@ const inner = (req, res, next)=>{
 			service.rentListByHao(req, res, (data)=>{
 				res.json(code(3065, data))
 			})
+		} else if (req.params.function === 'listByLandord') {
+			service.rentListByLandord(req, res, (data)=>{
+				res.json(code(3066, data))
+			})
 		} else {
 			next()
 		}
