@@ -1,7 +1,7 @@
 # rent-manager
 
 > rent-manager for ying
-> 项目后端：nodejs mongodb redis
+> 项目后端：nodejs mongodb redis <br>
 > 项目前端：webpack vue2.0 ElementUI superagent
 
 ## Build Setup
