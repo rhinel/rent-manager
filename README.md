@@ -1,6 +1,6 @@
 # rent-manager
 
-> rent-manager for ying
+> rent-manager for ying <br>
 > 项目后端：nodejs mongodb redis <br>
 > 项目前端：webpack vue2.0 ElementUI superagent
 
