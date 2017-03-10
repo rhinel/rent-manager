@@ -12,8 +12,8 @@ var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
 
 module.exports = {
   entry: {
-    'pcside': ['./src/pcside/js/main.js']//,
-    //'mobileside': ['./src/mobileside/js/main.js']
+    'pcside': ['./src/pcside/js/main.js'],
+    'mobileside': ['./src/mobileside/js/main.js']
   },
   output: {
     path: config.build.assetsRoot,
@@ -26,8 +26,9 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.common.js',
       'src': path.resolve(__dirname, '../src'),
-      //'mobileside': path.resolve(__dirname, '../src/mobileside'),
-      'pcside': path.resolve(__dirname, '../src/pcside')
+      'mobileside': path.resolve(__dirname, '../src/mobileside'),
+      'pcside': path.resolve(__dirname, '../src/pcside'),
+      'common': path.resolve(__dirname, '../src/common')
     }
   },
   resolveLoader: {

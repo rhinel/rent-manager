@@ -11,8 +11,8 @@ import App from '../index'
 import stores from './stores'
 import routes from './routes'
 import routerEach from './routerEach'
-import ajax from './request'
-import plugin from './plugin'
+import ajax from 'common/js/request'
+import plugin from 'common/js/plugin'
 
 //载入应用层
 Vue.use(Vuex)

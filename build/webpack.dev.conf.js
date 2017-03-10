@@ -32,12 +32,12 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['pcside'],
       inject: true
     }),
-    /*new HtmlWebpackPlugin({
+    new HtmlWebpackPlugin({
       filename: 'dist/mobileside.html',
       template: 'mobileside.html',
       chunks: ['mobileside'],
       inject: true
-    }),*/
+    }),
     /*new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',

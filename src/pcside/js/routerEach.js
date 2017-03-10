@@ -1,4 +1,4 @@
-import Ajax from './request'
+import Ajax from 'common/js/request'
 import { Message } from 'element-ui'
 
 const beforeEach = function(to, from, next, vue) {
