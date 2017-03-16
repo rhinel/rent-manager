@@ -28,7 +28,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-register": "^6.23.0",
     "body-parser": "^1.17.1",
-    "chromedriver": "^2.27.3",
+    "chromedriver": "^2.28.0",
     "cross-env": "^3.2.3",
     "element-ui": "^1.2.3",
     "eslint": "^3.17.0",
