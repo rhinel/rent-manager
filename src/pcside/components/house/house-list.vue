@@ -9,6 +9,7 @@
 			margin-left: 10px;
 		}
 		.add-house-dialog{
+			max-width: 400px;
 			.el-input{
 				max-width: 300px;
 			}
@@ -41,7 +42,7 @@
 		</div>
 		
 		<!-- 新增弹窗 -->
-		<el-dialog :title="ahdDialogTitle" v-model="addHouseFlag" size="tiny" class="add-house-dialog" :close-on-click-modal="false" @close="onAddHouseDialogClose">
+		<el-dialog :title="ahdDialogTitle" v-model="addHouseFlag" size="small" custom-class="add-house-dialog" :close-on-click-modal="false" @close="onAddHouseDialogClose">
 			<el-form :model="addHouse" ref="addHouse" :rules="addHouserules">
 				<el-form-item label="坊号" :label-width="ahdLabelWidth" prop="fang">
 					<el-select v-model="addHouse.fang" placeholder="选择坊号">

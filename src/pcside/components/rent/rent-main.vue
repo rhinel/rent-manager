@@ -9,6 +9,7 @@
 			margin-left: 10px;
 		}
 		.add-month-list-dialog{
+			max-width: 400px;
 			.el-input{
 				width: 100%;
 				max-width: 300px;
@@ -41,7 +42,7 @@
 		</div>
 
 		<!-- 新增弹窗 -->
-		<el-dialog :title="amldDialogTitle" v-model="addMonthListflag" size="tiny" class="add-month-list-dialog" :close-on-click-modal="false" @close="onAddMonthListDialogClose">
+		<el-dialog :title="amldDialogTitle" v-model="addMonthListflag" size="small" custom-class="add-month-list-dialog" :close-on-click-modal="false" @close="onAddMonthListDialogClose">
 			<el-form :model="addMonthList" ref="addMonthList" :rules="addMonthListrules">
 				<el-form-item label="收租周期" :label-width="amldLabelWidth" prop="month">
 					<el-date-picker

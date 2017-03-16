@@ -65,6 +65,7 @@
 			}
 		}
 		.note-dialog{
+			max-width: 800px;
 			.el-row{
 				margin-bottom: 0;
 			}
@@ -111,7 +112,7 @@
 <template>
 	<div class="dashboard-main">
 		<!-- 记事本弹窗 -->
-		<el-dialog :title="ndDialogTitle" v-model="noteflag" size="small" top="50px" class="note-dialog" :close-on-click-modal="false" @close="onNoteDialogClose">
+		<el-dialog :title="ndDialogTitle" v-model="noteflag" size="large" top="50px" custom-class="note-dialog" :close-on-click-modal="false" @close="onNoteDialogClose">
 			<el-form :model="note" ref="note" :rules="noterules" label-position="top">
 				<el-row :gutter="20">
 					<el-col :span="12">
@@ -146,7 +147,7 @@
 		</el-dialog>
 
 		<el-row :gutter="20">
-			<el-col :span="18" :xs="24">
+			<el-col :span="18" :md="16" :xs="24" :lg="18">
 				<el-row>
 					<el-card class="count-wrap" v-loading.body="gettingCount">
 						<div class="count">
@@ -385,7 +386,7 @@
 					</el-card>
 				</el-row>
 			</el-col>
-			<el-col :span="6" :xs="24">
+			<el-col :span="6" :md="8" :xs="24" :lg="6">
 				<el-row>
 					<el-card class="detail-wrap" v-loading.body="gettingNotes">
 						<div slot="header">

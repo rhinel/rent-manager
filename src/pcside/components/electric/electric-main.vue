@@ -9,6 +9,7 @@
 			margin-left: 10px;
 		}
 		.add-electric-dialog{
+			max-width: 400px;
 			.el-input{
 				max-width: 300px;
 				width: 100%;
@@ -19,6 +20,7 @@
 			}
 		}
 		.cal-electric-dialog{
+			max-width: 800px;
 			.line{
 				height: 14px;
 			}
@@ -43,7 +45,7 @@
 		</div>
 
 		<!-- 新增弹窗 -->
-		<el-dialog :title="aedDialogTitle" v-model="addElectricflag" size="tiny" class="add-electric-dialog" :close-on-click-modal="false" @close="onAddElectricDialogClose">
+		<el-dialog :title="aedDialogTitle" v-model="addElectricflag" size="small" custom-class="add-electric-dialog" :close-on-click-modal="false" @close="onAddElectricDialogClose">
 			<el-form :model="addElectric" ref="addElectric" :rules="addElectricrules">
 				<el-form-item label="房屋" :label-width="aedLabelWidth" prop="haoId">
 					<el-select v-model="addElectric.haoId" placeholder="选择房屋" :filterable="true">
@@ -67,7 +69,7 @@
 		</el-dialog>
 
 		<!-- 计费弹窗 -->
-		<el-dialog :title="calElectric.fanghao + cedDialogTitle" v-model="calElectricflag" size="small" top="50px" class="cal-electric-dialog" :close-on-click-modal="false" @close="onCalElectricDialogClose">
+		<el-dialog :title="calElectric.fanghao + cedDialogTitle" v-model="calElectricflag" size="large" top="50px" custom-class="cal-electric-dialog" :close-on-click-modal="false" @close="onCalElectricDialogClose">
 			<el-form :model="calElectric" ref="calElectric" :rules="calElectricrules">
 
 				<!-- 房屋信息 -->
@@ -252,7 +254,8 @@
 				</template>
 			</el-table-column>
 			<el-table-column
-				label="当前计费方式">
+				label="当前计费方式"
+				min-width="180">
 				<template scope="scope">
 					<div v-if="scope.row.leaseId.calType">
 						<div>低消：￥{{ scope.row.leaseId.minPrice }}度</div>

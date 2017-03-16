@@ -11,6 +11,7 @@
 		}
 		// 弹窗表单样式
 		.add-month-det-dialog, .change-type-dialog{
+			max-width: 800px;
 			.el-input{
 				width: 100%;
 				vertical-align: top;
@@ -103,7 +104,7 @@
 				</div>
 
 				<!-- 计租表单 -->
-				<el-dialog :title="addRent.fanghao + ardDialogTitle" v-model="addRentflag" size="small" class="add-month-det-dialog" :close-on-click-modal="false" @close="onAddRentDialogClose">
+				<el-dialog :title="addRent.fanghao + ardDialogTitle" v-model="addRentflag" size="large" top="50px" custom-class="add-month-det-dialog" :close-on-click-modal="false" @close="onAddRentDialogClose">
 					<el-form :model="addRent" ref="addRent" :rules="addRentrules">
 						<el-form-item>
 							<el-alert title="请确认计租信息" type="info"></el-alert>
@@ -181,7 +182,7 @@
 				</el-dialog>
 
 				<!-- 状态修改表单 -->
-				<el-dialog :title="changeType.fanghao + ctdDialogTitle" v-model="changeTypeflag" size="tiny" class="change-type-dialog" :close-on-click-modal="false" @close="onChangeTypeDialogClose">
+				<el-dialog :title="changeType.fanghao + ctdDialogTitle" v-model="changeTypeflag" size="large" custom-class="change-type-dialog" :close-on-click-modal="false" @close="onChangeTypeDialogClose">
 					<el-form :model="changeType" ref="changeType">
 						<el-form-item>
 							<el-alert title="多选状态信息" type="info"></el-alert>
@@ -234,7 +235,8 @@
 						<el-table-column
 							label="水费信息">
 							<el-table-column
-								label="本次用数/单价">
+								label="本次用数/单价"
+								min-width="150">
 								<template scope="scope">
 									<div v-if="scope.row.rents.length && getRent(scope).calWater">
 										<span class="tag-bf-span">{{getRent(scope).calWater.tnew.water - getRent(scope).calWater.old.water}}吨</span>
@@ -278,7 +280,8 @@
 						<el-table-column
 							label="电费信息">
 							<el-table-column
-								label="本次用数/单价">
+								label="本次用数/单价"
+								min-width="150">
 								<template scope="scope">
 									<div v-if="scope.row.rents.length && getRent(scope).calElectric">
 										<span class="tag-bf-span">{{getRent(scope).calElectric.tnew.electric - getRent(scope).calElectric.old.electric}}度</span>
@@ -320,7 +323,8 @@
 							</el-table-column>
 						</el-table-column>
 						<el-table-column
-							label="房租信息">
+							label="房租信息"
+							min-width="150">
 							<template scope="scope">
 								<div v-if="scope.row.rents.length && getRent(scope).lease.name">
 									<el-tag class="tag-bf-span">{{getRent(scope).lease.payDay}}日</el-tag>
@@ -377,7 +381,8 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							label="备注">
+							label="备注"
+							min-width="150">
 							<template scope="scope">
 								<el-popover
 									placement="top"

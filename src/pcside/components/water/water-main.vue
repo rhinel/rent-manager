@@ -9,6 +9,7 @@
 			margin-left: 10px;
 		}
 		.add-water-dialog{
+			max-width: 400px;
 			.el-input{
 				max-width: 300px;
 				width: 100%;
@@ -19,6 +20,7 @@
 			}
 		}
 		.cal-water-dialog{
+			max-width: 800px;
 			.line{
 				height: 14px;
 			}
@@ -43,7 +45,7 @@
 		</div>
 
 		<!-- 新增弹窗 -->
-		<el-dialog :title="awdDialogTitle" v-model="addWaterflag" size="tiny" class="add-water-dialog" :close-on-click-modal="false" @close="onAddWaterDialogClose">
+		<el-dialog :title="awdDialogTitle" v-model="addWaterflag" size="small" custom-class="add-water-dialog" :close-on-click-modal="false" @close="onAddWaterDialogClose">
 			<el-form :model="addWater" ref="addWater" :rules="addWaterrules">
 				<el-form-item label="房屋" :label-width="awdLabelWidth" prop="haoId">
 					<el-select v-model="addWater.haoId" placeholder="选择房屋" :filterable="true">
@@ -67,7 +69,7 @@
 		</el-dialog>
 
 		<!-- 计费弹窗 -->
-		<el-dialog :title="calWater.fanghao + cwdDialogTitle" v-model="calWaterflag" size="small" top="50px" class="cal-water-dialog" :close-on-click-modal="false" @close="onCalWaterDialogClose">
+		<el-dialog :title="calWater.fanghao + cwdDialogTitle" v-model="calWaterflag" size="large" top="50px" custom-class="cal-water-dialog" :close-on-click-modal="false" @close="onCalWaterDialogClose">
 			<el-form :model="calWater" ref="calWater" :rules="calWaterrules">
 
 				<!-- 房屋信息 -->
@@ -252,7 +254,8 @@
 				</template>
 			</el-table-column>
 			<el-table-column
-				label="当前计费方式">
+				label="当前计费方式"
+				min-width="180">
 				<template scope="scope">
 					<div v-if="scope.row.leaseId.calType">
 						<div>低消：￥{{ scope.row.leaseId.minPrice }}吨</div>

@@ -176,7 +176,8 @@
 						</el-table-column>
 						<el-table-column
 							prop="remark"
-							label="计费备注">
+							label="计费备注"
+							min-width="180">
 							<template scope="scope">
 								<el-popover
 									placement="right"

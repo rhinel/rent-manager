@@ -9,6 +9,7 @@
 			margin-left: 10px;
 		}
 		.lease-in-dialog{
+			max-width: 800px;
 			.el-date-editor--daterange.el-input{
 				width: 100%;
 			}
@@ -33,6 +34,9 @@
 			-webkit-line-clamp: 2;
 			-webkit-box-orient: vertical;
 		}
+		.lease-out-dialog{
+			max-width: 400px;
+		}
 	}
 	.lease-list-lease-o-pop-cont{
 		text-align: right;
@@ -54,7 +58,7 @@
 		</div>
 
 		<!-- 入住弹窗 -->
-		<el-dialog :title="lease.fanghao + lidDialogTitle" v-model="leaseInflag" size="small" top="50px" class="lease-in-dialog" :close-on-click-modal="false" @close="onLeaseInDialogClose">
+		<el-dialog :title="lease.fanghao + lidDialogTitle" v-model="leaseInflag" size="large" top="50px" custom-class="lease-in-dialog" :close-on-click-modal="false" @close="onLeaseInDialogClose">
 			<el-form :model="lease" ref="leaseIn" :rules="leaserules">
 				<el-form-item>
 					<el-alert title="搬出入住/修改：计费信息初始化，必须为上次收租结束/空置处理结束/本次计费之前，用户自行确认" type="info"></el-alert>
@@ -210,16 +214,16 @@
 				</el-form-item>
 				<el-row :gutter="20">
 					<el-col :span="7">
-						<el-form-item label="租金(月)" :label-width="lidLabelWidth" prop="rent">
-							<el-input v-model.number="lease.rent" auto-complete="off" placeholder="输入租金"><template slot="prepend">￥</template><template slot="append">元/月</template></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
 						<el-form-item label="押金" :label-width="lidLabelWidth" prop="deposit">
 							<el-input v-model.number="lease.deposit" auto-complete="off" placeholder="输入押金"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="9">
+
+					<el-col :span="8">
+						<el-form-item label="租金(月)" :label-width="lidLabelWidth" prop="rent">
+							<el-input v-model.number="lease.rent" auto-complete="off" placeholder="输入租金"><template slot="prepend">￥</template><template slot="append">元/月</template></el-input>
+						</el-form-item>
+					</el-col>					<el-col :span="9">
 						<el-form-item label="入住时间" :label-width="lidLabelWidth" prop="addTime">
 							<el-date-picker v-model="lease.addTime" type="datetime" placeholder="输入入住时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
@@ -233,7 +237,7 @@
 		</el-dialog>
 
 		<!-- 搬出弹窗 -->
-		<el-dialog :title="out.fanghao + lodDialogTitle" v-model="leaseOutflag" size="tiny" class="lease-out-dialog" :close-on-click-modal="false" @close="onLeaseOutDialogClose">
+		<el-dialog :title="out.fanghao + lodDialogTitle" v-model="leaseOutflag" size="small" custom-class="lease-out-dialog" :close-on-click-modal="false" @close="onLeaseOutDialogClose">
 			<el-form :model="out" ref="leaseOut" :rules="outrules">
 				<el-form-item>
 					<el-alert title="确认已经结清所有费用？此行为不可撤销" type="info"></el-alert>
