@@ -74,7 +74,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       chunksSortMode: 'dependency'
     }),
     new HtmlWebpackPlugin({
-      filename: 'mobileside.html',
+      filename: 'mobileside/index.html',
       template: './src/mobileside/html/index.html',
       chunks: ['manifest', 'vendor', 'mobileside'],
       inject: true,
