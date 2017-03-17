@@ -17,6 +17,12 @@ module.exports = (app, express)=>{
 	//处理页面, 动态加载
 	app.use(express.static(path.resolve(__dirname, '../dist')))
 	app.get('*', (req, res)=>{
-		res.send(fs.readFileSync(path.resolve('../dist/pcside/index.html'), 'utf-8'))
+		if (req.hostname.indexOf('wechat.rhinel.xyz') > -1) {
+			res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
+		} else if (req.hostname.indexOf('www.rhinel.xyz') > -1) {
+			res.send(fs.readFileSync(path.resolve('../dist/pcside/index.html'), 'utf-8'))
+		} else {
+			res.send('页面飘走了！')
+		}
 	})
 }
