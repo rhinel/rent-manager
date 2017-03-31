@@ -106,6 +106,10 @@ const inner = (req, res, next)=>{
 			service.waterCalDel(req, res, (data)=>{
 				res.json(code(3027, data))
 			})
+		} else if (req.params.function === 'findByDate') {
+			service.waterFindByDate(req, res, (data)=>{
+				res.json(code(3028, data))
+			})
 		} else {
 			next()
 		}
@@ -138,6 +142,10 @@ const inner = (req, res, next)=>{
 		} else if (req.params.function === 'delCal') {
 			service.electricCalDel(req, res, (data)=>{
 				res.json(code(3047, data))
+			})
+		} else if (req.params.function === 'findByDate') {
+			service.electricFindByDate(req, res, (data)=>{
+				res.json(code(3048, data))
 			})
 		} else {
 			next()

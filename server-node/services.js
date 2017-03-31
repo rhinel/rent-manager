@@ -938,6 +938,42 @@ module.exports = {
 			})
 		}
 	},
+	waterFindByDate: (req, res, callback)=>{
+		let today = new Date().toLocaleDateString()
+		let date = req.body.waterDate || today
+		db.dbModel('house')
+		db
+		.dbModel('water')
+		.find({})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime',
+			match: {status: 1}
+		})
+		.$where(new Function('return new Date(this.addTime).getTime() >= ' + new Date(date).getTime() + ' && new Date(this.addTime).getTime() < ' + (new Date(date).getTime() + 86400000)))
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-addTime -createTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			data.forEach((i)=>{
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
 
 	/***inner类****电费管理********************************************************************************************************/
 
@@ -1478,6 +1514,42 @@ module.exports = {
 				})
 			})
 		}
+	},
+	electricFindByDate: (req, res, callback)=>{
+		let today = new Date().toLocaleDateString()
+		let date = req.body.electricDate || today
+		db.dbModel('house')
+		db
+		.dbModel('electric')
+		.find({})
+		.populate({
+			path: 'haoId',
+			model: 'house',
+			select: 'fang hao haoId addTime',
+			match: {status: 1}
+		})
+		.$where(new Function('return new Date(this.addTime).getTime() >= ' + new Date(date).getTime() + ' && new Date(this.addTime).getTime() < ' + (new Date(date).getTime() + 86400000)))
+		.where('userId').equals(db.db.Types.ObjectId(req.userId))
+		.where('status').equals(1)
+		.sort('-addTime -createTime')
+		.lean()
+		.exec()
+		.then((data)=>{
+			data.forEach((i)=>{
+				//房屋
+				i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+			})
+			return Promise.reject({
+				type: true,
+				data: data
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
 	},
 
 	/***inner类****租住管理********************************************************************************************************/
