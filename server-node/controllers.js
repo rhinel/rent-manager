@@ -2,6 +2,7 @@
 
 let service = require('./services')
 let serviceDashb = require('./services-dashboard')
+let serviceRent = require('./services-rent')
 let code = require('./codes')
 
 //res.json([req.params,req.query,req.body])
@@ -221,6 +222,10 @@ const inner = (req, res, next)=>{
 		} else if (req.params.function === 'listByLandord') {
 			service.rentListByLandord(req, res, (data)=>{
 				res.json(code(3066, data))
+			})
+		} else if (req.params.function === 'listByNewestMonth') {
+			serviceRent.listByNewestMonth(req, res, (data)=>{
+				res.json(code(3067, data))
 			})
 		} else {
 			next()

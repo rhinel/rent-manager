@@ -366,7 +366,7 @@
 				</el-table-column>
 				<el-table-column
 					label="当前租金/押金"
-					width="150">
+					width="170">
 					<template scope="scope">
 						<div>{{ '租金：￥' + (scope.row.leaseId.rent || 0) + '元/月' }}</div>
 						<div>{{ '押金：￥' + (scope.row.leaseId.deposit || 0) + '元' }}</div>
