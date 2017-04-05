@@ -232,6 +232,10 @@ const inner = (req, res, next)=>{
 			serviceRent.listByNewestMonth(req, res, (data)=>{
 				res.json(code(3067, data))
 			})
+		} else if (req.params.function === 'detByHao') {
+			serviceRent.detByHao(req, res, (data)=>{
+				res.json(code(3068, data))
+			})
 		} else {
 			next()
 		}
