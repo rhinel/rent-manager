@@ -101,7 +101,7 @@ module.exports = {
         db
         //数据库查询
         .dbModel('house')
-        .find({_id: req.body.haoId})
+        .findOne({_id: req.body.haoId})
         // 租住信息
         .populate({
             path: 'leaseId',
