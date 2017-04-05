@@ -63,7 +63,7 @@ module.exports = {
         .then((houseandmonth)=>{
             return db
             .dbModel('rent')
-            .find({monthId: db.db.Types.ObjectId(houseandmonth.month.monthId)})
+            .find({monthId: db.db.Types.ObjectId(houseandmonth.month._id)})
             .where('status').equals(1)
             .lean()
             .exec()
