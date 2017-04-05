@@ -3,6 +3,7 @@
 let service = require('./services')
 let serviceDashb = require('./services-dashboard')
 let serviceRent = require('./services-rent')
+let serviceMonth = require('./services-month')
 let code = require('./codes')
 
 //res.json([req.params,req.query,req.body])
@@ -193,6 +194,10 @@ const inner = (req, res, next)=>{
 		} else if (req.params.function === 'find') {
 			service.monthFind(req, res, (data)=>{
 				res.json(code(3054, data))
+			})
+		} else if (req.params.function === 'newest') {
+			serviceMonth.newest(req, res, (data)=>{
+				res.json(code(3055, data))
 			})
 		} else {
 			next()
