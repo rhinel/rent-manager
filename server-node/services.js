@@ -55,7 +55,8 @@ module.exports = {
 			//旧token失效？
 			.then((reKeysData)=>{
 				if (reKeysData.length) {
-					return db.redisDelKeys(reKeysData)
+					// return db.redisDelKeys(reKeysData)
+					return true
 				} else {
 					return true
 				}
@@ -294,7 +295,7 @@ module.exports = {
 			})
 		}
 	},
-	houseFind: (req, res, callback)=> {
+	houseFind: (req, res, callback)=>{
 		//不校验字段
 		//查询数据，错误退出
 		//返回find对象
@@ -325,7 +326,7 @@ module.exports = {
 			})
 		})
 	},
-	houseList: (req, res, callback)=> {
+	houseList: (req, res, callback)=>{
 		//查询数据
 		//返回list对象
 		db
@@ -1980,7 +1981,7 @@ module.exports = {
 			})
 		}
 	},
-	monthList: (req, res, callback)=> {
+	monthList: (req, res, callback)=>{
 		//查询数据
 		//返回list对象
 		db
@@ -2017,7 +2018,7 @@ module.exports = {
 			})
 		})
 	},
-	monthFind: (req, res, callback)=> {
+	monthFind: (req, res, callback)=>{
 		//不校验字段
 		//查询数据，错误退出
 		//返回find对象

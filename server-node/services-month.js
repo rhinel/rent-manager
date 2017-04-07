@@ -5,7 +5,7 @@ let superagent = require('superagent')
 let md5 = require('md5')
 
 module.exports = {
-    newest (req, res, callback) {
+    newest: (req, res, callback)=>{
         //查询最新月度信息
         //返回det对象
         db

@@ -5,7 +5,7 @@ let superagent = require('superagent')
 let md5 = require('md5')
 
 module.exports = {
-    listByNewestMonth (req, res, callback) {
+    listByNewestMonth: (req, res, callback)=>{
         //通过房屋查询所有最新挂载信息：租约信息
         //初始化字段后
         //再根据monthId查询月度信息
