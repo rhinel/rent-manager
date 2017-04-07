@@ -41,6 +41,7 @@ module.exports = {
 							.then((calWaters)=>{
 								calWaters.forEach((j)=>{
 									//小计
+									j.tnew.addTime = new Date(j.tnew.addTime).toLocaleDateString()
 									!j.gap && (j.gap = (j.tnew.water ? j.tnew.water : 0) - (j.old.water ? j.old.water : 0))
 									j.gap <= 0 && (j.gap = 0)
 								})
@@ -63,6 +64,7 @@ module.exports = {
 							.then((calElectrics)=>{
 								calElectrics.forEach((k)=>{
 									//小计
+									k.tnew.addTime = new Date(k.tnew.addTime).toLocaleDateString()
 									!k.gap && (k.gap = (k.tnew.electric ? k.tnew.electric : 0) - (k.old.electric ? k.old.electric : 0))
 									k.gap <= 0 && (k.gap = 0)
 								})
