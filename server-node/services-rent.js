@@ -89,69 +89,40 @@ module.exports = {
             })
         })
     },
-    detByHao (req, res, callback) {
-        // 通过ID查询所有的house的连带信息
-        // 返回det对象
-        db.dbModel('lease')
-        db.dbModel('water')
-        db.dbModel('watercal')
-        db.dbModel('electric')
-        db.dbModel('electriccal')
-        db.dbModel('rent')
+    listByHaoAndMonth: (req, res, callback)=>{
+        //查询数据
+        //返回list对象
+        db.dbModel('house')
+        db.dbModel('month')
         db
-        //数据库查询
-        .dbModel('house')
-        .findOne({_id: req.body.haoId})
-        // 租住信息
+        .dbModel('rent')
+        .find({
+            haoId: db.db.Types.ObjectId(req.body.haoId),
+            monthId: db.db.Types.ObjectId(req.body.monthId)
+        })
         .populate({
-            path: 'leaseId',
-            model: 'lease',
+            path: 'haoId',
+            model: 'house',
+            select: 'fang hao haoId addTime',
             match: {status: 1}
         })
-        // 抄水表信息
         .populate({
-            path: 'waterId',
-            model: 'water',
-            match: {status: 1}
-        })
-        // 水表计费信息
-        .populate({
-            path: 'calWaterId',
-            model: 'watercal',
-            match: {status: 1}
-        })
-        // 抄电表信息
-        .populate({
-            path: 'electricId',
-            model: 'electric',
-            match: {status: 1}
-        })
-        // 电表计费信息
-        .populate({
-            path: 'calElectricId',
-            model: 'electriccal',
-            match: {status: 1}
-        })
-        // 最新计费信息
-        .populate({
-            path: 'rentId',
-            model: 'rent',
+            path: 'monthId',
+            model: 'month',
+            select: 'month',
             match: {status: 1}
         })
         .where('userId').equals(db.db.Types.ObjectId(req.userId))
         .where('status').equals(1)
+        .sort('-addTime')
         .lean()
         .exec()
         .then((data)=>{
-            //字段提供
-            !data.fanghao && (data.fanghao = data.fang + data.hao)
             //字段初始化
-            !data.waterId && (data.waterId = {})
-            !data.electricId && (data.electricId = {})
-            !data.calWaterId && (data.calWaterId = {})
-            !data.calElectricId && (data.calElectricId = {})
-            !data.leaseId && (data.leaseId = {})
-            !data.rentId && (data.rentId = {})
+            data.forEach((i)=>{
+                //房屋
+                i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
+            })
             return Promise.reject({
                 type: true,
                 data: data

@@ -80,6 +80,10 @@ const inner = (req, res, next)=>{
 			serviceHouse.listWithCal(req, res, (data)=>{
 				res.json(code(3015, data))
 			})
+		} else if (req.params.function === 'detByHao') {
+			serviceHouse.detByHao(req, res, (data)=>{
+				res.json(code(3016, data))
+			})
 		} else {
 			next()
 		}
@@ -237,8 +241,8 @@ const inner = (req, res, next)=>{
 			serviceRent.listByNewestMonth(req, res, (data)=>{
 				res.json(code(3067, data))
 			})
-		} else if (req.params.function === 'detByHao') {
-			serviceRent.detByHao(req, res, (data)=>{
+		} else if (req.params.function === 'listByHaoAndMonth') {
+			serviceRent.listByHaoAndMonth(req, res, (data)=>{
 				res.json(code(3068, data))
 			})
 		} else {
