@@ -187,5 +187,67 @@ module.exports = {
 				data: err.data || err.message
 			})
 		})
+	},
+	waitingListCount: (req, res, callback)=>{
+		//判断类型
+		//查询列表
+		//
+		let seach
+		let today = new Date().getDate()
+		let month = new Date().getMonth()
+		let year = new Date().getFullYear()
+		if (req.body.type == 1) {
+			seach = {
+				$or: [
+					{
+						type: null
+					},
+					{
+						'type.type': { '$ne': 1 }
+					}
+				]
+			}
+		} else {
+			seach = {
+				'type.type': { '$ne': req.body.type, '$in': [1] }
+			}
+		}
+		db.dbModel('month')
+		db
+		.dbModel('rent')
+		.find(seach)
+		.populate({
+			path: 'monthId',
+			model: 'month',
+			select: 'month',
+			match: {status: 1}
+		})
+		.where('status').equals(1)
+		.lean()
+		.exec()
+		.then((data)=>{
+			let isToday = 0
+			let count = 0
+			data.forEach((i)=>{
+				if (i.lease.payDay <= today || new Date(i.monthId.month).getMonth() < month || new Date(i.monthId.month).getFullYear() < year) {
+					count += i.calRentResult
+					isToday += 1
+				}
+			})
+			return Promise.reject({
+				type: true,
+				data: {
+					count: data.length,
+					countMoney: count,
+					isToday: isToday
+				}
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
 	}
 }
