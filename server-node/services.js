@@ -2287,6 +2287,11 @@ module.exports = {
 						'3': String
 					}
 				},
+				lease: {
+					payType: Number
+				},
+				remark: String,
+
 				updateTime: Number //更新时间
 			})
 			.findOneAndUpdate({_id: req.body.rentId}, {
@@ -2296,6 +2301,8 @@ module.exports = {
 					type: req.body.type,
 					typeTime: req.body.typeTime
 				},
+				'lease.payType': req.body.payType,
+				remark: req.body.remark,
 				updateTime: Date.now()
 			})
 			.exec()

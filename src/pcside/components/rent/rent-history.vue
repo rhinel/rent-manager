@@ -87,6 +87,28 @@
 				<el-form-item>
 					<el-alert title="多选状态信息" type="info"></el-alert>
 				</el-form-item>
+				<el-form-item label="交租方式" :label-width="ctdLabelWidth">
+					<div style="overflow: hidden;">
+						<el-row :gutter="20">
+							<el-col :span="4" style="height:1px;"></el-col>
+							<el-col :span="20">
+								<el-select v-model="changeType.payType" placeholder="选择交租方式">
+									<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index"></el-option>
+								</el-select>
+							</el-col>
+						</el-row>
+					</div>
+				</el-form-item>
+				<el-form-item label="备注" :label-width="ctdLabelWidth">
+					<div style="overflow: hidden;">
+						<el-row :gutter="20">
+							<el-col :span="4" style="height:1px;"></el-col>
+							<el-col :span="20">
+								<el-input v-model.number="changeType.remark" auto-complete="off" placeholder="备注"></el-input>
+							</el-col>
+						</el-row>
+					</div>
+				</el-form-item>
 				<el-form-item label="状态" :label-width="ctdLabelWidth">
 					<div>
 						<el-checkbox-group v-model="changeType.type" @change="onChangeType">
@@ -342,7 +364,10 @@
 						3: ''
 					},
 					isIndeterminate: false,
-					checkAll: false
+					checkAll: false,
+
+					payType: 0,
+					remark: ''
 				},
 
 				//列表渲染
@@ -418,6 +443,9 @@
 					}
 					this.changeType.isIndeterminate = row.type && row.type.isIndeterminate || false
 					this.changeType.checkAll = row.type && row.type.checkAll || false
+
+					this.changeType.payType = row.lease.payType || 0
+					this.changeType.remark = row.remark || ''
 				}
 			},
 			getResetChangeType () {
@@ -431,6 +459,9 @@
 				}
 				this.changeType.isIndeterminate = false
 				this.changeType.checkAll = false
+
+				this.changeType.payType = 0
+				this.changeType.remark = ''
 			},
 			onChangeTypeDialogClose () {
 				this.getResetChangeType()

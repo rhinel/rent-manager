@@ -78,6 +78,14 @@
 				width: 180px;
 				vertical-align: top;
 			}
+			.landord-content-type{
+				position: relative;
+				.el-tag{
+					position: absolute;
+					top: 50%;
+					transform: translateY(-50%);
+				}
+			}
 		}
 	}
 	// 信息悬浮窗弹窗样式
@@ -186,6 +194,28 @@
 					<el-form :model="changeType" ref="changeType">
 						<el-form-item>
 							<el-alert title="多选状态信息" type="info"></el-alert>
+						</el-form-item>
+						<el-form-item label="交租方式" :label-width="ctdLabelWidth">
+							<div style="overflow: hidden;">
+								<el-row :gutter="20">
+									<el-col :span="4" style="height:1px;"></el-col>
+									<el-col :span="20">
+										<el-select v-model="changeType.payType" placeholder="选择交租方式">
+											<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index"></el-option>
+										</el-select>
+									</el-col>
+								</el-row>
+							</div>
+						</el-form-item>
+						<el-form-item label="备注" :label-width="ctdLabelWidth">
+							<div style="overflow: hidden;">
+								<el-row :gutter="20">
+									<el-col :span="4" style="height:1px;"></el-col>
+									<el-col :span="20">
+										<el-input v-model.number="changeType.remark" auto-complete="off" placeholder="备注"></el-input>
+									</el-col>
+								</el-row>
+							</div>
 						</el-form-item>
 						<el-form-item label="状态" :label-width="ctdLabelWidth">
 							<div>
@@ -449,7 +479,7 @@
 							<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
 								<el-button type="text">[{{i.fanghao}}]</el-button>
 							</router-link>
-							<span>[￥{{i.calRentResult}}元]</span><span>备注：{{i.remark}}</span>
+							<span>[￥{{i.calRentResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
 						</div>
 				  </el-collapse-item>
 				</el-collapse>
@@ -521,7 +551,10 @@
 						3: ''
 					},
 					isIndeterminate: false,
-					checkAll: false
+					checkAll: false,
+
+					payType: 0,
+					remark: ''
 				},
 
 				//列表渲染
@@ -706,6 +739,9 @@
 					}
 					this.changeType.isIndeterminate = row.rents[row.rents.length - 1].type && row.rents[row.rents.length - 1].type.isIndeterminate || false
 					this.changeType.checkAll = row.rents[row.rents.length - 1].type && row.rents[row.rents.length - 1].type.checkAll || false
+
+					this.changeType.payType = row.rents[row.rents.length - 1].lease.payType || 0
+					this.changeType.remark = row.rents[row.rents.length - 1].remark || ''
 				}
 			},
 			getResetChangeType () {
@@ -719,6 +755,9 @@
 				}
 				this.changeType.isIndeterminate = false
 				this.changeType.checkAll = false
+
+				this.changeType.payType = 0
+				this.changeType.remark = ''
 			},
 			onChangeTypeDialogClose () {
 				this.getResetChangeType()
@@ -797,6 +836,10 @@
 					monthId: this.$route.query.id
 				}, (res)=>{
 					this.landordData = res.body.data
+					for (var i in res.body.data) {
+						this.activeDate.push(i)
+						break
+					}
 					this.gettingLandordRent = false
 				}, (res)=>{
 					this.$message({
