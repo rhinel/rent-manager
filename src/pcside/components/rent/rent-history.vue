@@ -372,9 +372,7 @@
 
 				//列表渲染
 				rentHistoryData: [],
-				rentHistorySearch: '',
-				payTypeVal: ['微信', '支付宝', '银行转账', '现金'],
-				typesVal: ['', '已交', '给单', '房东']
+				rentHistorySearch: ''
 			}
 		},
 		computed: {
@@ -394,6 +392,12 @@
 						return false
 					})
 				}
+			},
+			payTypeVal () {
+				return this.$store.state.default.payTypeVal
+			},
+			typesVal () {
+				return this.$store.state.default.typesVal
 			}
 		},
 		methods: {

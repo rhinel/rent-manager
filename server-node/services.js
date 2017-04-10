@@ -2430,10 +2430,22 @@ module.exports = {
 			data.forEach((i)=>{
 				let _date = new Date(i.type.typeTime[3]).toLocaleDateString()
 				if (!list[_date]) {
-					list[_date] = []
+					list[_date] = {
+						list: [],
+						0: 0,
+						1: 0,
+						2: 0,
+						3: 0,
+						4: 0,
+						5: 0,
+						all: 0
+					}
 				}
-				list[_date].push(i)
+				list[_date][i.lease.payType] += i.calRentResult
+				list[_date].all += i.calRentResult
+				list[_date].list.push(i)
 			})
+
 			return Promise.reject({
 				type: true,
 				data: list

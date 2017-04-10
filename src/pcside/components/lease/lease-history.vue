@@ -196,7 +196,6 @@
 		data () {
 			return {
 				gettingListRefresh: false,
-				payTypeVal: ['微信', '支付宝', '银行转账', '现金'],
 				leaseList: [],
 				leaseDataSearch: ''
 			}
@@ -218,6 +217,12 @@
 						return false
 					})
 				}
+			},
+			payTypeVal () {
+				return this.$store.state.default.payTypeVal
+			},
+			typesVal () {
+				return this.$store.state.default.typesVal
 			}
 		},
 		methods: {

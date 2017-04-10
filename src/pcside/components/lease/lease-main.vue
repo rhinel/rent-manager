@@ -469,7 +469,6 @@
 					'deposit': [{ type: 'number', required: true, message: '请填写', trigger: 'blur' }],
 					'addTime': [{ type: 'date', required: true, message: '请填写', trigger: 'change' }]
 				},
-				payTypeVal: ['微信', '支付宝', '银行转账', '现金'],
 				leasePickerOptions: {
 					shortcuts: [
 						{
@@ -563,6 +562,12 @@
 						return false
 					})
 				}
+			},
+			payTypeVal () {
+				return this.$store.state.default.payTypeVal
+			},
+			typesVal () {
+				return this.$store.state.default.typesVal
 			}
 		},
 		methods: {

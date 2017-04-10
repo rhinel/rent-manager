@@ -462,8 +462,6 @@
 				},
 				rentList1: [],
 				rentList3: [],
-				payTypeVal: ['微信', '支付宝', '银行转账', '现金'],
-				typesVal: ['', '已交', '给单', '房东'],
 				//添加记事
 				gettingAddNote: false,
 				houseData: [],
@@ -484,6 +482,14 @@
 				//记事列表
 				gettingNotes: false,
 				noteList: []
+			}
+		},
+		computed: {
+			payTypeVal () {
+				return this.$store.state.default.payTypeVal
+			},
+			typesVal () {
+				return this.$store.state.default.typesVal
 			}
 		},
 		watch: {

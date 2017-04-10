@@ -69,6 +69,10 @@
 			-webkit-line-clamp: 2;
 			-webkit-box-orient: vertical;
 		}
+		.landord-title{
+			display: inline-block;
+			margin-right: 20px;
+		}
 		.landord-content{
 			font-size: 14px;
 			& > span {
@@ -473,9 +477,9 @@
 				<el-collapse v-model="activeDate" v-loading.body="gettingLandordRent">
 				  <el-collapse-item v-for="(item, index) in landordData" :name="index">
 				  		<template slot="title">
-				  			{{index}} 合计：￥{{getCount(item)}}元
+				  			{{index}} <span class="landord-title">合计：￥{{item.all}}元</span><span class="landord-title" v-for="(j, index) in payTypeVal">{{j}}：{{item[index]}}元</span>
 				  		</template>
-						<div v-for="i in item" class="landord-content">
+						<div v-for="i in item.list" class="landord-content">
 							<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
 								<el-button type="text">[{{i.fanghao}}]</el-button>
 							</router-link>
@@ -483,6 +487,28 @@
 						</div>
 				  </el-collapse-item>
 				</el-collapse>
+			</el-tab-pane>
+			<el-tab-pane label="月租统计" name="rentCount">
+				<template v-for="(fang, fangi) in rentCount">
+					<div class="rent-count-title">
+						<el-alert type="info" title="" class="table-btn" :closable="false">
+							{{fangi}} 合计：￥{{fang.count}}元
+						</el-alert>						
+					</div>
+					<el-collapse v-model="activeRentCount[fangi]">
+						<el-collapse-item v-for="(floor, floori) in fang.list" :name="floori">
+							<template slot="title">
+				  				{{floori}}楼 <span class="landord-title">合计：￥{{floor.count}}元</span>
+				  			</template>
+				  			<div v-for="(hao, haoi) in floor.list">
+				  				<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: hao.haoId }}">
+									<el-button type="text">[{{fangi + hao.hao}}]</el-button>
+								</router-link>
+								<span>租金：￥{{hao.rent}}元</span>
+				  			</div>
+						</el-collapse-item>
+					</el-collapse>
+				</template>
 			</el-tab-pane>
 		</el-tabs>
 	</div>
@@ -498,6 +524,7 @@
 			this.getMonthDet()
 			this.activeName == 'rentHistory' && this.rentHistoryActive()
 			this.activeName == 'landordHistory' && this.landordHistoryActive()
+			this.activeName == 'rentCount' && this.rentCountActive()
 		},
 		data () {
 			return {
@@ -560,14 +587,16 @@
 				//列表渲染
 				monthDetData: [],
 				monthDetSearch: '',
-				payTypeVal: ['微信', '支付宝', '银行转账', '现金'],
-				typesVal: ['', '已交', '给单', '房东'],
 
 				//房东列表
 				activeDate: [],
 				landordHistorySearch: '',
 				gettingLandordRent: false,
-				landordData: {}
+				landordData: {},
+
+				//rentCount列表
+				rentCount: {},
+				activeRentCount: []
 			}
 		},
 		computed: {
@@ -593,6 +622,12 @@
 				let add = this.addRent
 				result = (add.calWater.calWaterResult || 0) + (add.calElectric.calElectricResult || 0) + (add.lease.rent || 0) //房租计算
 				return result
+			},
+			payTypeVal () {
+				return this.$store.state.default.payTypeVal
+			},
+			typesVal () {
+				return this.$store.state.default.typesVal
 			}
 		},
 		watch: {
@@ -606,6 +641,7 @@
 			activeName (n, o) {
 				n == 'rentHistory' && this.rentHistoryActive()
 				n == 'landordHistory' && this.landordHistoryActive()
+				n == 'rentCount' && this.rentCountActive()
 			}
 		},
 		methods: {
@@ -616,6 +652,9 @@
 			},
 			landordHistoryActive () {
 				this.getLandordRent()
+			},
+			rentCountActive () {
+				this.getCalRentCount()
 			},
 			getMonthDet () {
 				this.Ajax('/inner/month/find', {
@@ -838,6 +877,7 @@
 					this.landordData = res.body.data
 					for (var i in res.body.data) {
 						this.activeDate.push(i)
+						this.landordHistorySearch = i
 						break
 					}
 					this.gettingLandordRent = false
@@ -850,19 +890,36 @@
 					this.gettingLandordRent = false
 				})
 			},
-			getCount (arr) {
-				let count = 0
-				arr.forEach((i)=>{
-					count += i.calRentResult
-				})
-				return count
-			},
 			getfilterLandordData (v) {
 				if (!v) {
 					return
 				} else {
-					this.activeDate = [this.GetDateFormat(v)]
+					this.activeDate = [new Date(v).toLocaleDateString()]
 				}
+			},
+			getCalRentCount () {
+				this.rentCount = {}
+				this.monthDetData.forEach((i)=>{
+					if (i.rents[0]) {
+						let floor = i.hao.substr(0, 1)
+						let rent = i.rents[0].lease.rent
+						!this.rentCount[i.fang] && (this.rentCount[i.fang] = {
+							count: 0,
+							list: {}
+						}) && (this.activeRentCount[i.fang] = [])
+						!this.rentCount[i.fang].list[floor] && (this.rentCount[i.fang].list[floor] = {
+							count: 0,
+							list: []
+						})
+						this.rentCount[i.fang].count += rent
+						this.rentCount[i.fang].list[floor].count += rent
+						this.rentCount[i.fang].list[floor].list.push({
+							haoId: i._id,
+							hao: i.hao,
+							rent: rent
+						})
+					}
+				})
 			}
 		}
 	}
