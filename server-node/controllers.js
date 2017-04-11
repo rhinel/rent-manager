@@ -245,6 +245,10 @@ const inner = (req, res, next)=>{
 			serviceRent.listByHaoAndMonth(req, res, (data)=>{
 				res.json(code(3068, data))
 			})
+		} else if (req.params.function === 'listByLandordTemp') {
+			service.rentListByLandordTemp(req, res, (data)=>{
+				res.json(code(3069, data))
+			})
 		} else {
 			next()
 		}

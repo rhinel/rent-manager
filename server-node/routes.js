@@ -19,11 +19,12 @@ module.exports = (app, express)=>{
 	app.get('*', (req, res)=>{
 		console.log(req.hostname)
 		console.log(new Date())
-		if (req.hostname.indexOf('wechat.rhinel.xyz') > -1) {
+		if (req.hostname && req.hostname.indexOf('wechat.rhinel.xyz') > -1) {
 			res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
-		} else if (req.hostname.indexOf('www.rhinel.xyz') > -1) {
+		} else if (req.hostname && req.hostname.indexOf('www.rhinel.xyz') > -1) {
 			res.send(fs.readFileSync(path.resolve('../dist/pcside/index.html'), 'utf-8'))
 		} else {
+			console.log(req.ip)
 			res.send('页面飘走了！')
 		}
 	})

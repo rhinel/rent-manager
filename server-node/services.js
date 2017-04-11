@@ -2429,7 +2429,7 @@ module.exports = {
 		.then((data)=>{
 			let list = {}
 			data.forEach((i)=>{
-				let _date = new Date(i.type.typeTime[3]).toLocaleDateString()
+				let _date = new Date(new Date(i.type.typeTime[3]).toLocaleDateString()).getTime()
 				if (!list[_date]) {
 					list[_date] = {
 						list: [],
@@ -2445,6 +2445,58 @@ module.exports = {
 				list[_date][i.lease.payType] += i.calRentResult
 				list[_date].all += i.calRentResult
 				list[_date].list.push(i)
+			})
+
+			return Promise.reject({
+				type: true,
+				data: list
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	rentListByLandordTemp: (req, res, callback)=>{
+		//查询数据
+		//返回list对象
+		db.dbModel('month')
+		db
+		.dbModel('rent')
+		.find({
+			'type.type': {
+				'$in': [1],
+				'$ne': 3
+			},
+			monthId: db.db.Types.ObjectId(req.body.monthId)
+		})
+		.populate({
+			path: 'monthId',
+			model: 'month',
+			select: 'month',
+			match: {status: 1}
+		})
+		.where('status').equals(1)
+		.sort('-type.typeTime.3')
+		.lean()
+		.exec()
+		.then((data)=>{
+			let list = {
+				list: [],
+				0: 0,
+				1: 0,
+				2: 0,
+				3: 0,
+				4: 0,
+				5: 0,
+				all: 0
+			}
+			data.forEach((i)=>{
+				list[i.lease.payType] += i.calRentResult
+				list.all += i.calRentResult
+				list.list.push(i)
 			})
 
 			return Promise.reject({

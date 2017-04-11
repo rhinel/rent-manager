@@ -466,6 +466,21 @@
 					</el-table-column>
 				</el-table>
 			</el-tab-pane>
+			<el-tab-pane label="待交房东统计" name="landordHistoryTemp">
+				<el-collapse v-model="activeLandordHistoryTemp" v-loading.body="gettingLandordRentTemp" v-if="checkObject(landordHistoryTemp)">
+					<el-collapse-item name="temp">
+						<template slot="title">
+			  				<span class="landord-title">合计：￥{{landordHistoryTemp.all}}元</span><span class="landord-title" v-for="(j, indexj) in payTypeVal">{{j}}：{{landordHistoryTemp[indexj]}}元</span>
+			  			</template>
+			  			<div v-for="i in landordHistoryTemp.list" class="landord-content">
+							<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+								<el-button type="text">[{{i.fanghao}}]</el-button>
+							</router-link>
+							<span>[￥{{i.calRentResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+						</div>
+					</el-collapse-item>
+				</el-collapse>
+			</el-tab-pane>
 			<el-tab-pane label="交房东历史" name="landordHistory">
 				<!-- 顶部按钮组 -->
 				<div class="table-btn">
@@ -475,9 +490,9 @@
 					</div>
 				</div>
 				<el-collapse v-model="activeDate" v-loading.body="gettingLandordRent" v-if="checkObject(landordData)">
-				  <el-collapse-item v-for="(item, index) in landordData" :name="index">
+				  <el-collapse-item v-for="(item, index) in landordData" :name="new Date(Number(index)).toLocaleDateString()">
 				  		<template slot="title">
-				  			{{index}} <span class="landord-title">合计：￥{{item.all}}元</span><span class="landord-title" v-for="(j, index) in payTypeVal">{{j}}：{{item[index]}}元</span>
+				  			{{new Date(Number(index)).toLocaleDateString()}} <span class="landord-title">合计：￥{{item.all}}元</span><span class="landord-title" v-for="(j, indexj) in payTypeVal">{{j}}：{{item[indexj]}}元</span>
 				  		</template>
 						<div v-for="i in item.list" class="landord-content">
 							<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
@@ -525,6 +540,7 @@
 		created () {
 			this.getMonthDet()
 			this.activeName == 'rentHistory' && this.rentHistoryActive()
+			this.activeName == 'landordHistoryTemp' && this.landordHistoryTempActive()
 			this.activeName == 'landordHistory' && this.landordHistoryActive()
 			this.activeName == 'rentCount' && this.rentCountActive()
 		},
@@ -590,6 +606,11 @@
 				monthDetData: [],
 				monthDetSearch: '',
 
+				//未交统计
+				landordHistoryTemp: {},
+				activeLandordHistoryTemp: ['temp'],
+				gettingLandordRentTemp: false,
+
 				//房东列表
 				activeDate: [],
 				landordHistorySearch: '',
@@ -642,6 +663,7 @@
 			},
 			activeName (n, o) {
 				n == 'rentHistory' && this.rentHistoryActive()
+				n == 'landordHistoryTemp' && this.landordHistoryTempActive()
 				n == 'landordHistory' && this.landordHistoryActive()
 				n == 'rentCount' && this.rentCountActive()
 			}
@@ -651,6 +673,9 @@
 				this.getListRefresh()
 				this.getResetAddRent()
 				this.getResetChangeType()
+			},
+			landordHistoryTempActive () {
+				this.getLandordRentTemp()
 			},
 			landordHistoryActive () {
 				this.getLandordRent()
@@ -878,8 +903,8 @@
 				}, (res)=>{
 					this.landordData = res.body.data
 					for (var i in res.body.data) {
-						this.activeDate.push(i)
-						this.landordHistorySearch = i
+						this.activeDate.push(new Date(Number(i)).toLocaleDateString())
+						this.landordHistorySearch = new Date(Number(i)).toLocaleDateString()
 						break
 					}
 					this.gettingLandordRent = false
@@ -898,6 +923,25 @@
 				} else {
 					this.activeDate = [new Date(v).toLocaleDateString()]
 				}
+			},
+			getLandordRentTemp () {
+				if (this.gettingLandordRentTemp) {
+					return true
+				}
+				this.gettingLandordRentTemp = true
+				this.Ajax('/inner/rent/listByLandordTemp', {
+					monthId: this.$route.query.id
+				}, (res)=>{
+					this.landordHistoryTemp = res.body.data
+					this.gettingLandordRentTemp = false
+				}, (res)=>{
+					this.$message({
+						type: 'error',
+						message: '编号：' + res.body.code + '，' + res.body.msg,
+						duration: 2000
+					})
+					this.gettingLandordRentTemp = false
+				})
 			},
 			getCalRentCount () {
 				this.rentCount = {}
