@@ -428,7 +428,7 @@
 					name: '',
 					call: '',
 					leaserange: [],
-					payDay: 1,
+					payDay: new Date().getDate(),
 					payType: 3,
 					remark: '',
 
@@ -597,36 +597,52 @@
 				this.$router.push('/inner/lease/history?haoid=' + row._id)
 			},
 			getLeaseInDialog (index, row) {
-				this.leaseInflag = !this.leaseInflag
-				if (this.leaseInflag && row) {
-					this.lidDialogTitle = row.leaseId && row.leaseId._id ? '修改' : '入住'
-					this.editLeaseId = row.leaseId && row.leaseId._id || ''
-
-					this.lease.haoId = row._id
-					this.lease.fanghao = row.fanghao
-
-					this.lease.name = row.leaseId && row.leaseId.name || ''
-					this.lease.call = row.leaseId && row.leaseId.call || ''
-					this.lease.leaserange = row.leaseId && row.leaseId.leaserange || []
-					this.lease.payDay = row.leaseId && row.leaseId.payDay || new Date().getDate()
-					this.lease.payType = row.leaseId && row.leaseId.payType || 3
-					this.lease.remark = row.leaseId && row.leaseId.remark || ''
-					this.lease.rent = row.leaseId && row.leaseId.rent || 0
-					this.lease.deposit = row.leaseId && row.leaseId.deposit || 0
-					this.lease.addTime = row.leaseId.addTime && new Date(row.leaseId.addTime) || new Date()
-					//calWater
-					this.lease.calWaterPrice.minPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.minPrice || this.defaultCalWaterPrice.minPrice
-					this.lease.calWaterPrice.calType = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.calType || this.defaultCalWaterPrice.calType
-					this.lease.calWaterPrice.singlePrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.singlePrice || this.defaultCalWaterPrice.singlePrice
-					this.lease.calWaterPrice.stepPrice = row.leaseId && row.leaseId.calWaterPrice && row.leaseId.calWaterPrice.stepPrice || JSON.parse(JSON.stringify(this.defaultCalWaterPrice.stepPrice))
-					!this.lease.calWaterPrice.stepPrice.length && this.addStep(this.lease.calWaterPrice)
-					//calEle
-					this.lease.calElePrice.minPrice = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.minPrice || this.defaultCalElePrice.minPrice
-					this.lease.calElePrice.calType = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.calType || this.defaultCalElePrice.calType
-					this.lease.calElePrice.singlePrice = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.singlePrice || this.defaultCalElePrice.singlePrice
-					this.lease.calElePrice.stepPrice = row.leaseId && row.leaseId.calElePrice && row.leaseId.calElePrice.stepPrice || JSON.parse(JSON.stringify(this.defaultCalElePrice.stepPrice))
-					!this.lease.calElePrice.stepPrice.length && this.addStep(this.lease.calElePrice)
+				let setDefault = (leng, def)=>{
+					let lengs = leng.split('.')
+					let check = row
+					let re = null
+					for (var i in lengs) {
+						console.log(lengs[i])
+						if (check[lengs[i]] === undefined || check[lengs[i]] === null) {
+							return def
+						} else {
+							check = check[lengs[i]]
+						}
+					}
+					return check
 				}
+				this.leaseInflag = !this.leaseInflag
+				setTimeout(()=>{
+					if (this.leaseInflag && row) {
+						this.lidDialogTitle = row.leaseId && row.leaseId._id ? '修改' : '入住'
+						this.editLeaseId = row.leaseId && row.leaseId._id || ''
+
+						this.lease.haoId = row._id
+						this.lease.fanghao = row.fanghao
+
+						this.lease.name = setDefault('leaseId.name', '')
+						this.lease.call = setDefault('leaseId.call', '')
+						this.lease.leaserange = setDefault('leaseId.leaserange', [])
+						this.lease.payDay = setDefault('leaseId.payDay', new Date().getDate())
+						this.lease.payType = setDefault('leaseId.payType', 3)
+						this.lease.remark = setDefault('leaseId.remark', '')
+						this.lease.rent = setDefault('leaseId.rent', 0)
+						this.lease.deposit = setDefault('leaseId.deposit', 0)
+						this.lease.addTime = row.leaseId.addTime && new Date(row.leaseId.addTime) || new Date()
+						//calWater
+						this.lease.calWaterPrice.minPrice = setDefault('leaseId.calWaterPrice.minPrice', this.defaultCalWaterPrice.minPrice)
+						this.lease.calWaterPrice.calType = setDefault('leaseId.calWaterPrice.calType', this.defaultCalWaterPrice.calType)
+						this.lease.calWaterPrice.singlePrice = setDefault('leaseId.calWaterPrice.singlePrice', this.defaultCalWaterPrice.singlePrice)
+						this.lease.calWaterPrice.stepPrice = setDefault('leaseId.calWaterPrice.stepPrice', JSON.parse(JSON.stringify(this.defaultCalWaterPrice.stepPrice)))
+						!this.lease.calWaterPrice.stepPrice.length && this.addStep(this.lease.calWaterPrice)
+						//calEle
+						this.lease.calElePrice.minPrice = setDefault('leaseId.calElePrice.minPrice', this.defaultCalElePrice.minPrice)
+						this.lease.calElePrice.calType = setDefault('leaseId.calElePrice.calType', this.defaultCalElePrice.calType)
+						this.lease.calElePrice.singlePrice = setDefault('leaseId.calElePrice.singlePrice', this.defaultCalElePrice.singlePrice)
+						this.lease.calElePrice.stepPrice = setDefault('leaseId.calElePrice.stepPrice', JSON.parse(JSON.stringify(this.defaultCalElePrice.stepPrice)))
+						!this.lease.calElePrice.stepPrice.length && this.addStep(this.lease.calElePrice)
+					}
+				}, 0)
 			},
 			onLeaseInDialogClose () {
 				this.$refs.leaseIn.resetFields()
