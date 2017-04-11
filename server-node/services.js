@@ -2413,7 +2413,8 @@ module.exports = {
 		db
 		.dbModel('rent')
 		.find({
-			'type.type': 3
+			'type.type': 3,
+			monthId: db.db.Types.ObjectId(req.body.monthId)
 		})
 		.populate({
 			path: 'monthId',

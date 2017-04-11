@@ -474,7 +474,7 @@
 						<el-date-picker v-model="landordHistorySearch" type="date" placeholder="选择日期" :editable="false" @change="getfilterLandordData"></el-date-picker>
 					</div>
 				</div>
-				<el-collapse v-model="activeDate" v-loading.body="gettingLandordRent">
+				<el-collapse v-model="activeDate" v-loading.body="gettingLandordRent" v-if="checkObject(landordData)">
 				  <el-collapse-item v-for="(item, index) in landordData" :name="index">
 				  		<template slot="title">
 				  			{{index}} <span class="landord-title">合计：￥{{item.all}}元</span><span class="landord-title" v-for="(j, index) in payTypeVal">{{j}}：{{item[index]}}元</span>
@@ -487,6 +487,7 @@
 						</div>
 				  </el-collapse-item>
 				</el-collapse>
+				<el-alert v-if="!gettingLandordRent && !checkObject(landordData)" title="暂无数据！请先处理单据状态" type="info" :closable="false"></el-alert>
 			</el-tab-pane>
 			<el-tab-pane label="月租统计" name="rentCount">
 				<template v-for="(fang, fangi) in rentCount">
@@ -509,6 +510,7 @@
 						</el-collapse-item>
 					</el-collapse>
 				</template>
+				<el-alert v-if="!checkObject(rentCount)" title="暂无数据！请先处理单据状态" type="info" :closable="false"></el-alert>
 			</el-tab-pane>
 		</el-tabs>
 	</div>
@@ -920,6 +922,15 @@
 						})
 					}
 				})
+			},
+			checkObject (val) {
+				if (typeof val !== 'object') {
+					return false
+				}
+				for (var i in val) {
+					return true
+				}
+				return false
 			}
 		}
 	}

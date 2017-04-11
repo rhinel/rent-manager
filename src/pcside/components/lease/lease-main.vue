@@ -510,9 +510,9 @@
 					}]
 				},
 				defaultCalElePrice: {
-					minPrice: 0,
+					minPrice: 30,
 					calType: 'step',
-					singlePrice: 0,
+					singlePrice: 1,
 					stepPrice: [{
 							step: 100,
 							price: 1
