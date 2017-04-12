@@ -72,6 +72,9 @@
 		.landord-title{
 			display: inline-block;
 			margin-right: 20px;
+			.el-button{
+				font-size: 13px;
+			}
 		}
 		.landord-content{
 			font-size: 14px;
@@ -127,8 +130,8 @@
 									<div v-if="addRent.calWater.calWater">
 										计费方式：{{addRent.calWater.calWater.calType == 'single' ? '单一价格' : '阶梯价格'}}<br>
 										最低消费：{{addRent.calWater.calWater.minPrice}}吨<br>
-										本次表数：{{addRent.calWater.tnew.water}}吨（{{getTime(addRent.calWater.tnew.addTime)}}）<br>
-										上次表数：{{addRent.calWater.old.water}}吨（{{getTime(addRent.calWater.old.addTime)}}）<br>
+										本次表数：{{addRent.calWater.tnew.water}}吨<br>（{{getTime(addRent.calWater.tnew.addTime)}}）<br>
+										上次表数：{{addRent.calWater.old.water}}吨<br>（{{getTime(addRent.calWater.old.addTime)}}）<br>
 										计费单价：￥{{addRent.calWater.calWater.calType == 'single' ? addRent.calWater.calWater.singlePrice : getPrice(addRent.calWater.calWater.stepPrice, addRent.calWater.tnew.water - addRent.calWater.old.water)}}元/吨<br>
 										水费：￥{{addRent.calWater.calWaterResult}}元（{{addRent.calWater.fix ? '修' : '计'}}）<br>
 										计费时间：{{getTime(addRent.calWater.addTime)}}
@@ -143,8 +146,8 @@
 									<div v-if="addRent.calElectric.calElectric">
 										计费方式：{{addRent.calElectric.calElectric.calType == 'single' ? '单一价格' : '阶梯价格'}}<br>
 										最低消费：{{addRent.calElectric.calElectric.minPrice}}度<br>
-										本次表数：{{addRent.calElectric.tnew.electric}}度（{{getTime(addRent.calElectric.tnew.addTime)}}）<br>
-										上次表数：{{addRent.calElectric.old.electric}}度（{{getTime(addRent.calElectric.old.addTime)}}）<br>
+										本次表数：{{addRent.calElectric.tnew.electric}}度<br>（{{getTime(addRent.calElectric.tnew.addTime)}}）<br>
+										上次表数：{{addRent.calElectric.old.electric}}度<br>（{{getTime(addRent.calElectric.old.addTime)}}）<br>
 										计费单价：￥{{addRent.calElectric.calElectric.calType == 'single' ? addRent.calElectric.calElectric.singlePrice : getPrice(addRent.calElectric.calElectric.stepPrice, addRent.calElectric.tnew.electric - addRent.calElectric.old.electric)}}元/度<br>
 										电费：￥{{addRent.calElectric.calElectricResult}}元（{{addRent.calElectric.fix ? '修' : '计'}}）<br>
 										计费时间：{{getTime(addRent.calElectric.addTime)}}
@@ -467,7 +470,7 @@
 				</el-table>
 			</el-tab-pane>
 			<el-tab-pane label="待交房东统计" name="landordHistoryTemp">
-				<el-collapse v-model="activeLandordHistoryTemp" v-loading.body="gettingLandordRentTemp" v-if="checkObject(landordHistoryTemp)">
+				<el-collapse v-model="activeLandordHistoryTemp" v-loading.body="gettingLandordRentTemp" v-if="landordHistoryTemp.list && landordHistoryTemp.list.length">
 					<el-collapse-item name="temp">
 						<template slot="title">
 			  				<span class="landord-title">合计：￥{{landordHistoryTemp.all}}元</span><span class="landord-title" v-for="(j, indexj) in payTypeVal">{{j}}：{{landordHistoryTemp[indexj]}}元</span>
@@ -480,6 +483,7 @@
 						</div>
 					</el-collapse-item>
 				</el-collapse>
+				<el-alert v-if="!gettingLandordRentTemp && (!landordHistoryTemp.list || !landordHistoryTemp.list.length)" title="暂无数据！请先处理单据状态" type="info" :closable="false"></el-alert>
 			</el-tab-pane>
 			<el-tab-pane label="交房东历史" name="landordHistory">
 				<!-- 顶部按钮组 -->
@@ -492,7 +496,17 @@
 				<el-collapse v-model="activeDate" v-loading.body="gettingLandordRent" v-if="checkObject(landordData)">
 				  <el-collapse-item v-for="(item, index) in landordData" :name="new Date(Number(index)).toLocaleDateString()">
 				  		<template slot="title">
-				  			{{new Date(Number(index)).toLocaleDateString()}} <span class="landord-title">合计：￥{{item.all}}元</span><span class="landord-title" v-for="(j, indexj) in payTypeVal">{{j}}：{{item[indexj]}}元</span>
+				  			{{new Date(Number(index)).toLocaleDateString()}} 
+				  			<span class="landord-title">
+								<el-popover
+									placement="right"
+									trigger="hover">
+									<div class="landord-title" v-for="(j, indexj) in payTypeVal">{{j}}：{{item[indexj]}}元</div>
+									<div slot="reference">
+										<el-button type="text">合计：￥{{item.all}}元</el-button>
+									</div>
+								</el-popover>
+							</span>
 				  		</template>
 						<div v-for="i in item.list" class="landord-content">
 							<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">

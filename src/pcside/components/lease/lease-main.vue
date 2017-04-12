@@ -323,7 +323,7 @@
 					width="150">
 					<template scope="scope">
 						<div v-if="scope.row.leaseId.calWaterPrice">
-							<div>低消：￥{{ scope.row.leaseId.calWaterPrice.minPrice }}吨</div>
+							<div>低消：{{ scope.row.leaseId.calWaterPrice.minPrice }}吨</div>
 							<div v-if="scope.row.leaseId.calWaterPrice.calType == 'single'">
 								单价：￥{{ scope.row.leaseId.calWaterPrice.singlePrice }}元/吨
 							</div>
@@ -346,7 +346,7 @@
 					width="150">
 					<template scope="scope">
 						<div v-if="scope.row.leaseId.calElePrice">
-							<div>低消：￥{{ scope.row.leaseId.calElePrice.minPrice }}度</div>
+							<div>低消：{{ scope.row.leaseId.calElePrice.minPrice }}度</div>
 							<div v-if="scope.row.leaseId.calElePrice.calType == 'single'">
 								单价：￥{{ scope.row.leaseId.calElePrice.singlePrice }}元/度
 							</div>

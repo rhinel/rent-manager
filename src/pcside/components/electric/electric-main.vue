@@ -73,9 +73,6 @@
 			<el-form :model="calElectric" ref="calElectric" :rules="calElectricrules">
 
 				<!-- 房屋信息 -->
-				<el-form-item>
-					<el-alert title="本操作作为单独计费结费操作，水电（非周期，每次按照计费信息结算），每次收租一个租户（或空置）针对一个计费" type="info"></el-alert>
-				</el-form-item>
 				<!-- 电底信息 -->
 				<el-form-item>
 					<el-alert title="本抄表数据来源于最新一次抄表，可修改作为本次副本保存（不增加抄表数据），但建议按照逻辑操作，先抄表再计费" type="info"></el-alert>
@@ -116,10 +113,7 @@
 
 				<!-- 计费方式 -->
 				<el-form-item>
-					<el-alert title="本计费方式来源于租户信息，临时调整可修改作为本次副本保存（不更新租户信息），但建议按照逻辑操作，修改租住管理的租户信息" type="info"></el-alert>
-				</el-form-item>
-				<el-form-item>
-					<el-alert title="本计费结果来源于本表单数据计算，可对结果进行修正" type="info"></el-alert>
+					<el-alert title="本计费方式及结果来源于租户信息，临时调整可修改作为本次副本保存（不更新租户信息），但建议按照逻辑操作，修改租住管理的租户信息" type="info"></el-alert>
 				</el-form-item>
 				<el-row :gutter="20">
 					<el-col :span="12">
@@ -175,18 +169,18 @@
 				<!-- 本次计费情况 -->
 				<el-row :gutter="20">
 					<el-col :span="12">
+						<el-form-item :label="calElectric.fix ? '修正结果' : '计算结果'" :label-width="cedLabelWidth" prop="calElectricResult">
+							<el-input v-model.number="calElectric.calElectricResult" auto-complete="off" placeholder="输入金额"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
 						<el-form-item label="计费时间" :label-width="cedLabelWidth" prop="addTime">
 							<el-date-picker v-model="calElectric.addTime" type="datetime" placeholder="输入计费时间" style="width: 100%;" :editable="false"></el-date-picker>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
-						<el-form-item label="计费备注" :label-width="cedLabelWidth">
-							<el-input v-model="calElectric.remark" auto-complete="off" placeholder="计费备注"></el-input>
-						</el-form-item>
-					</el-col>
 				</el-row>
-				<el-form-item :label="calElectric.fix ? '修正结果' : '计算结果'" :label-width="cedLabelWidth" prop="calElectricResult">
-					<el-input v-model.number="calElectric.calElectricResult" auto-complete="off" placeholder="输入金额"><template slot="prepend">￥</template><template slot="append">元</template></el-input>
+				<el-form-item label="计费备注" :label-width="cedLabelWidth">
+					<el-input v-model="calElectric.remark" auto-complete="off" placeholder="计费备注"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -258,7 +252,7 @@
 				min-width="180">
 				<template scope="scope">
 					<div v-if="scope.row.leaseId.calType">
-						<div>低消：￥{{ scope.row.leaseId.minPrice }}度</div>
+						<div>低消：{{ scope.row.leaseId.minPrice }}度</div>
 						<div v-if="scope.row.leaseId.calType == 'single'">
 							单价：￥{{ scope.row.leaseId.singlePrice }}元/度
 						</div>
@@ -515,26 +509,42 @@
 			},
 			//打开关闭计费弹窗
 			getCalElectricDialog (index, row) {
+				let setDefault = (leng, def)=>{
+					let lengs = leng.split('.')
+					let check = row
+					let re = null
+					for (var i in lengs) {
+						console.log(lengs[i])
+						if (check[lengs[i]] === undefined || check[lengs[i]] === null) {
+							return def
+						} else {
+							check = check[lengs[i]]
+						}
+					}
+					return check
+				}
 				this.calElectricflag = !this.calElectricflag
 				if (this.calElectricflag && row) {
-					//基本信息
-					this.calElectric.haoId = row._id
-					this.calElectric.fanghao = row.fanghao
-					this.calElectric.addTime = new Date()
-					//tnew
-					this.calElectric.tnew.electric = row.electricId && row.electricId.electric || 0
-					this.calElectric.tnew.remark = row.electricId && row.electricId.remark || ''
-					this.calElectric.tnew.addTime = row.electricId && row.electricId.addTime && new Date(row.electricId.addTime) || new Date()
-					//old
-					this.calElectric.old.electric = row.calElectricId && row.calElectricId.electric || 0
-					this.calElectric.old.remark = row.calElectricId && row.calElectricId.remark || ''
-					this.calElectric.old.addTime = row.calElectricId && row.calElectricId.addTime && new Date(row.calElectricId.addTime) || new Date()
-					//calWater
-					this.calElectric.calElectric.minPrice = row.leaseId && row.leaseId.minPrice || 0
-					this.calElectric.calElectric.calType = row.leaseId && row.leaseId.calType || 'single'
-					this.calElectric.calElectric.singlePrice = row.leaseId && row.leaseId.singlePrice || 0
-					this.calElectric.calElectric.stepPrice = row.leaseId && row.leaseId.stepPrice || []
-					!this.calElectric.calElectric.stepPrice.length && this.addStep()
+					setTimeout(()=>{
+						//基本信息
+						this.calElectric.haoId = row._id
+						this.calElectric.fanghao = row.fanghao
+						this.calElectric.addTime = new Date()
+						//tnew
+						this.calElectric.tnew.electric = setDefault('electricId.electric', 0)
+						this.calElectric.tnew.remark = setDefault('electricId.remark', '')
+						this.calElectric.tnew.addTime = row.electricId && row.electricId.addTime && new Date(row.electricId.addTime) || new Date()
+						//old
+						this.calElectric.old.electric = setDefault('calElectricId.electric', 0)
+						this.calElectric.old.remark = setDefault('calElectricId.remark', 0)
+						this.calElectric.old.addTime = row.calElectricId && row.calElectricId.addTime && new Date(row.calElectricId.addTime) || new Date()
+						//calWater
+						this.calElectric.calElectric.minPrice = setDefault('leaseId.minPrice', 0)
+						this.calElectric.calElectric.calType = setDefault('leaseId.calType', 'single')
+						this.calElectric.calElectric.singlePrice = setDefault('leaseId.singlePrice', 0)
+						this.calElectric.calElectric.stepPrice = setDefault('leaseId.stepPrice', [])
+						!this.calElectric.calElectric.stepPrice.length && this.addStep()
+					}, 0)
 				}
 			},
 			//计费弹窗数据初始化
