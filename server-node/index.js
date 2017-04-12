@@ -31,6 +31,7 @@ app.use(bodyParser.json())
 require('./routes')(app, express)
 
 //启动监听
+console.log('--------------------------------------')
 console.log(new Date())
 httpServer.listen(httpPORT, ()=>{
 	console.log('TechNode http is on port ' + httpPORT + '!') 
