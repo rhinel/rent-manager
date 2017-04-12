@@ -6,6 +6,17 @@ let controller = require('./controllers')
 
 module.exports = (app, express)=>{
 	//log
+	app.post('*', (req, res)=>{
+		console.log('--------------------------------------')
+		console.log(new Date())
+		console.log('hostName:' + req.hostname)
+		if (!req.hostname || req.hostname.indexOf('rhinel.xyz') == -1) {
+			console.log('ip:' + req.ip)
+			console.log('url:' + req.originalUrl)
+			console.log('header:' + JSON.stringify(req.headers))
+		}
+		req.next()
+	})
 	app.get('*', (req, res)=>{
 		console.log('--------------------------------------')
 		console.log(new Date())
