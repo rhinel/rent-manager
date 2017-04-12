@@ -10,7 +10,7 @@ module.exports = (app, express)=>{
 		console.log('--------------------------------------')
 		console.log(new Date())
 		console.log('hostName:' + req.hostname)
-		if (!req.hostname || req.hostname.indexOf('wechat.rhinel.xyz') == -1) {
+		if (!req.hostname || req.hostname.indexOf('rhinel.xyz') == -1) {
 			console.log('ip:' + req.ip)
 			console.log('url:' + req.originalUrl)
 			console.log('header:' + JSON.stringify(req.headers))
