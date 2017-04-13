@@ -9,23 +9,19 @@ module.exports = (app, express)=>{
 	app.post('*', (req, res)=>{
 		console.log('--------------------------------------')
 		console.log(new Date())
+		console.log('ip:' + req.ip)
+		console.log('header:' + JSON.stringify(req.headers))
 		console.log('hostName:' + req.hostname)
-		if (!req.hostname || req.hostname.indexOf('rhinel.xyz') == -1) {
-			console.log('ip:' + req.ip)
-			console.log('url:' + req.originalUrl)
-			console.log('header:' + JSON.stringify(req.headers))
-		}
+		console.log('url:' + req.originalUrl)
 		req.next()
 	})
 	app.get('*', (req, res)=>{
 		console.log('--------------------------------------')
 		console.log(new Date())
+		console.log('ip:' + req.ip)
+		console.log('header:' + JSON.stringify(req.headers))
 		console.log('hostName:' + req.hostname)
-		if (!req.hostname || req.hostname.indexOf('rhinel.xyz') == -1) {
-			console.log('ip:' + req.ip)
-			console.log('url:' + req.originalUrl)
-			console.log('header:' + JSON.stringify(req.headers))
-		}
+		console.log('url:' + req.originalUrl)
 		req.next()
 	})
 	//非权限接口
