@@ -437,7 +437,7 @@
 			this.$store.dispatch('updateMenu', '/inner/dashboard/index')
 		},
 		created () {
-			// this.getCount()
+			this.getCount()
 			this.getList(1)
 			this.getList(3)
 			this.getHouseList()
@@ -511,7 +511,7 @@
 				this.gettingCount = true
 				this.Ajax('/inner/dash/count', {}, (res)=>{
 					this.gettingCount = false
-					this.count = res.body.data
+					this.count.houseCount = res.body.data.houseCount
 				}, (res)=>{
 					this.$message({
 						type: 'error',
@@ -556,7 +556,7 @@
 			getHouseList () {
 				this.Ajax('/inner/house/list', {}, (res)=>{
 					this.houseData = res.body.data
-					this.count.houseCount = this.houseData.length
+					// this.count.houseCount = this.houseData.length
 				}, (res)=>{
 					this.$message({
 						type: 'error',
