@@ -40,6 +40,44 @@ module.exports = {
 			})
 		})
 	},
+	leaseEmptyList: (req, res, callback)=>{
+		//查询房屋数
+		let count = {}
+		db.dbModel('lease')
+		db
+		.dbModel('house')
+		.find({
+			userId: db.db.Types.ObjectId(req.userId),
+			status: 1
+		})
+		.populate({
+			path: 'leaseId',
+			model: 'lease'
+		})
+		.lean()
+		.exec()
+		.then((data)=>{
+			let count = []
+			data.forEach((i)=>{
+				if (!i.leaseId) {
+					i.leaseId = {}
+					count.push(i)
+				} else if (i.leaseId.status != 1) {
+					count.push(i)
+				}
+			})
+			return Promise.reject({
+				type: true,
+				data: count
+			})
+		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
 	addNote: (req, res, callback)=>{
 		//不做数据校验
 		//判断ID
@@ -157,6 +195,9 @@ module.exports = {
 		//查询列表
 		//
 		let seach
+		let today = new Date().getDate()
+		let month = new Date().getMonth()
+		let year = new Date().getFullYear()
 		if (req.body.type == 1) {
 			seach = {
 				$or: [
@@ -185,11 +226,24 @@ module.exports = {
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
+		.lean()
 		.exec()
 		.then((data)=>{
+			let isToday = []
+			let isTodayCount = 0
+			data.forEach((i)=>{
+				if (i.lease.payDay <= today || new Date(i.monthId.month).getMonth() < month || new Date(i.monthId.month).getFullYear() < year) {
+					isTodayCount += i.calRentResult
+					isToday.push(i)
+				}
+			})
 			return Promise.reject({
 				type: true,
-				data: data
+				data: {
+					data: data,
+					isToday: isToday,
+					isTodayCountMoney: isTodayCount
+				}
 			})
 		})
 		.catch((err)=>{
@@ -250,11 +304,94 @@ module.exports = {
 				type: true,
 				data: {
 					count: data.length,
-					countMoney: count,
-					isToday: isToday
+					isTodayCountMoney: count,
+					isTodayCount: isToday
 				}
 			})
 		})
+		.catch((err)=>{
+			callback({
+				type: err.type || false,
+				data: err.data || err.message
+			})
+		})
+	},
+	okList: (req, res, callback)=>{
+		//判断类型
+		//查询列表
+		let today = new Date().getDate()
+		let month = new Date().getMonth()
+		let year = new Date().getFullYear()
+		let theMonth = {}
+
+		return (async ()=>{
+			//查询最新月度ID
+			await (()=>{
+				return new Promise((resolved, rejectd)=>{
+					db
+					.dbModel('month')
+					.findOne({}, {
+			            month: 1,
+			            remark: 1,
+			            createTime: 1,
+			            updateTime: 1
+			        })
+			        .where('userId').equals(db.db.Types.ObjectId(req.userId))
+			        .where('status').equals(1)
+			        .sort('-month')
+			        .lean()
+			        .exec()
+			        .then((data)=>{
+			        	theMonth = data
+			        	resolved()
+			        })
+				})
+			})()
+			let seach = {
+				'type.type': { '$in': [req.body.type] },
+				monthId: db.db.Types.ObjectId(theMonth._id)
+			}
+			let count = 0
+			let countMoney = 0
+			let isToday = []
+			//查询统计
+			await (()=>{
+				return new Promise((resolved, rejectd)=>{
+					db
+					.dbModel('rent')
+					.find(seach)
+					.populate({
+						path: 'monthId',
+						model: 'month',
+						select: 'month',
+						match: {status: 1}
+					})
+					.where('userId').equals(db.db.Types.ObjectId(req.userId))
+					.where('status').equals(1)
+					.lean()
+					.exec()
+					.then((data)=>{
+						count = data
+						data.forEach((i)=>{
+							if (i.lease.payDay <= today || new Date(i.monthId.month).getMonth() < month || new Date(i.monthId.month).getFullYear() < year) {
+								countMoney += i.calRentResult
+								isToday.push(i)
+							}
+						})
+						resolved()
+					})
+				})
+			})()
+			return Promise.reject({
+				type: true,
+				data: {
+					data: count,
+					isTodayCountMoney: countMoney,
+					isToday: isToday,
+					month: theMonth.month
+				}
+			})
+		})()
 		.catch((err)=>{
 			callback({
 				type: err.type || false,
@@ -319,8 +456,8 @@ module.exports = {
 					.then((data)=>{
 						count = data.length
 						data.forEach((i)=>{
+							countMoney += i.calRentResult
 							if (i.lease.payDay <= today || new Date(i.monthId.month).getMonth() < month || new Date(i.monthId.month).getFullYear() < year) {
-								countMoney += i.calRentResult
 								isToday += 1
 							}
 						})
@@ -333,7 +470,7 @@ module.exports = {
 				data: {
 					count: count,
 					countMoney: countMoney,
-					isToday: isToday,
+					isTodayCount: isToday,
 					month: theMonth.month
 				}
 			})

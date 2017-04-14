@@ -274,9 +274,17 @@ const inner = (req, res, next)=>{
 			serviceDashb.waitingListCount(req, res, (data)=>{
 				res.json(code(3075, data))
 			})
+		} else if (req.params.function === 'okList') {
+			serviceDashb.okList(req, res, (data)=>{
+				res.json(code(3077, data))
+			})
 		} else if (req.params.function === 'okListCount') {
 			serviceDashb.okListCount(req, res, (data)=>{
 				res.json(code(3076, data))
+			})
+		} else if (req.params.function === 'leaseEmptyList') {
+			serviceDashb.leaseEmptyList(req, res, (data)=>{
+				res.json(code(3078, data))
 			})
 		} else {
 			next()

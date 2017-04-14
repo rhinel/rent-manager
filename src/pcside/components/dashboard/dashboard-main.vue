@@ -529,7 +529,7 @@
 					type: type
 				}, (res)=>{
 					this['gettingRentList' + type] = false
-					this['rentList' + type] = res.body.data
+					this['rentList' + type] = res.body.data.data
 					this.count['rentList' + type + 'Count'] = this['rentList' + type].length
 				}, (res)=>{
 					this.$message({
