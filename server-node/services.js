@@ -32,40 +32,83 @@ module.exports = {
 			let _token = md5(req.ip + req.body.name + req.body.pwd + _tokenTime)
 			let _userId
 			//db类操作，异步同步化
+			
+			//1查询数据是否有超5次错误
 			db
-			//数据库查询用户名和密码校验
-			.dbModel('admin')
-			.findOne({name: req.body.name, pwd: req.body.pwd})
-			.exec()
-			.then((dbData)=>{
-				if (!dbData) {
+			.redisGet(req.ip)
+			.then((data)=>{
+				if (data && data >= 5) {
+					console.log('**************************************')
+					console.log(new Date())
+					console.log('ip:' + req.ip)
+					console.log('login error more than 5 times.')
 					return Promise.reject({
 						type: false,
-						data: '用户名/密码错误'
+						data: '用户名/密码错误超过5次，请等待5分钟后再次登陆'
 					})
 				} else {
-					_userId = dbData.id
-					return dbData 
+					return true
 				}
 			})
-			//查出已有的登陆态
+			//2数据库查询用户名和密码校验
+			.then(()=>{
+				return db
+				.dbModel('admin')
+				.findOne({name: req.body.name, pwd: req.body.pwd})
+				.exec()
+				.then((dbData)=>{
+					if (!dbData) {
+						//账号密码错误次数5分钟机制
+						return db
+						.redisIncrKeys(req.ip)
+						.then((data)=>{
+							return db
+							.redisSetTime(req.ip, 300)
+							.then(()=>{
+								return data
+							})
+						})
+						.then((data)=>{
+							console.log('**************************************')
+							console.log(new Date())
+							console.log('ip:' + req.ip)
+							console.log('login error ' + data + ' times.')
+							let errorTimes = 5 - data
+							errorTimes = errorTimes < 0 ? 0 : errorTimes
+							return Promise.reject({
+								type: false,
+								data: '用户名/密码错误，5分钟内您还有' + errorTimes + '次机会'
+							})
+						})
+					} else {
+						//成功清除错误记录
+						return db
+						.redisDelKeys(req.ip)
+						.then(()=>{
+							_userId = dbData.id
+							return dbData
+						})
+					}
+				})
+			})			
+			//3查出已有的登陆态，更新状态
 			.then((dbData)=>{
 				return db.redisGetKeys(dbData._id.toString() + '$*')
+				//旧token失效？
+				.then((reKeysData)=>{
+					if (reKeysData.length) {
+						// return db.redisDelKeys(reKeysData)
+						return true
+					} else {
+						return true
+					}
+				})
+				//更新缓存，存缓存token:userid，1800秒
+				.then(()=>{
+					return db.redisSet(_userId.toString() + '$' + _token, _userId.toString(), 1800)
+				})
 			})
-			//旧token失效？
-			.then((reKeysData)=>{
-				if (reKeysData.length) {
-					// return db.redisDelKeys(reKeysData)
-					return true
-				} else {
-					return true
-				}
-			})
-			//更新缓存，存缓存token:userid，1800秒
-			.then(()=>{
-				return db.redisSet(_userId.toString() + '$' + _token, _userId.toString(), 1800)
-			})
-			//返回token
+			//4返回token
 			.then(()=>{
 				return Promise.reject({
 					type: true,

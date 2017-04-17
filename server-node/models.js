@@ -66,6 +66,16 @@ const redisDelKeys = (keys)=>{
 	})
 }
 
+//incr keys
+const redisIncrKeys = (key)=>{
+	return new Promise((resolve, reject)=>{
+		rds.incr(key, (err, reply)=>{
+			err && reject(err)
+			!err && resolve(reply)
+		})
+	})
+}
+
 //链接数据库
 const connect = (callback)=>{
 	mongoose.Promise = global.Promise
@@ -127,6 +137,7 @@ module.exports = {
 	redisGet: redisGet,
 	redisGetKeys: redisGetKeys,
 	redisDelKeys: redisDelKeys,
+	redisIncrKeys: redisIncrKeys,
 	connect: connect,
 	dbModel: dbModel,
 	dbEntity: dbEntity,

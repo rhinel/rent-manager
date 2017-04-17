@@ -289,7 +289,7 @@ const inner = (req, res, next)=>{
 		} else {
 			next()
 		}
-	} else if (req.params.class === 'getData') {
+	/*} else if (req.params.class === 'getData') {
 		service.getData(req, res, (data)=>{
 			res.json(code(3001, data))
 		})
@@ -308,7 +308,7 @@ const inner = (req, res, next)=>{
 	} else if (req.params.class === 'redisGet') {
 		service.redisGet(req, res, (data)=>{
 			res.json(code(3005, data))
-		})
+		})*/
 	} else {
 		next()
 	}
