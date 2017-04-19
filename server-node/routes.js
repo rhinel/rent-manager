@@ -34,8 +34,8 @@ module.exports = (app, express)=>{
 	app.route('/api/*').post(controller.def)
 
 	//处理页面, 动态加载
-	app.use('../dist', express.static(path.resolve(__dirname, '../dist')))
-	app.use('../../rhinel.xyz', express.static(path.resolve(__dirname, '../../rhinel.xyz')))
+	app.use('/static', express.static(path.resolve(__dirname, '../dist/static')))
+	app.use('/assets', express.static(path.resolve(__dirname, '../../rhinel.xyz/assets')))
 	app.get('*', (req, res)=>{
 		if (req.hostname && req.hostname == 'wechat.rhinel.xyz') {
 			res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
