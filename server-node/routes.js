@@ -35,7 +35,7 @@ module.exports = (app, express)=>{
 
 	//处理页面, 动态加载
 	app.use(express.static(path.resolve(__dirname, '../dist')))
-	app.use(express.static(path.resolve(__dirname, '../../rhinel.xyz')))
+	app.use(express.static(path.join(__dirname, '../../rhinel.xyz')))
 	app.get('*', (req, res)=>{
 		if (req.hostname && req.hostname == 'wechat.rhinel.xyz') {
 			res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
