@@ -4,8 +4,8 @@
 let http = require('http')
 let https = require('https')
 let fs = require('fs')
-let privateKey  = fs.readFileSync('../../ssl-key/ssl-key.key', 'utf8')
-let certificate = fs.readFileSync('../../ssl-key/ssl-key.crt', 'utf8')
+let privateKey  = fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.key', 'utf8')
+let certificate = fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.crt', 'utf8')
 let credentials = {key: privateKey, cert: certificate}
 
 let express = require('express')
@@ -21,6 +21,10 @@ db.connect()
 let app = express()
 let httpServer = http.createServer(app)
 let httpsServer = https.createServer(credentials, app)
+httpsServer.addContext('www.rhinel.xyz', {
+	key: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.key', 'utf8'),
+	cert: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.crt', 'utf8')
+})
 const httpPORT = process.env.HTTPPORT || 80
 const httpsPORT = process.env.HTTPSPORT || 443
 app.use(express.static(__dirname + '/'))

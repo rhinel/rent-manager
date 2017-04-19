@@ -36,9 +36,9 @@ module.exports = (app, express)=>{
 	//处理页面, 动态加载
 	app.use(express.static(path.resolve(__dirname, '../dist')))
 	app.get('*', (req, res)=>{
-		if (req.hostname && req.hostname.indexOf('wechat.rhinel.xyz') > -1) {
+		if (req.hostname && req.hostname == 'wechat.rhinel.xyz') {
 			res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
-		} else if (req.hostname && req.hostname.indexOf('www.rhinel.xyz') > -1) {
+		} else if (req.hostname && req.hostname == 'www.rhinel.xyz') {
 			res.send(fs.readFileSync(path.resolve('../dist/pcside/index.html'), 'utf-8'))
 		} else {
 			res.send('页面飘走了！')
