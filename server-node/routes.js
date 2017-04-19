@@ -38,8 +38,10 @@ module.exports = (app, express)=>{
 	app.get('*', (req, res)=>{
 		if (req.hostname && req.hostname == 'wechat.rhinel.xyz') {
 			res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
-		} else if (req.hostname && (req.hostname == 'www.rhinel.xyz' || req.hostname == 'rhinel.xyz')) {
+		} else if (req.hostname && req.hostname == 'www.rhinel.xyz') {
 			res.send(fs.readFileSync(path.resolve('../dist/pcside/index.html'), 'utf-8'))
+		} else if (req.hostname && req.hostname == 'rhinel.xyz') {
+			res.send(fs.readFileSync(path.resolve('../../rhinel.xyz/index.html'), 'utf-8'))
 		} else {
 			res.send('页面飘走了！')
 		}
