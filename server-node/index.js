@@ -4,9 +4,6 @@
 let http = require('http')
 let https = require('https')
 let fs = require('fs')
-let privateKey  = fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.key', 'utf8')
-let certificate = fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.crt', 'utf8')
-let credentials = {key: privateKey, cert: certificate}
 
 let express = require('express')
 let bodyParser = require('body-parser')
@@ -19,8 +16,17 @@ db.connect()
 
 //启动路由及端口处理
 let app = express()
-let httpServer = http.createServer(app)
-let httpsServer = https.createServer(credentials, app)
+let reapp = express()
+//http转发
+let httpServer = http.createServer(reapp)
+reapp.all('*', function(req, res) {
+  return res.redirect("https://" + req.headers["host"] + req.url)
+})
+//https-ssl
+let httpsServer = https.createServer({
+	key: fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.key', 'utf8'),
+	cert: fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.crt', 'utf8')
+}, app)
 httpsServer.addContext('www.rhinel.xyz', {
 	key: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.key', 'utf8'),
 	cert: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.crt', 'utf8')
