@@ -35,7 +35,7 @@ const httpPORT = process.env.HTTPPORT || 80
 const httpsPORT = process.env.HTTPSPORT || 443
 app.use(express.static(__dirname + '/'))
 //使用post&json
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 //处理路由
 require('./routes')(app, express)
