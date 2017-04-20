@@ -31,6 +31,10 @@ httpsServer.addContext('www.rhinel.xyz', {
 	key: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.key', 'utf8'),
 	cert: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.crt', 'utf8')
 })
+httpsServer.addContext('wechat.rhinel.xyz', {
+	key: fs.readFileSync('../../ssl-key/ssl-wechat.rhinel.xyz/ssl-key.key', 'utf8'),
+	cert: fs.readFileSync('../../ssl-key/ssl-wechat.rhinel.xyz/ssl-key.crt', 'utf8')
+})
 const httpPORT = process.env.HTTPPORT || 80
 const httpsPORT = process.env.HTTPSPORT || 443
 app.use(express.static(__dirname + '/'))
