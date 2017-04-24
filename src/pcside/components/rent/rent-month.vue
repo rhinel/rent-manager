@@ -63,11 +63,11 @@
 			vertical-align: middle;
 		}
 		.rent-remark-tag{
+			-webkit-box-orient: vertical;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			display: -webkit-box;
 			-webkit-line-clamp: 2;
-			-webkit-box-orient: vertical;
 		}
 		.landord-title{
 			display: inline-block;
@@ -84,6 +84,10 @@
 				padding: 10px 0;
 				width: 180px;
 				vertical-align: top;
+			}
+			& > span:last-child{
+				min-width: 180px;
+				width: auto;
 			}
 			.landord-content-type{
 				position: relative;
