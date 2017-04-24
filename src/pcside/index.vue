@@ -8,6 +8,9 @@
 	.el-table .el-table__body .cell{
 		padding: 5px 18px;
 	}
+	.main-txt-highline{
+		color: #1D8CE0;;
+	}
 </style>
 
 <template>

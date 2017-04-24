@@ -207,6 +207,14 @@
 				label="最新抄表数(吨)"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<span v-if="scope.row.waterId.water > 0" class="main-txt-highline">
+						{{scope.row.waterId.water}}
+					</span>
+					<span v-else>
+						{{scope.row.waterId.water}}
+					</span>
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="waterId.addTime"
@@ -222,6 +230,14 @@
 				label="上次计费底表数(吨)"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<span v-if="scope.row.calWaterId.water > 0" class="main-txt-highline">
+						{{scope.row.calWaterId.water}}
+					</span>
+					<span v-else>
+						{{scope.row.calWaterId.water}}
+					</span>
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="calWaterId.addTime"
@@ -237,6 +253,14 @@
 				label="本期实用数(吨)"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<span v-if="scope.row.gap > 0" style="color:#1D8CE0;">
+						{{scope.row.gap}}
+					</span>
+					<span v-else>
+						{{scope.row.gap}}
+					</span>
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="result"

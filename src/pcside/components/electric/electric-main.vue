@@ -207,6 +207,14 @@
 				label="最新抄表数(度)"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<span v-if="scope.row.electricId.electric > 0" class="main-txt-highline">
+						{{scope.row.electricId.electric}}
+					</span>
+					<span v-else>
+						{{scope.row.electricId.electric}}
+					</span>
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="electricId.addTime"
@@ -222,6 +230,14 @@
 				label="上次计费底表数(度)"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<span v-if="scope.row.calElectricId.electric > 0" class="main-txt-highline">
+						{{scope.row.calElectricId.electric}}
+					</span>
+					<span v-else>
+						{{scope.row.calElectricId.electric}}
+					</span>
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="calElectricId.addTime"
@@ -237,6 +253,14 @@
 				label="本期实用数(度)"
 				width="180"
 				sortable>
+				<template scope="scope">
+					<span v-if="scope.row.gap > 0" class="main-txt-highline">
+						{{scope.row.gap}}
+					</span>
+					<span v-else>
+						{{scope.row.gap}}
+					</span>
+				</template>
 			</el-table-column>
 			<el-table-column
 				prop="result"

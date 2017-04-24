@@ -94,6 +94,9 @@
 				}
 			}
 		}
+		.rent-count-title:not(:first-child){
+			padding-top: 20px;
+		}
 	}
 	// 信息悬浮窗弹窗样式
 	.rent-remark{
