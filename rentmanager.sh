@@ -7,6 +7,7 @@ docker run \
  --name rentmanager \
  --expose 80 \
  --expose 443 \
- -v $PWD:/webapp \
- -w /webapp \
- -d node npm start
+ -v ~/gitcode/rent-manager:/webapp \
+ -v ~/ssl-key:/ssl-key \
+ -w /webapp/server-node \
+ -d node node index

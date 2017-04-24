@@ -24,16 +24,16 @@ reapp.all('*', function(req, res) {
 })
 //https-ssl
 let httpsServer = https.createServer({
-	key: fs.readFileSync('../../../ssl-key/ssl-rhinel.xyz/ssl-key.key', 'utf8'),
-	cert: fs.readFileSync('../../../ssl-key/ssl-rhinel.xyz/ssl-key.crt', 'utf8')
+	key: fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.key', 'utf8'),
+	cert: fs.readFileSync('../../ssl-key/ssl-rhinel.xyz/ssl-key.crt', 'utf8')
 }, app)
 httpsServer.addContext('www.rhinel.xyz', {
-	key: fs.readFileSync('../../../ssl-key/ssl-www.rhinel.xyz/ssl-key.key', 'utf8'),
-	cert: fs.readFileSync('../../../ssl-key/ssl-www.rhinel.xyz/ssl-key.crt', 'utf8')
+	key: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.key', 'utf8'),
+	cert: fs.readFileSync('../../ssl-key/ssl-www.rhinel.xyz/ssl-key.crt', 'utf8')
 })
 httpsServer.addContext('wechat.rhinel.xyz', {
-	key: fs.readFileSync('../../../ssl-key/ssl-wechat.rhinel.xyz/ssl-key.key', 'utf8'),
-	cert: fs.readFileSync('../../../ssl-key/ssl-wechat.rhinel.xyz/ssl-key.crt', 'utf8')
+	key: fs.readFileSync('../../ssl-key/ssl-wechat.rhinel.xyz/ssl-key.key', 'utf8'),
+	cert: fs.readFileSync('../../ssl-key/ssl-wechat.rhinel.xyz/ssl-key.crt', 'utf8')
 })
 const httpPORT = process.env.HTTPPORT || 80
 const httpsPORT = process.env.HTTPSPORT || 443
