@@ -38,10 +38,6 @@ module.exports = {
 			.redisGet(req.ip)
 			.then((data)=>{
 				if (data && data >= 5) {
-					console.log('**************************************')
-					console.log(new Date())
-					console.log('ip:' + req.ip)
-					console.log('login error more than 5 times.')
 					return Promise.reject({
 						type: false,
 						data: '用户名/密码错误超过5次，请等待5分钟后再次登陆'
@@ -69,10 +65,6 @@ module.exports = {
 							})
 						})
 						.then((data)=>{
-							console.log('**************************************')
-							console.log(new Date())
-							console.log('ip:' + req.ip)
-							console.log('login error ' + data + ' times.')
 							let errorTimes = 5 - data
 							errorTimes = errorTimes < 0 ? 0 : errorTimes
 							return Promise.reject({

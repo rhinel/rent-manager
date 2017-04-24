@@ -5,17 +5,6 @@ let path = require('path')
 let controller = require('./controllers')
 
 module.exports = (app, express)=>{
-	//log
-	app.all('*', (req, res)=>{
-		console.log('--------------------------------------')
-		console.log(new Date())
-		console.log('ip:' + req.ip)
-		console.log('header:' + JSON.stringify(req.headers))
-		console.log('hostName:' + req.hostname)
-		console.log('url:' + req.originalUrl)
-		req.next()
-	})
-	
 	//接口，不做接口校验
 	//非权限接口
 	app.route('/api/outer/:class/:function').post(controller.outer)
