@@ -55,7 +55,7 @@ app.use(morgan('combined', {stream: accessLogStream}))
 app.use(morgan((tokens, req, res)=>{
 	return [
 		new Date(),
-		req.ip,
+		req.headers.x-real-ip || req.ip,
 		JSON.stringify(req.body)
 	].join('  ')
 }, {
