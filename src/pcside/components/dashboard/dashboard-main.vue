@@ -118,7 +118,7 @@
 					<el-col :span="12">
 						<el-form-item label="房屋" :label-width="ndLabelWidth" prop="haoId">
 							<el-select v-model="note.haoId" placeholder="选择房屋" :filterable="true">
-								<el-option v-for="item in houseData" :label="item.fang + item.hao" :value="item._id" :key="item._id"></el-option>
+								<el-option v-for="item in houseData" :label="item.fang + item.hao" :value="item._id"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -248,8 +248,7 @@
 										<el-popover
 											placement="top"
 											trigger="hover"
-											 v-for="item in scope.row.type.type"
-											 :key="item">
+											 v-for="item in scope.row.type.type">
 											<div class="rent-remark">{{ getDate(scope.row.type.typeTime[item]) }}</div>
 											<div slot="reference" class="rent-show-tag rent-show-tag3">
 												<el-tag>{{typesVal[item]}}</el-tag>
@@ -262,7 +261,7 @@
 							</el-table-column>
 							<el-table-column
 								label="备注"
-								min-width="140">
+								min-width="180">
 								<template scope="scope">
 									<el-popover
 										placement="top"
@@ -358,8 +357,7 @@
 										<el-popover
 											placement="top"
 											trigger="hover"
-											 v-for="item in scope.row.type.type"
-											 :key="item">
+											 v-for="item in scope.row.type.type">
 											<div class="rent-remark">{{ getDate(scope.row.type.typeTime[item]) }}</div>
 											<div slot="reference" class="rent-show-tag rent-show-tag3">
 												<el-tag>{{typesVal[item]}}</el-tag>
@@ -372,7 +370,7 @@
 							</el-table-column>
 							<el-table-column
 								label="备注"
-								min-width="140">
+								min-width="180">
 								<template scope="scope">
 									<el-popover
 										placement="top"
@@ -413,16 +411,15 @@
 							<span class="card-header">操作说明</span>
 						</div>
 						<div class="detail-content">
-							<b>业务一：房屋管理</b><br>
-							1、房屋添加、修改、删除。<br>
-							<b>业务二：水电管理</b><br>
-							1、抄数：水电、信息更新。<br>
-							2、计费：水电计费可调整计费参数。<br>
-							3、中途搬入搬出可只进行计费，更新表底信息。<br>
-							<b>业务三：收租</b><br>
-							1、收租：房租（周期，周期内可多次），周期内可有多个租户，多次收租，计租必须先进行水电计费（或空计），可调整计费情况。<br>
-							2、搬出入住/修改：计费信息初始化，必须为上次收租结束/空置处理结束/本次计费之前，用户自行确认。<br>
-							3、空置作计费处理，不收租。
+							业务一：房屋管理<br>
+							1、房屋添加修改删除<br>
+							业务二：收租/租住管理<br>
+							1、抄数：水电，信息更新<br>
+							2、计费：水电（非周期，每次按照计费信息结算），每次收租一个租户（或空置）针对一个计费<br>
+							（中途缴费水电的情况先抄表，写备注在抄表信息中，不计费，计费时候收差额）<br>
+							3、收租：房租（周期，周期内可多次），周期内可有多个租户，多次收租（计费来源）<br>
+							4、搬出入住/修改：计费信息初始化，必须为上次收租结束/空置处理结束/本次计费之前，用户自行确认<br>
+							备注：空置作计费处理，不收租
 						</div>
 					</el-card>
 				</el-row>

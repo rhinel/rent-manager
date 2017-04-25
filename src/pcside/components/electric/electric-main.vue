@@ -49,7 +49,7 @@
 			<el-form :model="addElectric" ref="addElectric" :rules="addElectricrules">
 				<el-form-item label="房屋" :label-width="aedLabelWidth" prop="haoId">
 					<el-select v-model="addElectric.haoId" placeholder="选择房屋" :filterable="true">
-						<el-option v-for="item in houseData" :label="item.fang + item.hao" :value="item._id" :key="item._id"></el-option>
+						<el-option v-for="item in houseData" :label="item.fang + item.hao" :value="item._id"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="电表数" :label-width="aedLabelWidth" prop="electric">

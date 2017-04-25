@@ -93,7 +93,7 @@
 							<el-col :span="4" style="height:1px;"></el-col>
 							<el-col :span="20">
 								<el-select v-model="changeType.payType" placeholder="选择交租方式">
-									<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index" :key="index"></el-option>
+									<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index"></el-option>
 								</el-select>
 							</el-col>
 						</el-row>
@@ -112,7 +112,7 @@
 				<el-form-item label="状态" :label-width="ctdLabelWidth">
 					<div>
 						<el-checkbox-group v-model="changeType.type" @change="onChangeType">
-							<el-row :gutter="20" v-for="type in types" class="el-row-margin" :key="type">
+							<el-row :gutter="20" v-for="type in types" class="el-row-margin">
 								<el-col :span="4">
 									<el-checkbox :label="type.value">{{type.label}}</el-checkbox>
 								</el-col>
@@ -290,11 +290,10 @@
 							<el-popover
 								placement="top"
 								trigger="hover"
-								 v-for="item in getRent(scope).type.type"
-								 :key="item">
+								 v-for="item in getRent(scope).type.type">
 								<div class="rent-remark">{{ getTime(getRent(scope).type.typeTime[item]) }}</div>
 								<div slot="reference" class="rent-show-tag rent-show-tag3">
-									<el-tag :type="item != 2? 'primary' : ''">{{typesVal[item]}}</el-tag>
+									<el-tag>{{typesVal[item]}}</el-tag>
 								</div>
 							</el-popover>
 						</div>
