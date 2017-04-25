@@ -215,7 +215,7 @@
 									<el-col :span="4" style="height:1px;"></el-col>
 									<el-col :span="20">
 										<el-select v-model="changeType.payType" placeholder="选择交租方式">
-											<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index"></el-option>
+											<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index" :key="index"></el-option>
 										</el-select>
 									</el-col>
 								</el-row>
@@ -234,7 +234,7 @@
 						<el-form-item label="状态" :label-width="ctdLabelWidth">
 							<div>
 								<el-checkbox-group v-model="changeType.type" @change="onChangeType">
-									<el-row :gutter="20" v-for="type in types" class="el-row-margin">
+									<el-row :gutter="20" v-for="type in types" class="el-row-margin" :key="type">
 										<el-col :span="4">
 											<el-checkbox :label="type.value">{{type.label}}</el-checkbox>
 										</el-col>
@@ -413,10 +413,11 @@
 									<el-popover
 										placement="top"
 										trigger="hover"
-										 v-for="item in getRent(scope).type.type">
+										 v-for="item in getRent(scope).type.type"
+										 :key="item">
 										<div class="rent-remark">{{ getTime(getRent(scope).type.typeTime[item]) }}</div>
 										<div slot="reference" class="rent-show-tag rent-show-tag3">
-											<el-tag>{{typesVal[item]}}</el-tag>
+											<el-tag :type="item != 2? 'primary' : ''">{{typesVal[item]}}</el-tag>
 										</div>
 									</el-popover>
 								</div>
@@ -426,7 +427,7 @@
 						</el-table-column>
 						<el-table-column
 							label="备注"
-							min-width="150">
+							min-width="140">
 							<template scope="scope">
 								<el-popover
 									placement="top"
@@ -480,7 +481,7 @@
 				<el-collapse v-model="activeLandordHistoryTemp" v-loading.body="gettingLandordRentTemp" v-if="landordHistoryTemp.list && landordHistoryTemp.list.length">
 					<el-collapse-item name="temp">
 						<template slot="title">
-			  				<span class="landord-title">合计：￥{{landordHistoryTemp.all}}元</span><span class="landord-title" v-for="(j, indexj) in payTypeVal">{{j}}：{{landordHistoryTemp[indexj]}}元</span>
+			  				<span class="landord-title">合计：￥{{landordHistoryTemp.all}}元</span><span class="landord-title" v-for="(j, indexj) in payTypeVal" :key="indexj">{{j}}：{{landordHistoryTemp[indexj]}}元</span>
 			  			</template>
 			  			<div v-for="i in landordHistoryTemp.list" class="landord-content">
 							<router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
@@ -501,7 +502,7 @@
 					</div>
 				</div>
 				<el-collapse v-model="activeDate" v-loading.body="gettingLandordRent" v-if="checkObject(landordData)">
-				  <el-collapse-item v-for="(item, index) in landordData" :name="new Date(Number(index)).toLocaleDateString()">
+				  <el-collapse-item v-for="(item, index) in landordData" :name="new Date(Number(index)).toLocaleDateString()" :key="index">
 				  		<template slot="title">
 				  			{{new Date(Number(index)).toLocaleDateString()}} 
 				  			<span class="landord-title">
@@ -533,7 +534,7 @@
 						</el-alert>						
 					</div>
 					<el-collapse v-model="activeRentCount[fangi]">
-						<el-collapse-item v-for="(floor, floori) in fang.list" :name="floori">
+						<el-collapse-item v-for="(floor, floori) in fang.list" :name="floori" :key="floori">
 							<template slot="title">
 				  				{{floori}}楼 <span class="landord-title">合计：￥{{floor.count}}元</span>
 				  			</template>

@@ -85,14 +85,14 @@
 					<el-col :span="7">
 						<el-form-item label="交租时间" :label-width="lidLabelWidth" prop="payDay">
 							<el-select v-model="lease.payDay" placeholder="选择交租时间" prop="payDay">
-								<el-option v-for="n in 31" :label="n + '日'" :value="n"></el-option>
+								<el-option v-for="n in 31" :label="n + '日'" :value="n" :key="n"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
 						<el-form-item label="交租方式" :label-width="lidLabelWidth" prop="payType">
 							<el-select v-model="lease.payType" placeholder="选择交租方式">
-								<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index"></el-option>
+								<el-option v-for="(item, index) in payTypeVal" :label="item" :value="index" :key="index"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>

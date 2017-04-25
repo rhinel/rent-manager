@@ -46,7 +46,7 @@
 			<el-form :model="addHouse" ref="addHouse" :rules="addHouserules">
 				<el-form-item label="坊号" :label-width="ahdLabelWidth" prop="fang">
 					<el-select v-model="addHouse.fang" placeholder="选择坊号">
-						<el-option v-for="item in houseFang" :label="item" :value="item"></el-option>
+						<el-option v-for="item in houseFang" :label="item" :value="item" :key="item"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="房间号" :label-width="ahdLabelWidth" prop="hao">
