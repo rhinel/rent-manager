@@ -39,8 +39,6 @@ module.exports = {
         .exec()
         .then((data)=>{
             //字段初始化
-            
-        console.log(data)
             data && data.haoId && !data.fanghao && (data.fanghao = data.haoId.fang + data.haoId.hao)
             return Promise.reject({
                 type: true,
