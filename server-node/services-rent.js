@@ -5,6 +5,55 @@ let superagent = require('superagent')
 let md5 = require('md5')
 
 module.exports = {
+    one: (req, res, callback)=>{
+        //通过ID查询
+        //返回det对象
+        if (!req.body.rentId) {
+            callback({
+                type: false
+            })
+            return false
+        }
+        db.dbModel('house')
+        db.dbModel('month')
+        db
+        .dbModel('rent')
+        .findOne({
+            _id: db.db.Types.ObjectId(req.body.rentId)
+        })
+        .populate({
+            path: 'haoId',
+            model: 'house',
+            select: 'fang hao haoId addTime detail',
+            match: {status: 1}
+        })
+        .populate({
+            path: 'monthId',
+            model: 'month',
+            select: 'month',
+            match: {status: 1}
+        })
+        .where('userId').equals(db.db.Types.ObjectId(req.userId))
+        .where('status').equals(1)
+        .lean()
+        .exec()
+        .then((data)=>{
+            //字段初始化
+            
+        console.log(data)
+            data && data.haoId && !data.fanghao && (data.fanghao = data.haoId.fang + data.haoId.hao)
+            return Promise.reject({
+                type: true,
+                data: data
+            })
+        })
+        .catch((err)=>{
+            callback({
+                type: err.type || false,
+                data: err.data || err.message
+            })
+        })
+    },
     listByNewestMonth: (req, res, callback)=>{
         //通过房屋查询所有最新挂载信息：租约信息
         //初始化字段后
@@ -103,7 +152,7 @@ module.exports = {
         .populate({
             path: 'haoId',
             model: 'house',
-            select: 'fang hao haoId addTime',
+            select: 'fang hao haoId addTime detail',
             match: {status: 1}
         })
         .populate({

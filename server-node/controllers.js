@@ -249,6 +249,10 @@ const inner = (req, res, next)=>{
 			service.rentListByLandordTemp(req, res, (data)=>{
 				res.json(code(3069, data))
 			})
+		} else if (req.params.function === 'one') {
+			serviceRent.one(req, res, (data)=>{
+				res.json(code(30610, data))
+			})
 		} else {
 			next()
 		}
