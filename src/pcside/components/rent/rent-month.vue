@@ -744,7 +744,7 @@
 				if (this.addRentflag && row) {
 					this.addRent.calWater = row.calWaterId
 					this.addRent.calElectric = row.calElectricId
-					this.addRent.lease = row.leaseId.hasOwnProperty('rent') ? row.leaseId : {
+					this.addRent.lease = row.leaseId.hasOwnProperty('rent') ? JSON.parse(JSON.stringify(row.leaseId)) : {
 						rent: 0
 					}
 					this.addRent.fanghao = row.fanghao
@@ -773,7 +773,11 @@
 			getPrice (arr, p) {
 				let price = 0
 				arr.forEach((item, i, iarr)=>{
-					p > (iarr[i-1] ? iarr[i-1].step : 0) && p <= item.step && item.step != 0 && (price = item.price)
+					if (p > (iarr[i-1] ? iarr[i-1].step : 0) && p <= item.step && item.step != 0) {
+						price = item.price
+					} else if ((i + 1) == iarr.length && p > item.step && item.step != 0) {
+						price = item.price
+					}
 				})
 				return price
 			},
