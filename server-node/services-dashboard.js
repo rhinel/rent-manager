@@ -232,9 +232,14 @@ module.exports = {
 			let isToday = []
 			let isTodayCount = 0
 			data.forEach((i)=>{
-				if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
+				if ( req.body.type == 1 && (
+				 i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
 				 || new Date(i.monthId.month).getMonth() < month && new Date(i.monthId.month).getFullYear() == year
-				 || new Date(i.monthId.month).getFullYear() < year) {
+				 || new Date(i.monthId.month).getFullYear() < year)
+				) {
+					isTodayCount += i.calRentResult
+					isToday.push(i)
+				} else if (req.body.type == 3) {
 					isTodayCount += i.calRentResult
 					isToday.push(i)
 				}
@@ -297,9 +302,14 @@ module.exports = {
 			let isToday = 0
 			let count = 0
 			data.forEach((i)=>{
-				if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
+				if ( req.body.type == 1 && (
+				 i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
 				 || new Date(i.monthId.month).getMonth() < month && new Date(i.monthId.month).getFullYear() == year
-				 || new Date(i.monthId.month).getFullYear() < year) {
+				 || new Date(i.monthId.month).getFullYear() < year)
+				) {
+					count += i.calRentResult
+					isToday += 1
+				} else if (req.body.type == 3) {
 					count += i.calRentResult
 					isToday += 1
 				}
