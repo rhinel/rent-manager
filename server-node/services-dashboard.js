@@ -232,8 +232,8 @@ module.exports = {
 			let isToday = []
 			let isTodayCount = 0
 			data.forEach((i)=>{
-				if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() >= month && new Date(i.monthId.month).getFullYear() >= year
-				 || new Date(i.monthId.month).getMonth() < month
+				if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
+				 || new Date(i.monthId.month).getMonth() < month && new Date(i.monthId.month).getFullYear() == year
 				 || new Date(i.monthId.month).getFullYear() < year) {
 					isTodayCount += i.calRentResult
 					isToday.push(i)
@@ -297,8 +297,8 @@ module.exports = {
 			let isToday = 0
 			let count = 0
 			data.forEach((i)=>{
-				if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() >= month && new Date(i.monthId.month).getFullYear() >= year
-				 || new Date(i.monthId.month).getMonth() < month
+				if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
+				 || new Date(i.monthId.month).getMonth() < month && new Date(i.monthId.month).getFullYear() == year
 				 || new Date(i.monthId.month).getFullYear() < year) {
 					count += i.calRentResult
 					isToday += 1
@@ -377,7 +377,9 @@ module.exports = {
 					.then((data)=>{
 						count = data
 						data.forEach((i)=>{
-							if (i.lease.payDay <= today || new Date(i.monthId.month).getMonth() < month || new Date(i.monthId.month).getFullYear() < year) {
+							if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
+							 || new Date(i.monthId.month).getMonth() < month && new Date(i.monthId.month).getFullYear() == year
+							 || new Date(i.monthId.month).getFullYear() < year) {
 								countMoney += i.calRentResult
 								isToday.push(i)
 							}
@@ -461,7 +463,9 @@ module.exports = {
 						count = data.length
 						data.forEach((i)=>{
 							countMoney += i.calRentResult
-							if (i.lease.payDay <= today || new Date(i.monthId.month).getMonth() < month || new Date(i.monthId.month).getFullYear() < year) {
+							if (i.lease.payDay <= today && new Date(i.monthId.month).getMonth() == month && new Date(i.monthId.month).getFullYear() == year
+							 || new Date(i.monthId.month).getMonth() < month && new Date(i.monthId.month).getFullYear() == year
+							 || new Date(i.monthId.month).getFullYear() < year) {
 								isToday += 1
 							}
 						})
