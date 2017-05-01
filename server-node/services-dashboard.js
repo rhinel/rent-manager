@@ -226,7 +226,7 @@ module.exports = {
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
-		.sort('-_id')
+		.sort('fanghao')
 		.lean()
 		.exec()
 		.then((data)=>{
@@ -383,7 +383,7 @@ module.exports = {
 					})
 					.where('userId').equals(db.db.Types.ObjectId(req.userId))
 					.where('status').equals(1)
-					.sort('-_id')
+					.sort('fanghao')
 					.lean()
 					.exec()
 					.then((data)=>{
