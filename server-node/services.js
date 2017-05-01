@@ -640,7 +640,7 @@ module.exports = {
 		})
 		.where('userId').equals(db.db.Types.ObjectId(req.userId))
 		.where('status').equals(1)
-		.sort('-addTime')
+		.sort('-addTime -_id')
 		.lean()
 		.exec()
 		.then((data)=>{
