@@ -1,0 +1,3 @@
+[submodule "404"]
+	path = 404
+	url = https://github.com/rhinel/404.git
