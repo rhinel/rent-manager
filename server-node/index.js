@@ -43,11 +43,11 @@ const httpsPORT = process.env.HTTPSPORT || 443
 //logs
 let logDirectory = path.join(__dirname, '../log')
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
-let accessLogStream = rfs('access-' + new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate() + '.log', {
+let accessLogStream = rfs('access.log', {
 	interval: '1d',
 	path: logDirectory
 })
-let accessLogStream_login = rfs('login-' + new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate() + '.log', {
+let accessLogStream_login = rfs('login.log', {
 	interval: '1d',
 	path: logDirectory
 })
