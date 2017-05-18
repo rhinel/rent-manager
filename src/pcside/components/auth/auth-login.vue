@@ -57,7 +57,7 @@
 						v-model="logininfo.name">
 					</el-input>
 				</el-form-item>
-				<el-form-item  prop="pwd">
+				<el-form-item prop="pwd">
 					<el-input
 						type="password"
 						placeholder="Pwd"
