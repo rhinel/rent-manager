@@ -32,105 +32,110 @@
 <template>
 	<div class="house-list">
 
-		<!-- 顶部按钮组 -->
-		<div class="table-btn">
-			<el-button type="primary" @click="getAddHouseDialog">新增</el-button>
-			<el-button type="primary" @click="getListRefresh" :loading="gettingListRefresh">刷新</el-button>
-			<div class="table-btn-input">
-				<el-input v-model="houseDataSearch" placeholder="搜索"></el-input>
-			</div>
-		</div>
-		
-		<!-- 新增弹窗 -->
-		<el-dialog :title="ahdDialogTitle" v-model="addHouseFlag" size="small" custom-class="add-house-dialog" :close-on-click-modal="false" @close="onAddHouseDialogClose">
-			<el-form :model="addHouse" ref="addHouse" :rules="addHouserules">
-				<el-form-item label="坊号" :label-width="ahdLabelWidth" prop="fang">
-					<el-select v-model="addHouse.fang" placeholder="选择坊号">
-						<el-option v-for="item in houseFang" :label="item" :value="item" :key="item"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="房间号" :label-width="ahdLabelWidth" prop="hao">
-					<el-input v-model="addHouse.hao" auto-complete="off" placeholder="输入房间号"></el-input>
-				</el-form-item>
-				<el-form-item label="说明" :label-width="ahdLabelWidth">
-					<el-input v-model="addHouse.detail" auto-complete="off" placeholder="选填"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="getAddHouseDialog" :loading="gettingAddHouse">取消</el-button>
-				<el-button type="primary" @click="getAddHouse" :loading="gettingAddHouse">确定</el-button>
-			</div>
-		</el-dialog>
+	<el-tabs v-model="activeName">
+			<el-tab-pane label="租住列表" name="houseList">
 
-		<!-- 房屋数据表 -->
-		<el-table
-			class="house-table"
-			:data="filterHouseData"
-			v-loading.body="gettingListRefresh"
-			stripe
-			border>
-			<el-table-column
-				prop="fang"
-				label="坊号"
-				width="180"
-				sortable>
-			</el-table-column>
-			<el-table-column
-				prop="hao"
-				label="房间号"
-				width="180"
-				sortable>
-			</el-table-column>
-			<el-table-column
-				prop="detail"
-				label="说明">
-			</el-table-column>
-			<el-table-column
-				prop="createTime"
-				label="创建时间"
-				width="180"
-				sortable>
-				<template scope="scope">
-					{{ getTime(scope.row.createTime) }}
-				</template>
-			</el-table-column>
-			<el-table-column
-				prop="updateTime"
-				label="修改时间"
-				width="180"
-				sortable>
-				<template scope="scope">
-					{{ getTime(scope.row.updateTime) }}
-				</template>
-			</el-table-column>
-			<el-table-column
-				label="操作"
-				width="180">
-				<template scope="scope">
-					<el-button
-						size="small"
-						type="primary"
-						@click="getAddHouseDialog(scope.$index, scope.row)">修改</el-button>
-					<el-popover
-						placement="top"
-						width="150"
-						trigger="click"
-						v-model="scope.row.dHousePopFlag">
-						<p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
-						<div class="house-list-d-house-pop-cont">
-							<el-button size="mini" type="text" @click="scope.row.dHousePopFlag = false">取消</el-button>
-							<el-button type="danger" size="mini" @click="(scope.row.dHousePopFlag = false) || getDelHouse(scope.$index, scope.row)">确定</el-button>
-						</div>
-						<div slot="reference" class="house-show-pop">
+				<!-- 顶部按钮组 -->
+				<div class="table-btn">
+					<el-button type="primary" @click="getAddHouseDialog">新增</el-button>
+					<el-button type="primary" @click="getListRefresh" :loading="gettingListRefresh">刷新</el-button>
+					<div class="table-btn-input">
+						<el-input v-model="houseDataSearch" placeholder="搜索"></el-input>
+					</div>
+				</div>
+				
+				<!-- 新增弹窗 -->
+				<el-dialog :title="ahdDialogTitle" v-model="addHouseFlag" size="small" custom-class="add-house-dialog" :close-on-click-modal="false" @close="onAddHouseDialogClose">
+					<el-form :model="addHouse" ref="addHouse" :rules="addHouserules">
+						<el-form-item label="坊号" :label-width="ahdLabelWidth" prop="fang">
+							<el-select v-model="addHouse.fang" placeholder="选择坊号">
+								<el-option v-for="item in houseFang" :label="item" :value="item" :key="item"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="房间号" :label-width="ahdLabelWidth" prop="hao">
+							<el-input v-model="addHouse.hao" auto-complete="off" placeholder="输入房间号"></el-input>
+						</el-form-item>
+						<el-form-item label="说明" :label-width="ahdLabelWidth">
+							<el-input v-model="addHouse.detail" auto-complete="off" placeholder="选填"></el-input>
+						</el-form-item>
+					</el-form>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="getAddHouseDialog" :loading="gettingAddHouse">取消</el-button>
+						<el-button type="primary" @click="getAddHouse" :loading="gettingAddHouse">确定</el-button>
+					</div>
+				</el-dialog>
+
+				<!-- 房屋数据表 -->
+				<el-table
+					class="house-table"
+					:data="filterHouseData"
+					v-loading.body="gettingListRefresh"
+					stripe
+					border>
+					<el-table-column
+						prop="fang"
+						label="坊号"
+						width="180"
+						sortable>
+					</el-table-column>
+					<el-table-column
+						prop="hao"
+						label="房间号"
+						width="180"
+						sortable>
+					</el-table-column>
+					<el-table-column
+						prop="detail"
+						label="说明">
+					</el-table-column>
+					<el-table-column
+						prop="createTime"
+						label="创建时间"
+						width="180"
+						sortable>
+						<template scope="scope">
+							{{ getTime(scope.row.createTime) }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="updateTime"
+						label="修改时间"
+						width="180"
+						sortable>
+						<template scope="scope">
+							{{ getTime(scope.row.updateTime) }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						label="操作"
+						width="180">
+						<template scope="scope">
 							<el-button
 								size="small"
-								type="danger"
-								:loading="scope.row.gettingdelHouse">删除</el-button>
-						</div>
-					</el-popover>
-				</template>
-			</el-table-column>
-		</el-table>
+								type="primary"
+								@click="getAddHouseDialog(scope.$index, scope.row)">修改</el-button>
+							<el-popover
+								placement="top"
+								width="150"
+								trigger="click"
+								v-model="scope.row.dHousePopFlag">
+								<p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
+								<div class="house-list-d-house-pop-cont">
+									<el-button size="mini" type="text" @click="scope.row.dHousePopFlag = false">取消</el-button>
+									<el-button type="danger" size="mini" @click="(scope.row.dHousePopFlag = false) || getDelHouse(scope.$index, scope.row)">确定</el-button>
+								</div>
+								<div slot="reference" class="house-show-pop">
+									<el-button
+										size="small"
+										type="danger"
+										:loading="scope.row.gettingdelHouse">删除</el-button>
+								</div>
+							</el-popover>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-tab-pane>
+		</el-tabs>
 	</div>
 </template>
 
@@ -146,6 +151,8 @@
 		},
 		data () {
 			return {
+				activeName: 'houseList',
+
 				addHouseFlag: false,
 				gettingAddHouse: false,
 				gettingListRefresh: false,
