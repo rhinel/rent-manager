@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 const rootPath = '/api'
 
 // 方法封装
-const request = (path, data, callscue, callerr) => {
+const request = (path, data, callscue, callerr, callend) => {
   let token = localStorage.getItem('token')
   path = rootPath + path
   data = Object.assign({}, data)
@@ -22,6 +22,7 @@ const request = (path, data, callscue, callerr) => {
           message: '状态：' + err.status + '，网络/服务器错误',
           duration: 2000
         })
+        callend && callend()
       } else if (res.body.code === '2001' && path.indexOf('/auth') < 0) {
         // 非auth接口，登陆失效或者未登陆，先报错后，清除旧登陆信息，跳转
         Message({
@@ -45,6 +46,7 @@ const request = (path, data, callscue, callerr) => {
         } else {
           callerr(res)
         }
+        callend && callend()
       } else {
         // 返回成功，直接执行，没有默认行为
         if (!callscue) {
@@ -56,6 +58,7 @@ const request = (path, data, callscue, callerr) => {
         } else {
           callscue(res)
         }
+        callend && callend()
       }
     })
 }

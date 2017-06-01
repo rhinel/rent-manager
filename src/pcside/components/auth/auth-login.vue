@@ -116,9 +116,9 @@
         if (this.logininfo.loading) {
           return true
         }
-        this.logininfo.loading = true
         this.$refs.logininfo.validate((valid) => {
           if (valid) {
+            this.logininfo.loading = true
             this.Ajax('/outer/log/login', {
               name: this.logininfo.name,
               pwd: Md5(this.logininfo.pwd)
@@ -134,17 +134,15 @@
               } else {
                 this.$router.push('/inner')
               }
-              this.logininfo.loading = false
             }, (res) => {
               this.$message({
                 type: 'error',
                 message: '编号：' + res.body.code + '，' + res.body.msg,
                 duration: 2000
               })
+            }, () => {
               this.logininfo.loading = false
             })
-          } else {
-            this.logininfo.loading = false
           }
         })
       }

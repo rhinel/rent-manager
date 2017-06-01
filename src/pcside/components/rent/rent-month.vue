@@ -629,19 +629,19 @@
         monthDetSearch: '',
 
         // 未交统计
+        gettingLandordRentTemp: false,
         landordHistoryTemp: {},
         activeLandordHistoryTemp: ['temp'],
-        gettingLandordRentTemp: false,
 
         // 房东列表
-        activeDate: [],
         landordHistorySearch: '',
         gettingLandordRent: false,
         landordData: {},
+        activeDate: [],
 
         // rentCount列表
         rentCount: {},
-        activeRentCount: []
+        activeRentCount: {}
       }
     },
     computed: {
