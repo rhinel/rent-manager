@@ -20,7 +20,7 @@ db.connect()
 let app = express()
 let reapp = express()
 //http转发
-let httpServer = http.createServer(app)
+let httpServer = http.createServer(reapp)
 reapp.all('*', function(req, res) {
 	return res.redirect("https://" + req.headers["host"] + req.url)
 })
