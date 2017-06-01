@@ -199,13 +199,13 @@
       <el-table-column
         prop="fanghao"
         label="房屋"
-        width="180"
+        width="120"
         sortable>
       </el-table-column>
       <el-table-column
         prop="electricId.electric"
         label="最新抄表数(度)"
-        width="180"
+        width="160"
         sortable>
         <template scope="scope">
           <span v-if="scope.row.electricId.electric > 0" class="main-txt-highline">
@@ -227,8 +227,8 @@
       </el-table-column>
       <el-table-column
         prop="calElectricId.electric"
-        label="上次计费底表数(度)"
-        width="180"
+        label="上计底表数(度)"
+        width="160"
         sortable>
         <template scope="scope">
           <span v-if="scope.row.calElectricId.electric > 0" class="main-txt-highline">
@@ -251,7 +251,7 @@
       <el-table-column
         prop="gap"
         label="本期实用数(度)"
-        width="180"
+        width="160"
         sortable>
         <template scope="scope">
           <span v-if="scope.row.gap > 0" class="main-txt-highline">

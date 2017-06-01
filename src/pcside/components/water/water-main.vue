@@ -199,13 +199,13 @@
       <el-table-column
         prop="fanghao"
         label="房屋"
-        width="180"
+        width="120"
         sortable>
       </el-table-column>
       <el-table-column
         prop="waterId.water"
         label="最新抄表数(吨)"
-        width="180"
+        width="160"
         sortable>
         <template scope="scope">
           <span v-if="scope.row.waterId.water > 0" class="main-txt-highline">
@@ -227,8 +227,8 @@
       </el-table-column>
       <el-table-column
         prop="calWaterId.water"
-        label="上次计费底表数(吨)"
-        width="180"
+        label="上计底表数(吨)"
+        width="160"
         sortable>
         <template scope="scope">
           <span v-if="scope.row.calWaterId.water > 0" class="main-txt-highline">
@@ -251,7 +251,7 @@
       <el-table-column
         prop="gap"
         label="本期实用数(吨)"
-        width="180"
+        width="160"
         sortable>
         <template scope="scope">
           <span v-if="scope.row.gap > 0" style="color:#1D8CE0;">

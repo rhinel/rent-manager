@@ -266,62 +266,42 @@
           v-loading.body="gettingListRefresh"
           stripe
           border>
+          <el-table-column type="expand">
+            <template scope="props">
+              <el-form label-position="left" inline class="table-expand">
+                <el-form-item
+                  prop="leaseId.name"
+                  label="姓名/联系方式"
+                  width="150">
+                  <template>
+                    <div>{{ props.row.leaseId.name || '--' }} / {{ props.row.leaseId.call || '--' }}</div>
+                  </template>
+                </el-form-item>
+                <el-form-item
+                  prop="leaseId.addTime"
+                  label="入住时间"
+                  width="180">
+                  <template>
+                    <div>{{ getTime(props.row.leaseId.addTime) }}</div>
+                  </template>
+                </el-form-item>
+                <el-form-item
+                  style="width: 100%;"
+                  prop="leaseId.leaserange"
+                  label="租住周期"
+                  width="180">
+                  <template>
+                    <div>{{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[0]) }} ~ {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[1]) }}</div>
+                  </template>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="fanghao"
             label="房屋"
             width="120"
             sortable>
-          </el-table-column>
-          <el-table-column label="租户信息">
-            <el-table-column
-              prop="leaseId.name"
-              label="姓名/联系方式"
-              width="150">
-              <template scope="scope">
-                <div>{{ scope.row.leaseId.name || '--' }}</div>
-                <div>{{ scope.row.leaseId.call || '--' }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="leaseId.leaserange"
-              label="租住周期"
-              width="180">
-              <template scope="scope">
-                <div>{{ getTime(scope.row.leaseId.leaserange && scope.row.leaseId.leaserange[0]) }}</div>
-                <div>{{ getTime(scope.row.leaseId.leaserange && scope.row.leaseId.leaserange[1]) }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="leaseId.addTime"
-              label="入住时间"
-              width="180">
-              <template scope="scope">
-                <div>{{ getTime(scope.row.leaseId.addTime) }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="leaseId.payDay"
-              label="交租时间/交租方式"
-              width="180">
-              <template scope="scope">
-                <div>{{ scope.row.leaseId.payDay ? ('每月' + scope.row.leaseId.payDay + '日') : '--' }}</div>
-                <div>{{ payTypeVal[scope.row.leaseId.payType] || '--' }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="leaseId.remark"
-              label="备注">
-              <template scope="scope">
-                <el-popover
-                  placement="top"
-                  trigger="hover">
-                  <div class="lease-remark">{{ scope.row.leaseId.remark }}</div>
-                  <div slot="reference" class="lease-show-tag">
-                    <div class="lease-remark-tag">{{ scope.row.leaseId.remark }}</div>
-                  </div>
-                </el-popover>
-              </template>
-            </el-table-column>
           </el-table-column>
           <el-table-column
             label="计费信息">
@@ -375,8 +355,33 @@
               label="当前租金/押金"
               width="170">
               <template scope="scope">
-                <div>{{ '租金：￥' + (scope.row.leaseId.rent || 0) + '元/月' }}</div>
+              <div>{{ '租金：￥' }}<span class="main-txt-highline">{{(scope.row.leaseId.rent || 0)}}</span>{{ '元/月' }}</div>
                 <div>{{ '押金：￥' + (scope.row.leaseId.deposit || 0) + '元' }}</div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="租户信息">
+            <el-table-column
+              prop="leaseId.payDay"
+              label="交租时间/交租方式"
+              width="180">
+              <template scope="scope">
+                <div>{{ scope.row.leaseId.payDay ? ('每月' + scope.row.leaseId.payDay + '日') : '--' }}</div>
+                <div>{{ payTypeVal[scope.row.leaseId.payType] || '--' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="leaseId.remark"
+              label="备注">
+              <template scope="scope">
+                <el-popover
+                  placement="top"
+                  trigger="hover">
+                  <div class="lease-remark">{{ scope.row.leaseId.remark }}</div>
+                  <div slot="reference" class="lease-show-tag">
+                    <div class="lease-remark-tag">{{ scope.row.leaseId.remark }}</div>
+                  </div>
+                </el-popover>
               </template>
             </el-table-column>
           </el-table-column>
