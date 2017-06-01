@@ -2,7 +2,7 @@
   "name": "rent-manager",
   "version": "1.0.0",
   "description": "rent-manager for ying",
-  "author": "rhinel <rhinel@hotmail.com>",
+  "author": "rhinel <rhinelkc@hotmail.com>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
