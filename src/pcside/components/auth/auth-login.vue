@@ -9,9 +9,21 @@
     .login-wrap{
       width: 500px;
       position: absolute;
-      top: 50%;
+      top: 40%;
       left: 50%;
       transform: translateX(-50%) translateY(-50%);
+      overflow: visible;
+      .beian {
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        bottom: -35px;
+        left: 0;
+        a {
+          color: #fff;
+          text-decoration: none;
+        }
+      }
     }
     .login-hello{
       font-size: 30px;
@@ -67,6 +79,7 @@
         </el-form-item>
         <el-button class="login-go" type="primary" :loading="logininfo.loading" @click="getLogin">登陆</el-button>
       </el-form>
+      <div class="beian"><a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备17070491号-3</a></div>
     </el-card>
   </div>
 </template>
