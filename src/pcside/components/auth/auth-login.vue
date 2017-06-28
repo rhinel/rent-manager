@@ -8,6 +8,7 @@
     background-image: url(../../img/index_intro_bg.jpg);
     .login-wrap{
       width: 500px;
+      max-width: 90%;
       position: absolute;
       top: 40%;
       left: 50%;

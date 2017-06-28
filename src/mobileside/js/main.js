@@ -4,7 +4,6 @@ import Vue from 'vue'
 // import VueRouter from 'vue-router'
 import MintUI from 'mint-ui'
 import 'normalize.css'
-import 'mint-ui/lib/style.css'
 
 // 应用配置加载
 import App from '../index'
@@ -38,7 +37,7 @@ Vue.prototype.GetDateFormat = plugin.getDateFormat
 /* eslint-disable no-unused-vars */
 const app = new Vue({
   el: '#app',
-//  router,
-//  store,
+  // router,
+  // store,
   render: h => h(App)
 })

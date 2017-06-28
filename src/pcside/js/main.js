@@ -4,7 +4,6 @@ import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import ElementUI from 'element-ui'
 import 'normalize.css'
-import 'element-ui/lib/theme-default/index.css'
 
 // 应用配置加载
 import App from '../index'

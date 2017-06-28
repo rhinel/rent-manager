@@ -1,4 +1,12 @@
 <style lang="scss">
+  @media print {
+    .rent-month{
+      .el-tabs__header{
+        display: none !important;
+      }
+    }
+  }
+
   .rent-month{
     // 顶部按钮样式
     .table-btn{
@@ -100,6 +108,38 @@
     }
     .rent-count-title:not(:first-child){
       padding-top: 20px;
+    }
+    .cal-title{
+      text-align: center;
+      div:first-child{
+        letter-spacing: 0.5em;
+        padding-bottom: 40px;
+        font-size: 40px;
+      }
+      div:last-child{
+        font-size: 20px;
+        padding-bottom: 40px;
+        padding-right: 10em;
+      }
+    }
+    .cal-body{
+      width: 100%;
+      font-size: 20px;
+      tr{
+        display: flex;
+        border-top: 1px solid #000;
+        &:last-child{
+          border-bottom: 1px solid #000;
+        }
+        th{
+          flex: 1;
+          border-left: 1px solid #000;
+          padding: 15px 0;
+          &:last-child{
+            border-right: 1px solid #000;
+          }
+        }
+      }
     }
   }
   // 信息悬浮窗弹窗样式
@@ -561,6 +601,78 @@
         </template>
         <el-alert v-if="!checkObject(rentCount)" title="暂无数据！请先处理单据状态" type="info" :closable="false"></el-alert>
       </el-tab-pane>
+      <el-tab-pane label="6坊65栋水电张贴" name="waterandeleCal6">
+        <div class="rent-count-title">
+          <div class="cal-title">
+            <div>6坊65栋{{monthDet.month}}水电</div>
+            <div>抄表日期：</div>
+          </div>
+        </div>
+        <div>
+          <table class="cal-body">
+            <tr>
+              <th>房间号</th>
+              <th>本次水表</th>
+              <th>上次水表</th>
+              <th>实用数</th>
+              <th>小计</th>
+              <th></th>
+              <th>本次电表</th>
+              <th>上次电表</th>
+              <th>实用数</th>
+              <th>小计</th>
+            </tr>
+            <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '6坊65栋'">
+              <th>{{item.hao}}</th>
+              <th>{{item.rents[0].calWater.tnew.water}}吨</th>
+              <th>{{item.rents[0].calWater.old.water}}吨</th>
+              <th>{{item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water}}吨</th>
+              <th>{{getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water)}}元</th>
+              <th></th>
+              <th>{{item.rents[0].calElectric.tnew.electric}}度</th>
+              <th>{{item.rents[0].calElectric.old.electric}}度</th>
+              <th>{{item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric}}度</th>
+              <th>{{getEleCal(item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric)}}元</th>
+            </tr>
+          </table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="8坊68栋水电张贴" name="waterandeleCal8">
+        <div class="rent-count-title">
+          <div class="cal-title">
+            <div>8坊68栋{{monthDet.month}}水电</div>
+            <div>抄表日期：</div>
+          </div>
+        </div>
+        <div>
+          <table class="cal-body">
+            <tr>
+              <th>房间号</th>
+              <th>本次水表</th>
+              <th>上次水表</th>
+              <th>实用数</th>
+              <th>小计</th>
+              <th></th>
+              <th>本次电表</th>
+              <th>上次电表</th>
+              <th>实用数</th>
+              <th>小计</th>
+            </tr>
+            <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '8坊68栋'">
+              <th>{{item.hao}}</th>
+              <th>{{item.rents[0].calWater.tnew.water}}吨</th>
+              <th>{{item.rents[0].calWater.old.water}}吨</th>
+              <th>{{item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water}}吨</th>
+              <th>{{getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water)}}元</th>
+              <th></th>
+              <th>{{item.rents[0].calElectric.tnew.electric}}度</th>
+              <th>{{item.rents[0].calElectric.old.electric}}度</th>
+              <th>{{item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric}}度</th>
+              <th>{{getEleCal(item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric)}}元</th>
+            </tr>
+          </table>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -1013,6 +1125,36 @@
           return true
         }
         return false
+      },
+      gotoWaterandeleCal (target) {
+        this.$router.push({
+          path: '/inner/rent/waterandeleCal',
+          query: {
+            fanghao: target
+          }
+        })
+      },
+      getWaterCal (val) {
+        // 用于张贴展示，不做真实计费，所有计费按照标准计算
+        if (val < 6) {
+          return 36
+        } else {
+          return val * 6
+        }
+      },
+      getEleCal (val) {
+        // 用于张贴展示，不做真实计费，所有计费按照标准计算
+        let result = 0
+        if (val < 30) {
+          result = 30
+        } else if (val <= 100) {
+          result = val * 1
+        } else if (val <= 200) {
+          result = val * 1.2
+        } else {
+          result = val * 1.4
+        }
+        return ~~(Math.round(result * 100) / 100)
       }
     }
   }

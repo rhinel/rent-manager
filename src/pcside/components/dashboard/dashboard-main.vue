@@ -549,11 +549,11 @@
           TWEEN.update(time)
         }
         new TWEEN.Tween({ tweeningValue: o })
-        .to({ tweeningValue: n }, 200)
-        .onUpdate(function () {
-          _this.countDown[type] = this.tweeningValue.toFixed(0)
-        })
-        .start()
+          .to({ tweeningValue: n }, 200)
+          .onUpdate(function () {
+            _this.countDown[type] = this.tweeningValue.toFixed(0)
+          })
+          .start()
         animate()
       },
       getHouseList () {

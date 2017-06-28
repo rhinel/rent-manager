@@ -1,4 +1,16 @@
 <style lang="scss">
+  @media print {
+    .auth-inner-index{
+      padding-top: 0 !important;
+      .inner-header{
+        display: none !important;
+      }
+      .inner-body{
+        padding: 0 !important;
+      }
+    }
+  }
+
   .auth-inner-index{
     padding-left: 180px;
     transition: padding-left .3s;

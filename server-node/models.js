@@ -79,7 +79,9 @@ const redisIncrKeys = (key)=>{
 //链接数据库
 const connect = (callback)=>{
 	mongoose.Promise = global.Promise
-	mongoose.connect(auth.mongodbPs, {auto_reconnect: true})
+	mongoose.connect(auth.mongodbPs, {
+		useMongoClient: true
+	})
 	db = mongoose.connection
 	db.on('error', console.error.bind(console, 'mongoose connection error:'))
 	db.once('open', ()=>{
