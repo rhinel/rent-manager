@@ -624,15 +624,15 @@
             </tr>
             <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '6坊65栋'">
               <th>{{item.hao}}</th>
-              <th>{{item.rents[0].calWater ? item.rents[0].calWater.tnew.water || '--'}}吨</th>
-              <th>{{item.rents[0].calWater ? item.rents[0].calWater.old.water || '--'}}吨</th>
-              <th>{{item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) || '--'}}吨</th>
-              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) || '--'}}元</th>
+              <th>{{item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--'}}吨</th>
+              <th>{{item.rents[0].calWater ? item.rents[0].calWater.old.water : '--'}}吨</th>
+              <th>{{item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}吨</th>
+              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}元</th>
               <th></th>
-              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric || '--'}}度</th>
-              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.old.electric || '--'}}度</th>
-              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric || '--'}}度</th>
-              <th>{{item.rents[0].calElectric ? getEleCal(item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric) || '--'}}元</th>
+              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'}}度</th>
+              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'}}度</th>
+              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric : '--'}}度</th>
+              <th>{{item.rents[0].calElectric ? getEleCal(item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric) : '--'}}元</th>
             </tr>
           </table>
         </div>
@@ -1125,14 +1125,6 @@
           return true
         }
         return false
-      },
-      gotoWaterandeleCal (target) {
-        this.$router.push({
-          path: '/inner/rent/waterandeleCal',
-          query: {
-            fanghao: target
-          }
-        })
       },
       getWaterCal (val) {
         // 用于张贴展示，不做真实计费，所有计费按照标准计算
