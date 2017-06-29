@@ -166,7 +166,14 @@
         </div>
 
         <!-- 计租表单 -->
-        <el-dialog :title="addRent.fanghao + ardDialogTitle" v-model="addRentflag" size="large" top="50px" custom-class="add-month-det-dialog" :close-on-click-modal="false" @close="onAddRentDialogClose">
+        <el-dialog
+          :title="addRent.fanghao + ardDialogTitle"
+          v-model="addRentflag"
+          size="large"
+          top="50px"
+          custom-class="add-month-det-dialog"
+          :close-on-click-modal="false"
+          @close="onAddRentDialogClose">
           <el-form :model="addRent" ref="addRent" :rules="addRentrules">
             <el-form-item>
               <el-alert title="请确认计租信息" type="info"></el-alert>
@@ -244,7 +251,13 @@
         </el-dialog>
 
         <!-- 状态修改表单 -->
-        <el-dialog :title="changeType.fanghao + ctdDialogTitle" v-model="changeTypeflag" size="large" custom-class="change-type-dialog" :close-on-click-modal="false" @close="onChangeTypeDialogClose">
+        <el-dialog
+          :title="changeType.fanghao + ctdDialogTitle"
+          v-model="changeTypeflag"
+          size="large"
+          custom-class="change-type-dialog"
+          :close-on-click-modal="false"
+          @close="onChangeTypeDialogClose">
           <el-form :model="changeType" ref="changeType">
             <el-form-item>
               <el-alert title="多选状态信息" type="info"></el-alert>
@@ -469,7 +482,7 @@
                      :key="item">
                     <div class="rent-remark">{{ getTime(getRent(scope).type.typeTime[item]) }}</div>
                     <div slot="reference" class="rent-show-tag rent-show-tag3">
-                      <el-tag :type="item != 2? 'primary' : ''">{{typesVal[item]}}</el-tag>
+                      <el-tag :type="item != 2 ? 'primary' : ''">{{typesVal[item]}}</el-tag>
                     </div>
                   </el-popover>
                 </div>
@@ -555,9 +568,9 @@
         </div>
         <el-collapse v-model="activeDate" v-loading.body="gettingLandordRent" v-if="checkObject(landordData)">
           <el-collapse-item v-for="(item, index) in landordData" :name="new Date(Number(index)).toLocaleDateString()" :key="index">
-              <template slot="title">
-                {{new Date(Number(index)).toLocaleDateString()}} 
-                <span class="landord-title">
+            <template slot="title">
+              {{new Date(Number(index)).toLocaleDateString()}} 
+              <span class="landord-title">
                 <el-popover
                   placement="right"
                   trigger="hover">
@@ -567,7 +580,7 @@
                   </div>
                 </el-popover>
               </span>
-              </template>
+            </template>
             <div v-for="i in item.list" class="landord-content">
               <router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button type="text">[{{i.fanghao}}]</el-button>
