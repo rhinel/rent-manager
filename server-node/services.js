@@ -2488,7 +2488,7 @@ module.exports = {
 				list[_date][i.lease.payType] += i.calRentResult
 				list[_date].all += i.calRentResult
 				// 定制计算
-				i.cost = (i.calWater ? i.calWater.calWaterResult : 0) + (i.calElectric ? i.calElectric.calElectricResult : 0)
+				i.cost = i.calRentResult - i.lease.rent // (i.calWater ? i.calWater.calWaterResult : 0) + (i.calElectric ? i.calElectric.calElectricResult : 0)
 				if (i.fanghao.indexOf('8坊68栋') >= 0) {
 					list[_date].eight += i.calRentResult
 					list[_date].eightRent += i.lease.rent
@@ -2559,7 +2559,7 @@ module.exports = {
 			data.forEach((i)=>{
 				list[i.lease.payType] += i.calRentResult
 				list.all += i.calRentResult
-				i.cost = (i.calWater ? i.calWater.calWaterResult : 0) + (i.calElectric ? i.calElectric.calElectricResult : 0)
+				i.cost = i.calRentResult - i.lease.rent // (i.calWater ? i.calWater.calWaterResult : 0) + (i.calElectric ? i.calElectric.calElectricResult : 0)
 				// 定制计算
 				if (i.fanghao.indexOf('8坊68栋') >= 0) {
 					list.eight += i.calRentResult

@@ -550,7 +550,7 @@
         <el-collapse
           v-model="activeLandordHistoryTemp"
           v-loading.body="gettingLandordRentTemp"
-          v-if="landordHistoryTemp.list && landordHistoryTemp.list.length">
+          v-if="(landordHistoryTemp.sixList && landordHistoryTemp.sixList.length) || (landordHistoryTemp.eightList && landordHistoryTemp.eightList.length)">
           <el-collapse-item name="temp">
             <template slot="title">
               <span class="landord-title">合计：￥{{landordHistoryTemp.all}}元</span>
