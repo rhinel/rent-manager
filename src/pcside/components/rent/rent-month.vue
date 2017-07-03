@@ -688,14 +688,14 @@
           <el-collapse v-model="activeRentCount[fangi]">
             <el-collapse-item v-for="(floor, floori) in fang.list" :name="floori" :key="floori">
               <template slot="title">
-                  {{floori}}楼 <span class="landord-title">合计：￥{{floor.count}}元</span>
-                </template>
-                <div v-for="(hao, haoi) in floor.list">
-                  <router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: hao.haoId }}">
+                {{floori}}楼 <span class="landord-title">合计：￥{{floor.count}}元</span>
+              </template>
+              <div v-for="(hao, haoi) in floor.list" class="landord-content">
+                <router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: hao.haoId }}">
                   <el-button type="text">[{{fangi + hao.hao}}]</el-button>
                 </router-link>
                 <span>租金：￥{{hao.rent}}元</span>
-                </div>
+              </div>
             </el-collapse-item>
           </el-collapse>
         </template>
