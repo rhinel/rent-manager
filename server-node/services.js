@@ -2467,19 +2467,38 @@ module.exports = {
 				let _date = new Date(new Date(i.type.typeTime[3]).toLocaleDateString()).getTime()
 				if (!list[_date]) {
 					list[_date] = {
-						list: [],
 						0: 0,
 						1: 0,
 						2: 0,
 						3: 0,
 						4: 0,
 						5: 0,
-						all: 0
+						all: 0,
+						// 定制计算，不进行通用区分
+						six: 0,
+						sixRent: 0,
+						sixCost: 0,
+						sixList: [],
+						eight: 0,
+						eightRent: 0,
+						eightCost: 0,
+						eightList: []
 					}
 				}
 				list[_date][i.lease.payType] += i.calRentResult
 				list[_date].all += i.calRentResult
-				list[_date].list.push(i)
+				// 定制计算
+				if (i.fanghao.indexOf('8坊68栋') >= 0) {
+					list[_date].eight += i.calRentResult
+					list[_date].eightRent += i.lease.rent
+					list[_date].eightCost += i.calWater.calWaterResult + i.calElectric.calElectricResult
+					list[_date].eightList.push(i)
+				} else {
+					list[_date].six += i.calRentResult
+					list[_date].sixRent += i.lease.rent
+					list[_date].sixCost += i.calWater.calWaterResult + i.calElectric.calElectricResult
+					list[_date].sixList.push(i)
+				}
 			})
 
 			return Promise.reject({
@@ -2519,19 +2538,38 @@ module.exports = {
 		.exec()
 		.then((data)=>{
 			let list = {
-				list: [],
 				0: 0,
 				1: 0,
 				2: 0,
 				3: 0,
 				4: 0,
 				5: 0,
-				all: 0
+				all: 0,
+				// 定制计算，不进行通用区分
+				six: 0,
+				sixRent: 0,
+				sixCost: 0,
+				sixList: [],
+				eight: 0,
+				eightRent: 0,
+				eightCost: 0,
+				eightList: []
 			}
 			data.forEach((i)=>{
 				list[i.lease.payType] += i.calRentResult
 				list.all += i.calRentResult
-				list.list.push(i)
+				// 定制计算
+				if (i.fanghao.indexOf('8坊68栋') >= 0) {
+					list.eight += i.calRentResult
+					list.eightRent += i.lease.rent
+					list.eightCost += i.calWater.calWaterResult + i.calElectric.calElectricResult
+					list.eightList.push(i)
+				} else {
+					list.six += i.calRentResult
+					list.sixRent += i.lease.rent
+					list.sixCost += i.calWater.calWaterResult + i.calElectric.calElectricResult
+					list.sixList.push(i)
+				}
 			})
 
 			return Promise.reject({

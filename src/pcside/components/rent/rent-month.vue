@@ -86,6 +86,10 @@
     }
     .landord-content{
       font-size: 14px;
+      .collapse-btn{
+        width: auto;
+        min-width: 90px;
+      }
       & > span {
         display: inline-block;
         line-height: 1;
@@ -543,31 +547,71 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="待交房东统计" name="landordHistoryTemp">
-        <el-collapse v-model="activeLandordHistoryTemp" v-loading.body="gettingLandordRentTemp" v-if="landordHistoryTemp.list && landordHistoryTemp.list.length">
+        <el-collapse
+          v-model="activeLandordHistoryTemp"
+          v-loading.body="gettingLandordRentTemp"
+          v-if="landordHistoryTemp.list && landordHistoryTemp.list.length">
           <el-collapse-item name="temp">
             <template slot="title">
-                <span class="landord-title">合计：￥{{landordHistoryTemp.all}}元</span><span class="landord-title" v-for="(j, indexj) in payTypeVal" :key="indexj">{{j}}：{{landordHistoryTemp[indexj]}}元</span>
-              </template>
-              <div v-for="i in landordHistoryTemp.list" class="landord-content">
-              <router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+              <span class="landord-title">合计：￥{{landordHistoryTemp.all}}元</span>
+              <span class="landord-title" v-for="(j, indexj) in payTypeVal" :key="indexj">{{j}}：{{landordHistoryTemp[indexj]}}元</span>
+            </template>
+            <div v-if="landordHistoryTemp.sixList.length" class="landord-content" style="font-weight: bold;">
+              <span class="tag-bf-span collapse-btn">6坊65栋</span>
+              <span>[房租合计￥{{landordHistoryTemp.six}}元]</span><span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span><span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
+            </div>
+            <div v-for="i in landordHistoryTemp.sixList" class="landord-content">
+              <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button type="text">[{{i.fanghao}}]</el-button>
               </router-link>
-              <span>[￥{{i.calRentResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+            </div>
+            <div v-if="landordHistoryTemp.eightList.length" class="landord-content" style="font-weight: bold;">
+              <span class="tag-bf-span collapse-btn">8坊68栋</span>
+              <span>[房租合计￥{{landordHistoryTemp.six}}元]</span><span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span><span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
+            </div>
+            <div v-for="i in landordHistoryTemp.eightList" class="landord-content">
+              <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+                <el-button type="text">[{{i.fanghao}}]</el-button>
+              </router-link>
+              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
             </div>
           </el-collapse-item>
         </el-collapse>
-        <el-alert v-if="!gettingLandordRentTemp && (!landordHistoryTemp.list || !landordHistoryTemp.list.length)" title="暂无数据！请先处理单据状态" type="info" :closable="false"></el-alert>
+        <el-alert
+          v-if="!gettingLandordRentTemp && (!landordHistoryTemp.sixList || !landordHistoryTemp.sixList.length) && (!landordHistoryTemp.eightList || !landordHistoryTemp.eightList.length)"
+          title="暂无数据！请先处理单据状态"
+          type="info"
+          :closable="false">
+        </el-alert>
       </el-tab-pane>
       <el-tab-pane label="交房东历史" name="landordHistory">
         <!-- 顶部按钮组 -->
         <div class="table-btn">
-          <el-button type="primary" @click="getLandordRent" :loading="gettingLandordRent">刷新</el-button>
+          <el-button
+            type="primary"
+            @click="getLandordRent"
+            :loading="gettingLandordRent">
+            刷新
+          </el-button>
           <div class="table-btn-input">
-            <el-date-picker v-model="landordHistorySearch" type="date" placeholder="选择日期" :editable="false" @change="getfilterLandordData"></el-date-picker>
+            <el-date-picker
+              v-model="landordHistorySearch"
+              type="date"
+              placeholder="选择日期"
+              :editable="false"
+              @change="getfilterLandordData">
+            </el-date-picker>
           </div>
         </div>
-        <el-collapse v-model="activeDate" v-loading.body="gettingLandordRent" v-if="checkObject(landordData)">
-          <el-collapse-item v-for="(item, index) in landordData" :name="new Date(Number(index)).toLocaleDateString()" :key="index">
+        <el-collapse
+          v-model="activeDate"
+          v-loading.body="gettingLandordRent"
+          v-if="checkObject(landordData)">
+          <el-collapse-item
+            v-for="(item, index) in landordData"
+            :name="new Date(Number(index)).toLocaleDateString()"
+            :key="index">
             <template slot="title">
               {{new Date(Number(index)).toLocaleDateString()}} 
               <span class="landord-title">
@@ -581,15 +625,34 @@
                 </el-popover>
               </span>
             </template>
-            <div v-for="i in item.list" class="landord-content">
-              <router-link class="tag-bf-span" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+            <div v-if="item.sixList.length" class="landord-content" style="font-weight: bold;">
+              <span class="tag-bf-span collapse-btn">6坊65栋</span>
+              <span>[房租合计￥{{item.six}}元]</span><span>[租金合计￥{{item.sixRent}}元]</span><span>[水电合计￥{{item.sixCost}}元]</span>
+            </div>
+            <div v-for="i in item.sixList" class="landord-content">
+              <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button type="text">[{{i.fanghao}}]</el-button>
               </router-link>
-              <span>[￥{{i.calRentResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+            </div>
+            <div v-if="item.eightList.length" class="landord-content" style="font-weight: bold;">
+              <span class="tag-bf-span collapse-btn">8坊68栋</span>
+              <span>[房租合计￥{{item.eight}}元]</span><span>[租金合计￥{{item.eightRent}}元]</span><span>[水电合计￥{{item.eightCost}}元]</span>
+            </div>
+            <div v-for="i in item.eightList" class="landord-content">
+              <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+                <el-button type="text">[{{i.fanghao}}]</el-button>
+              </router-link>
+              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
             </div>
           </el-collapse-item>
         </el-collapse>
-        <el-alert v-if="!gettingLandordRent && !checkObject(landordData)" title="暂无数据！请先处理单据状态" type="info" :closable="false"></el-alert>
+        <el-alert
+          v-if="!gettingLandordRent && !checkObject(landordData)"
+          title="暂无数据！请先处理单据状态"
+          type="info"
+          :closable="false">
+        </el-alert>
       </el-tab-pane>
       <el-tab-pane label="月租统计" name="rentCount">
         <template v-for="(fang, fangi) in rentCount">
@@ -673,15 +736,15 @@
             </tr>
             <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '8坊68栋'">
               <th>{{item.hao}}</th>
-              <th>{{item.rents[0].calWater.tnew.water}}吨</th>
-              <th>{{item.rents[0].calWater.old.water}}吨</th>
-              <th>{{item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water}}吨</th>
-              <th>{{getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water)}}元</th>
+              <th>{{item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--'}}吨</th>
+              <th>{{item.rents[0].calWater ? item.rents[0].calWater.old.water : '--'}}吨</th>
+              <th>{{item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}吨</th>
+              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}元</th>
               <th></th>
-              <th>{{item.rents[0].calElectric.tnew.electric}}度</th>
-              <th>{{item.rents[0].calElectric.old.electric}}度</th>
-              <th>{{item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric}}度</th>
-              <th>{{getEleCal(item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric)}}元</th>
+              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'}}度</th>
+              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'}}度</th>
+              <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric : '--'}}度</th>
+              <th>{{item.rents[0].calElectric ? getEleCal(item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric) : '--'}}元</th>
             </tr>
           </table>
         </div>

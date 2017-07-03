@@ -5,6 +5,7 @@ let superagent = require('superagent')
 let md5 = require('md5')
 
 module.exports = {
+
     one: (req, res, callback)=>{
         //通过ID查询
         //返回det对象
@@ -52,6 +53,7 @@ module.exports = {
             })
         })
     },
+
     listByNewestMonth: (req, res, callback)=>{
         //通过房屋查询所有最新挂载信息：租约信息
         //初始化字段后
@@ -136,6 +138,7 @@ module.exports = {
             })
         })
     },
+
     listByHaoAndMonth: (req, res, callback)=>{
         //查询数据
         //返回list对象
@@ -182,4 +185,5 @@ module.exports = {
             })
         })
     }
+
 }
