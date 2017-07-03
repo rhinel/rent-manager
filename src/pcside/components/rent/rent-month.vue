@@ -558,23 +558,35 @@
             </template>
             <div v-if="landordHistoryTemp.sixList.length" class="landord-content" style="font-weight: bold;">
               <span class="tag-bf-span collapse-btn">6坊65栋</span>
-              <span>[房租合计￥{{landordHistoryTemp.six}}元]</span><span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span><span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
+              <span>[房租合计￥{{landordHistoryTemp.six}}元]</span>
+              <span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span>
+              <span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
             </div>
             <div v-for="i in landordHistoryTemp.sixList" class="landord-content">
               <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button type="text">[{{i.fanghao}}]</el-button>
               </router-link>
-              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+              <span>[房租￥{{i.calRentResult}}元]</span>
+              <span>[租金￥{{i.lease.rent}}元]</span>
+              <span>[水电￥{{i.cost}}元]</span>
+              <span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span>
+              <span>备注：{{i.remark}}</span>
             </div>
             <div v-if="landordHistoryTemp.eightList.length" class="landord-content" style="font-weight: bold;">
               <span class="tag-bf-span collapse-btn">8坊68栋</span>
-              <span>[房租合计￥{{landordHistoryTemp.six}}元]</span><span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span><span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
+              <span>[房租合计￥{{landordHistoryTemp.six}}元]</span>
+              <span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span>
+              <span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
             </div>
             <div v-for="i in landordHistoryTemp.eightList" class="landord-content">
               <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button type="text">[{{i.fanghao}}]</el-button>
               </router-link>
-              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+              <span>[房租￥{{i.calRentResult}}元]</span>
+              <span>[租金￥{{i.lease.rent}}元]</span>
+              <span>[水电￥{{i.cost}}元]</span>
+              <span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span>
+              <span>备注：{{i.remark}}</span>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -627,23 +639,35 @@
             </template>
             <div v-if="item.sixList.length" class="landord-content" style="font-weight: bold;">
               <span class="tag-bf-span collapse-btn">6坊65栋</span>
-              <span>[房租合计￥{{item.six}}元]</span><span>[租金合计￥{{item.sixRent}}元]</span><span>[水电合计￥{{item.sixCost}}元]</span>
+              <span>[房租合计￥{{item.six}}元]</span>
+              <span>[租金合计￥{{item.sixRent}}元]</span>
+              <span>[水电合计￥{{item.sixCost}}元]</span>
             </div>
             <div v-for="i in item.sixList" class="landord-content">
               <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button type="text">[{{i.fanghao}}]</el-button>
               </router-link>
-              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+              <span>[房租￥{{i.calRentResult}}元]</span>
+              <span>[租金￥{{i.lease.rent}}元]</span>
+              <span>[水电￥{{i.cost}}元]</span>
+              <span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span>
+              <span>备注：{{i.remark}}</span>
             </div>
             <div v-if="item.eightList.length" class="landord-content" style="font-weight: bold;">
               <span class="tag-bf-span collapse-btn">8坊68栋</span>
-              <span>[房租合计￥{{item.eight}}元]</span><span>[租金合计￥{{item.eightRent}}元]</span><span>[水电合计￥{{item.eightCost}}元]</span>
+              <span>[房租合计￥{{item.eight}}元]</span>
+              <span>[租金合计￥{{item.eightRent}}元]</span>
+              <span>[水电合计￥{{item.eightCost}}元]</span>
             </div>
             <div v-for="i in item.eightList" class="landord-content">
               <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button type="text">[{{i.fanghao}}]</el-button>
               </router-link>
-              <span>[房租￥{{i.calRentResult}}元]</span><span>[租金￥{{i.lease.rent}}元]</span><span>[水电￥{{i.calElectric.calElectricResult + i.calWater.calWaterResult}}元]</span><span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span><span>备注：{{i.remark}}</span>
+              <span>[房租￥{{i.calRentResult}}元]</span>
+              <span>[租金￥{{i.lease.rent}}元]</span>
+              <span>[水电￥{{i.cost}}元]</span>
+              <span class="landord-content-type">交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag></span>
+              <span>备注：{{i.remark}}</span>
             </div>
           </el-collapse-item>
         </el-collapse>
