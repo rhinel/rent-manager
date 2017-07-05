@@ -574,9 +574,9 @@
             </div>
             <div v-if="landordHistoryTemp.eightList.length" class="landord-content" style="font-weight: bold;">
               <span class="tag-bf-span collapse-btn">8坊68栋</span>
-              <span>[房租合计￥{{landordHistoryTemp.six}}元]</span>
-              <span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span>
-              <span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
+              <span>[房租合计￥{{landordHistoryTemp.eight}}元]</span>
+              <span>[租金合计￥{{landordHistoryTemp.eightRent}}元]</span>
+              <span>[水电合计￥{{landordHistoryTemp.eightCost}}元]</span>
             </div>
             <div v-for="i in landordHistoryTemp.eightList" class="landord-content">
               <router-link class="tag-bf-span collapse-btn" :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
