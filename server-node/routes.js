@@ -43,7 +43,7 @@ module.exports = (app, express)=>{
 			res.send(fs.readFileSync(path.resolve('../../rhinel.xyz/index.html'), 'utf-8'))
 		} else {
 			//res.send('页面飘走了！')		
-			res.send(fs.readFileSync(path.resolve('../404/404.html'), 'utf-8'))
+			res.send(fs.readFileSync(path.resolve(__dirname, '../404/404.html'), 'utf-8'))
 		}
 	})
 }
