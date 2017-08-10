@@ -104,7 +104,7 @@
             <el-row :gutter="20">
               <el-col :span="4" style="height:1px;"></el-col>
               <el-col :span="20">
-                <el-input v-model.number="changeType.remark" auto-complete="off" placeholder="备注"></el-input>
+                <el-input v-model="changeType.remark" auto-complete="off" placeholder="备注"></el-input>
               </el-col>
             </el-row>
           </div>

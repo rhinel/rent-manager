@@ -105,7 +105,7 @@
               </el-col>
               <el-col :span="9">
                 <el-form-item label="备注" :label-width="lidLabelWidth">
-                  <el-input v-model.number="lease.remark" auto-complete="off" placeholder="备注"></el-input>
+                  <el-input v-model="lease.remark" auto-complete="off" placeholder="备注"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
