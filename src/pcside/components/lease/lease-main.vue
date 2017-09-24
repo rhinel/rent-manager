@@ -543,10 +543,11 @@
             }
           ]
         },
+        // 入住时的默认计费数据，后台均以这为准
         defaultCalWaterPrice: {
           minPrice: 6,
           calType: 'single',
-          singlePrice: 6,
+          singlePrice: 8,
           stepPrice: [{
             step: 0,
             price: 0

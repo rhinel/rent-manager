@@ -1252,9 +1252,9 @@
       getWaterCal (val) {
         // 用于张贴展示，不做真实计费，所有计费按照标准计算
         if (val < 6) {
-          return 36
+          return 6 * 8
         } else {
-          return val * 6
+          return val * 8
         }
       },
       getEleCal (val) {
