@@ -745,12 +745,12 @@
               <th>实用数</th>
               <th>小计</th>
             </tr>
-            <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '6坊65栋'">
+            <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '6坊65栋'" :key="item._id">
               <th>{{item.hao}}</th>
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.old.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}吨</th>
-              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}元</th>
+              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water, item.rents[0].calWater.calWater) : '--'}}元</th>
               <th></th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'}}度</th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'}}度</th>
@@ -781,12 +781,12 @@
               <th>实用数</th>
               <th>小计</th>
             </tr>
-            <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '8坊68栋'">
+            <tr v-for="item in monthDetData" v-if="item.rents[0] && item.fang == '8坊68栋'" :key="item._id">
               <th>{{item.hao}}</th>
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.old.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}吨</th>
-              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}元</th>
+              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water, item.rents[0].calWater.calWater) : '--'}}元</th>
               <th></th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'}}度</th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'}}度</th>
@@ -1249,12 +1249,13 @@
         }
         return false
       },
-      getWaterCal (val) {
+      getWaterCal (val, cal) {
         // 用于张贴展示，不做真实计费，所有计费按照标准计算
+        // 此处没有缓存不同默认单价，使用的月份的单价，由于每户水费没有特殊，理解为使用默认单价
         if (val < 6) {
-          return 6 * 8
+          return 6 * cal.singlePrice
         } else {
-          return val * 8
+          return val * cal.singlePrice
         }
       },
       getEleCal (val) {
