@@ -1,18 +1,20 @@
 'use strict'
 
-let mongoose = require('mongoose')
-let redis = require('redis')
-let auth = require('./auth')
+const log4js = require('log4js')
+const mongoose = require('mongoose')
+const redis = require('redis')
+const auth = require('./auth')
 let db
 let rds
+const sysLog = log4js.getLogger('sys')
 
 // 链接缓存
 const redisct = (callback) => {
   rds = redis.createClient(auth.redisPo, auth.redisIp, {auth_pass: auth.redisPa})
-  rds.on('error', console.error.bind(console, 'redis connection error:'))
+  rds.on('error', sysLog.error.bind(sysLog, 'redis connection error: '))
   rds.on('ready', () => {
     callback && callback()
-    console.log(auth.redisIp + ':' + auth.redisPo + ' redis ready!')
+    sysLog.info(`redis://${auth.redisPa}@${auth.redisIp}:${auth.redisPo} redis ready !`)
   })
 }
 
@@ -80,14 +82,12 @@ const redisIncrKeys = (key) => {
 // 链接数据库
 const connect = (callback) => {
   mongoose.Promise = global.Promise
-  mongoose.connect(auth.mongodbPs, {
-    useMongoClient: true
-  })
+  mongoose.connect(auth.mongodbPs, { useMongoClient: true })
   db = mongoose.connection
-  db.on('error', console.error.bind(console, 'mongoose connection error:'))
+  db.on('error', sysLog.error.bind(sysLog, 'mongoose connection error: '))
   db.once('open', () => {
     callback && callback()
-    console.log(auth.mongodbPs + ' mongoose opened!')
+    sysLog.info(`${auth.mongodbPs} mongoose opened !`)
   })
 }
 
@@ -100,10 +100,10 @@ const dbModel = (dbName, dataType) => {
     dataType = {}
   }
   // 数据库模型骨架
-  let dataSchema = new mongoose.Schema(dataType)
+  const dataSchema = new mongoose.Schema(dataType)
 
   // 数据集合创建
-  let dataModel = db.model(dbName, dataSchema, dbName)
+  const dataModel = db.model(dbName, dataSchema, dbName)
 
   // model查询
   return dataModel
@@ -121,13 +121,13 @@ const dbEntity = (dbName, dataType, data) => {
     data = {}
   }
   // 数据库模型骨架
-  let dataSchema = new mongoose.Schema(dataType)
+  const dataSchema = new mongoose.Schema(dataType)
 
   // 数据集合创建
-  let DataModel = db.model(dbName, dataSchema, dbName)
+  const DataModel = db.model(dbName, dataSchema, dbName)
 
   // 数据实例
-  let dataEntity = new DataModel(data)
+  const dataEntity = new DataModel(data)
 
   // model查询
   return dataEntity

@@ -76,22 +76,21 @@ const codeList = {
 }
 
 // 根据接口使用返回格式化
-module.exports = (code, data) => {
-  !code && (code = 1000)
-  !data && (data = {
-    type: false,
-    data: ''
-  })
-
-  if (!data.type) {
+module.exports = (code = 0, data = '') => {
+  if (data.constructor === Error) {
     return {
-      code: data.code || code,
-      msg: data.data || codeList[code] || '未定义错误'
+      code: Number(`${code}${data.code || ''}`),
+      msg: data.message || codeList[code] || '未定义错误'
+    }
+  } else if (code) {
+    return {
+      code,
+      data: data || codeList[code] || '未定义错误'
     }
   } else {
     return {
       code: 0,
-      data: data.data || ''
+      data
     }
   }
 }
