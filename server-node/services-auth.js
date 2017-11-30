@@ -2,6 +2,7 @@
 const superagent = require('superagent')
 const md5 = require('md5')
 
+const FoundError = require('./config-error')
 const db = require('./models')
 
 module.exports = {
@@ -15,9 +16,9 @@ module.exports = {
     // 4返回token
 
     if (!req.body.name) {
-      return Promise.reject(new Error('请输入用户名'))
+      return Promise.reject(new FoundError('请输入用户名'))
     } else if (!req.body.pwd) {
-      return Promise.reject(new Error('请输入密码'))
+      return Promise.reject(new FoundError('请输入密码'))
     }
 
     // 0生成新token
@@ -28,7 +29,7 @@ module.exports = {
     const ipCheck = await db
       .redisGet(req.ip)
     if (ipCheck && ipCheck >= 5) {
-      return Promise.reject(new Error('用户名/密码错误超过5次，请等待5分钟后再次登陆'))
+      return Promise.reject(new FoundError('用户名/密码错误超过5次，请等待5分钟后再次登陆'))
     }
 
     // 2数据库查询用户名和密码校验
@@ -48,7 +49,7 @@ module.exports = {
         .redisSetTime(req.ip, 300)
       let errorTimes = 5 - ipError
       errorTimes = errorTimes < 0 ? 0 : errorTimes
-      return Promise.reject(new Error(`用户名/密码错误，5分钟内您还有${errorTimes}次机会`))
+      return Promise.reject(new FoundError(`用户名/密码错误，5分钟内您还有${errorTimes}次机会`))
     }
     await db
       .redisDelKeys(req.ip)
@@ -107,7 +108,7 @@ module.exports = {
     const reToken = await db
       .redisGetKeys(`*$${req.body.token || req.query.token}`)
     if (!reToken.length) {
-      return Promise.reject(new Error())
+      return Promise.reject(new FoundError())
     }
 
     // 2更新缓存

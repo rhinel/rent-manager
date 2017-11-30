@@ -9,7 +9,7 @@ let db
 const sysLog = log4js.getLogger('sys')
 
 // 链接缓存
-const redisct = (callback) => {
+const redisct = callback => {
   rds = redis.createClient(auth.redisPo, auth.redisIp, {
     auth_pass: auth.redisPa,
     retry_strategy: () => 5000,
@@ -47,7 +47,7 @@ const redisSetTime = (key, expire) => new Promise((resolve, reject) => {
 })
 
 // get
-const redisGet = (key) => new Promise((resolve, reject) => {
+const redisGet = key => new Promise((resolve, reject) => {
   rds.get(key, (err, reply) => {
     if (err) {
       reject(err)
@@ -58,7 +58,7 @@ const redisGet = (key) => new Promise((resolve, reject) => {
 })
 
 // get keys
-const redisGetKeys = (keys) => new Promise((resolve, reject) => {
+const redisGetKeys = keys => new Promise((resolve, reject) => {
   rds.keys(keys, (err, reply) => {
     if (err) {
       reject(err)
@@ -69,7 +69,7 @@ const redisGetKeys = (keys) => new Promise((resolve, reject) => {
 })
 
 // del keys
-const redisDelKeys = (keys) => new Promise((resolve, reject) => {
+const redisDelKeys = keys => new Promise((resolve, reject) => {
   rds.del(keys, (err, reply) => {
     if (err) {
       reject(err)
@@ -80,7 +80,7 @@ const redisDelKeys = (keys) => new Promise((resolve, reject) => {
 })
 
 // incr keys
-const redisIncr = (key) => new Promise((resolve, reject) => {
+const redisIncr = key => new Promise((resolve, reject) => {
   rds.incr(key, (err, reply) => {
     if (err) {
       reject(err)
@@ -91,7 +91,7 @@ const redisIncr = (key) => new Promise((resolve, reject) => {
 })
 
 // 链接数据库
-const connect = (callback) => {
+const connect = callback => {
   mongoose.Promise = global.Promise
   mongoose
     .connect(auth.mongodbPs, {

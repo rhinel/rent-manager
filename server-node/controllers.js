@@ -4,11 +4,10 @@ const serviceDashb = require('./services-dashboard')
 const serviceRent = require('./services-rent')
 const serviceMonth = require('./services-month')
 const serviceHouse = require('./services-house')
-const code = require('./codes')
+const code = require('./config-codes')
 
 // res.json([req.params, req.query, req.body])
 // res.json([req.params==url, req.query==get, req.body==post])
-// data是一个设计的返回对象，包含编码和内容，使用codes进行封装
 
 // outer类，失败则跳过
 const outer = (req, res, next) => {
@@ -18,19 +17,19 @@ const outer = (req, res, next) => {
     if (req.params.function === 'login') {
       serviceAuth
         .login(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(1001, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 1001, err)))
     } else if (req.params.function === 'logout') {
       serviceAuth
         .logout(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(1002, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 1002, err)))
     // 首页背景图
     } else if (req.params.function === 'bingBg') {
       serviceAuth
         .bingBg(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(1003, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 1003, err)))
     } else {
       next()
     }
@@ -44,50 +43,50 @@ const auth = (req, res, next) => {
   // 接口校验
   const token = req.body.token || req.query.token || ''
   if (!token) {
-    res.json(code(2001))
+    res.json(code(req, 2001))
   } else {
     serviceAuth
       .auth(req, res)
       .then(() => next())
-      .catch(err => res.json(code(2001, err)))
+      .catch(err => res.json(code(req, 2001, err)))
   }
 }
 
 // inner类，失败则跳过
 const inner = (req, res, next) => {
   if (req.params.class === 'auth') {
-    res.json(code(0, { type: true }))
+    res.json(code(req, 0))
   } else if (req.params.class === 'house') {
     // 添加房屋接口
     if (req.params.function === 'add') {
       serviceHouse
         .houseAdd(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(3011, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3011, err)))
     } else if (req.params.function === 'list') {
       serviceHouse
         .houseList(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(3012, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3012, err)))
     } else if (req.params.function === 'del') {
       serviceHouse.houseDel(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(3013, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3013, err)))
     } else if (req.params.function === 'find') {
       serviceHouse
         .houseFind(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(3014, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3014, err)))
     } else if (req.params.function === 'listWithCal') {
       serviceHouse
         .listWithCal(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(3015, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3015, err)))
     } else if (req.params.function === 'detByHao') {
       serviceHouse
         .detByHao(req, res)
-        .then(data => res.json(code(0, data)))
-        .catch(err => res.json(code(3016, err)))
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3016, err)))
     } else {
       next()
     }
@@ -303,7 +302,7 @@ const inner = (req, res, next) => {
 }
 
 // default类，最后返回
-const def = (req, res) => res.json(code(9999))
+const def = (req, res) => res.json(code(req, 9999))
 
 module.exports = {
   outer,

@@ -1,3 +1,4 @@
+const FoundError = require('./config-error')
 const db = require('./models')
 
 module.exports = {
@@ -10,9 +11,9 @@ module.exports = {
     // 4返回add对象
 
     if (!req.body.fang) {
-      return Promise.reject(new Error('请选择坊号'))
+      return Promise.reject(new FoundError('请选择坊号'))
     } else if (!req.body.hao) {
-      return Promise.reject(new Error('请填写房间号'))
+      return Promise.reject(new FoundError('请填写房间号'))
     }
 
     // 1如果有ID，根据ID修改内容
@@ -35,7 +36,7 @@ module.exports = {
         .exec()
 
       if (!house) {
-        return Promise.reject(new Error('修改失败，数据不存在'))
+        return Promise.reject(new FoundError('修改失败，数据不存在'))
       }
 
       return { _id: req.body._id }
@@ -53,7 +54,7 @@ module.exports = {
       .exec()
 
     if (houses.length) {
-      return Promise.reject(new Error('房间已存在'))
+      return Promise.reject(new FoundError('房间已存在'))
     }
 
 
@@ -85,7 +86,7 @@ module.exports = {
     // 2返回find对象
 
     if (!req.body._id) {
-      return Promise.reject(new Error('缺少房屋ID'))
+      return Promise.reject(new FoundError('缺少房屋ID'))
     }
 
     // 数据库查询
@@ -97,7 +98,7 @@ module.exports = {
       .exec()
 
     if (!house) {
-      const err = new Error('数据不存在')
+      const err = new FoundError('数据不存在')
       err.code = 1
       return Promise.reject(err)
     }
@@ -144,7 +145,7 @@ module.exports = {
     // 2返回del对象
 
     if (!req.body._id) {
-      return Promise.reject(new Error('缺少ID'))
+      return Promise.reject(new FoundError('缺少ID'))
     }
 
     // 1根据ID修改状态
@@ -160,7 +161,7 @@ module.exports = {
       .exec()
 
     if (!house || !house.status) {
-      return Promise.reject(new Error('无此房屋或房屋已删除'))
+      return Promise.reject(new FoundError('无此房屋或房屋已删除'))
     }
 
     return { _id: req.body._id }
@@ -276,7 +277,7 @@ module.exports = {
     db.dbModel('rent')
 
     if (!req.body.haoId) {
-      return Promise.reject(new Error('缺少房屋ID'))
+      return Promise.reject(new FoundError('缺少房屋ID'))
     }
 
     // 1数据库查询

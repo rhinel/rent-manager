@@ -1,3 +1,11 @@
+
+const log4js = require('log4js')
+
+const FoundError = require('./config-error')
+
+const loginLog = log4js.getLogger('login')
+const sysLog = log4js.getLogger('sys')
+
 // 提供默认错误提示
 const codeList = {
   // outer类
@@ -74,14 +82,20 @@ const codeList = {
 }
 
 // 根据接口使用返回格式化
-module.exports = (code = 0, data = '') => {
-  console.log(code)
-  console.log(data)
-  if (
-    data.constructor === Error ||
-    data.constructor === TypeError ||
-    !!data.message
-  ) {
+module.exports = (req = {}, code = 0, data = '') => {
+  const { url } = req
+  // code 1 为登录接口，记录所有日志
+  if (req.url.includes('/outer/log/')) {
+    const { name, pwd } = req.body
+    loginLog.info(url, name, pwd, data.message || data)
+  }
+
+  // error 非自定义类型错误，应该保存日志
+  if (data instanceof Error && !(data instanceof FoundError)) {
+    sysLog.error(url, data)
+  }
+
+  if (data instanceof Error) {
     return {
       code: Number(`${code}${data.code || ''}`),
       msg: data.message || codeList[code] || '未定义错误',
@@ -89,7 +103,7 @@ module.exports = (code = 0, data = '') => {
   } else if (code) {
     return {
       code,
-      data: data || codeList[code] || '未定义错误',
+      msg: data || codeList[code] || '未定义错误',
     }
   }
   return {

@@ -10,19 +10,19 @@ module.exports = {
     },
     sys: {
       type: 'dateFile',
-      filename: `${path.resolve(__dirname, '../logs/httpLogs/logs')}Sys.log`,
+      filename: `${path.resolve(__dirname, '../logs/sysLogs/logs')}Sys.log`,
       maxLogSize: 102400,
       backups: 1024,
     },
     login: {
       type: 'dateFile',
-      filename: `${path.resolve(__dirname, '../logs/httpLogs/logs')}Login.log`,
+      filename: `${path.resolve(__dirname, '../logs/loginLogs/logs')}Login.log`,
       maxLogSize: 102400,
       backups: 1024,
     },
     errorsFile: {
       type: 'dateFile',
-      filename: `${path.resolve(__dirname, '../logs/httpLogs/logs')}ErrorsFile.log`,
+      filename: `${path.resolve(__dirname, '../logs/errorsFileLogs/logs')}ErrorsFile.log`,
       maxLogSize: 102400,
       backups: 1024,
     },
