@@ -1,5 +1,3 @@
-'use strict'
-
 const serviceAuth = require('./services-auth')
 const service = require('./services')
 const serviceDashb = require('./services-dashboard')
@@ -50,7 +48,7 @@ const auth = (req, res, next) => {
   } else {
     serviceAuth
       .auth(req, res)
-      .then(data => next())
+      .then(() => next())
       .catch(err => res.json(code(2001, err)))
   }
 }
@@ -58,35 +56,38 @@ const auth = (req, res, next) => {
 // inner类，失败则跳过
 const inner = (req, res, next) => {
   if (req.params.class === 'auth') {
-    res.json(code(0, {
-      type: true
-    }))
+    res.json(code(0, { type: true }))
   } else if (req.params.class === 'house') {
     // 添加房屋接口
     if (req.params.function === 'add') {
-      service.houseAdd(req, res, (data) => {
-        res.json(code(3011, data))
-      })
+      serviceHouse
+        .houseAdd(req, res)
+        .then(data => res.json(code(0, data)))
+        .catch(err => res.json(code(3011, err)))
     } else if (req.params.function === 'list') {
-      service.houseList(req, res, (data) => {
-        res.json(code(3012, data))
-      })
+      serviceHouse
+        .houseList(req, res)
+        .then(data => res.json(code(0, data)))
+        .catch(err => res.json(code(3012, err)))
     } else if (req.params.function === 'del') {
-      service.houseDel(req, res, (data) => {
-        res.json(code(3013, data))
-      })
+      serviceHouse.houseDel(req, res)
+        .then(data => res.json(code(0, data)))
+        .catch(err => res.json(code(3013, err)))
     } else if (req.params.function === 'find') {
-      service.houseFind(req, res, (data) => {
-        res.json(code(3014, data))
-      })
+      serviceHouse
+        .houseFind(req, res)
+        .then(data => res.json(code(0, data)))
+        .catch(err => res.json(code(3014, err)))
     } else if (req.params.function === 'listWithCal') {
-      serviceHouse.listWithCal(req, res, (data) => {
-        res.json(code(3015, data))
-      })
+      serviceHouse
+        .listWithCal(req, res)
+        .then(data => res.json(code(0, data)))
+        .catch(err => res.json(code(3015, err)))
     } else if (req.params.function === 'detByHao') {
-      serviceHouse.detByHao(req, res, (data) => {
-        res.json(code(3016, data))
-      })
+      serviceHouse
+        .detByHao(req, res)
+        .then(data => res.json(code(0, data)))
+        .catch(err => res.json(code(3016, err)))
     } else {
       next()
     }
@@ -302,11 +303,11 @@ const inner = (req, res, next) => {
 }
 
 // default类，最后返回
-const def = (req, res, next) => res.json(code(9999))
+const def = (req, res) => res.json(code(9999))
 
 module.exports = {
   outer,
   auth,
   inner,
-  def
+  def,
 }

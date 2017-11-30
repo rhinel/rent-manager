@@ -1,5 +1,3 @@
-'use strict'
-
 // 启动服务
 const http = require('http')
 // const https = require('https')
@@ -7,6 +5,7 @@ const http = require('http')
 const express = require('express')
 const bodyParser = require('body-parser')
 const log4js = require('log4js')
+
 const configLog = require('./config-log')
 const db = require('./models')
 
@@ -46,7 +45,7 @@ app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'auto' }))
 app.use(express.static(`${__dirname}/`))
 
 // 使用post&json
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // 处理路由

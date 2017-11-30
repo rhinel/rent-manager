@@ -1,5 +1,3 @@
-'use strict'
-
 // 提供默认错误提示
 const codeList = {
   // outer类
@@ -72,25 +70,30 @@ const codeList = {
   3077: '获取ok列表失败',
   3078: '获取空置列表失败',
   //
-  9999: '接口不存在'
+  9999: '接口不存在',
 }
 
 // 根据接口使用返回格式化
 module.exports = (code = 0, data = '') => {
-  if (data.constructor === Error) {
+  console.log(code)
+  console.log(data)
+  if (
+    data.constructor === Error ||
+    data.constructor === TypeError ||
+    !!data.message
+  ) {
     return {
       code: Number(`${code}${data.code || ''}`),
-      msg: data.message || codeList[code] || '未定义错误'
+      msg: data.message || codeList[code] || '未定义错误',
     }
   } else if (code) {
     return {
       code,
-      data: data || codeList[code] || '未定义错误'
+      data: data || codeList[code] || '未定义错误',
     }
-  } else {
-    return {
-      code: 0,
-      data
-    }
+  }
+  return {
+    code: 0,
+    data,
   }
 }

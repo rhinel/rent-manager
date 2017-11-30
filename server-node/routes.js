@@ -1,8 +1,7 @@
-'use strict'
+const fs = require('fs')
+const path = require('path')
 
-let fs = require('fs')
-let path = require('path')
-let controller = require('./controllers')
+const controller = require('./controllers')
 
 module.exports = (app, express) => {
   // 接口，不做接口校验

@@ -1,12 +1,12 @@
-'use strict'
 
-let db = require('./models')
-let superagent = require('superagent')
-let md5 = require('md5')
+const superagent = require('superagent')
+const md5 = require('md5')
+
+const db = require('./models')
 
 module.exports = {
 
-  login: async (req, res) => {
+  login: async req => {
     // 校验字段，错误退出
     // 0根据MD5(IP，用户名，密码，时间)生成token
     // 1查询数据库用户名密码，错误退出
@@ -36,23 +36,22 @@ module.exports = {
       .dbModel('admin')
       .findOne({
         name: req.body.name,
-        pwd: req.body.pwd
+        pwd: req.body.pwd,
       })
       .exec()
 
     // 账号密码错误次数5分钟300秒机制，成功清除错误记录
     if (!dbInfo) {
       const ipError = await db
-        .redisIncrKeys(req.ip)
+        .redisIncr(req.ip)
       await db
         .redisSetTime(req.ip, 300)
       let errorTimes = 5 - ipError
       errorTimes = errorTimes < 0 ? 0 : errorTimes
       return Promise.reject(new Error(`用户名/密码错误，5分钟内您还有${errorTimes}次机会`))
-    } else {
-      await db
-        .redisDelKeys(req.ip)
     }
+    await db
+      .redisDelKeys(req.ip)
 
     // 3查出已有的登陆态，更新状态
     const userId = dbInfo._id.toString()
@@ -69,7 +68,7 @@ module.exports = {
     return token
   },
 
-  logout: async (req, res) => {
+  logout: async req => {
     // 校验字段，错误空退出
     // 1清除缓存
     // 2返回空
@@ -80,13 +79,14 @@ module.exports = {
 
     // 1查询并清空
     const reToken = await db
-      .redisGetKeys('*$' + req.body.token)
+      .redisGetKeys(`*$${req.body.token}`)
     if (reToken.length) {
       await db
         .redisDelKeys(reToken)
     }
   },
-  bingBg: async (req, res) => {
+
+  bingBg: async () => {
     // 1查询api，错误退出
     // 2返回bg对象
 
@@ -98,14 +98,14 @@ module.exports = {
       .then(res => res.body)
   },
 
-  auth: async (req, res) => {
+  auth: async req => {
     // 1查询缓存，错误退出
     // 2更新缓存
     // 3返回空
 
     // 1查询缓存
     const reToken = await db
-      .redisGetKeys('*$' + (req.body.token || req.query.token))
+      .redisGetKeys(`*$${req.body.token || req.query.token}`)
     if (!reToken.length) {
       return Promise.reject(new Error())
     }
@@ -114,5 +114,6 @@ module.exports = {
     req.userId = reToken[0].split('$')[0]
     await db
       .redisSetTime(reToken[0], 1800)
-  }
+    return ''
+  },
 }
