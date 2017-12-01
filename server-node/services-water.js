@@ -1,10 +1,12 @@
 const FoundError = require('./config-error')
 const db = require('./models')
 
+const servicesHouse = require('./services-house')
+
 module.exports = {
 
   waterAdd: async req => {
-    // 校验数据，错误退出，没有校验是否不存在房屋ID
+    // 校验数据，错误退出
     // 1插入数据，错误退出
     // 2更新房屋挂载ID，错误退出
     // 3返回add对象
@@ -16,6 +18,12 @@ module.exports = {
     } else if (!req.body.addTime) {
       return Promise.reject(new FoundError('请填写抄表时间'))
     }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind({
+        body: { _id: req.body.haoId },
+      })
 
     // 1插入水表抄表记录
     const addData = await db
