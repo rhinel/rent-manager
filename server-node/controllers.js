@@ -4,6 +4,7 @@ const serviceDashb = require('./services-dashboard')
 const serviceRent = require('./services-rent')
 const serviceMonth = require('./services-month')
 const serviceHouse = require('./services-house')
+const serviceWater = require('./services-water')
 const code = require('./config-codes')
 
 // res.json([req.params, req.query, req.body])
@@ -93,9 +94,10 @@ const inner = (req, res, next) => {
   } else if (req.params.class === 'water') {
     // 添加水表数接口
     if (req.params.function === 'add') {
-      service.waterAdd(req, res, (data) => {
-        res.json(code(3021, data))
-      })
+      serviceWater
+        .waterAdd(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3021, err)))
     } else if (req.params.function === 'mainList') {
       service.waterMainList(req, res, (data) => {
         res.json(code(3022, data))
