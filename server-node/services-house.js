@@ -81,6 +81,7 @@ module.exports = {
     return { _id: house._id }
   },
 
+  // code 1
   houseFind: async req => {
     // 1查询数据，错误退出
     // 2返回find对象

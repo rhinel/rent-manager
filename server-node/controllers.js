@@ -99,9 +99,10 @@ const inner = (req, res, next) => {
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3021, err)))
     } else if (req.params.function === 'mainList') {
-      service.waterMainList(req, res, (data) => {
-        res.json(code(3022, data))
-      })
+      serviceWater
+        .waterMainList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3022, err)))
     } else if (req.params.function === 'cal') {
       service.watercalWater(req, res, (data) => {
         res.json(code(3023, data))
