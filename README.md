@@ -1,7 +1,7 @@
 # rent-manager
 
-> rent-manager for ying <br>
-> 项目后端：nodejs mongodb redis <br>
+> rent-manager for ying
+> 项目后端：nodejs mongodb redis
 > 项目前端：webpack vue2.0 ElementUI superagent
 
 ## Build Setup
@@ -17,3 +17,8 @@ npm run dev
 npm run build
 
 ```
+
+## 待解决问题
+
+时区问题，elementUI组件提供的为0时区，服务器时间为0时区
+mongodb没有事务的问题，目前解决方式是判断可能出错的读取后执行，但高并发可能会有问题

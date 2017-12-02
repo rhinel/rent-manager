@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const FoundError = require('./config-error')
 
 const loginLog = log4js.getLogger('login')
-const sysLog = log4js.getLogger('sys')
+const apiErrorLog = log4js.getLogger('apiError')
 
 // 提供默认错误提示
 const codeList = {
@@ -90,9 +90,9 @@ module.exports = (req = {}, code = 0, data = '') => {
     loginLog.info(url, name, pwd, data.message || data)
   }
 
-  // error 非自定义类型错误，应该保存日志
+  // apiError 非自定义类型错误，应该保存日志
   if (data instanceof Error && !(data instanceof FoundError)) {
-    sysLog.error(url, data)
+    apiErrorLog.error(url, data)
   }
 
   if (data instanceof Error) {

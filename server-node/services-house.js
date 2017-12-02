@@ -237,7 +237,6 @@ module.exports = {
 
       // 计算水费小计
       dbSearchInfo[i].calWaters.forEach(j => {
-        j.tnew.addTime = new Date(j.tnew.addTime).toLocaleDateString()
         if (!j.gap) {
           j.gap = (j.tnew.water || 0) - (j.old.water || 0)
         }
@@ -246,9 +245,8 @@ module.exports = {
         }
       })
 
-      // 计算水费小计
+      // 计算电费小计
       dbSearchInfo[i].calElectrics.forEach(k => {
-        k.tnew.addTime = new Date(k.tnew.addTime).toLocaleDateString()
         if (!k.gap) {
           k.gap = (k.tnew.electric || 0) - (k.old.electric || 0)
         }
