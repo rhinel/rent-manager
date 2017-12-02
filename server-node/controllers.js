@@ -104,29 +104,35 @@ const inner = (req, res, next) => {
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3022, err)))
     } else if (req.params.function === 'cal') {
-      service.watercalWater(req, res, (data) => {
-        res.json(code(3023, data))
-      })
+      serviceWater
+        .watercalWater(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3023, err)))
     } else if (req.params.function === 'list') {
-      service.waterList(req, res, (data) => {
-        res.json(code(3024, data))
-      })
+      serviceWater
+        .waterList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3024, err)))
     } else if (req.params.function === 'calList') {
-      service.waterCalList(req, res, (data) => {
-        res.json(code(3025, data))
-      })
+      serviceWater
+        .waterCalList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3025, err)))
     } else if (req.params.function === 'del') {
-      service.waterDel(req, res, (data) => {
-        res.json(code(3026, data))
-      })
+      serviceWater
+        .waterDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3026, err)))
     } else if (req.params.function === 'delCal') {
-      service.waterCalDel(req, res, (data) => {
-        res.json(code(3027, data))
-      })
+      serviceWater
+        .waterCalDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3027, err)))
     } else if (req.params.function === 'findByDate') {
-      service.waterFindByDate(req, res, (data) => {
-        res.json(code(3028, data))
-      })
+      serviceWater
+        .waterFindByDate(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3028, err)))
     } else {
       next()
     }
