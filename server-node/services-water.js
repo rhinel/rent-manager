@@ -236,7 +236,6 @@ module.exports = {
     db.dbModel('house')
 
     // 1数据库查询
-
     const dbInfo = await db
       .dbModel('watercal')
       .find({ haoId: db.db.Types.ObjectId(req.body.haoId) })

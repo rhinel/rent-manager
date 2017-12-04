@@ -5,6 +5,7 @@ const serviceRent = require('./services-rent')
 const serviceMonth = require('./services-month')
 const serviceHouse = require('./services-house')
 const serviceWater = require('./services-water')
+const serviceElect = require('./services-electric')
 const code = require('./config-codes')
 
 // res.json([req.params, req.query, req.body])
@@ -139,21 +140,24 @@ const inner = (req, res, next) => {
   } else if (req.params.class === 'electric') {
     // 添加电表数接口
     if (req.params.function === 'add') {
-      service.electricAdd(req, res, (data) => {
-        res.json(code(3041, data))
-      })
+      serviceElect.electricAdd(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3041, err)))
     } else if (req.params.function === 'mainList') {
-      service.electricMainList(req, res, (data) => {
-        res.json(code(3042, data))
-      })
+      serviceElect
+        .electricMainList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3042, err)))
     } else if (req.params.function === 'cal') {
-      service.electriccalElectric(req, res, (data) => {
-        res.json(code(3043, data))
-      })
+      serviceElect
+        .electriccalElectric(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3043, err)))
     } else if (req.params.function === 'list') {
-      service.electricList(req, res, (data) => {
-        res.json(code(3044, data))
-      })
+      serviceElect
+        .electricList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3044, err)))
     } else if (req.params.function === 'calList') {
       service.electricCalList(req, res, (data) => {
         res.json(code(3045, data))
