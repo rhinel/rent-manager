@@ -336,7 +336,7 @@ module.exports = {
       return Promise.reject(new FoundError('插入失败'))
     }
 
-    // 3更新房屋信息
+    // 2更新房屋信息
     const house = await db
       .dbModel('house', {//* //标记，更新房屋数据类，扩增最新计费数据引用类型
         calWaterId: db.db.Schema.Types.ObjectId,
@@ -367,6 +367,10 @@ module.exports = {
       return Promise.reject(new FoundError('ID不存在'))
     }
 
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind({ body: { _id: req.body.haoId } })
+
     // 1根据ID修改状态
     const waterDel = await db
       .dbModel('water', {//* //标记，初始水表类型数据类，删除类型
@@ -382,10 +386,6 @@ module.exports = {
     if (!waterDel || !waterDel.status) {
       return Promise.reject(new FoundError('删除失败'))
     }
-
-    // 0code 1 校验房屋ID
-    await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
 
     // 2查询上一条数据
     const waterPrev = await db

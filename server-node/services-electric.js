@@ -272,4 +272,153 @@ module.exports = {
     // 2返回数据
     return dbInfo
   },
+
+  electriccalElectric: async req => {
+    // 不做数据校验
+    // 1插入数据（存储新抄表记录，旧抄表记录，计费信息），错误退出
+    // 2更新房屋挂载ID，错误提出
+    // 3返回add对象
+
+    if (!req.body.haoId) {
+      return Promise.reject(new FoundError('请选择房屋'))
+    }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind({ body: { _id: req.body.haoId } })
+
+    // 1插入数据
+    const addInfo = await db
+      .dbModel('electriccal', {//* //标记，初始电表计费数数据类，新增类型
+        userId: db.db.Schema.Types.ObjectId, // 用户ID
+        haoId: db.db.Schema.Types.ObjectId, // 房屋ID，全拼
+        tnew: {
+          electric: Number, // 抄表数
+          remark: String, // 抄表备注
+          addTime: String, // 抄表时间
+        },
+        old: {
+          electric: Number, // 底表数
+          remark: String, // 底表备注
+          addTime: String, // 底表时间
+        },
+        calElectric: {
+          minPrice: Number, // 本次计费低消
+          calType: String, // 计费类型
+          singlePrice: Number, // single单价
+          stepPrice: [{ // 阶梯价格
+            step: Number, // 阶梯
+            price: Number, // 单价
+          }],
+        },
+        remark: String, // 计费备注
+        addTime: String, // 计费时间
+        fix: Boolean, // 结果是否修正
+        calElectricResult: Number, // 计算结果
+        status: Number, // 状态
+        createTime: Number, // 创建时间
+      })
+      .create({
+        userId: req.userId,
+        haoId: req.body.haoId,
+        tnew: req.body.tnew,
+        old: req.body.old,
+        calElectric: req.body.calElectric,
+        remark: req.body.remark,
+        addTime: req.body.addTime,
+        fix: req.body.fix,
+        calElectricResult: req.body.calElectricResult,
+        status: 1,
+        createTime: Date.now(),
+      })
+
+    if (!addInfo) {
+      return Promise.reject(new FoundError('插入失败'))
+    }
+
+    // 2更新房屋最新电表计费数信息
+    const house = await db
+      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新计费数据引用类型
+        calElectricId: db.db.Schema.Types.ObjectId,
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body.haoId }, {
+        calElectricId: addInfo._id,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!house) {
+      return Promise.reject(new FoundError('房屋不存在，无法电费计费更新ID'))
+    }
+
+    // 3返回数据
+    return { _id: addInfo._id }
+  },
+
+  electricDel: async req => {
+    // 校验数据，错误退出
+    // 1修改状态，错误退出
+    // 2查询上一条数据
+    // 3更新房屋挂载ID，错误退出
+    // 4返回del对象
+
+    if (!req.body._id) {
+      return Promise.reject(new FoundError('ID不存在'))
+    }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind({ body: { _id: req.body.haoId } })
+
+    // 1根据ID修改状态
+    const electricDel = await db
+      .dbModel('electric', {//* //标记，初始电表类型数据类，删除类型
+        status: Number, // 状态
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body._id }, {
+        status: 0,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!electricDel || !electricDel.status) {
+      return Promise.reject(new FoundError('删除失败'))
+    }
+
+    // 查询上一条电表数据
+    const electricPrev = await db
+      .dbModel('electric')
+      .findOne({})
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('haoId')
+      .equals(db.db.Types.ObjectId(req.body.haoId))
+      .where('status')
+      .equals(1)
+      .sort('-addTime')
+      .exec()
+
+    const electricPrevId = electricPrev ? electricPrev.id : null
+
+    // 3更新房屋最新电表数信息
+    const house = await db
+      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新抄电表数引用类型
+        electricId: db.db.Schema.Types.ObjectId,
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body.haoId }, {
+        electricId: electricPrevId,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!house) {
+      return Promise.reject(new FoundError('房屋不存在，无法删除电度数'))
+    }
+
+    // 4返回ID
+    return { _id: req.body._id }
+  },
 }

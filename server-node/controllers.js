@@ -159,13 +159,14 @@ const inner = (req, res, next) => {
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3044, err)))
     } else if (req.params.function === 'calList') {
-      service.electricCalList(req, res, (data) => {
-        res.json(code(3045, data))
-      })
+      serviceElect
+        .electricCalList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3045, err)))
     } else if (req.params.function === 'del') {
-      service.electricDel(req, res, (data) => {
-        res.json(code(3046, data))
-      })
+      serviceElect.electricDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3046, err)))
     } else if (req.params.function === 'delCal') {
       service.electricCalDel(req, res, (data) => {
         res.json(code(3047, data))
