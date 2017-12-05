@@ -421,4 +421,116 @@ module.exports = {
     // 4返回ID
     return { _id: req.body._id }
   },
+
+  electricCalDel: async req => {
+    // 校验数据，错误退出
+    // 1修改状态，错误退出
+    // 2查询上一条数据
+    // 3更新房屋挂载ID，错误退出
+    // 4返回del对象
+
+    if (!req.body._id) {
+      return Promise.reject(new FoundError('ID不存在'))
+    }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind({ body: { _id: req.body.haoId } })
+
+    // 1根据ID修改状态
+    const electricCalDel = await db
+      .dbModel('electriccal', {//* //标记，初始电费计费数据类，删除类型
+        status: Number, // 状态
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body._id }, {
+        status: 0,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!electricCalDel || !electricCalDel.status) {
+      return Promise.reject(new FoundError('删除失败'))
+    }
+
+    // 2查询上一条数据
+    const electricCalDelPrev = await db
+      .dbModel('electriccal')
+      .findOne({})
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('haoId')
+      .equals(db.db.Types.ObjectId(req.body.haoId))
+      .where('status')
+      .equals(1)
+      .sort('-addTime')
+      .exec()
+
+    const electricCalDelPrevId = electricCalDelPrev ? electricCalDelPrev.id : null
+
+    // 3更新房屋最新电表计费信息
+    const house = await db
+      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新电表计费引用类型
+        calElectricId: db.db.Schema.Types.ObjectId,
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body.haoId }, {
+        calElectricId: electricCalDelPrevId,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!house) {
+      return Promise.reject(new FoundError('房屋不存在，无法删除电费计费'))
+    }
+
+    // 4返回ID
+    return { _id: req.body._id }
+  },
+
+  electricFindByDate: async req => {
+    // 1获取时间
+    // 2查询电表
+
+    // 1获取时间
+    const today = new Date().toLocaleDateString()
+    const date = req.body.electricDate || today
+
+    const time = new Date(date).getTime()
+    const firstLeft = ' new Date(this.addTime).getTime() >= '
+    const secondLfet = ' new Date(this.addTime).getTime() < '
+    const all = `return${firstLeft}${time} &&${secondLfet}${time + 86400000}`
+
+    db.dbModel('house')
+
+    // 2查询电表
+    const electricByDate = await db
+      .dbModel('electric')
+      .find({})
+      .populate({
+        path: 'haoId',
+        model: 'house',
+        select: 'fang hao haoId addTime',
+        match: { status: 1 },
+      })
+      // eslint-disable-next-line no-new-func
+      .$where(new Function(all))
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('status')
+      .equals(1)
+      .sort('-addTime -createTime')
+      .lean()
+      .exec()
+
+    electricByDate.forEach(electric => {
+      // 房屋
+      if (electric.haoId && !electric.fanghao) {
+        electric.fanghao = electric.haoId.fang + electric.haoId.hao
+      }
+    })
+
+    // 3返回数据
+    return electricByDate
+  },
 }

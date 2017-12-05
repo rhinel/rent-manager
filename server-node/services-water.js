@@ -433,6 +433,10 @@ module.exports = {
       return Promise.reject(new FoundError('ID不存在'))
     }
 
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind({ body: { _id: req.body.haoId } })
+
     // 1根据ID修改状态
     const waterCalDel = await db
       .dbModel('watercal', {//* //标记，初始水费计费数据类，删除类型
@@ -495,7 +499,7 @@ module.exports = {
     const time = new Date(date).getTime()
     const firstLeft = ' new Date(this.addTime).getTime() >= '
     const secondLfet = ' new Date(this.addTime).getTime() < '
-    const all = `return${firstLeft}${time}&&${secondLfet}${time + 86400000}`
+    const all = `return${firstLeft}${time} &&${secondLfet}${time + 86400000}`
 
     db.dbModel('house')
 

@@ -164,17 +164,20 @@ const inner = (req, res, next) => {
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3045, err)))
     } else if (req.params.function === 'del') {
-      serviceElect.electricDel(req, res)
+      serviceElect
+        .electricDel(req, res)
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3046, err)))
     } else if (req.params.function === 'delCal') {
-      service.electricCalDel(req, res, (data) => {
-        res.json(code(3047, data))
-      })
+      serviceElect
+        .electricCalDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3047, err)))
     } else if (req.params.function === 'findByDate') {
-      service.electricFindByDate(req, res, (data) => {
-        res.json(code(3048, data))
-      })
+      serviceElect
+        .electricFindByDate(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3048, err)))
     } else {
       next()
     }
