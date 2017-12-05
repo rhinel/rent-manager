@@ -6,6 +6,7 @@ const serviceMonth = require('./services-month')
 const serviceHouse = require('./services-house')
 const serviceWater = require('./services-water')
 const serviceElect = require('./services-electric')
+const serviceLease = require('./services-lease')
 const code = require('./config-codes')
 
 // res.json([req.params, req.query, req.body])
@@ -184,13 +185,15 @@ const inner = (req, res, next) => {
   } else if (req.params.class === 'lease') {
     // 租住管理接口
     if (req.params.function === 'mainList') {
-      service.leaseMainList(req, res, (data) => {
-        res.json(code(3031, data))
-      })
+      serviceLease
+        .leaseMainList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3031, err)))
     } else if (req.params.function === 'in') {
-      service.leaseIn(req, res, (data) => {
-        res.json(code(3032, data))
-      })
+      serviceLease
+        .leaseIn(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3032, err)))
     } else if (req.params.function === 'out') {
       service.leaseOut(req, res, (data) => {
         res.json(code(3033, data))
