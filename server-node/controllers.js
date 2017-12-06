@@ -214,9 +214,10 @@ const inner = (req, res, next) => {
   } else if (req.params.class === 'month') {
     // 月度周期管理
     if (req.params.function === 'add') {
-      service.monthAdd(req, res, (data) => {
-        res.json(code(3051, data))
-      })
+      serviceMonth
+        .monthAdd(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3051, err)))
     } else if (req.params.function === 'list') {
       service.monthList(req, res, (data) => {
         res.json(code(3052, data))

@@ -4,6 +4,7 @@ const db = require('./models')
 module.exports = {
 
   houseAdd: async req => {
+    // 此接口名称唯一
     // 校验字段，错误退出
     // 1ID存在修改数据，错误退出
     // 2ID不存在查询数据是否存在，存在->错误退出

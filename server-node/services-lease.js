@@ -49,6 +49,7 @@ module.exports = {
   },
 
   leaseIn: async req => {
+    // 此接口有效唯一
     // 不做数据校验
     // 1ID存在更新数据，错误退出
     // 2ID不存查询数据是否存在，存在->错误退出
@@ -126,7 +127,7 @@ module.exports = {
       })
       .exec()
 
-    if (leaseData) {
+    if (leaseData.length) {
       return Promise.reject(new FoundError('房间已有人租住'))
     }
 
