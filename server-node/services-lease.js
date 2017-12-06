@@ -169,4 +169,108 @@ module.exports = {
     // 4返回ID
     return { _id: newInfo._id }
   },
+
+  leaseOut: async req => {
+    // 校验字段，错误退出
+    // 1修改状态（无需更新房屋挂载ID）
+    // 2返回out对象
+
+    if (!req.body.haoId || !req.body._id || !req.body.outTime) {
+      return Promise.reject(new FoundError('缺少参数'))
+    }
+
+    // 1根据ID修改状态
+    // 由于不需要读取上一条信息，因此houseId上并没有清除租住者ID
+    const leaseOutInfo = await db
+      .dbModel('lease', {//* //标记，初始租住类型数据类，删除类型
+        outTime: String, // 搬出时间
+        status: Number, // 状态
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body._id }, {
+        outTime: req.body.outTime,
+        status: 2, // 搬出为2，正常为1
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!leaseOutInfo) {
+      return Promise.reject(new FoundError('搬出修改失败'))
+    }
+    // 2返回ID
+    return { _id: req.body._id }
+  },
+
+  leaseList: async req => {
+    // 1查询房屋数据，租户信息（状态2）历史记录
+    // 2返回list对象
+
+    // 初始化该库
+    db.dbModel('house')
+
+    // 1数据库查询
+    const dbInfo = await db
+      .dbModel('lease')
+      .find({ haoId: db.db.Types.ObjectId(req.body.haoId) })
+      .populate({
+        path: 'haoId',
+        model: 'house',
+        select: 'fang hao haoId addTime',
+        match: { status: 1 },
+      })
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('status')
+      .equals(2)
+      .sort('-addTime')
+      .lean()
+      .exec()
+
+    dbInfo.forEach((lease) => {
+      // loading字段提供
+      if (!lease.gettingdelLease) {
+        lease.gettingdelLease = false
+      }
+      // del提示字段提供
+      if (!lease.dLeasePopFlag) {
+        lease.dLeasePopFlag = false
+      }
+      // 房屋
+      if (lease.haoId && !lease.fanghao) {
+        lease.fanghao = lease.haoId.fang + lease.haoId.hao
+      }
+    })
+
+    // 2返回数据
+    return dbInfo
+  },
+
+  leaseDel: async req => {
+    // 校验字段，错误退出
+    // 1修改状态（无需更新房屋挂载ID）
+    // 2返回del对象
+    if (!req.body._id) {
+      return Promise.reject(new FoundError('缺少参数'))
+    }
+
+    // 1根据ID修改状态
+    // 由于不需要读取上一条信息，因此houseId上并没有清除租住者ID
+    const leaseInfo = await db
+      .dbModel('lease', {//* //标记，租住数据类，删除类型
+        status: Number, // 状态
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body._id }, {
+        status: 0,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!leaseInfo) {
+      return Promise.reject(new FoundError('删除失败'))
+    }
+
+    // 2返回del对象
+    return { _id: req.body._id }
+  },
 }

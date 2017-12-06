@@ -1,37 +1,32 @@
-'use strict'
+const FoundError = require('./config-error')
+const db = require('./models')
 
-let db = require('./models')
-let superagent = require('superagent')
-let md5 = require('md5')
+const servicesHouse = require('./services-house')
 
 module.exports = {
-    newest: (req, res, callback)=>{
-        //查询最新月度信息
-        //返回det对象
-        db
-        .dbModel('month')
-        .findOne({}, {
-            month: 1,
-            remark: 1,
-            createTime: 1,
-            updateTime: 1
-        })
-        .where('userId').equals(db.db.Types.ObjectId(req.userId))
-        .where('status').equals(1)
-        .sort('-month')
-        .lean()
-        .exec()
-        .then((data)=>{
-            return Promise.reject({
-                type: true,
-                data: data
-            })
-        })
-        .catch((err)=>{
-            callback({
-                type: err.type || false,
-                data: err.data || err.message
-            })
-        })
-    }
+
+  newest: async req => {
+    // 1查询最新月度信息
+    // 2返回det对象
+
+    // 1查询最新月度信息
+    const dbInfo = await db
+      .dbModel('month')
+      .findOne({}, {
+        month: 1,
+        remark: 1,
+        createTime: 1,
+        updateTime: 1,
+      })
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('status')
+      .equals(1)
+      .sort('-month')
+      .lean()
+      .exec()
+
+    // 2返回det对象
+    return dbInfo || {}
+  },
 }

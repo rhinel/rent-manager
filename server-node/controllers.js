@@ -195,17 +195,19 @@ const inner = (req, res, next) => {
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3032, err)))
     } else if (req.params.function === 'out') {
-      service.leaseOut(req, res, (data) => {
-        res.json(code(3033, data))
-      })
+      serviceLease
+        .leaseOut(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3033, err)))
     } else if (req.params.function === 'list') {
-      service.leaseList(req, res, (data) => {
-        res.json(code(3034, data))
-      })
+      serviceLease
+        .leaseList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3034, err)))
     } else if (req.params.function === 'del') {
-      service.leaseDel(req, res, (data) => {
-        res.json(code(3035, data))
-      })
+      serviceLease.leaseDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3035, err)))
     } else {
       next()
     }
@@ -228,9 +230,10 @@ const inner = (req, res, next) => {
         res.json(code(3054, data))
       })
     } else if (req.params.function === 'newest') {
-      serviceMonth.newest(req, res, (data) => {
-        res.json(code(3055, data))
-      })
+      serviceMonth
+        .newest(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3055, err)))
     } else {
       next()
     }
