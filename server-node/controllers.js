@@ -298,37 +298,45 @@ const inner = (req, res, next) => {
   } else if (req.params.class === 'dash') {
     // 主控面板
     if (req.params.function === 'count') {
-      serviceDashb.count(req, res, (data) => {
-        res.json(code(3071, data))
-      })
+      serviceDashb
+        .count(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3071, err)))
     } else if (req.params.function === 'addNote') {
-      serviceDashb.addNote(req, res, (data) => {
-        res.json(code(3072, data))
-      })
+      serviceDashb
+        .addNote(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3072, err)))
     } else if (req.params.function === 'notes') {
-      serviceDashb.notes(req, res, (data) => {
-        res.json(code(3073, data))
-      })
+      serviceDashb
+        .notes(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3073, err)))
     } else if (req.params.function === 'waitingList') {
-      serviceDashb.waitingList(req, res, (data) => {
-        res.json(code(3074, data))
-      })
+      serviceDashb
+        .waitingList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3074, err)))
     } else if (req.params.function === 'waitingListCount') {
-      serviceDashb.waitingListCount(req, res, (data) => {
-        res.json(code(3075, data))
-      })
+      serviceDashb
+        .waitingListCount(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3075, err)))
     } else if (req.params.function === 'okList') {
-      serviceDashb.okList(req, res, (data) => {
-        res.json(code(3077, data))
-      })
+      serviceDashb
+        .okList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3077, err)))
     } else if (req.params.function === 'okListCount') {
-      serviceDashb.okListCount(req, res, (data) => {
-        res.json(code(3076, data))
-      })
+      serviceDashb
+        .okListCount(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3076, err)))
     } else if (req.params.function === 'leaseEmptyList') {
-      serviceDashb.leaseEmptyList(req, res, (data) => {
-        res.json(code(3078, data))
-      })
+      serviceDashb
+        .leaseEmptyList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3078, err)))
     } else {
       next()
     }
