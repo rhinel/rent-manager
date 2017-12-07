@@ -1,31 +1,31 @@
-let AuthLogin = resolve => require(['../components/auth/auth-login'], resolve)
-let AuthInnerIndex = resolve => require(['../components/auth/auth-inner-index'], resolve)
+const AuthLogin = () => import('../components/auth/auth-login')
+const AuthInnerIndex = () => import('../components/auth/auth-inner-index')
 
-let Dashboard = resolve => require(['../components/dashboard/dashboard-index'], resolve)
-let DashboardIndex = resolve => require(['../components/dashboard/dashboard-main'], resolve)
+const Dashboard = () => import('../components/dashboard/dashboard-index')
+const DashboardIndex = () => import('../components/dashboard/dashboard-main')
 
-let House = resolve => require(['../components/house/house-index'], resolve)
-let HouseList = resolve => require(['../components/house/house-list'], resolve)
+const House = () => import('../components/house/house-index')
+const HouseList = () => import('../components/house/house-list')
 
-let Water = resolve => require(['../components/water/water-index'], resolve)
-let WaterIndex = resolve => require(['../components/water/water-main'], resolve)
-let WaterHistory = resolve => require(['../components/water/water-history'], resolve)
+const Water = () => import('../components/water/water-index')
+const WaterIndex = () => import('../components/water/water-main')
+const WaterHistory = () => import('../components/water/water-history')
 
-let Electric = resolve => require(['../components/electric/electric-index'], resolve)
-let ElectricIndex = resolve => require(['../components/electric/electric-main'], resolve)
-let ElectricHistory = resolve => require(['../components/electric/electric-history'], resolve)
+const Electric = () => import('../components/electric/electric-index')
+const ElectricIndex = () => import('../components/electric/electric-main')
+const ElectricHistory = () => import('../components/electric/electric-history')
 
-let Lease = resolve => require(['../components/lease/lease-index'], resolve)
-let LeaseIndex = resolve => require(['../components/lease/lease-main'], resolve)
-let LeaseHistory = resolve => require(['../components/lease/lease-history'], resolve)
+const Lease = () => import('../components/lease/lease-index')
+const LeaseIndex = () => import('../components/lease/lease-main')
+const LeaseHistory = () => import('../components/lease/lease-history')
 
-let Rent = resolve => require(['../components/rent/rent-index'], resolve)
-let RentMonth = resolve => require(['../components/rent/rent-month'], resolve)
-let RentIndex = resolve => require(['../components/rent/rent-main'], resolve)
-let RentHistory = resolve => require(['../components/rent/rent-history'], resolve)
+const Rent = () => import('../components/rent/rent-index')
+const RentMonth = () => import('../components/rent/rent-month')
+const RentIndex = () => import('../components/rent/rent-main')
+const RentHistory = () => import('../components/rent/rent-history')
 
-let System = resolve => require(['../components/system/system-index'], resolve)
-let SystemIndex = resolve => require(['../components/system/system-main'], resolve)
+const System = () => import('../components/system/system-index')
+const SystemIndex = () => import('../components/system/system-main')
 
 export default {
   routes: [
@@ -33,7 +33,7 @@ export default {
     {// 登陆层
       path: '/login',
       component: AuthLogin,
-      alias: ''
+      alias: '',
     },
     {// inner层
       path: '/inner',
@@ -48,9 +48,9 @@ export default {
               path: 'index',
               meta: { name: '主控面板' },
               component: DashboardIndex,
-              alias: ''
-            }
-          ]
+              alias: '',
+            },
+          ],
         },
         {// 房屋管理
           path: 'house',
@@ -60,9 +60,9 @@ export default {
               path: 'index',
               meta: { name: '房屋管理' },
               component: HouseList,
-              alias: ''
-            }
-          ]
+              alias: '',
+            },
+          ],
         },
         {// 水费管理
           path: 'water',
@@ -72,14 +72,14 @@ export default {
               path: 'index',
               meta: { name: '水费管理' },
               component: WaterIndex,
-              alias: ''
+              alias: '',
             },
             {
               path: 'history',
               meta: { name: '水费历史' },
-              component: WaterHistory
-            }
-          ]
+              component: WaterHistory,
+            },
+          ],
         },
         {// 电费管理
           path: 'electric',
@@ -89,14 +89,14 @@ export default {
               path: 'index',
               meta: { name: '电费管理' },
               component: ElectricIndex,
-              alias: ''
+              alias: '',
             },
             {
               path: 'history',
               meta: { name: '电费历史' },
-              component: ElectricHistory
-            }
-          ]
+              component: ElectricHistory,
+            },
+          ],
         },
         {// 租住管理
           path: 'lease',
@@ -106,14 +106,14 @@ export default {
               path: 'index',
               meta: { name: '租住管理' },
               component: LeaseIndex,
-              alias: ''
+              alias: '',
             },
             {
               path: 'history',
               meta: { name: '租住历史' },
-              component: LeaseHistory
-            }
-          ]
+              component: LeaseHistory,
+            },
+          ],
         },
         {// 收租管理
           path: 'rent',
@@ -123,19 +123,19 @@ export default {
               path: 'index',
               meta: { name: '收租管理' },
               component: RentIndex,
-              alias: ''
+              alias: '',
             },
             {
               path: 'month',
               meta: { name: '月租周期' },
-              component: RentMonth
+              component: RentMonth,
             },
             {
               path: 'history',
               meta: { name: '收租历史' },
-              component: RentHistory
-            }
-          ]
+              component: RentHistory,
+            },
+          ],
         },
         {// 系统管理
           path: 'system',
@@ -145,11 +145,11 @@ export default {
               path: 'index',
               meta: { name: '系统管理' },
               component: SystemIndex,
-              alias: ''
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              alias: '',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
