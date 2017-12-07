@@ -59,7 +59,7 @@ module.exports = {
       .find({ monthId: db.db.Types.ObjectId(req.body.monthId) })
       .where('status')
       .equals(1)
-      .sort('-addTime')
+      .sort('-addTime fanghao')
       .lean()
       .exec()
 
@@ -359,7 +359,7 @@ module.exports = {
       .equals(db.db.Types.ObjectId(req.userId))
       .where('status')
       .equals(1)
-      .sort('-addTime')
+      .sort('-addTime fanghao')
       .lean()
       .exec()
 
@@ -429,7 +429,7 @@ module.exports = {
       .find({ monthId: db.db.Types.ObjectId(houseAndMonth.monthInfo._id) })
       .where('status')
       .equals(1)
-      .sort('-addTime')
+      .sort('-addTime fanghao')
       .lean()
       .exec()
 
@@ -489,7 +489,7 @@ module.exports = {
       .equals(db.db.Types.ObjectId(req.userId))
       .where('status')
       .equals(1)
-      .sort('-addTime')
+      .sort('-addTime fanghao')
       .lean()
       .exec()
 
@@ -530,7 +530,7 @@ module.exports = {
       })
       .where('status')
       .equals(1)
-      .sort('-type.typeTime.3')
+      .sort('-type.typeTime.3 fanghao')
       .lean()
       .exec()
 
@@ -613,7 +613,7 @@ module.exports = {
       })
       .where('status')
       .equals(1)
-      .sort('-type.typeTime.3')
+      .sort('-type.typeTime.3 fanghao')
       .lean()
       .exec()
 
