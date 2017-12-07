@@ -110,7 +110,7 @@ module.exports = {
     return dbInfo
   },
 
-  monthFind: async req => {
+  async monthFind(req) {
     // 1查询数据，错误退出
     // 2返回find对象
 
@@ -131,7 +131,8 @@ module.exports = {
       return Promise.reject(new FoundError('月度数据不存在'))
     }
 
-    const newest = await this.newest(req)
+    const newest = await this
+      .newest(req)
 
     if (findMonth._id.toString() === newest._id.toString()) {
       findMonth.newest = true

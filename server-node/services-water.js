@@ -21,7 +21,7 @@ module.exports = {
 
     // 0code 1 校验房屋ID
     await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
+      .houseFind(req)
 
     // 1插入水表抄表记录
     const addData = await db
@@ -182,7 +182,7 @@ module.exports = {
 
     // 0code 1 校验房屋ID
     await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
+      .houseFind(req)
 
     // 初始化该库
     db.dbModel('house')
@@ -230,7 +230,7 @@ module.exports = {
 
     // 0code 1 校验房屋ID
     await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
+      .houseFind(req)
 
     // 1初始化该库
     db.dbModel('house')
@@ -285,7 +285,7 @@ module.exports = {
 
     // 0code 1 校验房屋ID
     await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
+      .houseFind(req)
 
     // 1插入数据
     const addInfo = await db
@@ -369,7 +369,7 @@ module.exports = {
 
     // 0code 1 校验房屋ID
     await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
+      .houseFind(req)
 
     // 1根据ID修改状态
     const waterDel = await db
@@ -435,7 +435,7 @@ module.exports = {
 
     // 0code 1 校验房屋ID
     await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
+      .houseFind(req)
 
     // 1根据ID修改状态
     const waterCalDel = await db

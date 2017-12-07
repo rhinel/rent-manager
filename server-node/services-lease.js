@@ -63,7 +63,7 @@ module.exports = {
 
     // 0code 1 校验房屋ID
     await servicesHouse
-      .houseFind({ body: { _id: req.body.haoId } })
+      .houseFind(req)
 
     const leaseModel = {//* //标记，租住数据类型
       name: String, // 租户姓名
