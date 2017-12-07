@@ -219,17 +219,20 @@ const inner = (req, res, next) => {
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3051, err)))
     } else if (req.params.function === 'list') {
-      service.monthList(req, res, (data) => {
-        res.json(code(3052, data))
-      })
+      serviceMonth
+        .monthList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3052, err)))
     } else if (req.params.function === 'del') {
-      service.monthDel(req, res, (data) => {
-        res.json(code(3053, data))
-      })
+      serviceMonth
+        .monthDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3053, err)))
     } else if (req.params.function === 'find') {
-      service.monthFind(req, res, (data) => {
-        res.json(code(3054, data))
-      })
+      serviceMonth
+        .monthFind(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3054, err)))
     } else if (req.params.function === 'newest') {
       serviceMonth
         .newest(req, res)

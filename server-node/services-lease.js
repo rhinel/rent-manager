@@ -195,7 +195,7 @@ module.exports = {
       })
       .exec()
 
-    if (!leaseOutInfo) {
+    if (!leaseOutInfo || leaseOutInfo.status !== 1) {
       return Promise.reject(new FoundError('搬出修改失败'))
     }
     // 2返回ID
@@ -267,7 +267,7 @@ module.exports = {
       })
       .exec()
 
-    if (!leaseInfo) {
+    if (!leaseInfo || !leaseInfo.status) {
       return Promise.reject(new FoundError('删除失败'))
     }
 

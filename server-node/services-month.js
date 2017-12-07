@@ -1,8 +1,6 @@
 const FoundError = require('./config-error')
 const db = require('./models')
 
-const servicesHouse = require('./services-house')
-
 module.exports = {
 
   monthAdd: async req => {
@@ -78,6 +76,98 @@ module.exports = {
 
     // 4返回id
     return { _id: createMonth._id }
+  },
+
+  monthList: async req => {
+    // 1查询数据
+    // 2返回list对象
+
+    // 1数据库查询
+    const dbInfo = await db
+      .dbModel('month')
+      .find({}, {
+        month: 1,
+        remark: 1,
+        createTime: 1,
+        updateTime: 1,
+      })
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('status')
+      .equals(1)
+      .sort('-month')
+      .lean()
+      .exec()
+
+    dbInfo.forEach(month => {
+      // loading字段提供
+      if (!month.gettingdelMonth) month.gettingdelMonth = false
+      // del提示字段提供
+      if (!month.dMonthPopFlag) month.dMonthPopFlag = false
+    })
+
+    // 2返回list对象
+    return dbInfo
+  },
+
+  monthFind: async req => {
+    // 1查询数据，错误退出
+    // 2返回find对象
+
+    if (!req.body._id) {
+      return Promise.reject(new FoundError('缺少ID'))
+    }
+
+    // 1数据库查询
+    const findMonth = await db
+      .dbModel('month')
+      .findOne({ _id: req.body._id })
+      .where('status')
+      .equals(1)
+      .lean()
+      .exec()
+
+    if (!findMonth) {
+      return Promise.reject(new FoundError('月度数据不存在'))
+    }
+
+    const newest = await this.newest(req)
+
+    if (findMonth._id.toString() === newest._id.toString()) {
+      findMonth.newest = true
+    } else {
+      findMonth.newest = false
+    }
+
+    return findMonth
+  },
+
+  monthDel: async req => {
+    // 0校验字段，错误提出
+    // 1修改状态
+    // 2返回del对象
+    if (!req.body._id) {
+      return Promise.reject(new FoundError('缺少ID'))
+    }
+
+    // 1根据ID修改状态
+    const delInfo = await db
+      .dbModel('month', {//* //标记，初始房屋数据类，删除类型
+        status: Number, // 状态
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body._id }, {
+        status: 0,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!delInfo || !delInfo.status) {
+      return Promise.reject(new FoundError('月份删除失败'))
+    }
+
+    // 2返回id
+    return { _id: req.body._id }
   },
 
   newest: async req => {
