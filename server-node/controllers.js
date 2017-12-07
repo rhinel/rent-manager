@@ -248,9 +248,10 @@ const inner = (req, res, next) => {
         res.json(code(3062, data))
       })
     } else if (req.params.function === 'listByMonth') {
-      service.rentListByMonth(req, res, (data) => {
-        res.json(code(3061, data))
-      })
+      serviceRent
+        .rentListByMonth(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3061, err)))
     } else if (req.params.function === 'type') {
       service.rentType(req, res, (data) => {
         res.json(code(3063, data))
@@ -268,21 +269,24 @@ const inner = (req, res, next) => {
         res.json(code(3066, data))
       })
     } else if (req.params.function === 'listByNewestMonth') {
-      serviceRent.listByNewestMonth(req, res, (data) => {
-        res.json(code(3067, data))
-      })
+      serviceRent
+        .listByNewestMonth(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3067, err)))
     } else if (req.params.function === 'listByHaoAndMonth') {
-      serviceRent.listByHaoAndMonth(req, res, (data) => {
-        res.json(code(3068, data))
-      })
+      serviceRent
+        .listByHaoAndMonth(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3068, err)))
     } else if (req.params.function === 'listByLandordTemp') {
       service.rentListByLandordTemp(req, res, (data) => {
         res.json(code(3069, data))
       })
     } else if (req.params.function === 'one') {
-      serviceRent.one(req, res, (data) => {
-        res.json(code(30610, data))
-      })
+      serviceRent
+        .one(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 30610, err)))
     } else {
       next()
     }
