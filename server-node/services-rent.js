@@ -454,7 +454,13 @@ module.exports = {
 
     if (!req.body.monthId) {
       return Promise.reject(new FoundError('缺少rentId'))
+    } else if (!req.body.haoId) {
+      return Promise.reject(new FoundError('缺少参数'))
     }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind(req)
 
     // 初始化该库
     db.dbModel('house')
@@ -581,6 +587,10 @@ module.exports = {
   rentListByLandordTemp: async req => {
     // 1查询数据
     // 2返回list对象
+
+    if (!req.body.monthId) {
+      return Promise.reject(new FoundError('缺少rentId'))
+    }
 
     // 初始化该库
     db.dbModel('month')

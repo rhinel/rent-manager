@@ -1,10 +1,10 @@
-'use strict'
+const FoundError = require('./config-error')
+const db = require('./models')
 
-let db = require('./models')
-let superagent = require('superagent')
-let md5 = require('md5')
+const servicesHouse = require('./services-house')
 
 module.exports = {
+
 	count: (req, res, callback)=>{
 		//查询房屋数
 		let count = {}
@@ -40,6 +40,7 @@ module.exports = {
 			})
 		})
 	},
+
 	leaseEmptyList: (req, res, callback)=>{
 		//查询房屋数
 		let count = {}
@@ -78,6 +79,7 @@ module.exports = {
 			})
 		})
 	},
+
 	addNote: (req, res, callback)=>{
 		//不做数据校验
 		//判断ID
@@ -156,6 +158,7 @@ module.exports = {
 			})
 		}
 	},
+
 	notes: (req, res, callback)=>{
 		//查询记事
 		//返回list对象
@@ -190,6 +193,7 @@ module.exports = {
 			})
 		})
 	},
+
 	waitingList: (req, res, callback)=>{
 		//判断类型
 		//查询列表
@@ -261,6 +265,7 @@ module.exports = {
 			})
 		})
 	},
+
 	waitingListCount: (req, res, callback)=>{
 		//判断类型
 		//查询列表
@@ -331,6 +336,7 @@ module.exports = {
 			})
 		})
 	},
+
 	okList: (req, res, callback)=>{
 		//判断类型
 		//查询列表
@@ -417,6 +423,7 @@ module.exports = {
 			})
 		})
 	},
+
 	okListCount: (req, res, callback)=>{
 		//判断类型
 		//查询列表
