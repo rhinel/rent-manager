@@ -5,13 +5,14 @@ import Vue from 'vue'
 import MintUI from 'mint-ui'
 import 'normalize.css'
 
-// 应用配置加载
-import App from '../index'
 // import stores from './stores'
 // import routes from './routes'
 // import routerEach from './routerEach'
 import ajax from 'common/js/request'
 import plugin from 'common/js/plugin'
+
+// 应用配置加载
+import App from '../index'
 
 // 载入应用层
 // Vue.use(Vuex)
