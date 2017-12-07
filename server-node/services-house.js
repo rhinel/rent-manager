@@ -87,20 +87,22 @@ module.exports = {
     // 1查询数据，错误退出
     // 2返回find对象
 
-    if (!req.body._id) {
+    if (!req.body.haoId || !req.body._id) {
       return Promise.reject(new FoundError('缺少房屋ID'))
     }
+
+    const id = req.body._haoId || req.body._id
 
     // 数据库查询
     const house = await db
       .dbModel('house')
-      .findOne({ _id: req.body._id })
+      .findOne({ _id: id })
       .where('status')
       .equals(1)
       .exec()
 
     if (!house) {
-      const err = new FoundError('数据不存在')
+      const err = new FoundError('房屋数据不存在')
       err.code = 1
       return Promise.reject(err)
     }

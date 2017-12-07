@@ -1,6 +1,8 @@
 const FoundError = require('./config-error')
 const db = require('./models')
 
+const servicesHouse = require('./services-house')
+
 module.exports = {
 
   rentListByMonth: async req => {
@@ -86,6 +88,79 @@ module.exports = {
     return dbInfo.houseInfo
   },
 
+  rentAdd: async req => {
+    // 不做数据校验
+    // 1插入数据（存储新水费记录，电费记录，租住信息），错误退出
+    // 2更新房屋挂载ID，错误提出
+    // 3返回add对象
+
+    if (!req.body.haoId) {
+      return Promise.reject(new FoundError('请选择房屋'))
+    } else if (!req.body.monthId) {
+      return Promise.reject(new FoundError('请选择月份'))
+    }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind(req)
+
+    // 1插入数据
+    const addInfo = await db
+      .dbModel('rent', {//* //标记，初始计租数据数数据类，新增类型
+        userId: db.db.Schema.Types.ObjectId, // 用户ID
+        haoId: db.db.Schema.Types.ObjectId, // 房屋ID，全拼
+        monthId: db.db.Schema.Types.ObjectId, // 月度周期ID，全拼
+        calWater: Object, // 水费计费
+        calElectric: Object, // 电费计费
+        lease: Object, // 租住信息
+        fanghao: String, // 房屋
+        remark: String, // 计费备注
+        addTime: String, // 计费时间
+        fix: Boolean, // 结果是否修正
+        calRentResult: Number, // 计算结果
+        status: Number, // 状态
+        createTime: Number, // 创建时间
+      })
+      .create({
+        userId: req.userId,
+        haoId: req.body.haoId,
+        monthId: req.body.monthId,
+        calWater: req.body.calWater,
+        calElectric: req.body.calElectric,
+        lease: req.body.lease,
+        fanghao: req.body.fanghao,
+        remark: req.body.remark,
+        addTime: req.body.addTime,
+        fix: req.body.fix,
+        calRentResult: req.body.calRentResult,
+        status: 1,
+        createTime: Date.now(),
+      })
+
+    if (!addInfo) {
+      return Promise.reject(new FoundError('插入失败'))
+    }
+
+    // 2更新房屋挂载ID
+    const house = await db
+      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新计租数据引用类型
+        rentId: db.db.Schema.Types.ObjectId,
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body.haoId }, {
+        rentId: addInfo._id,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!house) {
+      return Promise.reject(new FoundError('房屋不存在，无法更新抄租单信息ID'))
+    }
+
+    // 3返回数据
+    return { _id: addInfo._id }
+  },
+
   one: async req => {
     // 1通过ID查询
     // 2返回det对象
@@ -132,6 +207,171 @@ module.exports = {
 
     // 2返回
     return rentInfo
+  },
+
+  rentType: async req => {
+    // 校验字段，错误退出
+    // 1修改字段状态
+    // 2返回edit对象
+
+    if (!req.body.rentId) {
+      return Promise.reject(new FoundError('请选择收租单'))
+    }
+
+    // 1根据ID修改状态
+    const editInfo = await db
+      .dbModel('rent', {//* //标记，计租数据类，状态修改类型
+        type: {
+          checkAll: Boolean,
+          isIndeterminate: Boolean,
+          type: Array,
+          typeTime: {
+            1: String,
+            2: String,
+            3: String,
+          },
+        },
+        lease: { payType: Number },
+        remark: String,
+
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body.rentId }, {
+        type: {
+          checkAll: req.body.checkAll,
+          isIndeterminate: req.body.isIndeterminate,
+          type: req.body.type,
+          typeTime: req.body.typeTime,
+        },
+        'lease.payType': req.body.payType,
+        remark: req.body.remark,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!editInfo) {
+      return Promise.reject(new FoundError('修改失败，数据不存在'))
+    }
+
+    // 2返回id
+    return { _id: req.body.rentId }
+  },
+
+  rentDel: async req => {
+    // 校验数据，错误退出
+    // 1修改状态，错误退出
+    // 2查询上一条数据
+    // 3更新房屋挂载ID，错误退出
+    // 4返回del对象
+
+    if (!req.body._id || !req.body.haoId) {
+      return Promise.reject(new FoundError('缺少参数'))
+    }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind(req)
+
+    // 1根据ID修改状态
+    const rentDel = await db
+      .dbModel('rent', {//* //标记，初始电费计费数据类，删除类型
+        status: Number, // 状态
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body._id }, {
+        status: 0,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!rentDel || !rentDel.status) {
+      return Promise.reject(new FoundError('删除失败'))
+    }
+
+    // 2查询上一条租单计费数据
+    const rentPrev = await db
+      .dbModel('rent')
+      .findOne({})
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('haoId')
+      .equals(db.db.Types.ObjectId(req.body.haoId))
+      .where('status')
+      .equals(1)
+      .sort('-addTime')
+      .exec()
+
+    const rentPrevId = rentPrev ? rentPrev._id : null
+
+    // 3更新房屋最新租单计费信息
+    const house = await db
+      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新电表计费引用类型
+        rentId: db.db.Schema.Types.ObjectId,
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body.haoId }, {
+        rentId: rentPrevId,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!house) {
+      return Promise.reject(new FoundError('房屋不存在，无法删除租单'))
+    }
+
+    // 4返回ID
+    return { _id: req.body._id }
+  },
+
+  rentListByHao: async req => {
+    // 1查询数据
+    // 2返回list对象
+
+    if (!req.body.haoId) {
+      return Promise.reject(new FoundError('缺少参数'))
+    }
+
+    // 0code 1 校验房屋ID
+    await servicesHouse
+      .houseFind(req)
+
+    // 初始化挂载信息
+    db.dbModel('house')
+    db.dbModel('month')
+
+    // 1查询数据
+    const dbInfo = await db
+      .dbModel('rent')
+      .find({ haoId: db.db.Types.ObjectId(req.body.haoId) })
+      .populate({
+        path: 'haoId',
+        model: 'house',
+        select: 'fang hao haoId addTime',
+        match: { status: 1 },
+      })
+      .populate({
+        path: 'monthId',
+        model: 'month',
+        select: 'month',
+        match: { status: 1 },
+      })
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('status')
+      .equals(1)
+      .sort('-addTime')
+      .lean()
+      .exec()
+
+    dbInfo.forEach(rent => {
+      // 房屋
+      if (rent.haoId && !rent.fanghao) {
+        rent.fanghao = rent.haoId.fang + rent.haoId.hao
+      }
+    })
+
+    // 2返回对象
+    return dbInfo
   },
 
   listByNewestMonth: async req => {
@@ -256,5 +496,159 @@ module.exports = {
 
     // 2返回数据
     return dbInfo
+  },
+
+  rentListByLandord: async req => {
+    // 1查询数据
+    // 2返回list对象
+
+    if (!req.body.monthId) {
+      return Promise.reject(new FoundError('缺少rentId'))
+    }
+
+    // 初始化该库
+    db.dbModel('month')
+
+    // 1查询数据
+    const dbInfo = await db
+      .dbModel('rent')
+      .find({
+        'type.type': 3,
+        monthId: db.db.Types.ObjectId(req.body.monthId),
+      })
+      .populate({
+        path: 'monthId',
+        model: 'month',
+        select: 'month',
+        match: { status: 1 },
+      })
+      .where('status')
+      .equals(1)
+      .sort('-type.typeTime.3')
+      .lean()
+      .exec()
+
+    const list = {}
+    dbInfo.forEach(rent => {
+      const time = new Date(rent.type.typeTime[3]).getTime()
+      // 初始化字段
+      if (!list[time]) {
+        list[time] = {
+          // 收租类型
+          0: 0,
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          all: 0,
+          // 定制计算，不进行通用区分
+          six: 0,
+          sixRent: 0,
+          sixCost: 0,
+          sixList: [],
+          eight: 0,
+          eightRent: 0,
+          eightCost: 0,
+          eightList: [],
+        }
+      }
+      // 分类统计
+      list[time][rent.lease.payType] += rent.calRentResult
+      list[time].all += rent.calRentResult
+      // 非房租都认为是水电费
+      // (i.calWater ? i.calWater.calWaterResult : 0) +
+      // (i.calElectric ? i.calElectric.calElectricResult : 0)
+      rent.cost = rent.calRentResult - rent.lease.rent
+      // 定制计算，分类房屋，租单数据没有分开房屋，其实可以的
+      if (rent.fanghao.indexOf('8坊68栋') >= 0) {
+        list[time].eight += rent.calRentResult
+        list[time].eightRent += rent.lease.rent
+        list[time].eightCost += rent.cost
+        list[time].eightList.push(rent)
+      } else {
+        list[time].six += rent.calRentResult
+        list[time].sixRent += rent.lease.rent
+        list[time].sixCost += rent.cost
+        list[time].sixList.push(rent)
+      }
+    })
+
+    // 2返回数据
+    return list
+  },
+
+  rentListByLandordTemp: async req => {
+    // 1查询数据
+    // 2返回list对象
+
+    // 初始化该库
+    db.dbModel('month')
+
+    // 1查询数据
+    const dbInfo = await db
+      .dbModel('rent')
+      .find({
+        'type.type': {
+          $in: [1],
+          $ne: 3,
+        },
+        monthId: db.db.Types.ObjectId(req.body.monthId),
+      })
+      .populate({
+        path: 'monthId',
+        model: 'month',
+        select: 'month',
+        match: { status: 1 },
+      })
+      .where('status')
+      .equals(1)
+      .sort('-type.typeTime.3')
+      .lean()
+      .exec()
+
+    const list = {
+      // 收租类型
+      0: 0,
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      all: 0,
+      // 定制计算，不进行通用区分
+      six: 0,
+      sixRent: 0,
+      sixCost: 0,
+      sixList: [],
+      eight: 0,
+      eightRent: 0,
+      eightCost: 0,
+      eightList: [],
+    }
+
+    dbInfo.forEach(rent => {
+      list[rent.lease.payType] += rent.calRentResult
+      list.all += rent.calRentResult
+      // 非房租都认为是水电费
+      // (i.calWater ? i.calWater.calWaterResult : 0) +
+      // (i.calElectric ? i.calElectric.calElectricResult : 0)
+      rent.cost = rent.calRentResult - rent.lease.rent
+      // 定制计算，分类房屋，租单数据没有分开房屋，其实可以的
+      if (rent.fanghao.indexOf('8坊68栋') >= 0) {
+        list.eight += rent.calRentResult
+        list.eightRent += rent.lease.rent
+        list.eightCost += rent.cost
+        list.eightList.push(rent)
+      } else {
+        list.six += rent.calRentResult
+        list.sixRent += rent.lease.rent
+        list.sixCost += rent.cost
+        list.sixList.push(rent)
+      }
+    })
+
+    // 2返回数据
+    return list
   },
 }

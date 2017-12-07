@@ -1,5 +1,5 @@
 const serviceAuth = require('./services-auth')
-const service = require('./services')
+// const service = require('./services')
 const serviceDashb = require('./services-dashboard')
 const serviceRent = require('./services-rent')
 const serviceMonth = require('./services-month')
@@ -244,30 +244,35 @@ const inner = (req, res, next) => {
   } else if (req.params.class === 'rent') {
     // 计租管理
     if (req.params.function === 'add') {
-      service.rentAdd(req, res, (data) => {
-        res.json(code(3062, data))
-      })
+      serviceRent
+        .rentAdd(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3062, err)))
     } else if (req.params.function === 'listByMonth') {
       serviceRent
         .rentListByMonth(req, res)
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3061, err)))
     } else if (req.params.function === 'type') {
-      service.rentType(req, res, (data) => {
-        res.json(code(3063, data))
-      })
+      serviceRent
+        .rentType(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3063, err)))
     } else if (req.params.function === 'del') {
-      service.rentDel(req, res, (data) => {
-        res.json(code(3064, data))
-      })
+      serviceRent
+        .rentDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3064, err)))
     } else if (req.params.function === 'listByHao') {
-      service.rentListByHao(req, res, (data) => {
-        res.json(code(3065, data))
-      })
+      serviceRent
+        .rentListByHao(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3065, err)))
     } else if (req.params.function === 'listByLandord') {
-      service.rentListByLandord(req, res, (data) => {
-        res.json(code(3066, data))
-      })
+      serviceRent
+        .rentListByLandord(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3066, err)))
     } else if (req.params.function === 'listByNewestMonth') {
       serviceRent
         .listByNewestMonth(req, res)
@@ -279,9 +284,9 @@ const inner = (req, res, next) => {
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3068, err)))
     } else if (req.params.function === 'listByLandordTemp') {
-      service.rentListByLandordTemp(req, res, (data) => {
-        res.json(code(3069, data))
-      })
+      serviceRent.rentListByLandordTemp(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3069, err)))
     } else if (req.params.function === 'one') {
       serviceRent
         .one(req, res)

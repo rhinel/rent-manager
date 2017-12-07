@@ -56,525 +56,108 @@ module.exports = {
     房屋ID ok
   */
 
-  rentAdd (req, res, callback) {
-    //不做数据校验
-    //插入数据（存储新水费记录，电费记录，租住信息），错误退出
-    //更新房屋挂载ID，错误提出
-    //返回add对象
-    let addData
-    db
-    .dbModel('rent', {//*//标记，初始计租数据数数据类，新增类型
-      userId: db.db.Schema.Types.ObjectId, //用户ID
-      haoId: db.db.Schema.Types.ObjectId, //房屋ID，全拼
-      monthId: db.db.Schema.Types.ObjectId, //月度周期ID，全拼
-      calWater: Object, //水费计费
-      calElectric: Object, //电费计费
-      lease: Object, //租住信息
-      fanghao: String, //房屋
-      remark: String, //计费备注
-      addTime: String, //计费时间
-      fix: Boolean, //结果是否修正
-      calRentResult: Number, //计算结果
-      status: Number, //状态
-      createTime: Number //创建时间
-    })
-    .create({
-      userId: req.userId,
-      haoId: req.body.haoId,
-      monthId: req.body.monthId,
-      calWater: req.body.calWater,
-      calElectric: req.body.calElectric,
-      lease: req.body.lease,
-      fanghao: req.body.fanghao,
-      remark: req.body.remark,
-      addTime: req.body.addTime,
-      fix: req.body.fix,
-      calRentResult: req.body.calRentResult,
-      status: 1,
-      createTime: Date.now()
-    })
-    .then((data)=>{
-      if (data) {
-        addData = data
-        return Promise.resolve(data)
-      } else {
-        return Promise.reject({
-          type: false
-        })
-      }
-    })
-    //更新房屋最新计租数信息
-    .then((data)=>{
-      return db
-      .dbModel('house', {//*//标记，更新房屋数据类，扩增最新计租数据引用类型
-        rentId: db.db.Schema.Types.ObjectId,
-        updateTime: Number //更新时间
-      })
-      .findOneAndUpdate({_id: req.body.haoId}, {
-        rentId: addData._id,
-        updateTime: Date.now()
-      })
-      .exec()
-      .then((data)=>{
-        if (data) {
-          return Promise.reject({
-            type: true,
-            data: addData
-          })
-        } else {
-          return Promise.reject({
-            type: false
-          })
-        }
-      })
-    })
-    .catch((err)=>{
-      callback({
-        type: err.type || false,
-        data: err.data || err.message
-      })
-    })
-  },
-  rentType: (req, res, callback)=>{
-    //校验字段，错误退出
-    //修改字段状态
-    //返回del对象
-    if (!req.body.rentId) {
-      callback({
-        type: false
-      })
-    } else {
-      db
-      //根据ID修改状态
-      .dbModel('rent', {//*//标记，计租数据类，状态修改类型
-        type: {
-          checkAll: Boolean,
-          isIndeterminate: Boolean,
-          type: Array,
-          typeTime: {
-            '1': String,
-            '2': String,
-            '3': String
-          }
-        },
-        lease: {
-          payType: Number
-        },
-        remark: String,
-
-        updateTime: Number //更新时间
-      })
-      .findOneAndUpdate({_id: req.body.rentId}, {
-        type: {
-          checkAll: req.body.checkAll,
-          isIndeterminate: req.body.isIndeterminate,
-          type: req.body.type,
-          typeTime: req.body.typeTime
-        },
-        'lease.payType': req.body.payType,
-        remark: req.body.remark,
-        updateTime: Date.now()
-      })
-      .exec()
-      .then((data)=>{
-        return Promise.reject({
-          type: true,
-          data: data
-        })
-      })
-      .catch((err)=>{
-        callback({
-          type: err.type || false,
-          data: err.data || err.message
-        })
-      })
-    }
-  },
-  rentDel: (req, res, callback)=>{
-    //校验数据，错误退出
-    //修改状态，错误退出
-    //查询上一条数据
-    //更新房屋挂载ID，错误退出
-    //返回del对象
-    if (!req.body._id || !req.body.haoId) {
-      callback({
-        type: false
-      })
-    } else {
-      let delData
-      let moveData
-      db
-      //根据ID修改状态
-      .dbModel('rent', {//*//标记，初始电费计费数据类，删除类型
-        status: Number, //状态
-        updateTime: Number //更新时间
-      })
-      .findOneAndUpdate({_id: req.body._id}, {
-        status: 0,
-        updateTime: Date.now()
-      })
-      .exec()
-      .then((data)=>{
-        if (data) {
-          delData = data
-          return Promise.resolve(data)
-        } else {
-          return Promise.reject({
-            type: false
-          })
-        }
-      })
-      //查询上一条电表计费数据
-      .then((data)=>{
-        return db
-        .dbModel('rent')
-        .findOne({})
-        .where('userId').equals(db.db.Types.ObjectId(req.userId))
-        .where('haoId').equals(db.db.Types.ObjectId(req.body.haoId))
-        .where('status').equals(1)
-        .sort('-addTime')
-        .exec()
-        .then((data)=>{
-          if (data) {
-            moveData = data
-          } else {
-            moveData = {_id: null}
-          }
-          return Promise.resolve(data)
-        })
-      })
-      //更新房屋最新电表计费信息
-      .then((data)=>{
-        return db
-        .dbModel('house', {//*//标记，更新房屋数据类，扩增最新电表计费引用类型
-          rentId: db.db.Schema.Types.ObjectId,
-          updateTime: Number //更新时间
-        })
-        .findOneAndUpdate({_id: req.body.haoId}, {
-          rentId: moveData._id,
-          updateTime: Date.now()
-        })
-        .exec()
-        .then((data)=>{
-          if (data) {
-            return Promise.reject({
-              type: true,
-              data: delData
-            })
-          } else {
-            return Promise.reject({
-              type: false
-            })
-          }
-        })
-      })
-      .catch((err)=>{
-        callback({
-          type: err.type || false,
-          data: err.data || err.message
-        })
-      })
-    }
-  },
-  rentListByLandord: (req, res, callback)=>{
-    //查询数据
-    //返回list对象
-    db.dbModel('month')
-    db
-    .dbModel('rent')
-    .find({
-      'type.type': 3,
-      monthId: db.db.Types.ObjectId(req.body.monthId)
-    })
-    .populate({
-      path: 'monthId',
-      model: 'month',
-      select: 'month',
-      match: {status: 1}
-    })
-    .where('status').equals(1)
-    .sort('-type.typeTime.3')
-    .lean()
-    .exec()
-    .then((data)=>{
-      let list = {}
-      data.forEach((i)=>{
-        let _date = new Date(new Date(i.type.typeTime[3]).toLocaleDateString()).getTime()
-        if (!list[_date]) {
-          list[_date] = {
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            all: 0,
-            // 定制计算，不进行通用区分
-            six: 0,
-            sixRent: 0,
-            sixCost: 0,
-            sixList: [],
-            eight: 0,
-            eightRent: 0,
-            eightCost: 0,
-            eightList: []
-          }
-        }
-        list[_date][i.lease.payType] += i.calRentResult
-        list[_date].all += i.calRentResult
-        // 定制计算
-        i.cost = i.calRentResult - i.lease.rent // (i.calWater ? i.calWater.calWaterResult : 0) + (i.calElectric ? i.calElectric.calElectricResult : 0)
-        if (i.fanghao.indexOf('8坊68栋') >= 0) {
-          list[_date].eight += i.calRentResult
-          list[_date].eightRent += i.lease.rent
-          list[_date].eightCost += i.cost
-          list[_date].eightList.push(i)
-        } else {
-          list[_date].six += i.calRentResult
-          list[_date].sixRent += i.lease.rent
-          list[_date].sixCost += i.cost
-          list[_date].sixList.push(i)
-        }
-      })
-
-      return Promise.reject({
-        type: true,
-        data: list
-      })
-    })
-    .catch((err)=>{
-      callback({
-        type: err.type || false,
-        data: err.data || err.message
-      })
-    })
-  },
-  rentListByLandordTemp: (req, res, callback)=>{
-    //查询数据
-    //返回list对象
-    db.dbModel('month')
-    db
-    .dbModel('rent')
-    .find({
-      'type.type': {
-        '$in': [1],
-        '$ne': 3
-      },
-      monthId: db.db.Types.ObjectId(req.body.monthId)
-    })
-    .populate({
-      path: 'monthId',
-      model: 'month',
-      select: 'month',
-      match: {status: 1}
-    })
-    .where('status').equals(1)
-    .sort('-type.typeTime.3')
-    .lean()
-    .exec()
-    .then((data)=>{
-      let list = {
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        all: 0,
-        // 定制计算，不进行通用区分
-        six: 0,
-        sixRent: 0,
-        sixCost: 0,
-        sixList: [],
-        eight: 0,
-        eightRent: 0,
-        eightCost: 0,
-        eightList: []
-      }
-      data.forEach((i)=>{
-        list[i.lease.payType] += i.calRentResult
-        list.all += i.calRentResult
-        i.cost = i.calRentResult - i.lease.rent // (i.calWater ? i.calWater.calWaterResult : 0) + (i.calElectric ? i.calElectric.calElectricResult : 0)
-        // 定制计算
-        if (i.fanghao.indexOf('8坊68栋') >= 0) {
-          list.eight += i.calRentResult
-          list.eightRent += i.lease.rent
-          list.eightCost += i.cost
-          list.eightList.push(i)
-        } else {
-          list.six += i.calRentResult
-          list.sixRent += i.lease.rent
-          list.sixCost += i.cost
-          list.sixList.push(i)
-        }
-      })
-
-      return Promise.reject({
-        type: true,
-        data: list
-      })
-    })
-    .catch((err)=>{
-      callback({
-        type: err.type || false,
-        data: err.data || err.message
-      })
-    })
-  },
-  rentListByHao: (req, res, callback)=>{
-    //查询数据
-    //返回list对象
-    db.dbModel('house')
-    db.dbModel('month')
-    db
-    .dbModel('rent')
-    .find({haoId: db.db.Types.ObjectId(req.body.haoId)})
-    .populate({
-      path: 'haoId',
-      model: 'house',
-      select: 'fang hao haoId addTime',
-      match: {status: 1}
-    })
-    .populate({
-      path: 'monthId',
-      model: 'month',
-      select: 'month',
-      match: {status: 1}
-    })
-    .where('userId').equals(db.db.Types.ObjectId(req.userId))
-    .where('status').equals(1)
-    .sort('-addTime')
-    .lean()
-    .exec()
-    .then((data)=>{
-      //字段初始化
-      data.forEach((i)=>{
-        //房屋
-        i.haoId && !i.fanghao && (i.fanghao = i.haoId.fang + i.haoId.hao)
-      })
-      return Promise.reject({
-        type: true,
-        data: data
-      })
-    })
-    .catch((err)=>{
-      callback({
-        type: err.type || false,
-        data: err.data || err.message
-      })
-    })
-  },
-
-  //收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
+  // 收租对象 ，存储整个水表计费信息，电表计费信息，租户信息
   //
   //
-  //收租周期表add OK
-  //根据收租周期表list，进列表 OK
-  //根据房屋，带挂载收租信息list，进历史 OK
+  // 收租周期表add OK
+  // 根据收租周期表list，进列表 OK
+  // 根据房屋，带挂载收租信息list，进历史 OK
   //
   //
-  //收租add，更新房屋挂载ID OK
-  //收租type多选：交租、给单据、给房东 OK
-  //收租del，需要回退房屋挂载ID OK
-  //根据收租周期表收租列表list，可添加，可修改收租状态，最新一期可删除收租 OK
-  //根据房屋收租历史list OK
+  // 收租add，更新房屋挂载ID OK
+  // 收租type多选：交租、给单据、给房东 OK
+  // 收租del，需要回退房屋挂载ID OK
+  // 根据收租周期表收租列表list，可添加，可修改收租状态，最新一期可删除收租 OK
+  // 根据房屋收租历史list OK
 
-  /***inner类****其他********************************************************************************************************/
+  /** *inner类****其他 * */
 
-  getData: (req, res, callback)=>{
-
-
+  getData: (req, res, callback) => {
     db
       .dbModel('admin')
-      .find({name:req.body.name})
-      .exec((err, db)=>{
+      .find({ name: req.body.name })
+      .exec((err, data) => {
         if (err) {
           callback({
             type: false,
-            data: err
+            data: err,
           })
         } else {
           callback({
             type: true,
-            data: db
+            data,
           })
         }
       })
   },
-  saveData: (req, res, callback)=>{
-
-
+  saveData: (req, res, callback) => {
     db
-      .dbModel('admin',{name:'string'})
-      .create({name:req.body.name}, (err, db)=>{
+      .dbModel('admin', { name: 'string' })
+      .create({ name: req.body.name }, (err, data) => {
         if (err) {
           callback({
             type: false,
-            data: err
+            data: err,
           })
         } else {
           callback({
             type: true,
-            data: db
+            data,
           })
         }
       })
   },
-  removeData: (req, res, callback)=>{
+  removeData: (req, res, callback) => {
     if (!req.body.name) {
       return callback({
         type: false,
-        data: '未定义删除关键字'
+        data: '未定义删除关键字',
       })
     }
-    db
+    return db
       .dbModel('admin')
-      .remove({}, (err, db)=>{
+      .remove({}, (err, data) => {
         if (err) {
           callback({
             type: false,
-            data: err
+            data: err,
           })
         } else {
           callback({
             type: true,
-            data: db
+            data,
           })
         }
       })
   },
-  redisSet: (req, res, callback)=>{
-
-
-    db.redisSet(req.body.setname, req.body.setval, req.body.settime || 0, (err, reply)=>{
+  redisSet: (req, res, callback) => {
+    db.redisSet(req.body.setname, req.body.setval, req.body.settime || 0, (err, reply) => {
       if (err) {
         callback({
           type: false,
-          data: err
+          data: err,
         })
       } else {
         callback({
           type: true,
-          data: reply
+          data: reply,
         })
       }
     })
   },
-  redisGet: (req, res, callback)=>{
-
-
-    db.redisGet(req.body.setname, (err, reply)=>{
+  redisGet: (req, res, callback) => {
+    db.redisGet(req.body.setname, (err, reply) => {
       if (err) {
         callback({
           type: false,
-          data: err
+          data: err,
         })
       } else {
         callback({
           type: true,
-          data: reply
+          data: reply,
         })
       }
     })
-  }
+  },
 }
