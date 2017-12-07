@@ -28,8 +28,8 @@ const store = new Vuex.Store(stores)
 
 // 全局路由配置
 const router = new VueRouter(routes)
-router.beforeEach(routerEach.beforeEach)
-router.afterEach(routerEach.afterEach)
+router.beforeEach((to, from, next) => routerEach.beforeEach(router, to, from, next))
+router.afterEach(() => routerEach.afterEach(router))
 
 // 页面初始化
 /* eslint-disable no-new */

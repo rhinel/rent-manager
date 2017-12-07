@@ -11,7 +11,7 @@ const request = (path, body) => {
   body = Object.assign({}, body)
   if (token) body.token = token
 
-  Superagent
+  return Superagent
     .post(path)
     .send(body)
     .catch(err => {
@@ -21,6 +21,7 @@ const request = (path, body) => {
         message: `状态：${err.status}，网络/服务器错误`,
         duration: 2000,
       })
+      return Promise.reject(new Error('网络/服务器错误'))
     })
     .then(res => {
       const { code, msg, data } = res.body
@@ -38,7 +39,7 @@ const request = (path, body) => {
           path: '/login',
           query: { backurl: this.$router.currentRoute.fullPath },
         })
-        return Promise.reject(new Error('token验证不通过'))
+        return Promise.reject(new Error(msg))
       } else if (code === 2001) {
         // auth接口，返回msg
         return Promise.reject(new Error(msg))

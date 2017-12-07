@@ -6,7 +6,7 @@
         <span>Rent Manager</span>
         <el-button class="nav-flag"
           size="small"
-          icon="d-arrow-left"
+          icon="el-icon-d-arrow-left"
           @click="getNavtg"></el-button>
       </div>
       <div class="header-name">
@@ -25,7 +25,7 @@
       theme="dark"
       :router="true">
       <el-menu-item
-        v-for="(menuItem, index) in menu"
+        v-for="(menuItem, index) in config.menu"
         :key="index"
         :index="menuItem.index">
         <i :class="menuItem.icon"></i>
@@ -54,7 +54,7 @@
         'menuing',
         'menuCheck',
         'titleAdd',
-        'menu',
+        'config',
       ]),
     },
     methods: {
@@ -85,97 +85,98 @@
 </script>
 
 <style lang="scss">
-  @media print {
-    .auth-inner-index {
-      padding-top: 0!important;
-      .inner-header {
-        display: none !important;
-      }
-      .inner-body {
-        padding: 0!important;
-      }
-    }
-  }
-
+@media print {
   .auth-inner-index {
-    padding-left: 180px;
-    transition: padding-left .3s;
-    padding-top: 50px;
-    .el-icon-loading {
-      margin-left: 10px;
-    }
+    padding-top: 0 !important;
     .inner-header {
-      width: 100%;
-      height: 50px;
-      line-height: 50px;
-      color: #F9FAFC;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 3;
-      background-color: #324157;
-      display: flex;
-      .header-left {
-        width: 160px;
-        position: relative;
-        background-color: #1F2D3D;
-        padding-left: 20px;
-        .el-button {
-          position: absolute;
-          right: 20px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: transparent;
-            color: #fff;
-            .el-icon-d-arrow-left{
-              transition: transform .3s;
-              transform: rotateZ(0deg);
-            }
-            &:hover, &:focus{
-              color: #20a0ff;
-            }
-        }
-      }
-      .header-name {
-        padding-left: 20px;
-        flex: 1;
-      }
-      .header-right {
-        width: 120px;
-        cursor: pointer;
-        color: #D3DCE6;
-        text-align: right;
-        padding-right: 20px;
-        .el-icon-star-on{
-          margin-right: 10px;
-        }
-        &:hover{
-          color: #fff;
-        }
-      }
-    }
-    .inner-sidebar {
-      width: 180px;
-      height: calc( 100vh - 50px );
-      border-radius: 0;
-      position: fixed;
-      top: 50px;
-      left: 0;
-      transition: left .3s;
-      bottom: 0;
+      display: none !important;
     }
     .inner-body {
-      padding: 20px;
+      padding: 0 !important;
     }
-    &.in {
-      padding-left: 0;
-      .header-left .el-button .el-icon-d-arrow-left {
-        transform: rotateZ(180deg);
+  }
+}
+
+.auth-inner-index {
+  padding-left: 180px;
+  transition: padding-left 0.3s;
+  padding-top: 50px;
+  .el-icon-loading {
+    margin-left: 10px;
+  }
+  .inner-header {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #f9fafc;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    background-color: #324157;
+    display: flex;
+    .header-left {
+      width: 160px;
+      position: relative;
+      background-color: #1f2d3d;
+      padding-left: 20px;
+      .el-button {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        color: #fff;
+        .el-icon-d-arrow-left {
+          transition: transform 0.3s;
+          transform: rotateZ(0deg);
+        }
+        &:hover,
+        &:focus {
+          color: #20a0ff;
+        }
       }
-      .inner-sidebar {
-        left: -180px;
+    }
+    .header-name {
+      padding-left: 20px;
+      flex: 1;
+    }
+    .header-right {
+      width: 120px;
+      cursor: pointer;
+      color: #d3dce6;
+      text-align: right;
+      padding-right: 20px;
+      .el-icon-star-on {
+        margin-right: 10px;
+      }
+      &:hover {
+        color: #fff;
       }
     }
   }
+  .inner-sidebar {
+    width: 180px;
+    height: calc(100vh - 50px);
+    border-radius: 0;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    transition: left 0.3s;
+    bottom: 0;
+  }
+  .inner-body {
+    padding: 20px;
+  }
+  &.in {
+    padding-left: 0;
+    .header-left .el-button .el-icon-d-arrow-left {
+      transform: rotateZ(180deg);
+    }
+    .inner-sidebar {
+      left: -180px;
+    }
+  }
+}
 </style>

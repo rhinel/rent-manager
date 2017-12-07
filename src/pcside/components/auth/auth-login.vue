@@ -82,11 +82,12 @@
       }
     },
     methods: {
-      getBingBg() {
-        this.Ajax('/outer/log/bingBg', {})
+      async getBingBg() {
+        await this.Ajax('/outer/log/bingBg', {})
           .then(res => {
             this.bingBg = res.fav.murl
           })
+          .catch(() => {})
       },
       async getLogin() {
         if (this.logininfo.loading) return
@@ -130,58 +131,64 @@
 </script>
 
 <style lang="scss">
-  .auth-login{
-    height: 100%;
-    width: 100%;
-    position: relative;
-    background-size: cover;
-    background-position: center center;
-    background-image: url(../../img/index_intro_bg.jpg);
-    .login-wrap{
-      width: 500px;
-      max-width: 90%;
-      position: absolute;
-      top: 40%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      overflow: visible;
-      .beian {
-        width: 100%;
-        text-align: center;
-        position: absolute;
-        bottom: -35px;
-        left: 0;
-        a {
-          color: #fff;
-          text-decoration: none;
-        }
-      }
-    }
-    .login-hello{
-      font-size: 30px;
-      text-align: center;
-      margin-bottom: 20px;
-      @keyframes hello{
-        0% {opacity: 0;}
-        50% {opacity: 1;}
-        100% {opacity: 0;}
-      }
-      & > i{
-        display: inline-block;
-        width: 15px;
-        height: 5px;
-        background-color: #666;
-        opacity: 0;
-        animation:hello 1.5s infinite;
-      }
-    }
-    .login-go{
+.auth-login {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-size: cover;
+  background-position: center center;
+  background-image: url(../../img/index_intro_bg.jpg);
+  .login-wrap {
+    width: 500px;
+    max-width: 90%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    overflow: visible;
+    .beian {
       width: 100%;
-    }
-    #index-canvas{
-      width: 100vw;
-      height: 100vh;
-      display: block;
+      text-align: center;
+      position: absolute;
+      bottom: -35px;
+      left: 0;
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
     }
   }
+  .login-hello {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    @keyframes hello {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+    & > i {
+      display: inline-block;
+      width: 15px;
+      height: 5px;
+      background-color: #666;
+      opacity: 0;
+      animation: hello 1.5s infinite;
+    }
+  }
+  .login-go {
+    width: 100%;
+  }
+  #index-canvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+  }
+}
 </style>

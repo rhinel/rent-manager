@@ -1,11 +1,9 @@
-
-import Vuex from 'vuex'
 import Ajax from 'common/js/request'
 import { Message } from 'element-ui'
 
-const beforeEach = (to, from, next) => {
+const beforeEach = (router, to, from, next) => {
   // 继承或直接记录目的地
-  Vuex.$store.dispatch('menuCheck', to.fullPath)
+  router.app.$store.dispatch('menuCheck', to.fullPath)
   const nextConfig = {
     path: '/login',
     query: { backurl: to.fullPath },
@@ -53,9 +51,9 @@ const beforeEach = (to, from, next) => {
   }
 }
 
-const afterEach = () => {
-  Vuex.$store.dispatch('menuCheck', '')
-  Vuex.$store.dispatch('titleAdd', '')
+const afterEach = router => {
+  router.app.$store.dispatch('menuCheck', '')
+  router.app.$store.dispatch('titleAdd', '')
 }
 
 export default {

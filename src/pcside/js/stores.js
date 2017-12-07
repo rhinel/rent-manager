@@ -6,7 +6,7 @@ export default {
     menuCheck: '',
     titleAdd: '',
 
-    default: {
+    config: {
       payTypeVal: ['微信', '支付宝', '银行转账', '现金', '房东自收', '其他'],
       typesVal: ['', '已交', '给单', '房东'],
       menu: [
