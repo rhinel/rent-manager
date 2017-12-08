@@ -116,7 +116,7 @@
     left: 0;
     right: 0;
     z-index: 3;
-    background-color: #324157;
+    background-color: #878D99;
     display: flex;
     .header-left {
       width: 160px;

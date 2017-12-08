@@ -91,7 +91,7 @@ module.exports = {
       return Promise.reject(new FoundError('缺少房屋ID'))
     }
 
-    const id = req.body._haoId || req.body._id
+    const id = req.body.haoId || req.body._id
 
     // 数据库查询
     const house = await db
