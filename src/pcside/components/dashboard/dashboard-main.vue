@@ -11,7 +11,7 @@
       <el-form
         :model="note"
         ref="note"
-        :rules="noterules"
+        :rules="noteRules"
         label-position="top">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -55,6 +55,7 @@
           </el-input>
         </el-form-item>
       </el-form>
+
       <div class="dialog-footer"
         slot="footer">
         <el-button
@@ -72,21 +73,21 @@
           type="success"
           @click="getAddNote(2)"
           :loading="gettingAddNote"
-          v-if="editNoteId && note.status === 1">
+          v-if="note._id && note.status === 1">
           完成
         </el-button>
         <el-button
           type="success"
           @click="getAddNote(1)"
           :loading="gettingAddNote"
-          v-if="editNoteId && note.status == 2">
+          v-if="note._id && note.status === 2">
           重做
         </el-button>
         <el-button
           type="danger"
           @click="getAddNote(0)"
           :loading="gettingAddNote"
-          v-if="editNoteId">
+          v-if="note._id">
           删除
         </el-button>
       </div>
@@ -130,12 +131,12 @@
             <el-table class="rent-list-table"
               :data="rentList1"
               v-loading.body="gettingRentList1"
-              stripe>
+              stripe
+              border>
               <el-table-column
                 prop="monthId.month"
                 label="周期"
-                width="120"
-                sortable>
+                width="120">
                 <template slot-scope="scope">
                   <router-link :to="{ path: '/inner/rent/month', query: { id: scope.row.monthId._id }}">
                     <el-button type="text">{{scope.row.monthId.month}}</el-button>
@@ -145,8 +146,7 @@
               <el-table-column
                 prop="fanghao"
                 label="房屋"
-                width="180"
-                sortable>
+                width="180">
                 <template slot-scope="scope">
                   <router-link :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
                     <el-button type="text">{{scope.row.fanghao}}</el-button>
@@ -156,8 +156,7 @@
               <el-table-column
                 prop="calRentResult"
                 label="房租/计费时间"
-                width="180"
-                sortable>
+                width="180">
                 <template slot-scope="scope">
                   <div>
                     <el-tag>{{scope.row.fix ? '修' : '计'}}</el-tag>
@@ -249,12 +248,12 @@
               class="rent-list-table"
               :data="rentList3"
               v-loading.body="gettingRentList3"
-              stripe>
+              stripe
+              border>
               <el-table-column
                 prop="monthId.month"
                 label="周期"
-                width="120"
-                sortable>
+                width="120">
                 <template slot-scope="scope">
                   <router-link :to="{ path: '/inner/rent/month', query: { id: scope.row.monthId._id }}">
                     <el-button type="text">{{scope.row.monthId.month}}</el-button>
@@ -264,8 +263,7 @@
               <el-table-column
                 prop="fanghao"
                 label="房屋"
-                width="180"
-                sortable>
+                width="180">
                 <template slot-scope="scope">
                   <router-link :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
                     <el-button type="text">{{scope.row.fanghao}}</el-button>
@@ -275,8 +273,7 @@
               <el-table-column
                 prop="calRentResult"
                 label="房租/计费时间"
-                width="180"
-                sortable>
+                width="180">
                 <template slot-scope="scope">
                   <div>
                     <el-tag>{{scope.row.fix ? '修' : '计'}}</el-tag>
@@ -413,6 +410,7 @@
 
 <script>
   import TWEEN from 'tween.js'
+  import { mapState } from 'vuex'
 
   export default {
     name: 'dashboard-main',
@@ -451,15 +449,18 @@
         ndDialogTitle: '添加记事',
         ndLabelWidth: '90px',
         noteflag: false,
-        note: {
+        note: {},
+        noteClear: {
+          _id: '',
           haoId: '',
           content: '',
           addTime: '',
           status: 1,
         },
-        editNoteId: '',
-        noterules: {
-          haoId: [{ required: true, message: '请选择', trigger: 'change' }],
+        noteRules: {
+          haoId: [
+            { required: true, message: '请选择', trigger: 'change' },
+          ],
           addTime: [
             {
               required: true, type: 'date', message: '请填写', trigger: 'change',
@@ -472,12 +473,10 @@
       }
     },
     computed: {
-      payTypeVal() {
-        return this.$store.state.config.payTypeVal
-      },
-      typesVal() {
-        return this.$store.state.config.typesVal
-      },
+      ...mapState({
+        payTypeVal: state => state.config.payTypeVal,
+        typesVal: state => state.config.typesVal,
+      }),
     },
     watch: {
       /* eslint object-shorthand: 0 */
@@ -492,8 +491,15 @@
       },
     },
     methods: {
+      // 时间格式化
+      getDate(t) {
+        return t ? new Date(t).toLocaleDateString() : '--'
+      },
+      // 获取计数
       async getCount() {
         if (this.gettingCount) return
+
+        // 接口提交
         this.gettingCount = true
 
         await this.Ajax('/inner/dash/count', {})
@@ -504,8 +510,11 @@
 
         this.gettingCount = false
       },
+      // 获取各种列表和计数
       async getList(type) {
         if (this[`gettingRentList${type}`]) return
+
+        // 接口提交
         this[`gettingRentList${type}`] = true
 
         await this.Ajax('/inner/dash/waitingList', {
@@ -519,6 +528,7 @@
 
         this[`gettingRentList${type}`] = false
       },
+      // 计数动画
       onCount(type, n, o) {
         const _this = this
         function animate(time) {
@@ -533,6 +543,31 @@
           .start()
         animate()
       },
+      // 弹窗状态和数据更新
+      getNoteAddDialog(index, row) {
+        this.noteflag = !this.noteflag
+        if (this.noteflag && row) {
+          this.note._id = row._id
+          this.note.haoId = row.haoId._id
+          this.note.content = row.content
+          this.note.addTime = new Date(row.addTime)
+          this.note.status = row.status
+        } else if (this.noteflag) {
+          this.note.addTime = new Date()
+        }
+      },
+      // 数据初始化
+      getNoteReset() {
+        this.note = Object.assign({}, this.note, this.noteClear)
+      },
+      // 关闭弹窗和清空数据
+      onNoteDialogClose() {
+        setTimeout(() => {
+          this.getNoteReset()
+          this.$refs.note.resetFields()
+        }, 500)
+      },
+      // 房屋列表
       async getHouseList() {
         await this.Ajax('/inner/house/list', {})
           .then(res => {
@@ -540,31 +575,11 @@
           })
           .catch(() => {})
       },
-      getNoteAddDialog(index, row) {
-        this.noteflag = !this.noteflag
-        if (this.noteflag && row) {
-          this.note.haoId = row.haoId._id
-          this.note.content = row.content
-          this.note.addTime = new Date(row.addTime)
-          this.note.status = row.status
-          this.editNoteId = row._id
-        } else {
-          this.note.addTime = new Date()
-        }
-      },
-      getNoteReset() {
-        this.note.haoId = ''
-        this.note.content = ''
-        this.note.status = 1
-        this.editNoteId = ''
-        this.note.addTime = ''
-      },
-      onNoteDialogClose() {
-        this.$refs.note.resetFields()
-        this.getNoteReset()
-      },
+      // 记事列表
       async getNotes() {
         if (this.gettingNotes) return
+
+        // 接口提交
         this.gettingNotes = true
 
         await this.Ajax('/inner/dash/notes', {})
@@ -575,15 +590,11 @@
 
         this.gettingNotes = false
       },
-      getDate(t) {
-        if (t) {
-          return new Date(t).toLocaleDateString()
-        }
-        return '--'
-      },
+      // 更新记事
       async getAddNote(type) {
         if (this.gettingAddNote) return
 
+        // 表单校验
         try {
           await (() => new Promise((resolve, reject) => {
             this.$refs.note.validate((valid) => {
@@ -595,16 +606,16 @@
           return
         }
 
+        // 接口提交
         this.gettingAddNote = true
 
         const _data = Object.assign({}, this.note)
-        if (this.editNoteId) _data._id = this.editNoteId
         if (type !== undefined) _data.status = type
         await this.Ajax('/inner/dash/addNote', _data)
           .then(() => {
             this.$message({
               type: 'success',
-              message: this.editNoteId ? '修改成功' : '添加成功',
+              message: this.note._id ? '修改成功' : '添加成功',
               duration: 2000,
             })
             this.getNoteAddDialog()

@@ -1,3 +1,13 @@
+<template>
+  <router-view class="index"></router-view>
+</template>
+
+<script>
+  export default {
+    name: 'index',
+  }
+</script>
+
 <style lang="scss">
 html,
 body {
@@ -20,17 +30,6 @@ body {
   tr:hover
   > td:not(.el-table__expanded-cell) {
   font-weight: bold;
-  // background-color: #58B7FF;
-  // color: #fff;
-  // .main-txt-highline {
-  //   color: #fff;
-  // }
-  // .el-button--text {
-  //   color: #fff;
-  //   &:hover {
-  //     color: #D3DCE6;
-  //   }
-  // }
 }
 // 折页打开样式
 .table-expand {
@@ -58,13 +57,3 @@ body {
   line-height: 1.5;
 }
 </style>
-
-<template>
-  <router-view class="index"></router-view>
-</template>
-
-<script>
-  export default {
-    name: 'index',
-  }
-</script>

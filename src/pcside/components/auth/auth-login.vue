@@ -38,7 +38,9 @@
         </el-button>
       </el-form>
       <div class="beian">
-        <a href="http://www.miitbeian.gov.cn/" target="_blank">
+        <a
+          href="http://www.miitbeian.gov.cn/"
+          target="_blank">
           粤ICP备17070491号-3
         </a>
       </div>
@@ -82,6 +84,7 @@
       }
     },
     methods: {
+      // bing背景
       async getBingBg() {
         await this.Ajax('/outer/log/bingBg', {})
           .then(res => {
@@ -89,9 +92,11 @@
           })
           .catch(() => {})
       },
+      // 登录
       async getLogin() {
         if (this.logininfo.loading) return
 
+        // 表单校验
         try {
           await (() => new Promise((resolve, reject) => {
             this.$refs.logininfo.validate((valid) => {
@@ -103,13 +108,14 @@
           return
         }
 
+        // 接口提交
         this.logininfo.loading = true
 
         await this.Ajax('/outer/log/login', {
           name: this.logininfo.name,
           pwd: Md5(this.logininfo.pwd),
         })
-          .then((res) => {
+          .then(res => {
             localStorage.setItem('token', res)
             this.$message({
               type: 'success',

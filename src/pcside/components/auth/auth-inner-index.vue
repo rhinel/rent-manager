@@ -65,6 +65,8 @@
       // 登出
       async logout() {
         if (this.logouting) return
+
+        // 接口提交
         this.logouting = true
 
         await this.Ajax('/outer/log/logout', {})

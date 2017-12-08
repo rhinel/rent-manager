@@ -1,6 +1,8 @@
 import Superagent from 'superagent'
 import { Message } from 'element-ui'
 
+import app from '@/pcside/js/main'
+
 // 定义负载常量
 const rootPath = '/api'
 
@@ -35,9 +37,9 @@ const request = (path, body) => {
           duration: 2000,
         })
         localStorage.removeItem('token')
-        this.$router.push({
+        app.$router.push({
           path: '/login',
-          query: { backurl: this.$router.currentRoute.fullPath },
+          query: { backurl: app.$router.currentRoute.fullPath },
         })
         return Promise.reject(new Error(msg))
       } else if (code === 2001) {

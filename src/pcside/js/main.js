@@ -32,8 +32,7 @@ router.beforeEach((to, from, next) => routerEach.beforeEach(router, to, from, ne
 router.afterEach(() => routerEach.afterEach(router))
 
 // 页面初始化
-/* eslint-disable no-new */
-new Vue({
+export default new Vue({
   el: '#app',
   router,
   store,
