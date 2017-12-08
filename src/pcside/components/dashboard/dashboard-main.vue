@@ -2,8 +2,9 @@
   <div class="dashboard-main">
     <!-- 记事本弹窗 -->
     <el-dialog custom-class="note-dialog"
+      :key="note._id"
       :title="ndDialogTitle"
-      :visible="noteflag"
+      :visible.sync="noteflag"
       size="large"
       top="50px"
       :close-on-click-modal="false"
@@ -15,7 +16,8 @@
         label-position="top">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="房屋"
+            <el-form-item
+              label="房屋"
               :label-width="ndLabelWidth"
               prop="haoId">
               <el-select
@@ -33,7 +35,8 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="记事时间"
+            <el-form-item
+              label="记事时间"
               :label-width="ndLabelWidth"
               prop="addTime">
               <el-date-picker
@@ -45,7 +48,8 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="内容"
+        <el-form-item
+          label="内容"
           :label-width="ndLabelWidth">
           <el-input
             type="textarea"
@@ -563,8 +567,8 @@
       // 关闭弹窗和清空数据
       onNoteDialogClose() {
         setTimeout(() => {
-          this.getNoteReset()
           this.$refs.note.resetFields()
+          this.getNoteReset()
         }, 500)
       },
       // 房屋列表

@@ -15,8 +15,8 @@ const HouseList = () => import('../components/house/house-list')
 // const ElectricIndex = () => import('../components/electric/electric-main')
 // const ElectricHistory = () => import('../components/electric/electric-history')
 
-// const Lease = () => import('../components/lease/lease-index')
-// const LeaseIndex = () => import('../components/lease/lease-main')
+const Lease = () => import('../components/lease/lease-index')
+const LeaseIndex = () => import('../components/lease/lease-main')
 // const LeaseHistory = () => import('../components/lease/lease-history')
 
 // const Rent = () => import('../components/rent/rent-index')
@@ -98,23 +98,23 @@ export default {
         //     },
         //   ],
         // },
-        // {// 租住管理
-        //   path: 'lease',
-        //   component: Lease,
-        //   children: [
-        //     {
-        //       path: 'index',
-        //       meta: { name: '租住管理' },
-        //       component: LeaseIndex,
-        //       alias: '',
-        //     },
-        //     {
-        //       path: 'history',
-        //       meta: { name: '租住历史' },
-        //       component: LeaseHistory,
-        //     },
-        //   ],
-        // },
+        {// 租住管理
+          path: 'lease',
+          component: Lease,
+          children: [
+            {
+              path: 'index',
+              meta: { name: '租住管理' },
+              component: LeaseIndex,
+              alias: '',
+            },
+            // {
+            //   path: 'history',
+            //   meta: { name: '租住历史' },
+            //   component: LeaseHistory,
+            // },
+          ],
+        },
         // {// 收租管理
         //   path: 'rent',
         //   component: Rent,

@@ -14,11 +14,11 @@ body {
   height: 100%;
   width: 100%;
   font-size: 14px;
-  font-family: sans-serif;
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
 }
-// 表格样式
-.el-table .el-table__body .cell {
-  padding: 5px 18px;
+// button text
+.el-button--text {
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
 }
 // 高亮样式
 .main-txt-highline {

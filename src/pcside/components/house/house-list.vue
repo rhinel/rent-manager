@@ -23,8 +23,9 @@
 
     <!-- 新增弹窗 -->
     <el-dialog custom-class="add-house-dialog"
+      :key="addHouse._id"
       :title="ahdDialogTitle"
-      :visible="addHouseFlag"
+      :visible.sync="addHouseFlag"
       size="small"
       :close-on-click-modal="false"
       @close="onAddHouseDialogClose">
@@ -249,8 +250,8 @@
       // 关闭弹窗回调
       onAddHouseDialogClose() {
         setTimeout(() => {
-          this.getResetHouse()
           this.$refs.addHouse.resetFields()
+          this.getResetHouse()
         }, 500)
       },
       // 添加/修改房屋
@@ -332,6 +333,7 @@
     margin-bottom: 20px;
   }
   .table-btn-input {
+    vertical-align: top;
     max-width: 300px;
     display: inline-block;
     margin-left: 10px;
