@@ -14,9 +14,10 @@ body {
   height: 100%;
   width: 100%;
   font-size: 14px;
-  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
 }
 // button text
+html,
+body,
 .el-button--text {
   font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
 }
@@ -55,5 +56,13 @@ body {
 .el-popover {
   font-size: 14px;
   line-height: 1.5;
+}
+.el-table--border
+  .has-gutter
+  td:nth-last-of-type(2),
+.el-table--border
+  .has-gutter
+  th:nth-last-of-type(2) {
+  border-right: 1px solid #e6ebf5;
 }
 </style>

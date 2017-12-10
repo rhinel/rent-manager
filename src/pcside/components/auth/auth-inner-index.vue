@@ -28,9 +28,11 @@
         :key="index"
         :index="menuItem.index">
         <i :class="menuItem.icon"></i>
-        <span slot="title">{{menuItem.name}}</span>
-        <i class="el-icon-loading"
-          v-show="menuCheck.includes(menuItem.check)"></i>
+        <span slot="title">
+          {{menuItem.name}}
+          <i class="el-icon-loading"
+            v-show="menuCheck.includes(menuItem.check)"></i>
+        </span>
       </el-menu-item>
     </el-menu>
     <router-view class="inner-body"></router-view>
@@ -103,7 +105,9 @@
   transition: padding-left 0.3s;
   padding-top: 50px;
   .el-icon-loading {
-    margin-left: 10px;
+    vertical-align: text-bottom;
+    position: relative;
+    top: 1.5px;
   }
   .inner-header {
     width: 100%;

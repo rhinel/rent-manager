@@ -690,7 +690,7 @@
       }
     }
     .card-nodata {
-      color: #5e7382;
+      color: #5a5e66;
       text-align: center;
       line-height: 20px;
     }
