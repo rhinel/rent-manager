@@ -629,10 +629,14 @@
                 <el-popover
                   placement="top"
                   trigger="hover">
-                  <div class="lease-remark">{{ scope.row.leaseId.remark }}</div>
+                  <div class="lease-remark">
+                    {{ scope.row.leaseId.remark }}
+                  </div>
                   <div class="lease-show-tag"
                     slot="reference">
-                    <div class="lease-remark-tag">{{ scope.row.leaseId.remark }}</div>
+                    <div class="lease-remark-tag">
+                      {{ scope.row.leaseId.remark }}
+                    </div>
                   </div>
                 </el-popover>
               </template>

@@ -22,14 +22,13 @@
     </div>
     <el-menu class="inner-sidebar"
       :default-active="menuing"
-      theme="dark"
       :router="true">
       <el-menu-item
         v-for="(menuItem, index) in config.menu"
         :key="index"
         :index="menuItem.index">
         <i :class="menuItem.icon"></i>
-        {{menuItem.name}}
+        <span slot="title">{{menuItem.name}}</span>
         <i class="el-icon-loading"
           v-show="menuCheck.includes(menuItem.check)"></i>
       </el-menu-item>
@@ -119,7 +118,7 @@
     background-color: #878D99;
     display: flex;
     .header-left {
-      width: 160px;
+      width: 161px;
       position: relative;
       background-color: #1f2d3d;
       padding-left: 20px;
