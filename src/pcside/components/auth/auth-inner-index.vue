@@ -104,7 +104,8 @@
   padding-left: 180px;
   transition: padding-left 0.3s;
   padding-top: 50px;
-  .el-icon-loading {
+  .inner-sidebar
+    .el-icon-loading {
     vertical-align: text-bottom;
     position: relative;
     top: 1.5px;
@@ -119,12 +120,12 @@
     left: 0;
     right: 0;
     z-index: 3;
-    background-color: #878D99;
+    background-color: #409EFF;
     display: flex;
     .header-left {
       width: 161px;
       position: relative;
-      background-color: #1f2d3d;
+      background-color: #1d8ce0;
       padding-left: 20px;
       .el-button {
         position: absolute;
