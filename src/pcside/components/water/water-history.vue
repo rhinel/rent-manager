@@ -23,8 +23,7 @@
         </div>
 
         <!-- 水费数据表 -->
-        <el-table
-          class="water-table"
+        <el-table class="water-table"
           :data="filterWaterData"
           v-loading.body="gettingListRefresh"
           stripe
@@ -111,8 +110,7 @@
         </div>
 
         <!-- 水费数据表 -->
-        <el-table
-          class="water-table"
+        <el-table class="water-table"
           :data="filterWaterCalData"
           v-loading.body="gettingListRefresh2"
           stripe
@@ -122,7 +120,8 @@
             label="房屋"
             width="180">
           </el-table-column>
-          <el-table-column label="今次(吨)">
+          <el-table-column
+            label="今次(吨)">
             <el-table-column
               prop="tnew.water"
               label="抄表数"
@@ -137,7 +136,8 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="前次(吨)">
+          <el-table-column
+            label="前次(吨)">
             <el-table-column
               prop="old.water"
               label="底表数"
@@ -384,13 +384,14 @@
 
         row.gettingdelWater = false
       },
-      delCalWater(index, row) {
+      async delCalWater(index, row) {
         row.dCalWaterPopFlag = false
         if (row.gettingdelCalWater) return
 
         // 请求接口
         row.gettingdelCalWater = true
-        this.Ajax('/inner/water/delCal', {
+
+        await this.Ajax('/inner/water/delCal', {
           _id: row._id,
           haoId: row.haoId._id,
         })
@@ -402,6 +403,7 @@
             })
             this.getWaterCalList()
           })
+          .catch(() => {})
 
         row.gettingdelCalWater = false
       },

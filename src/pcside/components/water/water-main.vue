@@ -100,7 +100,7 @@
 
     <!-- 计费弹窗 -->
     <el-dialog custom-class="cal-water-dialog"
-      :key="'addWater' + dialogId"
+      :key="'calWater' + dialogId"
       :title="calWater.fanghao + cwdDialogTitle"
       :visible.sync="calWaterflag"
       size="large"
@@ -373,8 +373,7 @@
     </el-dialog>
 
     <!-- 水费数据表 -->
-    <el-table
-      class="water-table"
+    <el-table class="water-table"
       :data="filterWaterData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -433,8 +432,7 @@
         label="本期实用数(吨)"
         width="160">
         <template slot-scope="scope">
-          <span
-            style="color:#1D8CE0;"
+          <span class="main-txt-highline"
             v-if="scope.row.gap > 0">
             {{scope.row.gap}}
           </span>

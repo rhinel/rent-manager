@@ -11,9 +11,9 @@ const Water = () => import('../components/water/water-index')
 const WaterIndex = () => import('../components/water/water-main')
 const WaterHistory = () => import('../components/water/water-history')
 
-// const Electric = () => import('../components/electric/electric-index')
-// const ElectricIndex = () => import('../components/electric/electric-main')
-// const ElectricHistory = () => import('../components/electric/electric-history')
+const Electric = () => import('../components/electric/electric-index')
+const ElectricIndex = () => import('../components/electric/electric-main')
+const ElectricHistory = () => import('../components/electric/electric-history')
 
 const Lease = () => import('../components/lease/lease-index')
 const LeaseIndex = () => import('../components/lease/lease-main')
@@ -81,23 +81,23 @@ export default {
             },
           ],
         },
-        // {// 电费管理
-        //   path: 'electric',
-        //   component: Electric,
-        //   children: [
-        //     {
-        //       path: 'index',
-        //       meta: { name: '电费管理' },
-        //       component: ElectricIndex,
-        //       alias: '',
-        //     },
-        //     {
-        //       path: 'history',
-        //       meta: { name: '电费历史' },
-        //       component: ElectricHistory,
-        //     },
-        //   ],
-        // },
+        {// 电费管理
+          path: 'electric',
+          component: Electric,
+          children: [
+            {
+              path: 'index',
+              meta: { name: '电费管理' },
+              component: ElectricIndex,
+              alias: '',
+            },
+            {
+              path: 'history',
+              meta: { name: '电费历史' },
+              component: ElectricHistory,
+            },
+          ],
+        },
         {// 租住管理
           path: 'lease',
           component: Lease,
