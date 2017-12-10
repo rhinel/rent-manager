@@ -19,9 +19,9 @@ const Lease = () => import('../components/lease/lease-index')
 const LeaseIndex = () => import('../components/lease/lease-main')
 const LeaseHistory = () => import('../components/lease/lease-history')
 
-// const Rent = () => import('../components/rent/rent-index')
+const Rent = () => import('../components/rent/rent-index')
 // const RentMonth = () => import('../components/rent/rent-month')
-// const RentIndex = () => import('../components/rent/rent-main')
+const RentIndex = () => import('../components/rent/rent-main')
 // const RentHistory = () => import('../components/rent/rent-history')
 
 const System = () => import('../components/system/system-index')
@@ -115,28 +115,28 @@ export default {
             },
           ],
         },
-        // {// 收租管理
-        //   path: 'rent',
-        //   component: Rent,
-        //   children: [
-        //     {
-        //       path: 'index',
-        //       meta: { name: '收租管理' },
-        //       component: RentIndex,
-        //       alias: '',
-        //     },
-        //     {
-        //       path: 'month',
-        //       meta: { name: '月租周期' },
-        //       component: RentMonth,
-        //     },
-        //     {
-        //       path: 'history',
-        //       meta: { name: '收租历史' },
-        //       component: RentHistory,
-        //     },
-        //   ],
-        // },
+        {// 收租管理
+          path: 'rent',
+          component: Rent,
+          children: [
+            {
+              path: 'index',
+              meta: { name: '收租管理' },
+              component: RentIndex,
+              alias: '',
+            },
+            // {
+            //   path: 'month',
+            //   meta: { name: '月租周期' },
+            //   component: RentMonth,
+            // },
+            // {
+            //   path: 'history',
+            //   meta: { name: '收租历史' },
+            //   component: RentHistory,
+            // },
+          ],
+        },
         {// 系统管理
           path: 'system',
           component: System,

@@ -23,7 +23,7 @@
 
     <!-- 新增弹窗 -->
     <el-dialog custom-class="add-house-dialog"
-      :key="addHouse._id"
+      :key="dialogId"
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
       size="small"
@@ -181,6 +181,7 @@
         gettingAddHouse: false,
         gettingListRefresh: false,
 
+        dialogId: Date.now(),
         // 定义坊号，前台写死，后台分类统计用做判断
         houseFang: ['6坊65栋', '8坊68栋', '公司楼'],
         ahdDialogTitle: '',
@@ -246,6 +247,7 @@
       // 弹窗数据初始化
       getResetHouse() {
         this.addHouse = Object.assign({}, this.addHouse, this.addHouseClear)
+        this.dialogId = Date.now()
       },
       // 关闭弹窗回调
       onAddHouseDialogClose() {
@@ -260,12 +262,7 @@
 
         // 表单校验
         try {
-          await (() => new Promise((resolve, reject) => {
-            this.$refs.addHouse.validate((valid) => {
-              if (valid) resolve()
-              if (!valid) reject()
-            })
-          }))()
+          await this.$refs.addHouse.validate()
         } catch (err) {
           return
         }

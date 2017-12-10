@@ -49,7 +49,7 @@ module.exports = {
       })
       .exec()
 
-    if (findMonth) {
+    if (findMonth.length) {
       return Promise.reject(new FoundError('月份周期已存在'))
     }
 
