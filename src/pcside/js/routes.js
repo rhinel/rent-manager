@@ -7,8 +7,8 @@ const DashboardIndex = () => import('../components/dashboard/dashboard-main')
 const House = () => import('../components/house/house-index')
 const HouseList = () => import('../components/house/house-list')
 
-// const Water = () => import('../components/water/water-index')
-// const WaterIndex = () => import('../components/water/water-main')
+const Water = () => import('../components/water/water-index')
+const WaterIndex = () => import('../components/water/water-main')
 // const WaterHistory = () => import('../components/water/water-history')
 
 // const Electric = () => import('../components/electric/electric-index')
@@ -64,23 +64,23 @@ export default {
             },
           ],
         },
-        // {// 水费管理
-        //   path: 'water',
-        //   component: Water,
-        //   children: [
-        //     {
-        //       path: 'index',
-        //       meta: { name: '水费管理' },
-        //       component: WaterIndex,
-        //       alias: '',
-        //     },
-        //     {
-        //       path: 'history',
-        //       meta: { name: '水费历史' },
-        //       component: WaterHistory,
-        //     },
-        //   ],
-        // },
+        {// 水费管理
+          path: 'water',
+          component: Water,
+          children: [
+            {
+              path: 'index',
+              meta: { name: '水费管理' },
+              component: WaterIndex,
+              alias: '',
+            },
+            // {
+            //   path: 'history',
+            //   meta: { name: '水费历史' },
+            //   component: WaterHistory,
+            // },
+          ],
+        },
         // {// 电费管理
         //   path: 'electric',
         //   component: Electric,

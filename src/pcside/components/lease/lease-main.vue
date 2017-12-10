@@ -25,7 +25,7 @@
 
         <!-- 入住弹窗 -->
         <el-dialog custom-class="lease-in-dialog"
-          :key="leaseDiId"
+          :key="'leaseIn' + dialogId"
           :title="lease.fanghao + lidDialogTitle"
           :visible.sync="leaseInflag"
           size="large"
@@ -420,7 +420,7 @@
 
         <!-- 搬出弹窗 -->
         <el-dialog custom-class="lease-out-dialog"
-          :key="'leaseOut' + out._id"
+          :key="'leaseOut' + dialogId"
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
           size="small"
@@ -754,12 +754,12 @@
         leaseData: [],
         leaseDataSearch: '',
 
+        dialogId: Date.now(),
         // 入住弹窗
         lidDialogTitle: '入住',
         lidLabelWidth: '90px',
         leaseInflag: false,
         // 入住数据对象
-        leaseDiId: Date.now(),
         lease: {},
         leaseClear: {
           _id: '',
@@ -1048,7 +1048,7 @@
       // 数据初始化
       getLeaseInReset() {
         this.lease = Object.assign({}, JSON.parse(JSON.stringify(this.leaseClear)))
-        this.leaseDiId = Date.now()
+        this.dialogId = Date.now()
       },
       // 关闭弹窗
       onLeaseInDialogClose() {
@@ -1115,6 +1115,7 @@
       onLeaseOutDialogClose() {
         setTimeout(() => {
           this.$refs.leaseOut.resetFields()
+          this.dialogId = Date.now()
         }, 500)
       },
       async getLeaseOut() {

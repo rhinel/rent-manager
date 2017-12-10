@@ -87,7 +87,7 @@ module.exports = {
     // 1查询数据，错误退出
     // 2返回find对象
 
-    if (!req.body.haoId || !req.body._id) {
+    if (!req.body.haoId && !req.body._id) {
       return Promise.reject(new FoundError('缺少房屋ID'))
     }
 
