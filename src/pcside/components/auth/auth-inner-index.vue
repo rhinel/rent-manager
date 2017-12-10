@@ -5,7 +5,7 @@
       <div class="header-left">
         <span>Rent Manager</span>
         <el-button class="nav-flag"
-          size="small"
+          size="mini"
           icon="el-icon-d-arrow-left"
           @click="getNavtg"></el-button>
       </div>
@@ -108,7 +108,7 @@
     .el-icon-loading {
     vertical-align: text-bottom;
     position: relative;
-    top: 1.5px;
+    top: 0.5px;
   }
   .inner-header {
     width: 100%;

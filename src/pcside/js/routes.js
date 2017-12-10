@@ -9,7 +9,7 @@ const HouseList = () => import('../components/house/house-list')
 
 const Water = () => import('../components/water/water-index')
 const WaterIndex = () => import('../components/water/water-main')
-// const WaterHistory = () => import('../components/water/water-history')
+const WaterHistory = () => import('../components/water/water-history')
 
 // const Electric = () => import('../components/electric/electric-index')
 // const ElectricIndex = () => import('../components/electric/electric-main')
@@ -24,8 +24,8 @@ const LeaseHistory = () => import('../components/lease/lease-history')
 // const RentIndex = () => import('../components/rent/rent-main')
 // const RentHistory = () => import('../components/rent/rent-history')
 
-// const System = () => import('../components/system/system-index')
-// const SystemIndex = () => import('../components/system/system-main')
+const System = () => import('../components/system/system-index')
+const SystemIndex = () => import('../components/system/system-main')
 
 export default {
   routes: [
@@ -74,11 +74,11 @@ export default {
               component: WaterIndex,
               alias: '',
             },
-            // {
-            //   path: 'history',
-            //   meta: { name: '水费历史' },
-            //   component: WaterHistory,
-            // },
+            {
+              path: 'history',
+              meta: { name: '水费历史' },
+              component: WaterHistory,
+            },
           ],
         },
         // {// 电费管理
@@ -137,18 +137,18 @@ export default {
         //     },
         //   ],
         // },
-        // {// 系统管理
-        //   path: 'system',
-        //   component: System,
-        //   children: [
-        //     {
-        //       path: 'index',
-        //       meta: { name: '系统管理' },
-        //       component: SystemIndex,
-        //       alias: '',
-        //     },
-        //   ],
-        // },
+        {// 系统管理
+          path: 'system',
+          component: System,
+          children: [
+            {
+              path: 'index',
+              meta: { name: '系统管理' },
+              component: SystemIndex,
+              alias: '',
+            },
+          ],
+        },
       ],
     },
   ],

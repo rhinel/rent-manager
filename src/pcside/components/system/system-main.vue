@@ -1,8 +1,3 @@
-<style lang="scss">
-  .system-main{
-  }
-</style>
-
 <template>
   <div class="system-main">
     系统设置
@@ -12,8 +7,8 @@
 <script>
   export default {
     name: 'system-main',
-    beforeCreate () {
+    beforeCreate() {
       this.$store.dispatch('updateMenu', '/inner/system/index')
-    }
+    },
   }
 </script>

@@ -868,6 +868,7 @@
     margin-bottom: 20px;
   }
   .table-btn-input {
+    vertical-align: top;
     max-width: 300px;
     display: inline-block;
     margin-left: 10px;

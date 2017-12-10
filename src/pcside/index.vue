@@ -50,9 +50,6 @@ body,
   width: 33%;
 }
 // 重写组件样式
-.el-tag {
-  vertical-align: top;
-}
 .el-popover {
   font-size: 14px;
   line-height: 1.5;
