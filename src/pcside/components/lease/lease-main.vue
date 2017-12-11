@@ -1095,12 +1095,7 @@
 
         // 表单校验
         try {
-          await (() => new Promise((resolve, reject) => {
-            this.$refs.leaseOut.validate((valid) => {
-              if (valid) resolve()
-              if (!valid) reject()
-            })
-          }))()
+          await this.$refs.leaseOut.validate()
         } catch (err) {
           return
         }

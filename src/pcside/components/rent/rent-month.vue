@@ -191,7 +191,8 @@
             </el-form-item>
             <el-form-item
               label="交租方式"
-              :label-width="ctdLabelWidth">
+              :label-width="ctdLabelWidth"
+              prop="payType">
               <div style="overflow: hidden;">
                 <el-row :gutter="20">
                   <el-col :span="4" style="height:1px;"></el-col>
@@ -244,13 +245,17 @@
                       </el-checkbox>
                     </el-col>
                     <el-col :span="20">
-                      <el-date-picker
-                        v-if="changeType.type.indexOf(type.value) > -1"
-                        v-model="changeType.typeTime[type.value]"
-                        type="datetime"
-                        placeholder="输入状态时间"
-                        :editable="false">
-                      </el-date-picker>
+                    <el-form-item
+                      v-if="changeType.type.indexOf(type.value) > -1"
+                      :prop="`typeTime.${type.value}`"
+                      :rules="changeTyperules.typeTime[0]">
+                        <el-date-picker
+                          v-model="changeType.typeTime[type.value]"
+                          type="datetime"
+                          placeholder="输入状态时间"
+                          :editable="false">
+                        </el-date-picker>
+                      </el-form-item>
                     </el-col>
                   </el-row>
                 </el-checkbox-group>
@@ -1040,7 +1045,12 @@
           remark: '',
         },
         changeTyperules: {
-
+          payType: [{
+            type: 'number', required: true, message: '请选择', trigger: 'change',
+          }],
+          typeTime: [{
+            type: 'date', required: true, message: '请填写', trigger: 'change',
+          }],
         },
 
         // 列表渲染
@@ -1272,10 +1282,21 @@
           this.changeType.fanghao = rent.fanghao
           this.changeType.rentId = rent._id
           // type
-          this.changeType.type = (rent.type && rent.type.type) ||
+          this.changeType.type = (
+            rent.type &&
+            JSON.parse(JSON.stringify(rent.type.type))
+          ) ||
             this.changeType.type
-          this.changeType.typeTime = (rent.type && rent.type.typeTime) ||
+          this.changeType.typeTime = (
+            rent.type &&
+            JSON.parse(JSON.stringify(rent.type.typeTime))
+          ) ||
             this.changeType.typeTime
+          Object.keys(this.changeType.typeTime).forEach(key => {
+            if (this.changeType.typeTime[key]) {
+              this.changeType.typeTime[key] = new Date(this.changeType.typeTime[key])
+            }
+          })
 
           this.changeType.isIndeterminate = (rent.type && rent.type.isIndeterminate) ||
             this.changeType.isIndeterminate
@@ -1337,6 +1358,12 @@
       async getChangeType() {
         if (this.gettingChangeType) return
 
+        // 表单校验
+        try {
+          await this.$refs.changeType.validate()
+        } catch (err) {
+          return
+        }
         // 提交接口
         this.gettingChangeType = true
 
