@@ -307,7 +307,8 @@
                         <div>抄表时间：{{getTime(getRent(props).calWater.tnew.addTime)}}</div>
                         <div>上次表底数：{{getRent(props).calWater.old.water}}吨</div>
                         <div>表底时间：{{getTime(getRent(props).calWater.old.addTime)}}</div>
-                        <el-tag slot="reference">计数</el-tag>
+                        <el-tag class="show-tag"
+                          slot="reference">计数</el-tag>
                       </el-popover>
                       ￥{{getPrice(getRent(props), 'calWater')}}元/吨
                     </div>
@@ -331,7 +332,8 @@
                         <div>抄表时间：{{getTime(getRent(props).calElectric.tnew.addTime)}}</div>
                         <div>上次表底数：{{getRent(props).calElectric.old.electric}}度</div>
                         <div>表底时间：{{getTime(getRent(props).calElectric.old.addTime)}}</div>
-                        <el-tag slot="reference">计数</el-tag>
+                        <el-tag class="show-tag"
+                          slot="reference">计数</el-tag>
                       </el-popover>
                       ￥{{getPrice(getRent(props), 'calElectric')}}元/度
                     </div>
@@ -443,7 +445,8 @@
                     <div>租住结束：{{getTime(getRent(scope).lease.leaserange[1])}}</div>
                     <div>入住时间：{{getTime(getRent(scope).lease.addTime)}}</div>
                     <div>备注：{{getRent(scope).lease.remark || '--'}}</div>
-                    <el-tag slot="reference">
+                    <el-tag class="show-tag"
+                      slot="reference">
                       {{payTypeVal[getRent(scope).lease.payType]}}
                     </el-tag>
                   </el-popover>
@@ -493,8 +496,8 @@
                     v-for="item in getRent(scope).type.type"
                     :key="item">
                     {{ getTime(getRent(scope).type.typeTime[item]) }}
-                    <el-tag slot="reference"
-                      style="margin-right: 4px;"
+                    <el-tag class="show-tag show-tag3"
+                      slot="reference"
                       :type="item != 2 ? 'success' : ''">
                       {{typesVal[item]}}
                     </el-tag>
@@ -518,12 +521,14 @@
                   placement="top"
                   trigger="hover"
                    v-if="scope.row.rents.length">
-                  <div class="rent-remark">
+                  <div class="remark-pop">
                     {{ getRent(scope).remark }}
                   </div>
-                  <span class="rent-remark-tag"
+                  <span class="show-tag"
                     slot="reference">
-                    {{ getRent(scope).remark }}
+                    <div class="remark-tag">
+                      {{ getRent(scope).remark }}
+                    </div>
                   </span>
                 </el-popover>
               </template>
@@ -554,7 +559,7 @@
                 v-if="scope.row.rents.length && monthDet.newest"
                 v-model="scope.row.dRentPopFlag">
                 <p>确认删除该计租信息吗？其他数据不受影响，但无法恢复关联信息</p>
-                <div class="month-det-d-rent-pop-cont">
+                <div class="pop-cont">
                   <el-button
                     size="mini"
                     type="text"
@@ -568,14 +573,15 @@
                     确定
                   </el-button>
                 </div>
-                <div slot="reference" class="month-det-show-pop">
+                <span class="show-pop"
+                  slot="reference">
                   <el-button
                     size="small"
                     type="danger"
                     :loading="scope.row.gettingdelRent">
                     删除
                   </el-button>
-                </div>
+                </span>
               </el-popover>
             </template>
           </el-table-column>
@@ -585,6 +591,15 @@
       <el-tab-pane
         label="待交房东统计"
         name="landordHistoryTemp">
+        <!-- 顶部按钮组 -->
+        <div class="table-btn">
+          <el-button
+            type="primary"
+            @click="getLandordRentTemp"
+            :loading="gettingLandordRentTemp">
+            刷新
+          </el-button>
+        </div>
         <el-collapse
           v-model="activeLandordHistoryTemp"
           v-loading.body="gettingLandordRentTemp"
@@ -611,7 +626,7 @@
             <div class="landord-content"
               v-if="landordHistoryTemp.sixList.length"
               style="font-weight: bold;">
-              <span class="tag-bf-span collapse-btn">
+              <span class="collapse-btn">
                 6坊65栋
               </span>
               <span>[房租合计￥{{landordHistoryTemp.six}}元]</span>
@@ -621,7 +636,7 @@
             <div class="landord-content"
               v-for="i in landordHistoryTemp.sixList"
               :key="i._id">
-              <router-link class="tag-bf-span collapse-btn"
+              <router-link class="collapse-btn"
                 :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button
                   type="text"
@@ -640,7 +655,7 @@
             <div class="landord-content"
               v-if="landordHistoryTemp.eightList.length"
               style="font-weight: bold;">
-              <span class="tag-bf-span collapse-btn">
+              <span class="collapse-btn">
                 8坊68栋
               </span>
               <span>[房租合计￥{{landordHistoryTemp.eight}}元]</span>
@@ -650,7 +665,7 @@
             <div class="landord-content"
               v-for="i in landordHistoryTemp.eightList"
               :key="i._id">
-              <router-link class="tag-bf-span collapse-btn"
+              <router-link class="collapse-btn"
                 :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button
                   type="text"
@@ -736,7 +751,7 @@
             <div class="landord-content"
               v-if="item.sixList.length"
               style="font-weight: bold;">
-              <span class="tag-bf-span collapse-btn">
+              <span class="collapse-btn">
                 6坊65栋
               </span>
               <span>[房租合计￥{{item.six}}元]</span>
@@ -746,7 +761,7 @@
             <div class="landord-content"
               v-for="i in item.sixList"
               :key="i._id">
-              <router-link class="tag-bf-span collapse-btn"
+              <router-link class="collapse-btn"
                 :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button
                   type="text"
@@ -766,7 +781,7 @@
             <div class="landord-content"
               v-if="item.eightList.length"
               style="font-weight: bold;">
-              <span class="tag-bf-span collapse-btn">
+              <span class="collapse-btn">
                 8坊68栋
               </span>
               <span>[房租合计￥{{item.eight}}元]</span>
@@ -776,7 +791,7 @@
             <div class="landord-content"
               v-for="i in item.eightList"
               :key="i._id">
-              <router-link class="tag-bf-span collapse-btn"
+              <router-link class="collapse-btn"
                 :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
                 <el-button
                   type="text"
@@ -833,7 +848,7 @@
               <div class="landord-content"
                 v-for="(hao, haoi) in floor.list"
                 :key="haoi">
-                <router-link class="tag-bf-span"
+                <router-link
                   :to="{ path: '/inner/rent/history', query: { id: hao.haoId }}">
                   <el-button
                     type="text"
@@ -897,6 +912,7 @@
           </table>
         </div>
       </el-tab-pane>
+
       <el-tab-pane
         label="8坊68栋水电张贴"
         name="waterandeleCal8">
@@ -1464,6 +1480,7 @@
 </script>
 
 <style lang="scss">
+// 特殊打印样式
 @media print {
   .rent-month {
     .el-tabs__header {
@@ -1473,16 +1490,6 @@
 }
 
 .rent-month {
-  // 顶部按钮样式
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
   // 弹窗表单样式
   .add-month-det-dialog,
   .change-type-dialog {
@@ -1490,7 +1497,6 @@
     .el-input {
       width: 100%;
       vertical-align: top;
-      // max-width: 300px;
     }
     .el-select {
       width: 100%;
@@ -1512,36 +1518,7 @@
     color: #999;
     font-weight: normal;
   }
-  // 删除pop样式
-  .month-det-show-pop {
-    display: inline-block;
-    margin-left: 10px;
-  }
-  // 删除pop弹窗样式
-  .month-det-d-rent-pop-cont {
-    text-align: right;
-    margin: 0;
-  }
-  // 信息悬浮窗样式
-  .tag-bf-span {
-    display: inline-block;
-    vertical-align: top;
-  }
-  .tag-bf-span + * {
-    display: inline-block;
-    vertical-align: top;
-  }
-  // 信息悬浮窗弹窗样式
-  .rent-remark {
-    max-width: 200px;
-  }
-  .rent-remark-tag {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
+  // 标题样式
   .landord-title {
     display: inline-block;
     margin-right: 20px;
@@ -1554,6 +1531,7 @@
     .collapse-btn {
       width: auto;
       min-width: 90px;
+      display: inline-block;
     }
     & > span {
       display: inline-block;

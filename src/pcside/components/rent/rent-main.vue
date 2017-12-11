@@ -125,7 +125,7 @@
             trigger="click"
             v-model="scope.row.dMonthPopFlag">
             <p>确认删除月份周期信息吗？与之关联的数据将一并删除</p>
-            <div class="month-list-d-month-pop-cont">
+            <div class="pop-cont">
               <el-button
                 size="mini"
                 type="text"
@@ -139,7 +139,7 @@
                 确定
               </el-button>
             </div>
-            <div class="month-list-show-pop"
+            <span class="show-pop"
               slot="reference">
               <el-button
                 size="small"
@@ -147,7 +147,7 @@
                 :loading="scope.row.gettingdelMonth">
                 删除
               </el-button>
-            </div>
+            </span>
           </el-popover>
         </template>
       </el-table-column>
@@ -311,15 +311,7 @@
 
 <style lang="scss">
 .rent-main {
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
+  // 弹窗样式
   .add-month-list-dialog {
     max-width: 400px;
     .el-input {
@@ -331,13 +323,5 @@
       max-width: 300px;
     }
   }
-  .month-list-show-pop {
-    display: inline-block;
-    margin-left: 10px;
-  }
-}
-.month-list-d-month-pop-cont {
-  text-align: right;
-  margin: 0;
 }
 </style>

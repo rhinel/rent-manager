@@ -36,10 +36,6 @@ body,
 // 折页打开样式
 .table-expand {
   font-size: 0;
-  .rent-show-tag {
-    padding-top: 6px;
-    line-height: 0;
-  }
   .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
@@ -64,9 +60,6 @@ body,
 .show-tag {
   cursor: pointer;
   display: inline-block;
-  &.pop {
-    margin-left: 10px;
-  }
 }
 .show-tag3 {
   margin-right: 4px;
