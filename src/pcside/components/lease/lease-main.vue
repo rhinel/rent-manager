@@ -1047,12 +1047,7 @@
 
         // 表单校验
         try {
-          await (() => new Promise((resolve, reject) => {
-            this.$refs.leaseIn.validate((valid) => {
-              if (valid) resolve()
-              if (!valid) reject()
-            })
-          }))()
+          await this.$refs.leaseIn.validate()
         } catch (err) {
           return
         }

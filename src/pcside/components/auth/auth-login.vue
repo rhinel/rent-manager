@@ -98,12 +98,7 @@
 
         // 表单校验
         try {
-          await (() => new Promise((resolve, reject) => {
-            this.$refs.logininfo.validate((valid) => {
-              if (valid) resolve()
-              if (!valid) reject()
-            })
-          }))()
+          await this.$refs.logininfo.validate()
         } catch (err) {
           return
         }
