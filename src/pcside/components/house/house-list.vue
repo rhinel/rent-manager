@@ -136,7 +136,7 @@
             trigger="click"
             v-model="scope.row.dHousePopFlag">
             <p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
-            <div class="house-list-d-house-pop-cont">
+            <div class="pop-cont">
               <el-button
                 size="mini"
                 type="text"
@@ -150,14 +150,15 @@
                 确定
               </el-button>
             </div>
-            <div slot="reference" class="house-show-pop">
+            <span class="show-pop"
+              slot="reference">
               <el-button
                 size="small"
                 type="danger"
                 :loading="scope.row.gettingdelHouse">
                 删除
               </el-button>
-            </div>
+            </span>
           </el-popover>
         </template>
       </el-table-column>
@@ -330,15 +331,6 @@
 
 <style lang="scss">
 .house-list {
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
   .add-house-dialog {
     max-width: 400px;
     .el-input {
@@ -349,13 +341,5 @@
       max-width: 300px;
     }
   }
-  .house-show-pop {
-    display: inline-block;
-    margin-left: 10px;
-  }
-}
-.house-list-d-house-pop-cont {
-  text-align: right;
-  margin: 0;
 }
 </style>

@@ -9,6 +9,7 @@
 </script>
 
 <style lang="scss">
+// reset
 html,
 body {
   height: 100%;
@@ -39,15 +40,50 @@ body,
     padding-top: 6px;
     line-height: 0;
   }
+  .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 33%;
+  }
+  label {
+    width: 150px;
+    color: #99a9bf;
+  }
 }
-.table-expand label {
-  width: 150px;
-  color: #99a9bf;
+// 顶部按钮样式
+.table-btn {
+  margin-bottom: 20px;
 }
-.table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 33%;
+.table-btn-input {
+  vertical-align: top;
+  max-width: 300px;
+  display: inline-block;
+  margin-left: 10px;
+}
+// 信息悬浮窗样式
+.rent-show-tag {
+  cursor: pointer;
+  display: inline-block;
+  &.pop {
+    margin-left: 10px;
+  }
+}
+.rent-show-tag3 {
+  margin-right: 4px;
+}
+.rent-remark-tag {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+// 删除pop样式
+.show-pop {
+  margin-left: 10px;
+}
+.pop-cont {
+  text-align: right;
 }
 // 重写组件样式
 .el-popover {

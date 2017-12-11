@@ -2,7 +2,7 @@
   <div class="dashboard-main">
     <!-- 记事本弹窗 -->
     <el-dialog custom-class="note-dialog"
-      :key="note._id"
+      :key="'note' + dialogId"
       :title="ndDialogTitle"
       :visible.sync="noteflag"
       size="large"
@@ -98,7 +98,7 @@
     </el-dialog>
 
     <el-row :gutter="20"
-      style="margin-bottom: -20px;">
+      class="main-wrap">
       <el-col :span="18" :md="16" :xs="24" :lg="18">
         <el-row>
           <el-card class="count-wrap"
@@ -124,7 +124,9 @@
         <el-row>
           <el-card>
             <div slot="header">
-              <span class="card-header">待收租金列表</span>
+              <span class="card-header">
+                待收租金列表
+              </span>
               <el-button class="card-btn"
                 type="primary"
                 :loading="gettingRentList1"
@@ -142,8 +144,12 @@
                 label="周期"
                 width="120">
                 <template slot-scope="scope">
-                  <router-link :to="{ path: '/inner/rent/month', query: { id: scope.row.monthId._id }}">
-                    <el-button type="text">{{scope.row.monthId.month}}</el-button>
+                  <router-link
+                    :to="{ path: '/inner/rent/month', query: { id: scope.row.monthId._id }}">
+                    <el-button
+                      type="text">
+                      {{scope.row.monthId.month}}
+                    </el-button>
                   </router-link>
                 </template>
               </el-table-column>
@@ -152,8 +158,12 @@
                 label="房屋"
                 width="180">
                 <template slot-scope="scope">
-                  <router-link :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
-                    <el-button type="text">{{scope.row.fanghao}}</el-button>
+                  <router-link
+                    :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
+                    <el-button
+                      type="text">
+                      {{scope.row.fanghao}}
+                    </el-button>
                   </router-link>
                 </template>
               </el-table-column>
@@ -174,7 +184,7 @@
                 width="180">
                 <template slot-scope="scope">
                   <div v-if="scope.row.lease.name">
-                    <el-tag class="tag-bf-span">{{scope.row.lease.payDay}}日</el-tag>
+                    <el-tag>{{scope.row.lease.payDay}}日</el-tag>
                     <el-popover
                       placement="top"
                       trigger="hover">
@@ -186,10 +196,10 @@
                       <div>入住时间：{{getDate(scope.row.lease.addTime)}}</div>
                       <div>搬出时间：{{getDate(scope.row.lease.outTime)}}</div>
                       <div>备注：{{scope.row.lease.remark || '--'}}</div>
-                      <div class="rent-show-tag"
+                      <span class="rent-show-tag"
                         slot="reference">
                         <el-tag>{{payTypeVal[scope.row.lease.payType]}}</el-tag>
-                      </div>
+                      </span>
                     </el-popover>
                   </div>
                   <div v-if="!scope.row.lease.name">
@@ -207,14 +217,19 @@
                       trigger="hover"
                        v-for="item in scope.row.type.type"
                        :key="item">
-                      <div class="rent-remark">{{ getDate(scope.row.type.typeTime[item]) }}</div>
-                      <div class="rent-show-tag rent-show-tag3"
+                      <div class="rent-remark">
+                        {{ getDate(scope.row.type.typeTime[item]) }}
+                      </div>
+                      <span class="rent-show-tag rent-show-tag3"
                         slot="reference">
                         <el-tag>{{typesVal[item]}}</el-tag>
-                      </div>
+                      </span>
                     </el-popover>
                   </div>
-                  <el-tag v-if="(scope.row.type && !scope.row.type.type.length) || !scope.row.type">新建</el-tag>
+                  <el-tag
+                    v-if="(scope.row.type && !scope.row.type.type.length) || !scope.row.type">
+                    新建
+                  </el-tag>
                   <div>{{getDate(scope.row.updateTime)}}</div>
                 </template>
               </el-table-column>
@@ -225,10 +240,14 @@
                   <el-popover
                     placement="top"
                     trigger="hover">
-                    <div class="rent-remark">{{ scope.row.remark }}</div>
-                    <div class="rent-show-tag rent-show-tag2"
+                    <div class="rent-remark">
+                      {{ scope.row.remark }}
+                    </div>
+                    <div class="rent-show-tag"
                       slot="reference">
-                      <div class="rent-remark-tag">{{ scope.row.remark }}</div>
+                      <div class="rent-remark-tag">
+                        {{ scope.row.remark }}
+                      </div>
                     </div>
                   </el-popover>
                 </template>
@@ -240,7 +259,9 @@
         <el-row>
           <el-card>
             <div slot="header">
-              <span class="card-header">待交房东列表</span>
+              <span class="card-header">
+                待交房东列表
+              </span>
               <el-button class="card-btn"
                 type="primary"
                 :loading="gettingRentList3"
@@ -248,8 +269,7 @@
                 刷新
               </el-button>
             </div>
-            <el-table
-              class="rent-list-table"
+            <el-table class="rent-list-table"
               :data="rentList3"
               v-loading.body="gettingRentList3"
               stripe
@@ -259,8 +279,12 @@
                 label="周期"
                 width="120">
                 <template slot-scope="scope">
-                  <router-link :to="{ path: '/inner/rent/month', query: { id: scope.row.monthId._id }}">
-                    <el-button type="text">{{scope.row.monthId.month}}</el-button>
+                  <router-link
+                    :to="{ path: '/inner/rent/month', query: { id: scope.row.monthId._id }}">
+                    <el-button
+                      type="text">
+                      {{scope.row.monthId.month}}
+                    </el-button>
                   </router-link>
                 </template>
               </el-table-column>
@@ -269,8 +293,12 @@
                 label="房屋"
                 width="180">
                 <template slot-scope="scope">
-                  <router-link :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
-                    <el-button type="text">{{scope.row.fanghao}}</el-button>
+                  <router-link
+                    :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
+                    <el-button
+                      type="text">
+                      {{scope.row.fanghao}}
+                    </el-button>
                   </router-link>
                 </template>
               </el-table-column>
@@ -291,7 +319,7 @@
                 width="180">
                 <template slot-scope="scope">
                   <div v-if="scope.row.lease.name">
-                    <el-tag class="tag-bf-span">{{scope.row.lease.payDay}}日</el-tag>
+                    <el-tag>{{scope.row.lease.payDay}}日</el-tag>
                     <el-popover
                       placement="top"
                       trigger="hover">
@@ -303,10 +331,10 @@
                       <div>入住时间：{{getDate(scope.row.lease.addTime)}}</div>
                       <div>搬出时间：{{getDate(scope.row.lease.outTime)}}</div>
                       <div>备注：{{scope.row.lease.remark || '--'}}</div>
-                      <div class="rent-show-tag"
+                      <span class="rent-show-tag"
                         slot="reference">
                         <el-tag>{{payTypeVal[scope.row.lease.payType]}}</el-tag>
-                      </div>
+                      </span>
                     </el-popover>
                   </div>
                   <div v-if="!scope.row.lease.name">
@@ -324,14 +352,19 @@
                       trigger="hover"
                        v-for="item in scope.row.type.type"
                        :key="item">
-                      <div class="rent-remark">{{ getDate(scope.row.type.typeTime[item]) }}</div>
-                      <div class="rent-show-tag rent-show-tag3"
+                      <div class="rent-remark">
+                        {{ getDate(scope.row.type.typeTime[item]) }}
+                      </div>
+                      <span class="rent-show-tag rent-show-tag3"
                         slot="reference">
                         <el-tag>{{typesVal[item]}}</el-tag>
-                      </div>
+                      </span>
                     </el-popover>
                   </div>
-                  <el-tag (v-if="scope.row.type && !scope.row.type.type.length) || !scope.row.type">新建</el-tag>
+                  <el-tag
+                    v-if="(scope.row.type && !scope.row.type.type.length) || !scope.row.type">
+                    新建
+                  </el-tag>
                   <div>{{getDate(scope.row.updateTime)}}</div>
                 </template>
               </el-table-column>
@@ -342,11 +375,14 @@
                   <el-popover
                     placement="top"
                     trigger="hover">
-                    <div class="rent-remark">{{ scope.row.remark }}</div>
-                    <div class="rent-show-tag rent-show-tag2"
+                    <div class="rent-remark">
+                      {{ scope.row.remark }}</div>
+                    <span class="rent-show-tag"
                       slot="reference">
-                      <div class="rent-remark-tag">{{ scope.row.remark }}</div>
-                    </div>
+                      <div class="rent-remark-tag">
+                        {{ scope.row.remark }}
+                      </div>
+                    </span>
                   </el-popover>
                 </template>
               </el-table-column>
@@ -360,7 +396,9 @@
           <el-card class="detail-wrap"
             v-loading.body="gettingNotes">
             <div slot="header">
-              <span class="card-header">记事本</span>
+              <span class="card-header">
+                记事本
+              </span>
               <el-button class="card-btn"
                 type="primary"
                 @click="getNoteAddDialog">
@@ -391,7 +429,9 @@
         <el-row>
           <el-card class="detail-wrap">
             <div slot="header">
-              <span class="card-header">操作说明</span>
+              <span class="card-header">
+                操作说明
+              </span>
             </div>
             <div class="detail-content">
               <b>业务一：房屋管理</b><br>
@@ -448,6 +488,7 @@
         rentList1: [],
         rentList3: [],
         // 添加记事
+        dialogId: Date.now(),
         gettingAddNote: false,
         houseData: [],
         ndDialogTitle: '添加记事',
@@ -497,7 +538,7 @@
     methods: {
       // 时间格式化
       getDate(t) {
-        return t ? new Date(t).toLocaleDateString() : '--'
+        return t ? new Date(t).toLocaleString() : '--'
       },
       // 获取计数
       async getCount() {
@@ -563,6 +604,7 @@
       // 数据初始化
       getNoteReset() {
         this.note = Object.assign({}, this.note, this.noteClear)
+        this.dialogId = Date.now()
       },
       // 关闭弹窗和清空数据
       onNoteDialogClose() {
@@ -600,12 +642,7 @@
 
         // 表单校验
         try {
-          await (() => new Promise((resolve, reject) => {
-            this.$refs.note.validate((valid) => {
-              if (valid) resolve()
-              if (!valid) reject()
-            })
-          }))()
+          await this.$refs.note.validate()
         } catch (err) {
           return
         }
@@ -635,8 +672,12 @@
 
 <style lang="scss">
 .dashboard-main {
+  // 页面样式
   .el-row {
     margin-bottom: 20px;
+  }
+  .el-row.main-wrap {
+    margin-bottom: -20px;
   }
   .el-card__header {
     position: relative;
@@ -650,7 +691,9 @@
     right: 20px;
     transform: translateY(-50%);
   }
-  .count-wrap .el-card__body {
+  // 计数card
+  .count-wrap
+    .el-card__body {
     display: flex;
     justify-content: space-around;
   }
@@ -665,7 +708,9 @@
       font-size: 48px;
     }
   }
+  // 自定义card
   .detail-wrap {
+    // 记事列表
     .card-list {
       list-style: none;
       padding: 0;
@@ -689,16 +734,19 @@
         }
       }
     }
+    // card暂无数据
     .card-nodata {
       color: #5a5e66;
       text-align: center;
       line-height: 20px;
     }
+    // 文字内容
     .detail-content {
       line-height: 2;
       margin: -7px 0;
     }
   }
+  // 记事弹窗
   .note-dialog {
     max-width: 800px;
     .el-row {
@@ -707,39 +755,6 @@
     .el-input,
     .el-select {
       width: 100%;
-    }
-  }
-  .rent-list-table {
-    // 信息悬浮窗样式
-    .tag-bf-span {
-      display: inline-block;
-      vertical-align: middle;
-    }
-    .tag-bf-span + * {
-      display: inline-block;
-      vertical-align: middle;
-    }
-    .rent-show-tag {
-      cursor: pointer;
-      &.pop {
-        margin-left: 10px;
-      }
-    }
-    .rent-show-tag2 {
-      display: inline-block;
-      vertical-align: middle;
-    }
-    .rent-show-tag3 {
-      margin-right: 4px;
-      display: inline-block;
-      vertical-align: middle;
-    }
-    .rent-remark-tag {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
     }
   }
 }

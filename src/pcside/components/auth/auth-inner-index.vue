@@ -89,6 +89,7 @@
 
 <style lang="scss">
 @media print {
+  // 打印样式
   .auth-inner-index {
     padding-top: 0 !important;
     .inner-header {
@@ -101,14 +102,35 @@
 }
 
 .auth-inner-index {
+  // 页面布局
   padding-left: 180px;
   transition: padding-left 0.3s;
   padding-top: 50px;
-  .inner-sidebar
+  // 顶部开关按钮
+  &.in {
+    padding-left: 0;
+    .header-left .el-button .el-icon-d-arrow-left {
+      transform: rotateZ(180deg);
+    }
+    .inner-sidebar {
+      left: -180px;
+    }
+  }
+  // menu
+  .inner-sidebar {
     .el-icon-loading {
-    vertical-align: text-bottom;
-    position: relative;
-    top: 0.5px;
+      vertical-align: text-bottom;
+      position: relative;
+      top: 0.5px;
+    }
+    width: 180px;
+    height: calc(100vh - 50px);
+    border-radius: 0;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    transition: left 0.3s;
+    bottom: 0;
   }
   .inner-header {
     width: 100%;
@@ -162,27 +184,8 @@
       }
     }
   }
-  .inner-sidebar {
-    width: 180px;
-    height: calc(100vh - 50px);
-    border-radius: 0;
-    position: fixed;
-    top: 50px;
-    left: 0;
-    transition: left 0.3s;
-    bottom: 0;
-  }
   .inner-body {
     padding: 20px;
-  }
-  &.in {
-    padding-left: 0;
-    .header-left .el-button .el-icon-d-arrow-left {
-      transform: rotateZ(180deg);
-    }
-    .inner-sidebar {
-      left: -180px;
-    }
   }
 }
 </style>
