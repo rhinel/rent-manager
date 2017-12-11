@@ -151,7 +151,8 @@
                     <div>抄表时间：{{getTime(getRent(props).calWater.tnew.addTime)}}</div>
                     <div>上次表底数：{{getRent(props).calWater.old.water}}吨</div>
                     <div>表底时间：{{getTime(getRent(props).calWater.old.addTime)}}</div>
-                    <el-tag slot="reference">计数</el-tag>
+                    <el-tag class="show-tag"
+                      slot="reference">计数</el-tag>
                   </el-popover>
                   ￥{{getPrice(getRent(props), 'calWater')}}元/吨
                 </div>
@@ -175,7 +176,8 @@
                     <div>抄表时间：{{getTime(getRent(props).calElectric.tnew.addTime)}}</div>
                     <div>上次表底数：{{getRent(props).calElectric.old.electric}}度</div>
                     <div>表底时间：{{getTime(getRent(props).calElectric.old.addTime)}}</div>
-                    <el-tag slot="reference">计数</el-tag>
+                    <el-tag class="show-tag"
+                      slot="reference">计数</el-tag>
                   </el-popover>
                   ￥{{getPrice(getRent(props), 'calElectric')}}元/度
                 </div>
@@ -323,8 +325,8 @@
                 v-for="item in getRent(scope).type.type"
                 :key="item">
                 {{ getTime(getRent(scope).type.typeTime[item]) }}
-                <el-tag slot="reference"
-                  style="margin-right: 4px;"
+                <el-tag class="show-tag show-tag3"
+                  slot="reference"
                   :type="item != 2? 'success' : ''">
                   {{typesVal[item]}}
                 </el-tag>

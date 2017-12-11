@@ -196,10 +196,10 @@
                       <div>入住时间：{{getDate(scope.row.lease.addTime)}}</div>
                       <div>搬出时间：{{getDate(scope.row.lease.outTime)}}</div>
                       <div>备注：{{scope.row.lease.remark || '--'}}</div>
-                      <span class="show-tag"
+                      <el-tag class="show-tag"
                         slot="reference">
-                        <el-tag>{{payTypeVal[scope.row.lease.payType]}}</el-tag>
-                      </span>
+                        {{payTypeVal[scope.row.lease.payType]}}
+                      </el-tag>
                     </el-popover>
                   </div>
                   <div v-if="!scope.row.lease.name">
@@ -220,10 +220,10 @@
                       <div class="remark-pop">
                         {{ getDate(scope.row.type.typeTime[item]) }}
                       </div>
-                      <span class="show-tag show-tag3"
+                      <el-tag class="show-tag show-tag3"
                         slot="reference">
-                        <el-tag>{{typesVal[item]}}</el-tag>
-                      </span>
+                        {{typesVal[item]}}
+                      </el-tag>
                     </el-popover>
                   </div>
                   <el-tag
@@ -331,10 +331,10 @@
                       <div>入住时间：{{getDate(scope.row.lease.addTime)}}</div>
                       <div>搬出时间：{{getDate(scope.row.lease.outTime)}}</div>
                       <div>备注：{{scope.row.lease.remark || '--'}}</div>
-                      <span class="show-tag"
+                      <el-tag class="show-tag"
                         slot="reference">
-                        <el-tag>{{payTypeVal[scope.row.lease.payType]}}</el-tag>
-                      </span>
+                        {{payTypeVal[scope.row.lease.payType]}}
+                      </el-tag>
                     </el-popover>
                   </div>
                   <div v-if="!scope.row.lease.name">
@@ -355,10 +355,11 @@
                       <div class="remark-pop">
                         {{ getDate(scope.row.type.typeTime[item]) }}
                       </div>
-                      <span class="show-tag show-tag3"
-                        slot="reference">
-                        <el-tag>{{typesVal[item]}}</el-tag>
-                      </span>
+                      <el-tag class="show-tag show-tag3"
+                        slot="reference"
+                        type="success">
+                        {{typesVal[item]}}
+                      </el-tag>
                     </el-popover>
                   </div>
                   <el-tag
@@ -539,7 +540,7 @@
     methods: {
       // 时间格式化
       getDate(t) {
-        return t ? new Date(t).toLocaleString() : '--'
+        return t ? this.GetTimeFormat(t) : '--'
       },
       // 获取计数
       async getCount() {

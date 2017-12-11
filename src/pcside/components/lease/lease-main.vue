@@ -444,7 +444,7 @@
                 v-model="out.outTime"
                 type="datetime"
                 placeholder="输入搬出时间"
-                style="width: 100%; max-width: 300px;"
+                style="width: 100%;"
                 :editable="false">
               </el-date-picker>
             </el-form-item>
@@ -1174,6 +1174,9 @@
   // 弹窗样式
   .lease-out-dialog {
     max-width: 400px;
+    .el-date-editor {
+      max-width: 300px;
+    }
   }
   // 统计标题
   .lease-count-title:not(:first-child) {
