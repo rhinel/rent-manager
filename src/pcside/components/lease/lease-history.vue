@@ -63,12 +63,12 @@
             <el-popover
               placement="top"
               trigger="hover">
-              <div class="lease-remark">
+              <div class="remark-pop">
                 {{ scope.row.remark }}
               </div>
-              <div class="lease-show-tag"
+              <div class="show-tag"
                 slot="reference">
-                <div class="lease-remark-tag">
+                <div class="remark-tag">
                   {{ scope.row.remark }}
                 </div>
               </div>
@@ -111,7 +111,7 @@
                     {{item.step}}吨及以下￥{{item.price}}元/吨；
                   </div>
                   超出按最后阶梯计算。
-                  <div class="lease-show-tag"
+                  <div class="show-tag"
                     slot="reference">
                     <el-tag>阶梯</el-tag>
                   </div>
@@ -145,7 +145,7 @@
                     {{item.step}}度及以下￥{{item.price}}元/度；
                   </div>
                   超出按最后阶梯计算。
-                  <div class="lease-show-tag"
+                  <div class="show-tag"
                     slot="reference">
                     <el-tag>阶梯</el-tag>
                   </div>
@@ -183,7 +183,7 @@
               v-if="scope.row._id"
               v-model="scope.row.dLeasePopFlag">
               <p>确认删除此租住历史？此行为不可撤销</p>
-              <div class="lease-list-lease-o-pop-cont">
+              <div class="pop-cont">
                 <el-button
                   size="mini"
                   type="text"
@@ -197,7 +197,7 @@
                   确定
                 </el-button>
               </div>
-              <div class="lease-show-tag pop"
+              <div
                 slot="reference">
                 <el-button
                   size="small"
@@ -265,7 +265,9 @@
         // 拉取接口
         this.gettingListRefresh = true
 
-        await this.Ajax('/inner/lease/list', { haoId: this.$route.query.haoid })
+        await this.Ajax('/inner/lease/list', {
+          haoId: this.$route.query.haoid,
+        })
           .then(res => {
             this.leaseList = res
           })
@@ -280,7 +282,9 @@
         // 拉取接口
         row.gettingdelLease = true
 
-        await this.Ajax('/inner/lease/del', { _id: row._id })
+        await this.Ajax('/inner/lease/del', {
+          _id: row._id,
+        })
           .then(() => {
             this.$message({
               type: 'success',
@@ -296,30 +300,3 @@
     },
   }
 </script>
-
-<style lang="scss">
-.lease-history {
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
-  .lease-show-tag {
-    display: inline-block;
-    cursor: pointer;
-  }
-  .lease-remark-tag {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-}
-.lease-remark {
-  max-width: 200px;
-}
-</style>

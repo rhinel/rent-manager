@@ -61,22 +61,25 @@ body,
   margin-left: 10px;
 }
 // 信息悬浮窗样式
-.rent-show-tag {
+.show-tag {
   cursor: pointer;
   display: inline-block;
   &.pop {
     margin-left: 10px;
   }
 }
-.rent-show-tag3 {
+.show-tag3 {
   margin-right: 4px;
 }
-.rent-remark-tag {
+.remark-tag {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+.remark-pop {
+  max-width: 300px;
 }
 // 删除pop样式
 .show-pop {

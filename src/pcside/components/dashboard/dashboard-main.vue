@@ -156,7 +156,7 @@
               <el-table-column
                 prop="fanghao"
                 label="房屋"
-                width="180">
+                width="120">
                 <template slot-scope="scope">
                   <router-link
                     :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
@@ -196,7 +196,7 @@
                       <div>入住时间：{{getDate(scope.row.lease.addTime)}}</div>
                       <div>搬出时间：{{getDate(scope.row.lease.outTime)}}</div>
                       <div>备注：{{scope.row.lease.remark || '--'}}</div>
-                      <span class="rent-show-tag"
+                      <span class="show-tag"
                         slot="reference">
                         <el-tag>{{payTypeVal[scope.row.lease.payType]}}</el-tag>
                       </span>
@@ -217,10 +217,10 @@
                       trigger="hover"
                        v-for="item in scope.row.type.type"
                        :key="item">
-                      <div class="rent-remark">
+                      <div class="remark-pop">
                         {{ getDate(scope.row.type.typeTime[item]) }}
                       </div>
-                      <span class="rent-show-tag rent-show-tag3"
+                      <span class="show-tag show-tag3"
                         slot="reference">
                         <el-tag>{{typesVal[item]}}</el-tag>
                       </span>
@@ -240,15 +240,15 @@
                   <el-popover
                     placement="top"
                     trigger="hover">
-                    <div class="rent-remark">
+                    <div class="remark-pop">
                       {{ scope.row.remark }}
                     </div>
-                    <div class="rent-show-tag"
+                    <span class="show-tag"
                       slot="reference">
-                      <div class="rent-remark-tag">
+                      <div class="remark-tag">
                         {{ scope.row.remark }}
                       </div>
-                    </div>
+                    </span>
                   </el-popover>
                 </template>
               </el-table-column>
@@ -291,7 +291,7 @@
               <el-table-column
                 prop="fanghao"
                 label="房屋"
-                width="180">
+                width="120">
                 <template slot-scope="scope">
                   <router-link
                     :to="{ path: '/inner/rent/history', query: { id: scope.row.haoId }}">
@@ -331,7 +331,7 @@
                       <div>入住时间：{{getDate(scope.row.lease.addTime)}}</div>
                       <div>搬出时间：{{getDate(scope.row.lease.outTime)}}</div>
                       <div>备注：{{scope.row.lease.remark || '--'}}</div>
-                      <span class="rent-show-tag"
+                      <span class="show-tag"
                         slot="reference">
                         <el-tag>{{payTypeVal[scope.row.lease.payType]}}</el-tag>
                       </span>
@@ -352,10 +352,10 @@
                       trigger="hover"
                        v-for="item in scope.row.type.type"
                        :key="item">
-                      <div class="rent-remark">
+                      <div class="remark-pop">
                         {{ getDate(scope.row.type.typeTime[item]) }}
                       </div>
-                      <span class="rent-show-tag rent-show-tag3"
+                      <span class="show-tag show-tag3"
                         slot="reference">
                         <el-tag>{{typesVal[item]}}</el-tag>
                       </span>
@@ -375,11 +375,12 @@
                   <el-popover
                     placement="top"
                     trigger="hover">
-                    <div class="rent-remark">
-                      {{ scope.row.remark }}</div>
-                    <span class="rent-show-tag"
+                    <div class="remark-pop">
+                      {{ scope.row.remark }}
+                    </div>
+                    <span class="show-tag"
                       slot="reference">
-                      <div class="rent-remark-tag">
+                      <div class="remark-tag">
                         {{ scope.row.remark }}
                       </div>
                     </span>

@@ -548,8 +548,8 @@
                         {{ item.step }}吨及以下￥{{ item.price }}元/吨；
                       </div>
                       超出按最后阶梯计算。
-                      <div class="lease-show-tag"
-                         slot="reference">
+                      <div class="show-tag"
+                        slot="reference">
                         <el-tag>阶梯</el-tag>
                       </div>
                     </el-popover>
@@ -585,7 +585,7 @@
                         {{ item.step }}度及以下￥{{ item.price }}元/度；
                       </div>
                       超出按最后阶梯计算。
-                      <div class="lease-show-tag"
+                      <div class="show-tag"
                         slot="reference">
                         <el-tag>阶梯</el-tag>
                       </div>
@@ -629,12 +629,12 @@
                 <el-popover
                   placement="top"
                   trigger="hover">
-                  <div class="lease-remark">
+                  <div class="remark-pop">
                     {{ scope.row.leaseId.remark }}
                   </div>
-                  <div class="lease-show-tag"
+                  <div class="show-tag"
                     slot="reference">
-                    <div class="lease-remark-tag">
+                    <div class="remark-tag">
                       {{ scope.row.leaseId.remark }}
                     </div>
                   </div>
@@ -674,7 +674,8 @@
         label="当前租金统计"
         name="leaseCount">
 
-        <template v-for="(fang, fangi) in leaseCount">
+        <template
+          v-for="(fang, fangi) in leaseCount">
           <div class="lease-count-title"
             :key="fangi + `title`">
             <el-alert class="table-btn"
@@ -1156,15 +1157,7 @@
 
 <style lang="scss">
 .lease-main {
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
+  // 弹窗样式
   .lease-in-dialog {
     max-width: 1400px;
     width: 65%;
@@ -1178,32 +1171,13 @@
       height: 14px;
     }
   }
-  .lease-show-tag {
-    display: inline-block;
-    cursor: pointer;
-    &.pop {
-      margin-left: 10px;
-    }
-  }
-  .lease-remark-tag {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
+  // 弹窗样式
   .lease-out-dialog {
     max-width: 400px;
   }
+  // 统计标题
   .lease-count-title:not(:first-child) {
     padding-top: 20px;
   }
-}
-.lease-list-lease-o-pop-cont {
-  text-align: right;
-  margin: 0;
-}
-.lease-remark {
-  max-width: 300px;
 }
 </style>
