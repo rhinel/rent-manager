@@ -290,9 +290,9 @@
           <el-table-column
             type="expand">
             <template slot-scope="props">
-              <el-form
+              <el-form class="table-expand"
                 label-position="left"
-                inline class="table-expand">
+                inline>
                 <el-form-item
                   label="水表本次用数/单价"
                   min-width="150">

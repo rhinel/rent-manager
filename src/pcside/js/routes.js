@@ -22,7 +22,7 @@ const LeaseHistory = () => import('../components/lease/lease-history')
 const Rent = () => import('../components/rent/rent-index')
 const RentMonth = () => import('../components/rent/rent-month')
 const RentIndex = () => import('../components/rent/rent-main')
-// const RentHistory = () => import('../components/rent/rent-history')
+const RentHistory = () => import('../components/rent/rent-history')
 
 const System = () => import('../components/system/system-index')
 const SystemIndex = () => import('../components/system/system-main')
@@ -130,11 +130,11 @@ export default {
               meta: { name: '月租周期' },
               component: RentMonth,
             },
-            // {
-            //   path: 'history',
-            //   meta: { name: '收租历史' },
-            //   component: RentHistory,
-            // },
+            {
+              path: 'history',
+              meta: { name: '收租历史' },
+              component: RentHistory,
+            },
           ],
         },
         {// 系统管理
