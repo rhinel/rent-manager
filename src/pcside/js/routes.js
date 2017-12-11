@@ -20,7 +20,7 @@ const LeaseIndex = () => import('../components/lease/lease-main')
 const LeaseHistory = () => import('../components/lease/lease-history')
 
 const Rent = () => import('../components/rent/rent-index')
-// const RentMonth = () => import('../components/rent/rent-month')
+const RentMonth = () => import('../components/rent/rent-month')
 const RentIndex = () => import('../components/rent/rent-main')
 // const RentHistory = () => import('../components/rent/rent-history')
 
@@ -125,11 +125,11 @@ export default {
               component: RentIndex,
               alias: '',
             },
-            // {
-            //   path: 'month',
-            //   meta: { name: '月租周期' },
-            //   component: RentMonth,
-            // },
+            {
+              path: 'month',
+              meta: { name: '月租周期' },
+              component: RentMonth,
+            },
             // {
             //   path: 'history',
             //   meta: { name: '收租历史' },

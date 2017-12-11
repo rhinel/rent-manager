@@ -63,9 +63,9 @@ module.exports = {
       .lean()
       .exec()
 
-    const dbInfo = await Promise.all([houseInfo, rentInfo])
+    const dbInfo = await Promise.all([houseInfo(), rentInfo()])
 
-    dbInfo.houseInfo.forEach(house => {
+    dbInfo[0].forEach(house => {
       // 字段提供
       if (!house.fanghao) {
         house.fanghao = house.fang + house.hao
@@ -80,12 +80,12 @@ module.exports = {
       if (!house.dRentPopFlag) house.dRentPopFlag = false
 
       // 处理租住信息
-      house.rents = dbInfo.rentInfo
+      house.rents = dbInfo[1]
         .filter(rent => rent.haoId.toString() === house._id.toString())
     })
 
     // 2返回list
-    return dbInfo.houseInfo
+    return dbInfo[0]
   },
 
   rentAdd: async req => {
@@ -421,12 +421,12 @@ module.exports = {
       .lean()
       .exec()
 
-    const houseAndMonth = await Promise.all([houseInfo, monthInfo])
+    const houseAndMonth = await Promise.all([houseInfo(), monthInfo()])
 
     // 2再根据monthId查询月度信息
     const rentInfo = await db
       .dbModel('rent')
-      .find({ monthId: db.db.Types.ObjectId(houseAndMonth.monthInfo._id) })
+      .find({ monthId: db.db.Types.ObjectId(houseAndMonth[1]._id) })
       .where('status')
       .equals(1)
       .sort('-addTime fanghao')
@@ -434,7 +434,7 @@ module.exports = {
       .exec()
 
     // 3根据房屋Id插入monthId信息
-    houseAndMonth.houseInfo.forEach(house => {
+    houseAndMonth[0].forEach(house => {
       // 字段提供
       if (!house.fanghao) house.fanghao = house.fang + house.hao
       if (!house.leaseId) house.leaseId = {}
@@ -445,7 +445,7 @@ module.exports = {
     })
 
     // 4返回list
-    return houseAndMonth.houseInfo
+    return houseAndMonth[0]
   },
 
   listByHaoAndMonth: async req => {
@@ -536,7 +536,11 @@ module.exports = {
 
     const list = {}
     dbInfo.forEach(rent => {
-      const time = new Date(rent.type.typeTime[3]).getTime()
+      // 东八区偏移时间
+      const dateOffset = -480
+      let time = new Date(rent.type.typeTime[3])
+      time.setMinutes(time.getMinutes() + (time.getTimezoneOffset() - dateOffset))
+      time = new Date(time.toLocaleDateString()).getTime()
       // 初始化字段
       if (!list[time]) {
         list[time] = {
