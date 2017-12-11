@@ -881,7 +881,7 @@
         name="waterandeleCal6">
         <div class="rent-count-title">
           <div class="cal-title">
-            <div>6坊65栋{{monthDet.month}}水电</div>
+            <div>6坊65栋{{getCalMonth(monthDet.month)}}水电</div>
             <div>抄表日期：{{getTnewTime()}}</div>
           </div>
         </div>
