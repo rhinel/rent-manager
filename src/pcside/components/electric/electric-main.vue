@@ -474,7 +474,7 @@
                   {{item.step}}度及以下￥{{item.price}}元/度；
                 </div>
                 超出按最后阶梯计算。
-                <div class="electric-show-tag"
+                <div class="show-tag"
                   slot="reference">
                   <el-tag>阶梯</el-tag>
                 </div>
@@ -853,15 +853,7 @@
 
 <style lang="scss">
 .electric-main {
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
+  // 弹窗样式
   .add-electric-dialog {
     max-width: 400px;
     .el-input {
@@ -873,15 +865,12 @@
       max-width: 300px;
     }
   }
+  // 弹窗样式
   .cal-electric-dialog {
     max-width: 800px;
     .line {
       height: 14px;
     }
-  }
-  .electric-show-tag {
-    display: inline-block;
-    cursor: pointer;
   }
 }
 </style>

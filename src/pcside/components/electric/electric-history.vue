@@ -60,7 +60,7 @@
                 trigger="click"
                 v-model="scope.row.dElectricPopFlag">
                 <p>确认删除抄表记录吗？计费历史收费历史等将不受影响，仅影响当前数据</p>
-                <div class="house-list-d-house-pop-cont">
+                <div class="pop-cont">
                   <el-button
                     size="mini"
                     type="text"
@@ -74,7 +74,7 @@
                     确定
                   </el-button>
                 </div>
-                <div class="electric-show-pop"
+                <div
                   slot="reference">
                   <el-button
                     size="small"
@@ -194,7 +194,7 @@
                     {{ scope.row.calElectric.singlePrice }}
                     元/吨
                   </div>
-                  <div class="electric-history-step-p-wrap"
+                  <div class="history-step-p-wrap"
                     v-if="scope.row.calElectric.calType == 'step'">
                     <div class="step-p-title">
                       阶梯：
@@ -214,7 +214,7 @@
                     v-if="scope.row.fix">
                     本计费结果已被修正，计算方式仅供参考
                   </div>
-                  <div class="cal-show-tag"
+                  <div class="show-tag"
                     slot="reference">
                     <el-tag>计费方式</el-tag>
                   </div>
@@ -233,7 +233,7 @@
                 trigger="click"
                 v-model="scope.row.dCalElectricPopFlag">
                 <p>确认删除计费记录吗？抄表历史收费历史等将不受影响，仅影响当前数据</p>
-                <div class="house-list-d-house-pop-cont">
+                <div class="pop-cont">
                   <el-button
                     size="mini"
                     type="text"
@@ -247,7 +247,7 @@
                     确定
                   </el-button>
                 </div>
-                <div class="electric-show-pop"
+                <div
                   slot="reference">
                   <el-button
                     size="small"
@@ -410,30 +410,3 @@
     },
   }
 </script>
-
-<style lang="scss">
-.electric-history {
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
-  .el-tag {
-    cursor: pointer;
-  }
-  .cal-show-tag,
-  .electric-show-pop {
-    display: inline-block;
-  }
-}
-.electric-history-step-p-wrap {
-  display: flex;
-  .step-p-val {
-    flex: 1;
-  }
-}
-</style>

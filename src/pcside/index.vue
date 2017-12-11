@@ -81,6 +81,12 @@ body,
 .remark-pop {
   max-width: 300px;
 }
+.history-step-p-wrap {
+  display: flex;
+  .step-p-val {
+    flex: 1;
+  }
+}
 // 删除pop样式
 .show-pop {
   margin-left: 10px;

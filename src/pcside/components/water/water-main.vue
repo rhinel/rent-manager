@@ -474,7 +474,7 @@
                   {{item.step}}吨及以下￥{{item.price}}元/吨；
                   </div>
                   超出按最后阶梯计算。
-                <div class="water-show-tag"
+                <div class="show-tag"
                   slot="reference">
                   <el-tag>阶梯</el-tag>
                 </div>
@@ -852,15 +852,7 @@
 
 <style lang="scss">
 .water-main {
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
+  // 弹窗样式
   .add-water-dialog {
     max-width: 400px;
     .el-input {
@@ -872,15 +864,12 @@
       max-width: 300px;
     }
   }
+  // 弹窗样式
   .cal-water-dialog {
     max-width: 800px;
     .line {
       height: 14px;
     }
-  }
-  .water-show-tag {
-    display: inline-block;
-    cursor: pointer;
   }
 }
 </style>
