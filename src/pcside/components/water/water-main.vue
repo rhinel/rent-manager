@@ -507,6 +507,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'water-main',
     beforeCreate() {
@@ -584,22 +586,6 @@
           calWaterResult: 0,
         },
 
-        // 入住时的默认计费数据，后台均以这为准
-        defaultCalWaterPrice: {
-          minPrice: 6,
-          calType: 'single',
-          singlePrice: 8,
-          stepPrice: [{
-            step: 0,
-            price: 0,
-          }],
-        },
-
-        defaultStep: {
-          step: 0,
-          price: 0,
-        },
-
         calWaterrules: {
           'tnew.water': [{
             type: 'number', required: true, message: '请填写', trigger: 'blur',
@@ -668,6 +654,10 @@
         }
         return result
       },
+      ...mapState({
+        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+        defaultStep: state => state.config.defaultStep,
+      }),
     },
     watch: {
       calWaterResult(n) {

@@ -507,6 +507,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'electric-main',
     beforeCreate() {
@@ -584,30 +586,6 @@
           calElectricResult: 0,
         },
 
-        // 入住时的默认计费数据，后台均以这为准
-        defaultCalElePrice: {
-          minPrice: 30,
-          calType: 'step',
-          singlePrice: 1,
-          stepPrice: [{
-            step: 100,
-            price: 1,
-          },
-          {
-            step: 200,
-            price: 1.2,
-          },
-          {
-            step: 201,
-            price: 1.4,
-          }],
-        },
-
-        defaultStep: {
-          step: 0,
-          price: 0,
-        },
-
         calElectricrules: {
           'tnew.electric': [{
             type: 'number', required: true, message: '请填写', trigger: 'blur',
@@ -677,6 +655,10 @@
         }
         return result
       },
+      ...mapState({
+        defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultStep: state => state.config.defaultStep,
+      }),
     },
     watch: {
       calElectricResult(n) {

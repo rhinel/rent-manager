@@ -861,38 +861,6 @@
           ],
         },
 
-        // 入住时的默认计费数据，后台均以这为准
-        defaultCalWaterPrice: {
-          minPrice: 6,
-          calType: 'single',
-          singlePrice: 8,
-          stepPrice: [{
-            step: 0,
-            price: 0,
-          }],
-        },
-        defaultCalElePrice: {
-          minPrice: 30,
-          calType: 'step',
-          singlePrice: 1,
-          stepPrice: [{
-            step: 100,
-            price: 1,
-          },
-          {
-            step: 200,
-            price: 1.2,
-          },
-          {
-            step: 201,
-            price: 1.4,
-          }],
-        },
-        defaultStep: {
-          step: 0,
-          price: 0,
-        },
-
         gettingLeaseIn: false,
 
         // 搬出弹窗
@@ -942,6 +910,9 @@
       ...mapState({
         payTypeVal: state => state.config.payTypeVal,
         typesVal: state => state.config.typesVal,
+        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+        defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultStep: state => state.config.defaultStep,
       }),
     },
     methods: {

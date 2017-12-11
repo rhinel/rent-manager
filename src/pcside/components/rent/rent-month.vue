@@ -1077,6 +1077,8 @@
       ...mapState({
         payTypeVal: state => state.config.payTypeVal,
         typesVal: state => state.config.typesVal,
+        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+        defaultCalElePrice: state => state.config.defaultCalElePrice,
       }),
     },
     watch: {
@@ -1425,7 +1427,7 @@
         month = month > 9 ? month : `0${month}`
         return `${date.getFullYear()}-${month}`
       },
-      // 获取抄表日期
+      // 获取抄表日期，计租数据中第一条可用数据的时间
       getTnewTime() {
         const takeTime = this.monthDetData.find(item => item.rents[0] && item.rents[0].calWater)
         if (!takeTime) return ''

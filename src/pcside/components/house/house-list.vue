@@ -166,6 +166,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'house-list',
     beforeCreate() {
@@ -182,8 +184,7 @@
         gettingListRefresh: false,
 
         dialogId: Date.now(),
-        // 定义坊号，前台写死，后台分类统计用做判断
-        houseFang: ['6坊65栋', '8坊68栋', '公司楼'],
+
         ahdDialogTitle: '',
         ahdLabelWidth: '80px',
         addHouse: {},
@@ -224,6 +225,9 @@
           return _houseDataSearch.test(testItem)
         })
       },
+      ...mapState({
+        houseFang: state => state.config.houseFang,
+      }),
     },
     methods: {
       // 时间格式化
