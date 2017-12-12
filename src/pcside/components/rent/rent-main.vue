@@ -85,7 +85,8 @@
         label="月份"
         width="180">
         <template slot-scope="scope">
-          <router-link :to="{ path: '/inner/rent/month', query: { id: scope.row._id }}">
+          <router-link
+            :to="{ path: '/inner/rent/month', query: { id: scope.row._id }}">
             <el-button
               type="text">
               {{scope.row.month}}
