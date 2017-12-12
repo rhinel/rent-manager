@@ -282,7 +282,8 @@
                 <div>入住时间：{{getTime(getRent(scope).lease.addTime)}}</div>
                 <div>搬出时间：{{getTime(getRent(scope).lease.outTime)}}</div>
                 <div>备注：{{getRent(scope).lease.remark || '--'}}</div>
-                <el-tag slot="reference">
+                <el-tag class="show-tag"
+                  slot="reference">
                   {{payTypeVal[getRent(scope).lease.payType]}}
                 </el-tag>
               </el-popover>
@@ -354,12 +355,14 @@
             <el-popover
               placement="top"
               trigger="hover">
-              <div class="rent-remark">
+              <div class="remark-pop">
                 {{ getRent(scope).remark }}
               </div>
-              <div class="rent-remark-tag"
+              <div class="show-tag"
                 slot="reference">
-                {{ getRent(scope).remark }}
+                <div class="remark-tag">
+                  {{ getRent(scope).remark }}
+                </div>
               </div>
             </el-popover>
           </template>
@@ -623,22 +626,11 @@
 </script>
 <style lang="scss">
 .rent-history {
-  // 顶部按钮样式
-  .table-btn {
-    margin-bottom: 20px;
-  }
-  .table-btn-input {
-    vertical-align: top;
-    max-width: 300px;
-    display: inline-block;
-    margin-left: 10px;
-  }
   // 弹窗表单样式
   .change-type-dialog {
     .el-input {
       width: 100%;
       vertical-align: top;
-      // max-width: 300px;
     }
     .el-select {
       width: 100%;
@@ -651,22 +643,12 @@
       margin-bottom: 20px;
     }
   }
+  // 弹窗表单样式
   .change-type-dialog {
     max-width: 800px;
     .el-input {
       max-width: 300px;
     }
-  }
-  .rent-remark-tag {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  // 信息悬浮窗弹窗样式
-  .rent-remark {
-    max-width: 200px;
   }
 }
 </style>

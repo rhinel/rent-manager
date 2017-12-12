@@ -134,4 +134,34 @@ module.exports = {
 
     return dbInfo
   },
+
+  updateSysInfo: async req => {
+    // 更新数据库信息
+
+    const {
+      defaultCalWaterPrice,
+      defaultCalElePrice,
+    } = req.body
+
+    const dbInfo = await db
+      .dbModel('admin', {//* //标记，更新默认计费方式，修改类型
+        defaultCalWaterPrice: Object, // 默认水费计费，全拼
+        defaultCalElePrice: Object, // 默认电费计费，全拼
+      })
+      .findOneAndUpdate({
+        _id: req.userId,
+      }, {
+        $set: {
+          defaultCalWaterPrice,
+          defaultCalElePrice,
+        },
+      })
+      .exec()
+
+    if (!dbInfo) {
+      return Promise.reject(new FoundError('修改失败，数据不存在'))
+    }
+
+    return ''
+  },
 }

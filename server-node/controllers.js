@@ -63,8 +63,15 @@ const inner = (req, res, next) => {
         .getSysInfo(req, res)
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 1004, err)))
-    } else {
+    } else if (req.params.function === 'updateSysInfo') {
+      serviceAuth
+        .updateSysInfo(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 1005, err)))
+    } else if (req.params.function === 'check') {
       res.json(code(req, 0))
+    } else {
+      next()
     }
   } else if (req.params.class === 'house') {
     // 添加房屋接口

@@ -118,7 +118,7 @@ export default {
     titleAdd(state, add) {
       state.titleAdd = add
     },
-    upDefaults(state, key, value) {
+    upDefaults(state, { key, value }) {
       state.config[key] = JSON.parse(JSON.stringify(value))
     },
     upDefaultGot(state, status) {
@@ -144,7 +144,9 @@ export default {
       const datas = await Ajax('/inner/auth/sysInfo')
         .catch(() => {}) || {}
       state.defaultKeys.forEach(key => {
-        if (datas[key]) commit('upDefaults', key, datas[key])
+        if (datas[key]) {
+          commit('upDefaults', { key, value: datas[key] })
+        }
       })
       commit('upDefaultGot', true)
       commit('updefaultGetting', false)

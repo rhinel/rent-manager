@@ -36,7 +36,7 @@
             :rules="addRentrules">
             <el-form-item>
               <el-alert
-                title="请确认计租信息"
+                title="请确认计租信息，保存计租副本"
                 type="info">
               </el-alert>
             </el-form-item>
@@ -84,7 +84,7 @@
             </el-row>
             <el-form-item>
               <el-alert
-                title="租金及结果可做修正，但建议租金调整先修改租户信息"
+                title="租金及结果可做修正（不更新租户信息）作为本次副本保存，但建议租金调整先修改租户信息"
                 type="info">
               </el-alert>
             </el-form-item>
