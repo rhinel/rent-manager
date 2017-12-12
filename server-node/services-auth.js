@@ -117,4 +117,21 @@ module.exports = {
       .redisSetTime(reToken[0], 1800)
     return ''
   },
+
+  getSysInfo: async req => {
+    // 查询数据库信息
+
+    const dbInfo = await db
+      .dbModel('admin')
+      .findOne({
+        _id: req.userId,
+      }, {
+        pwd: 0,
+      })
+      .where('status')
+      .equals(1)
+      .exec()
+
+    return dbInfo
+  },
 }

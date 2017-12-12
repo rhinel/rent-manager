@@ -50,6 +50,13 @@
         Navtg: true,
       }
     },
+    created() {
+      // 获取系统设置
+      const { defaultGot, defaultGetting } = this.$store.state
+      if (!defaultGot && !defaultGetting) {
+        this.$store.dispatch('getDefaults')
+      }
+    },
     computed: {
       ...mapState([
         'menuing',

@@ -122,6 +122,8 @@
             } else {
               this.$router.push('/inner')
             }
+
+            this.$store.dispatch('getDefaults')
           })
           .catch(() => {})
 

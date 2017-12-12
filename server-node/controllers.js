@@ -58,7 +58,14 @@ const auth = (req, res, next) => {
 // inner类，失败则跳过
 const inner = (req, res, next) => {
   if (req.params.class === 'auth') {
-    res.json(code(req, 0))
+    if (req.params.function === 'sysInfo') {
+      serviceAuth
+        .getSysInfo(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 1004, err)))
+    } else {
+      res.json(code(req, 0))
+    }
   } else if (req.params.class === 'house') {
     // 添加房屋接口
     if (req.params.function === 'add') {

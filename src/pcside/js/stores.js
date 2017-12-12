@@ -1,11 +1,15 @@
+import Ajax from 'common/js/request'
+
 export default {
   strict: process.env.NODE_ENV !== 'production',
   // 数据
   state: {
+    // 路由调用
     menuing: '',
     menuCheck: '',
     titleAdd: '',
 
+    // 系统配置
     config: {
       // 定义坊号，前台写死，后台分类统计用做判断
       houseFang: ['6坊65栋', '8坊68栋', '公司楼'],
@@ -93,6 +97,11 @@ export default {
         },
       ],
     },
+
+    // 可修改字段
+    defaultGot: false,
+    defaultGetting: false,
+    defaultKeys: ['defaultCalWaterPrice', 'defaultCalElePrice'],
   },
   // 处理
   getters: {
@@ -109,17 +118,36 @@ export default {
     titleAdd(state, add) {
       state.titleAdd = add
     },
+    upDefaults(state, key, value) {
+      state.config[key] = JSON.parse(JSON.stringify(value))
+    },
+    upDefaultGot(state, status) {
+      state.defaultGot = status
+    },
+    updefaultGetting(state, status) {
+      state.defaultGetting = status
+    },
   },
   // 行为
   actions: {
-    updateMenu(context, menuing) {
-      context.commit('updateMenu', menuing)
+    updateMenu({ commit }, menuing) {
+      commit('updateMenu', menuing)
     },
-    menuCheck(context, path) {
-      context.commit('menuCheck', path)
+    menuCheck({ commit }, path) {
+      commit('menuCheck', path)
     },
-    titleAdd(context, add) {
-      context.commit('titleAdd', add)
+    titleAdd({ commit }, add) {
+      commit('titleAdd', add)
+    },
+    async getDefaults({ commit, state }) {
+      commit('updefaultGetting', true)
+      const datas = await Ajax('/inner/auth/sysInfo')
+        .catch(() => {}) || {}
+      state.defaultKeys.forEach(key => {
+        if (datas[key]) commit('upDefaults', key, datas[key])
+      })
+      commit('upDefaultGot', true)
+      commit('updefaultGetting', false)
     },
   },
 }
