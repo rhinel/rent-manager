@@ -50,13 +50,6 @@
         Navtg: true,
       }
     },
-    created() {
-      // 获取系统设置
-      const { defaultGot, defaultGetting } = this.$store.state
-      if (!defaultGot && !defaultGetting) {
-        this.$store.dispatch('getDefaults')
-      }
-    },
     computed: {
       ...mapState([
         'menuing',
@@ -84,6 +77,8 @@
               message: '退出成功',
               duration: 2000,
             })
+            localStorage.removeItem('token')
+            this.$store.dispatch('clearDefaults')
             this.$router.push('/login')
           })
           .catch(() => {})

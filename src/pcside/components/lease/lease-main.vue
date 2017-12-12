@@ -518,8 +518,7 @@
           <el-table-column
             prop="fanghao"
             label="房屋"
-            width="120"
-            sortable>
+            width="120">
           </el-table-column>
           <el-table-column
             label="计费信息">

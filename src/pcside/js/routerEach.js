@@ -1,9 +1,9 @@
 import Ajax from 'common/js/request'
 import { Message } from 'element-ui'
 
-const beforeEach = (router, to, from, next) => {
+const beforeEach = async (router, to, from, next) => {
   // 继承或直接记录目的地
-  router.app.$store.dispatch('menuCheck', to.fullPath)
+  await router.app.$store.dispatch('menuCheck', to.fullPath)
   const nextConfig = {
     path: '/login',
     query: { backurl: to.fullPath },
@@ -18,7 +18,14 @@ const beforeEach = (router, to, from, next) => {
     next(nextConfig)
   } else if (to.path.includes('/inner')) {
     // 校验token，进入登陆页，中断后继续
-    Ajax('/inner/auth/check', {})
+    await Ajax('/inner/auth/check', {})
+      .then(() => {
+        const { defaultGot, defaultGetting } = router.app.$store.state
+        if (!defaultGot && !defaultGetting) {
+          return router.app.$store.dispatch('getDefaults')
+        }
+        return ''
+      })
       .then(() => next())
       .catch(err => {
         Message.error({
@@ -27,11 +34,12 @@ const beforeEach = (router, to, from, next) => {
           duration: 2000,
         })
         localStorage.removeItem('token')
+        router.app.$store.dispatch('clearDefaults')
         next(nextConfig)
       })
   } else if (to.path.includes('/login') && localStorage.getItem('token')) {
     // 登陆页面校验token，进入主页
-    Ajax('/inner/auth/check', {})
+    await Ajax('/inner/auth/check', {})
       .then(() => {
         if (to.query.backurl) {
           next(to.query.backurl)
@@ -43,6 +51,7 @@ const beforeEach = (router, to, from, next) => {
       })
       .catch(() => {
         localStorage.removeItem('token')
+        router.app.$store.dispatch('clearDefaults')
         next()
       })
   } else {
@@ -51,9 +60,9 @@ const beforeEach = (router, to, from, next) => {
   }
 }
 
-const afterEach = router => {
-  router.app.$store.dispatch('menuCheck', '')
-  router.app.$store.dispatch('titleAdd', '')
+const afterEach = async router => {
+  await router.app.$store.dispatch('menuCheck', '')
+  await router.app.$store.dispatch('titleAdd', '')
 }
 
 export default {

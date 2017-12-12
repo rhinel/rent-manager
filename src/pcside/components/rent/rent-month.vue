@@ -347,8 +347,7 @@
           <el-table-column
             prop="fanghao"
             label="房屋"
-            width="150"
-            sortable>
+            width="150">
             <template slot-scope="scope">
               <router-link
                 :to="{ path: '/inner/rent/history', query: { id: scope.row._id }}">

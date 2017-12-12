@@ -197,8 +197,7 @@
       <el-table-column
         prop="fanghao"
         label="房屋"
-        width="120"
-        sortable>
+        width="120">
         <template slot-scope="scope">
           <div>{{getRent(scope).fanghao}}</div>
           <div>{{getRent(scope).monthId.month}}</div>

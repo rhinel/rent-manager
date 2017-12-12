@@ -112,6 +112,9 @@
         })
           .then(res => {
             localStorage.setItem('token', res)
+            return this.$store.dispatch('getDefaults')
+          })
+          .then(() => {
             this.$message({
               type: 'success',
               message: '登陆成功',
@@ -122,8 +125,6 @@
             } else {
               this.$router.push('/inner')
             }
-
-            this.$store.dispatch('getDefaults')
           })
           .catch(() => {})
 

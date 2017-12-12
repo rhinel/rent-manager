@@ -19,7 +19,8 @@ export default {
       typesVal: ['', '已交', '给单', '房东'],
       // 入住时的默认计费数据，后台均以这为准
       // 默认水费计费规则
-      defaultCalWaterPrice: {
+      defaultCalWaterPrice: {},
+      defaultCalWaterPriceClear: {
         minPrice: 6,
         calType: 'single',
         singlePrice: 8,
@@ -29,7 +30,8 @@ export default {
         }],
       },
       // 默认电费计费规则
-      defaultCalElePrice: {
+      defaultCalElePrice: {},
+      defaultCalElePriceClear: {
         minPrice: 30,
         calType: 'step',
         singlePrice: 1,
@@ -139,16 +141,27 @@ export default {
     titleAdd({ commit }, add) {
       commit('titleAdd', add)
     },
+    // 获取用户配置
     async getDefaults({ commit, state }) {
       commit('updefaultGetting', true)
       const datas = await Ajax('/inner/auth/sysInfo')
-        .catch(() => {}) || {}
       state.defaultKeys.forEach(key => {
         if (datas[key]) {
           commit('upDefaults', { key, value: datas[key] })
+        } else {
+          commit('upDefaults', { key, value: state[`${key}Clear`] })
         }
       })
       commit('upDefaultGot', true)
+      commit('updefaultGetting', false)
+    },
+    // 清空用户配置
+    async clearDefaults({ commit, state }) {
+      commit('updefaultGetting', true)
+      state.defaultKeys.forEach(key => {
+        commit('upDefaults', { key, value: {} })
+      })
+      commit('upDefaultGot', false)
       commit('updefaultGetting', false)
     },
   },
