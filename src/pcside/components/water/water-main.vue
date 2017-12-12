@@ -266,7 +266,7 @@
             :key="'calWater'+ index"
             :ref="'calWater' + index"
             required>
-            <el-col :span="5">
+            <el-col :span="10">
               <el-form-item
                 :prop="'calWater.stepPrice.' + index + '.step'"
                 :rules="{
@@ -281,7 +281,7 @@
               </el-form-item>
             </el-col>
             <el-col class="line" :span="1"></el-col>
-            <el-col :span="7">
+            <el-col :span="9">
               <el-form-item
                 :prop="'calWater.stepPrice.' + index + '.price'"
                 :rules="{
@@ -297,7 +297,8 @@
               </el-form-item>
             </el-col>
             <el-col class="line" :span="1"></el-col>
-            <el-col :span="5">
+            <el-col :span="3"
+              class="step-btn">
               <el-button
                 @click.prevent="removeStep(step)">
                 删除
@@ -866,10 +867,7 @@
   }
   // 弹窗样式
   .cal-water-dialog {
-    max-width: 800px;
-    .line {
-      height: 14px;
-    }
+    max-width: 790px;
   }
 }
 </style>

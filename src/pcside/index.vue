@@ -22,18 +22,18 @@ body,
 .el-button--text {
   font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
 }
-// 高亮样式
+// 表格=高亮样式
 .main-txt-highline {
   color: #1d8ce0;
 }
-// 悬浮高亮样式
+// 表格=悬浮高亮样式
 .el-table--enable-row-hover
   .el-table__body
   tr:hover
   > td:not(.el-table__expanded-cell) {
   font-weight: bold;
 }
-// 折页打开样式
+// 表格=折页打开样式
 .table-expand {
   font-size: 0;
   .el-form-item {
@@ -46,7 +46,7 @@ body,
     color: #99a9bf;
   }
 }
-// 顶部按钮样式
+// 页面=顶部按钮样式
 .table-btn {
   margin-bottom: 20px;
 }
@@ -56,7 +56,7 @@ body,
   display: inline-block;
   margin-left: 10px;
 }
-// 信息悬浮窗样式
+// 表格=信息悬浮窗样式
 .show-tag {
   cursor: pointer;
   display: inline-block;
@@ -80,12 +80,19 @@ body,
     flex: 1;
   }
 }
-// 删除pop样式
+// 表格=删除pop样式
 .show-pop {
   margin-left: 10px;
 }
 .pop-cont {
   text-align: right;
+}
+// 表单=删除按钮
+.step-btn {
+  text-align: right;
+}
+.line {
+  height: 14px;
 }
 // 重写组件样式
 .el-popover {
@@ -99,5 +106,10 @@ body,
   .has-gutter
   th:nth-last-of-type(2) {
   border-right: 1px solid #e6ebf5;
+}
+.el-date-editor
+  .el-range__close-icon {
+  margin-left: -8px;
+  margin-right: -7px;
 }
 </style>

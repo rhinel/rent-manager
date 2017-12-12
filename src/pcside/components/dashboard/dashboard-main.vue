@@ -221,7 +221,8 @@
                         {{ getDate(scope.row.type.typeTime[item]) }}
                       </div>
                       <el-tag class="show-tag show-tag3"
-                        slot="reference">
+                        slot="reference"
+                        :type="item != 2? 'success' : ''">
                         {{typesVal[item]}}
                       </el-tag>
                     </el-popover>
@@ -357,7 +358,7 @@
                       </div>
                       <el-tag class="show-tag show-tag3"
                         slot="reference"
-                        type="success">
+                        :type="item != 2? 'success' : ''">
                         {{typesVal[item]}}
                       </el-tag>
                     </el-popover>
