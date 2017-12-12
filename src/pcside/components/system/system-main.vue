@@ -37,7 +37,7 @@
         </el-collapse-item>
 
         <el-collapse-item
-          title="默认水费计费方式"
+          title="默认水费计费方式（修改后将在下次新建月度/入住时生效）"
           name="defaultCalWaterPrice">
           <el-form
             :model="calWaterPrice"
@@ -176,7 +176,7 @@
         </el-collapse-item>
 
         <el-collapse-item
-          title="默认电费计费方式"
+          title="默认电费计费方式（修改后将在下次新建月度/入住时生效）"
           name="defaultCalElePrice">
           <el-form
             :model="calElePrice"

@@ -19,13 +19,11 @@ module.exports = {
     if (req.body._id) {
       const editMonth = await db
         .dbModel('month', {//* //标记，初始月度周期数据类，修改类型
-          month: String, // 月份
           remark: String, // 备注
           updateTime: Number, // 更新时间
         })
         .findOneAndUpdate({ _id: req.body._id }, {
           $set: {
-            month: req.body.month,
             remark: req.body.remark,
             updateTime: Date.now(),
           },
@@ -60,12 +58,16 @@ module.exports = {
         month: String, // 月份
         remark: String, // 备注
         status: Number, // 状态
+        defaultCalWaterPrice: Object, // 本月度默认水费计费方式
+        defaultCalElePrice: Object, // 本月度默认电费计费方式
         createTime: Number, // 创建时间
       })
       .create({
         userId: req.userId,
         month: req.body.month,
         remark: req.body.remark,
+        defaultCalWaterPrice: req.body.defaultCalWaterPrice,
+        defaultCalElePrice: req.body.defaultCalElePrice,
         status: 1,
         createTime: Date.now(),
       })
@@ -88,6 +90,8 @@ module.exports = {
       .find({}, {
         month: 1,
         remark: 1,
+        defaultCalWaterPrice: 1,
+        defaultCalElePrice: 1,
         createTime: 1,
         updateTime: 1,
       })

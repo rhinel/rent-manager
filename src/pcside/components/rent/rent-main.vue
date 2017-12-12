@@ -33,31 +33,94 @@
         :model="addMonthList"
         ref="addMonthList"
         :rules="addMonthListrules">
-        <el-form-item
-          label="收租周期"
-          :label-width="amldLabelWidth"
-          prop="month">
-          <el-date-picker
-            v-model="addMonthList.month"
-            type="month"
-            :disabled="!amldInput"
-            :editable="false"
-            placeholder="选择月份">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item
-          label="备注"
-          :label-width="amldLabelWidth">
-          <el-input
-            v-model="addMonthList.remark"
-            auto-complete="off"
-            placeholder="备注">
-          </el-input>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item
+              label="收租周期"
+              :label-width="amldLabelWidth"
+              prop="month">
+              <el-date-picker
+                v-model="addMonthList.month"
+                type="month"
+                :disabled="!amldInput"
+                :editable="false"
+                placeholder="选择月份">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="备注"
+              :label-width="amldLabelWidth">
+              <el-input
+                v-model="addMonthList.remark"
+                auto-complete="off"
+                placeholder="备注">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-alert
-          title="将记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算"
+          :title="(addMonthList._id ? '已' : '将') +
+            '记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算'"
           type="info">
         </el-alert>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item
+              label="水费"
+              :label-width="amldLabelWidth">
+              <div>
+                低消：{{addMonthList.defaultCalWaterPrice.minPrice || 0}}吨
+              </div>
+              <div
+                v-if="addMonthList.defaultCalWaterPrice.calType == 'single'">
+                单价：{{addMonthList.defaultCalWaterPrice.singlePrice || 0}}元/吨
+              </div>
+              <div
+                v-else-if="addMonthList.defaultCalWaterPrice.calType == 'step'">
+                阶梯：
+                <div
+                  v-for="(item, index) in addMonthList.defaultCalWaterPrice.stepPrice"
+                  :key="index">
+                  {{ item.step }}吨及以下￥{{ item.price }}元/吨；
+                </div>
+                超出按最后阶梯计算。
+              </div>
+              <div
+                v-else>
+                暂无计费方式
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="电费"
+              :label-width="amldLabelWidth">
+              <div>
+                低消：{{addMonthList.defaultCalElePrice.minPrice || 0}}度
+              </div>
+              <div
+                v-if="addMonthList.defaultCalElePrice.calType == 'single'">
+                单价：{{addMonthList.defaultCalElePrice.singlePrice || 0}}元/度
+              </div>
+              <div
+                v-else-if="addMonthList.defaultCalElePrice.calType == 'step'">
+                阶梯：
+                <div
+                  v-for="(item, index) in addMonthList.defaultCalElePrice.stepPrice"
+                  :key="index">
+                  {{ item.step }}度及以下￥{{ item.price }}元/度；
+                </div>
+                超出按最后阶梯计算。
+              </div>
+              <div
+                v-else>
+                暂无计费方式
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div class="dialog-footer"
         slot="footer">
@@ -187,6 +250,8 @@
           _id: '',
           month: '',
           remark: '',
+          defaultCalWaterPrice: {},
+          defaultCalElePrice: {},
         },
         addMonthListrules: {
           month: [{
@@ -233,6 +298,10 @@
           this.addMonthList._id = row._id
           this.addMonthList.month = _date
           this.addMonthList.remark = row.remark
+          this.addMonthList.defaultCalWaterPrice =
+            row.defaultCalWaterPrice || {}
+          this.addMonthList.defaultCalElePrice =
+            row.defaultCalElePrice || {}
           this.amldInput = false
           this.amldDialogTitle = '修改收租周期'
         } else if (this.addMonthListflag) {
@@ -242,7 +311,19 @@
         }
       },
       getResetAddMonthList() {
-        this.addMonthList = Object.assign({}, this.addMonthList, this.addMonthListClear)
+        let {
+          defaultCalWaterPrice,
+          defaultCalElePrice,
+        } = this
+        defaultCalWaterPrice =
+          JSON.parse(JSON.stringify(defaultCalWaterPrice))
+        defaultCalElePrice =
+          JSON.parse(JSON.stringify(defaultCalElePrice))
+        this.addMonthList =
+          Object.assign({}, this.addMonthList, this.addMonthListClear, {
+            defaultCalWaterPrice,
+            defaultCalElePrice,
+          })
         this.dialogId = Date.now()
       },
       async getListRefresh() {
@@ -278,7 +359,8 @@
 
         const _data = Object.assign({}, this.addMonthList)
         const y = _data.month.getFullYear()
-        const m = _data.month.getMonth() + 1 > 9 ? _data.month.getMonth() + 1 : `0${_data.month.getMonth() + 1}`
+        const m = _data.month.getMonth() + 1 > 9 ?
+          _data.month.getMonth() + 1 : `0${_data.month.getMonth() + 1}`
         _data.month = `${y}-${m}`
 
         await this.Ajax('/inner/month/add', _data)
@@ -295,7 +377,7 @@
 
         this.gettingAddMonthList = false
       },
-      // 删除房屋
+      // 删除月度周期
       async getDelMonth(index, row) {
         row.dMonthPopFlag = false
         if (row.gettingdelMonth) return
@@ -324,7 +406,7 @@
 .rent-main {
   // 弹窗样式
   .add-month-list-dialog {
-    max-width: 400px;
+    max-width: 790px;
     .el-input {
       width: 100%;
       max-width: 300px;
