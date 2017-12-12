@@ -36,12 +36,10 @@
             :model="lease"
             ref="leaseIn"
             :rules="leaserules">
-            <el-form-item>
-              <el-alert
-                title="搬出入住/修改：计费信息初始化，必须为上次收租结束/空置处理结束/本次计费之前，用户自行确认"
-                type="info">
-              </el-alert>
-            </el-form-item>
+            <el-alert
+              title="搬出入住/修改：计费信息初始化，必须为上次收租结束/空置处理结束/本次计费之前，用户自行确认"
+              type="info">
+            </el-alert>
             <!-- 基本信息 -->
             <el-row :gutter="20">
               <el-col :span="12">
@@ -436,12 +434,10 @@
             :model="out"
             ref="leaseOut"
             :rules="outrules">
-            <el-form-item>
-              <el-alert
-                title="确认已经结清所有费用？此行为不可撤销"
-                type="info">
-              </el-alert>
-            </el-form-item>
+            <el-alert
+              title="确认已经结清所有费用？此行为不可撤销"
+              type="info">
+            </el-alert>
             <el-form-item
               label="搬出时间"
               :label-width="lodLabelWidth"

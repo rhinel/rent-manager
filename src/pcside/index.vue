@@ -22,6 +22,16 @@ body,
 .el-button--text {
   font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
 }
+// 页面=顶部按钮样式
+.table-btn {
+  margin-bottom: 20px;
+}
+.table-btn-input {
+  vertical-align: top;
+  max-width: 300px;
+  display: inline-block;
+  margin-left: 10px;
+}
 // 表格=高亮样式
 .main-txt-highline {
   color: #1d8ce0;
@@ -45,16 +55,6 @@ body,
     width: 150px;
     color: #99a9bf;
   }
-}
-// 页面=顶部按钮样式
-.table-btn {
-  margin-bottom: 20px;
-}
-.table-btn-input {
-  vertical-align: top;
-  max-width: 300px;
-  display: inline-block;
-  margin-left: 10px;
 }
 // 表格=信息悬浮窗样式
 .show-tag {
@@ -87,12 +87,19 @@ body,
 .pop-cont {
   text-align: right;
 }
-// 表单=删除按钮
-.step-btn {
-  text-align: right;
-}
-.line {
-  height: 14px;
+.el-form {
+  // 表单=alert
+  .el-alert {
+    margin-bottom: 22px;
+  }
+  // 表单=删除按钮
+  .step-btn {
+    text-align: right;
+  }
+  // 表单=分割
+  .line {
+    height: 14px;
+  }
 }
 // 重写组件样式
 .el-popover {

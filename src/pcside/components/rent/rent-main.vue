@@ -54,6 +54,10 @@
             placeholder="备注">
           </el-input>
         </el-form-item>
+        <el-alert
+          title="将记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算"
+          type="info">
+        </el-alert>
       </el-form>
       <div class="dialog-footer"
         slot="footer">
@@ -156,6 +160,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'rent-main',
     beforeCreate() {
@@ -207,6 +213,10 @@
           return _monthListDataSearch.test(testItem)
         })
       },
+      ...mapState({
+        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+        defaultCalElePrice: state => state.config.defaultCalElePrice,
+      }),
     },
     methods: {
       // 时间格式化

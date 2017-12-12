@@ -28,12 +28,10 @@
         :model="changeType"
         ref="changeType"
         :rules="changeTyperules">
-        <el-form-item>
-          <el-alert
-            title="多选状态信息"
-            type="info">
-          </el-alert>
-        </el-form-item>
+        <el-alert
+          title="多选状态信息"
+          type="info">
+        </el-alert>
         <el-form-item
           label="交租方式"
           :label-width="ctdLabelWidth"

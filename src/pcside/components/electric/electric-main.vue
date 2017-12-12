@@ -114,12 +114,10 @@
 
         <!-- 房屋信息 -->
         <!-- 电底信息 -->
-        <el-form-item>
-          <el-alert
-            title="本抄表数据来源于最新一次抄表，可修改作为本次副本保存（不增加抄表数据），但建议按照逻辑操作，先抄表再计费"
-            type="info">
-          </el-alert>
-        </el-form-item>
+        <el-alert
+          title="本抄表数据来源于最新一次抄表，可修改作为本次副本保存（不增加抄表数据），但建议按照逻辑操作，先抄表再计费"
+          type="info">
+        </el-alert>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -158,12 +156,10 @@
             placeholder="抄表备注">
           </el-input>
         </el-form-item>
-        <el-form-item>
-          <el-alert
-            title="本底表数来源于上一次计费数据，可修改作为本次副本保存（不创建底表计费信息），但建议按照逻辑操作，分次计费"
-            type="info">
-          </el-alert>
-        </el-form-item>
+        <el-alert
+          title="本底表数来源于上一次计费数据，可修改作为本次副本保存（不创建底表计费信息），但建议按照逻辑操作，分次计费"
+          type="info">
+        </el-alert>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -204,12 +200,10 @@
         </el-form-item>
 
         <!-- 计费方式 -->
-        <el-form-item>
-          <el-alert
-            title="本计费方式及结果来源于租户信息，临时调整可修改作为本次副本保存（不更新租户信息），但建议按照逻辑操作，修改租住管理的租户信息"
-            type="info">
-          </el-alert>
-        </el-form-item>
+        <el-alert
+          title="本计费方式及结果来源于租户信息，临时调整可修改作为本次副本保存（不更新租户信息），但建议按照逻辑操作，修改租住管理的租户信息"
+          type="info">
+        </el-alert>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item

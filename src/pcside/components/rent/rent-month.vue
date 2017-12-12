@@ -34,12 +34,10 @@
             :model="addRent"
             ref="addRent"
             :rules="addRentrules">
-            <el-form-item>
-              <el-alert
-                title="请确认计租信息，保存计租副本"
-                type="info">
-              </el-alert>
-            </el-form-item>
+            <el-alert
+              title="请确认计租信息，保存计租副本"
+              type="info">
+            </el-alert>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
@@ -82,12 +80,10 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-form-item>
-              <el-alert
-                title="租金及结果可做修正（不更新租户信息）作为本次副本保存，但建议租金调整先修改租户信息"
-                type="info">
-              </el-alert>
-            </el-form-item>
+            <el-alert
+              title="租金及结果可做修正（不更新租户信息）作为本次副本保存，但建议租金调整先修改租户信息"
+              type="info">
+            </el-alert>
             <el-form-item
               label="租住周期"
               :label-width="ardLabelWidth">
@@ -183,12 +179,10 @@
             :model="changeType"
             ref="changeType"
             :rules="changeTyperules">
-            <el-form-item>
-              <el-alert
-                title="多选状态信息"
-                type="info">
-              </el-alert>
-            </el-form-item>
+            <el-alert
+              title="多选状态信息"
+              type="info">
+            </el-alert>
             <el-form-item
               label="交租方式"
               :label-width="ctdLabelWidth"
