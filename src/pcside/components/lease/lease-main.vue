@@ -697,10 +697,10 @@
                 {{floori}}楼
                 <span class="count-title">合计：￥{{floor.count}}元</span>
               </template>
-              <div
+              <div class="content-bg"
                 v-for="(hao, haoi) in floor.list"
                 :key="haoi">
-                <router-link class="tag-bf-span"
+                <router-link
                   :to="{ path: '/inner/rent/history', query: { id: hao.haoId }}">
                   <el-button
                     type="text">

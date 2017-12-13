@@ -92,6 +92,7 @@ body,
 .pop-cont {
   text-align: right;
 }
+// 表单
 .el-form {
   // 表单=alert
   .el-alert {
@@ -104,6 +105,12 @@ body,
   // 表单=分割
   .line {
     height: 14px;
+  }
+}
+// 折页=内表格高亮
+.content-bg {
+  &:hover {
+    background-color: #f5f7fa;
   }
 }
 // 重写组件样式

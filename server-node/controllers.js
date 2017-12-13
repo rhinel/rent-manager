@@ -306,6 +306,11 @@ const inner = (req, res, next) => {
         .one(req, res)
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 30610, err)))
+    } else if (req.params.function === 'checkBill') {
+      serviceRent
+        .rentCheckBill(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 30611, err)))
     } else {
       next()
     }

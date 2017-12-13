@@ -257,6 +257,35 @@ module.exports = {
     return { _id: req.body.rentId }
   },
 
+  rentCheckBill: async req => {
+    // 校验字段，错误退出
+    // 1修改字段状态
+    // 2返回edit对象
+
+    if (!req.body.rentId) {
+      return Promise.reject(new FoundError('请选择收租单'))
+    }
+
+    // 1根据ID修改状态
+    const editInfo = await db
+      .dbModel('rent', {//* //标记，计租数据类，状态修改类型
+        checkBill: Boolean, // 是否对账
+        updateTime: Number, // 更新时间
+      })
+      .findOneAndUpdate({ _id: req.body.rentId }, {
+        checkBill: req.body.checkBill,
+        updateTime: Date.now(),
+      })
+      .exec()
+
+    if (!editInfo) {
+      return Promise.reject(new FoundError('修改失败，数据不存在'))
+    }
+
+    // 2返回id
+    return { _id: req.body.rentId }
+  },
+
   rentDel: async req => {
     // 校验数据，错误退出
     // 1修改状态，错误退出
@@ -648,6 +677,9 @@ module.exports = {
       // (i.calWater ? i.calWater.calWaterResult : 0) +
       // (i.calElectric ? i.calElectric.calElectricResult : 0)
       rent.cost = rent.calRentResult - rent.lease.rent
+      // 默认字段提供
+      if (!rent.checkBill) rent.checkBill = false
+      rent.checkBilling = false
       // 定制计算，分类房屋，租单数据没有分开房屋，其实可以的
       if (rent.fanghao.indexOf('8坊68栋') >= 0) {
         list.eight += rent.calRentResult

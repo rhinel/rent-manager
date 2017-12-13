@@ -631,7 +631,7 @@
               <span>[租金合计￥{{landordHistoryTemp.sixRent}}元]</span>
               <span>[水电合计￥{{landordHistoryTemp.sixCost}}元]</span>
             </div>
-            <div class="landord-content"
+            <div class="landord-content content-bg"
               v-for="i in landordHistoryTemp.sixList"
               :key="i._id">
               <router-link class="collapse-btn"
@@ -645,6 +645,14 @@
               <span>[房租￥{{i.calRentResult}}元]</span>
               <span>[租金￥{{i.lease.rent}}元]</span>
               <span>[水电￥{{i.cost}}元]</span>
+              <el-checkbox class="landord-check"
+                v-model="i.checkBill"
+                :disabled="i.checkBilling"
+                @change="checkBillChange($event, i)">
+                已对账
+                <i class="el-icon-loading"
+                  v-if="i.checkBilling"></i>
+              </el-checkbox>
               <span class="landord-content-type">
                 交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag>
               </span>
@@ -660,7 +668,7 @@
               <span>[租金合计￥{{landordHistoryTemp.eightRent}}元]</span>
               <span>[水电合计￥{{landordHistoryTemp.eightCost}}元]</span>
             </div>
-            <div class="landord-content"
+            <div class="landord-content content-bg"
               v-for="i in landordHistoryTemp.eightList"
               :key="i._id">
               <router-link class="collapse-btn"
@@ -674,6 +682,14 @@
               <span>[房租￥{{i.calRentResult}}元]</span>
               <span>[租金￥{{i.lease.rent}}元]</span>
               <span>[水电￥{{i.cost}}元]</span>
+              <el-checkbox class="landord-check"
+                v-model="i.checkBill"
+                :disabled="i.checkBilling"
+                @change="checkBillChange($event, i)">
+                已对账
+                <i class="el-icon-loading"
+                  v-if="i.checkBilling"></i>
+              </el-checkbox>
               <span class="landord-content-type">
                 交租方式：<el-tag>{{payTypeVal[i.lease.payType]}}</el-tag>
               </span>
@@ -756,7 +772,7 @@
               <span>[租金合计￥{{item.sixRent}}元]</span>
               <span>[水电合计￥{{item.sixCost}}元]</span>
             </div>
-            <div class="landord-content"
+            <div class="landord-content content-bg"
               v-for="i in item.sixList"
               :key="i._id">
               <router-link class="collapse-btn"
@@ -786,7 +802,7 @@
               <span>[租金合计￥{{item.eightRent}}元]</span>
               <span>[水电合计￥{{item.eightCost}}元]</span>
             </div>
-            <div class="landord-content"
+            <div class="landord-content content-bg"
               v-for="i in item.eightList"
               :key="i._id">
               <router-link class="collapse-btn"
@@ -1163,17 +1179,17 @@
       },
       getAddRentDialog(index, row) {
         this.addRentflag = !this.addRentflag
-        this.addRent.fix = false
-        this.addRent.addTime = new Date()
         if (this.addRentflag && row) {
           // 用于展示
           this.addRent.calWater = row.calWaterId
           this.addRent.calElectric = row.calElectricId
+          // 编辑部分
           this.addRent.lease = {}.hasOwnProperty.call(row.leaseId, 'rent') ?
             JSON.parse(JSON.stringify(row.leaseId)) : this.addRent.lease
           this.addRent.fanghao = row.fanghao
           this.addRent.haoId = row._id
           this.addRent.remark = row.leaseId.remark || ''
+          this.addRent.addTime = new Date()
         }
       },
       getResetAddRent() {
@@ -1417,6 +1433,31 @@
 
         this.gettingLandordRentTemp = false
       },
+      // 提交对账变化
+      async checkBillChange(newValue, i) {
+        if (i.checkBilling) return
+
+        // 提交接口
+        i.checkBilling = true
+
+        await this.Ajax('/inner/rent/checkBill', {
+          rentId: i._id,
+          checkBill: i.checkBill,
+        })
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '更新成功',
+              duration: 2000,
+            })
+            i.checkBill = newValue
+          })
+          .catch(() => {
+            i.checkBill = !newValue
+          })
+
+        i.checkBilling = false
+      },
       // 获取月租统计
       getCalRentCount() {
         this.rentCount = {}
@@ -1573,6 +1614,9 @@
     & > span:last-child {
       min-width: 180px;
       width: auto;
+    }
+    .landord-check {
+      width: 120px;
     }
     .landord-content-type {
       position: relative;
