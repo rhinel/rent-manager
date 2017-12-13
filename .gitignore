@@ -7,5 +7,6 @@ yarn-error.log*
 
 debug.log
 
+log/*
 logs/*
 server-node/auth.js
