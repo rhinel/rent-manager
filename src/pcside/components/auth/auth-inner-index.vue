@@ -111,8 +111,10 @@
   // 顶部开关按钮
   &.in {
     padding-left: 0;
-    .header-left .el-button .el-icon-d-arrow-left {
-      transform: rotateZ(180deg);
+    .header-left
+      .el-button
+      .el-icon-d-arrow-left {
+      transform: rotateZ(180deg)!important;
     }
     .inner-sidebar {
       left: -180px;
@@ -157,14 +159,15 @@
         top: 50%;
         transform: translateY(-50%);
         background: transparent;
-        color: #fff;
+        border-color: #d3dce6;
+        color: #d3dce6;
         .el-icon-d-arrow-left {
           transition: transform 0.3s;
           transform: rotateZ(0deg);
         }
-        &:hover,
-        &:focus {
-          color: #20a0ff;
+        &:hover {
+          color: #fff;
+        border-color: #fff;
         }
       }
     }
