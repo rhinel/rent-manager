@@ -900,12 +900,12 @@
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.old.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}吨</th>
-              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater) : '--'}}元</th>
+              <th>{{item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--'}}元</th>
               <th></th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'}}度</th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'}}度</th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric : '--'}}度</th>
-              <th>{{item.rents[0].calElectric ? getEleCal(item.rents[0].calElectric) : '--'}}元</th>
+              <th>{{item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--'}}元</th>
             </tr>
           </table>
         </div>
@@ -941,12 +941,12 @@
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? item.rents[0].calWater.old.water : '--'}}吨</th>
               <th>{{item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'}}吨</th>
-              <th>{{item.rents[0].calWater ? getWaterCal(item.rents[0].calWater) : '--'}}元</th>
+              <th>{{item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--'}}元</th>
               <th></th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'}}度</th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'}}度</th>
               <th>{{item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric : '--'}}度</th>
-              <th>{{item.rents[0].calElectric ? getEleCal(item.rents[0].calElectric) : '--'}}元</th>
+              <th>{{item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--'}}元</th>
             </tr>
           </table>
         </div>
@@ -1470,28 +1470,42 @@
         return this.GetDateFormat(takeTime.rents[0].calWater.tnew.addTime)
       },
       // 计算张贴的价格
-      getWaterCal(rent) {
-        // 用于张贴展示，不做真实计费，所有计费按照标准计算
-        // 此处没有缓存不同默认单价，使用的月份的单价，由于每户水费没有特殊，理解为使用默认单价
-        const val = rent.tnew.water - rent.old.water
-        if (val < 6) {
-          return 6 * rent.calWater.singlePrice
-        }
-        return val * rent.calWater.singlePrice
-      },
-      // 计算张贴的价格
-      getEleCal(rent) {
-        // 用于张贴展示，不做真实计费，所有计费按照标准计算
-        const val = rent.tnew.electric - rent.old.electric
+      getCal(rent, type) {
+        // 用于张贴展示，不做真实计费，所有计费按月度周期来计算
+        const {
+          calType,
+          minPrice,
+          singlePrice,
+          stepPrice,
+        } =
+          type === 'water' ? (
+            this.monthDet.defaultCalWaterPrice ||
+            this.defaultCalWaterPrice
+          ) : (
+            this.monthDet.defaultCalElePrice ||
+            this.defaultCalElePrice
+          )
+
+        let gap = type === 'water' ?
+          (rent.tnew.water - rent.old.water) :
+          (rent.tnew.electric - rent.old.electric)
+        gap = Math.max(gap, minPrice)
+
         let result = 0
-        if (val < 30) {
-          result = 30
-        } else if (val <= 100) {
-          result = val * 1
-        } else if (val <= 200) {
-          result = val * 1.2
-        } else {
-          result = val * 1.4
+        if (calType === 'single') {
+          result = gap * singlePrice
+        } else if (calType === 'step') {
+          result = stepPrice.reduce((cal, price, index) => {
+            if (
+              gap <= price.step ||
+              (
+                gap > price.step && index === stepPrice.length
+              )
+            ) {
+              return gap * price.price
+            }
+            return 0
+          })
         }
         return Math.floor(Math.round(result * 100) / 100)
       },
@@ -1533,10 +1547,6 @@
     .el-input {
       max-width: 300px;
     }
-  }
-  .unimportant {
-    color: #999;
-    font-weight: normal;
   }
   // 标题样式
   .landord-title {

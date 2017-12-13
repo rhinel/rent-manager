@@ -36,6 +36,11 @@ body,
 .main-txt-highline {
   color: #1d8ce0;
 }
+// 表格=非低亮
+.unimportant {
+  color: #999;
+  font-weight: normal;
+}
 // 表格=悬浮高亮样式
 .el-table--enable-row-hover
   .el-table__body
