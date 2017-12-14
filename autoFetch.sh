@@ -6,6 +6,9 @@ cd ~/gitcode/rent-manager/
 
 echo '--> fetch当前分支'
 
+git fetch -p
+git status
+
 if [ "$TRAVIS_BRANCH" == "dev-0.1.0" ]; then
   git checkout dev-0.1.0
 fi
