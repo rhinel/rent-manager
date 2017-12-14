@@ -12,23 +12,20 @@
   },
   "dependencies": {
     "body-parser": "^1.18.2",
-    "element-ui": "^2.0.8",
     "express": "^4.16.2",
     "log4js": "^2.4.1",
     "md5": "^2.2.1",
-    "mint-ui": "^2.2.13",
     "mongoose": "^4.13.7",
-    "node-sass": "^4.7.2",
-    "normalize.css": "^7.0.0",
     "redis": "^2.8.0",
-    "sass-loader": "^6.0.6",
-    "superagent": "^3.8.2",
-    "tween.js": "^16.6.0",
-    "vue": "^2.5.10",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "superagent": "^3.8.2"
   },
   "devDependencies": {
+    "element-ui": "^2.0.8",
+    "mint-ui": "^2.2.13",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "normalize.css": "^7.0.0",
+    "tween.js": "^16.6.0",
     "autoprefixer": "^7.2.3",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.3",
@@ -74,7 +71,10 @@
     "webpack-bundle-analyzer": "^2.9.1",
     "webpack-dev-middleware": "^2.0.1",
     "webpack-hot-middleware": "^2.21.0",
-    "webpack-merge": "^4.1.1"
+    "webpack-merge": "^4.1.1",
+    "vue": "^2.5.10",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "engines": {
     "node": ">= 4.0.0",

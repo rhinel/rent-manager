@@ -48,6 +48,8 @@ module.exports = {
     // 数组不要求结构赋值
     "prefer-destructuring": ["error", {"object": true, "array": false}],
     // 可以进行参数赋值
-    "no-param-reassign": 0
+    "no-param-reassign": 0,
+    // 不校验换行符
+    'linebreak-style': 0
   }
 }

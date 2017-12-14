@@ -9,7 +9,7 @@ echo "--> $1"
 
 git status
 
-echo "--> git branch $1"
+echo "--> git checkout $1"
 git checkout $1
 
 echo "--> git pull --all"
@@ -17,9 +17,9 @@ echo "--> git pull --all"
 git pull --all
 git fetch -p
 
-echo "--> 更新依赖"
+echo "--> 更新生产版本依赖"
 
-yarn
+yarn install --production=true
 
 echo "--> 删除旧版本"
 
