@@ -12,9 +12,9 @@ script:
   - npm run build
 
 after_success:
-  - tar -jcf dist.tar.bz2
-  - scp indoor-server.tar.bz2 jingsam@102.201.64.94:~/gitcode/rentmanager/
-  - ssh root@45.76.52.33 "./gitcode/rentmanager/autoFetch"
+  - tar -jcf dist.tar.bz2 *
+  - scp dict.tar.bz2 root@45.76.52.33:~/gitcode/rent-manager/
+  - ssh root@45.76.52.33 "./gitcode/rent-manager/autoFetch"
 
 addons:
   - ssh_known_hosts: 45.76.52.33
