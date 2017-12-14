@@ -11,6 +11,5 @@ docker run \
  --expose 443 \
  -v /etc/localtime:/etc/localtime \
  -v ~/gitcode/rent-manager:/webapp \
- -v ~/ssl-key:/ssl-key \
  -w /webapp/server-node \
  -d node node index

@@ -2,8 +2,21 @@ language: node_js
 node_js:
   - 8.9.3
 
+before_install:
+  - openssl aes-256-cbc -K $encrypted_7c789783d536_key -iv $encrypted_7c789783d536_iv -in ssh-vultr2.ppk.enc -out ~/.ssh/id_rsa -d
+  - chmod 600 ~/.ssh/id_rsa
+  - echo -e "Host 45.76.52.33\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
 script:
   - npm run build
+
+after_success:
+  - tar -jcf dist.tar.bz2 dist/*
+  - scp dist.tar.bz2 root@45.76.52.33:~/gitcode/rent-manager/
+  - ssh root@45.76.52.33 "./gitcode/rent-manager/autoFetch.sh"
+
+addons:
+  - ssh_known_hosts: 45.76.52.33
 
 branches:
   only:
