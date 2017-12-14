@@ -11,7 +11,7 @@ script:
   - npm run build
 
 after_success:
-  - tar -jcf dist.tar.bz2 *
+  - tar -jcf dist.tar.bz2 dist/
   - scp dist.tar.bz2 root@45.76.52.33:~/gitcode/rent-manager/
   - ssh root@45.76.52.33 "./gitcode/rent-manager/autoFetch.sh"
 
