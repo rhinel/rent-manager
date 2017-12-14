@@ -1,17 +1,17 @@
 #!/bin/bash
 
-echo '--> 开始本地处理'
+echo "--> 开始本地处理"
 
 cd ~/gitcode/rent-manager/
 
-echo '--> fetch当前分支'
-echo '--> $0'
+echo "--> fetch当前分支"
+echo "--> $1"
 
 git status
 
 if [ "$0" != "test" ]; then
-  echo "--> git branch $0"
-  git checkout $0
+  echo "--> git branch $1"
+  git checkout $1
 fi
 
 if [ "$0" == "test" ]; then
@@ -22,25 +22,25 @@ fi
 git pull --all
 git fetch -p
 
-echo '--> 更新依赖'
+echo "--> 更新依赖"
 
 yarn
 
-echo '--> 删除旧版本'
+echo "--> 删除旧版本"
 
 rm -rf ./dist
 
-echo '--> 解压新版本'
+echo "--> 解压新版本"
 
 tar -jxf dist.tar.bz2 -C ./
 
-echo '--> cache clear'
+echo "--> cache clear"
 
 rm -rf dist.tar.bz2
 
-echo '--> docker restart'
+echo "--> docker restart"
 
 sh ./rentmanager.sh
 
-echo '--> 全部完成'
+echo "--> 全部完成"
 
