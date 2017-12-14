@@ -12,8 +12,9 @@ fi
 
 git pull --all
 yarn
-mkdir dist2
-tar -jxf dist.tar.bz2 -C dist2
+rm -rf ./dist
+tar -jxf dist.tar.bz2 -C ./
+rm -rf dist.tar.bz2
 
 
 echo 'done'
