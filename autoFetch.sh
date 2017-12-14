@@ -5,15 +5,16 @@ echo '--> 开始本地处理'
 cd ~/gitcode/rent-manager/
 
 echo '--> fetch当前分支'
+echo '--> $0'
 
 git status
 
-if [ "$TRAVIS_BRANCH" != "test" ]; then
-  echo "--> git branch $TRAVIS_BRANCH"
-  git checkout "$TRAVIS_BRANCH"
+if [ "$0" != "test" ]; then
+  echo "--> git branch $0"
+  git checkout $0
 fi
 
-if [ "$TRAVIS_BRANCH" == "test" ]; then
+if [ "$0" == "test" ]; then
   echo "--> git branch test"
   git checkout test
 fi
