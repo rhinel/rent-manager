@@ -158,7 +158,7 @@
             <!-- 提交按钮 -->
             <el-form-item
               key="watBtn"
-              v-if="calWaterEdit"
+              v-if="calWaterEdit || !defaultKeysHasSet.defaultCalWaterPrice"
               :label-width="labelWidth">
               <el-button
                 type="danger"
@@ -295,7 +295,7 @@
             <!-- 提交按钮 -->
             <el-form-item
               key="eleBtn"
-              v-if="calEleEdit"
+              v-if="calEleEdit || !defaultKeysHasSet.defaultCalElePrice"
               :label-width="labelWidth">
               <el-button
                 type="danger"
@@ -363,6 +363,7 @@
         defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
         defaultCalElePrice: state => state.config.defaultCalElePrice,
         defaultStep: state => state.config.defaultStep,
+        defaultKeysHasSet: state => state.defaultKeysHasSet,
       }),
       calWaterEdit() {
         const local = JSON.stringify(this.calWaterPrice)

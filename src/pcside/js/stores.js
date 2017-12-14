@@ -104,6 +104,10 @@ export default {
     defaultGot: false,
     defaultGetting: false,
     defaultKeys: ['defaultCalWaterPrice', 'defaultCalElePrice'],
+    defaultKeysHasSet: {
+      defaultCalWaterPrice: false,
+      defaultCalElePrice: false,
+    },
   },
   // 处理
   getters: {
@@ -121,7 +125,20 @@ export default {
       state.titleAdd = add
     },
     upDefaults(state, { key, value }) {
-      state.config[key] = JSON.parse(JSON.stringify(value))
+      if (value) {
+        state.config[key] = JSON.parse(JSON.stringify(value))
+        state.defaultKeysHasSet[key] = true
+      } else if (value === false) {
+        const valueClear = state.config[`${key}Clear`]
+        state.config[key] = JSON.parse(JSON.stringify(valueClear))
+        state.defaultKeysHasSet[key] = false
+      } else {
+        state.config[key] = {}
+        state.defaultKeysHasSet[key] = false
+      }
+    },
+    upDefaultHasSet(state, { key, value }) {
+      state.defaultKeysHasSet[key] = value
     },
     upDefaultGot(state, status) {
       state.defaultGot = status
@@ -149,7 +166,7 @@ export default {
         if (datas[key]) {
           commit('upDefaults', { key, value: datas[key] })
         } else {
-          commit('upDefaults', { key, value: state[`${key}Clear`] })
+          commit('upDefaults', { key, value: false })
         }
       })
       commit('upDefaultGot', true)
@@ -159,7 +176,7 @@ export default {
     async clearDefaults({ commit, state }) {
       commit('updefaultGetting', true)
       state.defaultKeys.forEach(key => {
-        commit('upDefaults', { key, value: {} })
+        commit('upDefaults', { key })
       })
       commit('upDefaultGot', false)
       commit('updefaultGetting', false)
