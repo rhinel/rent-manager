@@ -7,14 +7,13 @@ before_install:
   - chmod 600 ~/.ssh/id_rsa
   - echo -e "Host 45.76.52.33\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
-
 script:
   - npm run build
 
 after_success:
   - tar -jcf dist.tar.bz2 *
-  - scp dict.tar.bz2 root@45.76.52.33:~/gitcode/rent-manager/
-  - ssh root@45.76.52.33 "./gitcode/rent-manager/autoFetch"
+  - scp dist.tar.bz2 root@45.76.52.33:~/gitcode/rent-manager/
+  - ssh root@45.76.52.33 "./gitcode/rent-manager/autoFetch.sh"
 
 addons:
   - ssh_known_hosts: 45.76.52.33
