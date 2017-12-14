@@ -9,15 +9,10 @@ echo "--> $1"
 
 git status
 
-if [ "$0" != "test" ]; then
-  echo "--> git branch $1"
-  git checkout $1
-fi
+echo "--> git branch $1"
+git checkout $1
 
-if [ "$0" == "test" ]; then
-  echo "--> git branch test"
-  git checkout test
-fi
+echo "--> git pull --all"
 
 git pull --all
 git fetch -p
@@ -43,4 +38,3 @@ echo "--> docker restart"
 sh ./rentmanager.sh
 
 echo "--> 全部完成"
-
