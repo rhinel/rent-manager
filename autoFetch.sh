@@ -6,18 +6,20 @@ cd ~/gitcode/rent-manager/
 
 echo '--> fetch当前分支'
 
-git fetch -p
 git status
 
 if [ "$TRAVIS_BRANCH" != "test" ]; then
-  git checkout dev-0.1.0
+  echo "--> git branch $TRAVIS_BRANCH"
+  git checkout "$TRAVIS_BRANCH"
 fi
 
 if [ "$TRAVIS_BRANCH" == "test" ]; then
+  echo "--> git branch test"
   git checkout test
 fi
 
 git pull --all
+git fetch -p
 
 echo '--> 更新依赖'
 
