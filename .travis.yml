@@ -5,6 +5,8 @@ node_js:
 before_install:
   - openssl aes-256-cbc -K $encrypted_7c789783d536_key -iv $encrypted_7c789783d536_iv -in ssh-vultr2.ppk.enc -out ~/.ssh/ssh-vultr2.ppk -d
   - chmod 600 ~/.ssh/ssh-vultr2.ppk
+  - echo -e "Host 45.76.52.33\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
 
 script:
   - npm run build
