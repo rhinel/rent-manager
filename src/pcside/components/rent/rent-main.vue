@@ -16,13 +16,13 @@
       <div class="table-btn-input">
         <el-input
           v-model="monthListDataSearch"
-          placeholder="搜索">
-        </el-input>
+          placeholder="搜索" />
       </div>
     </div>
 
     <!-- 新增弹窗 -->
-    <el-dialog custom-class="add-month-list-dialog"
+    <el-dialog
+      custom-class="add-month-list-dialog"
       :key="dialogId"
       :title="amldDialogTitle"
       :visible.sync="addMonthListflag"
@@ -44,8 +44,7 @@
                 type="month"
                 :disabled="!amldInput"
                 :editable="false"
-                placeholder="选择月份">
-              </el-date-picker>
+                placeholder="选择月份" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -55,30 +54,26 @@
               <el-input
                 v-model="addMonthList.remark"
                 auto-complete="off"
-                placeholder="备注">
-              </el-input>
+                placeholder="备注" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-alert
           :title="(addMonthList._id ? '已' : '将') +
-            '记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算'"
-          type="info">
-        </el-alert>
+          '记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算'"
+          type="info" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
               label="水费"
               :label-width="amldLabelWidth">
               <div>
-                低消：{{addMonthList.defaultCalWaterPrice.minPrice || 0}}吨
+                低消：{{ addMonthList.defaultCalWaterPrice.minPrice || 0 }}吨
               </div>
-              <div
-                v-if="addMonthList.defaultCalWaterPrice.calType == 'single'">
-                单价：{{addMonthList.defaultCalWaterPrice.singlePrice || 0}}元/吨
+              <div v-if="addMonthList.defaultCalWaterPrice.calType == 'single'">
+                单价：{{ addMonthList.defaultCalWaterPrice.singlePrice || 0 }}元/吨
               </div>
-              <div
-                v-else-if="addMonthList.defaultCalWaterPrice.calType == 'step'">
+              <div v-else-if="addMonthList.defaultCalWaterPrice.calType == 'step'">
                 阶梯：
                 <div
                   v-for="(item, index) in addMonthList.defaultCalWaterPrice.stepPrice"
@@ -87,8 +82,7 @@
                 </div>
                 超出按最后阶梯计算。
               </div>
-              <div
-                v-else>
+              <div v-else>
                 暂无计费方式
               </div>
             </el-form-item>
@@ -98,14 +92,12 @@
               label="电费"
               :label-width="amldLabelWidth">
               <div>
-                低消：{{addMonthList.defaultCalElePrice.minPrice || 0}}度
+                低消：{{ addMonthList.defaultCalElePrice.minPrice || 0 }}度
               </div>
-              <div
-                v-if="addMonthList.defaultCalElePrice.calType == 'single'">
-                单价：{{addMonthList.defaultCalElePrice.singlePrice || 0}}元/度
+              <div v-if="addMonthList.defaultCalElePrice.calType == 'single'">
+                单价：{{ addMonthList.defaultCalElePrice.singlePrice || 0 }}元/度
               </div>
-              <div
-                v-else-if="addMonthList.defaultCalElePrice.calType == 'step'">
+              <div v-else-if="addMonthList.defaultCalElePrice.calType == 'step'">
                 阶梯：
                 <div
                   v-for="(item, index) in addMonthList.defaultCalElePrice.stepPrice"
@@ -114,22 +106,23 @@
                 </div>
                 超出按最后阶梯计算。
               </div>
-              <div
-                v-else>
+              <div v-else>
                 暂无计费方式
               </div>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <div class="dialog-footer"
+      <div
+        class="dialog-footer"
         slot="footer">
         <el-button
           @click="getAddMonthListDialog"
           :loading="gettingAddMonthList">
           取消
         </el-button>
-        <el-button type="primary"
+        <el-button
+          type="primary"
           @click="getAddMonthList"
           :loading="gettingAddMonthList">
           确定
@@ -138,7 +131,8 @@
     </el-dialog>
 
     <!-- 月份数据表 -->
-    <el-table class="month-table"
+    <el-table
+      class="month-table"
       :data="filterMonthListData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -148,19 +142,16 @@
         label="月份"
         width="180">
         <template slot-scope="scope">
-          <router-link
-            :to="{ path: '/inner/rent/month', query: { id: scope.row._id }}">
-            <el-button
-              type="text">
-              {{scope.row.month}}
+          <router-link :to="{ path: '/inner/rent/month', query: { id: scope.row._id }}">
+            <el-button type="text">
+              {{ scope.row.month }}
             </el-button>
           </router-link>
         </template>
       </el-table-column>
       <el-table-column
         prop="remark"
-        label="备注">
-      </el-table-column>
+        label="备注" />
       <el-table-column
         prop="createTime"
         label="创建时间"
@@ -207,7 +198,8 @@
                 确定
               </el-button>
             </div>
-            <span class="show-pop"
+            <span
+              class="show-pop"
               slot="reference">
               <el-button
                 size="small"

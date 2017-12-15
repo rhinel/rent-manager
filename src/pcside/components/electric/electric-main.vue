@@ -17,13 +17,13 @@
       <div class="table-btn-input">
         <el-input
           v-model="electricDataSearch"
-          placeholder="搜索">
-        </el-input>
+          placeholder="搜索" />
       </div>
     </div>
 
     <!-- 新增弹窗 -->
-    <el-dialog custom-class="add-electric-dialog"
+    <el-dialog
+      custom-class="add-electric-dialog"
       :key="'addElectric' + dialogId"
       :title="aedDialogTitle"
       :visible.sync="addElectricflag"
@@ -46,8 +46,7 @@
               v-for="item in houseData"
               :label="item.fang + item.hao"
               :value="item._id"
-              :key="item._id">
-            </el-option>
+              :key="item._id" />
           </el-select>
         </el-form-item>
         <el-form-item
@@ -67,8 +66,7 @@
           <el-input
             v-model="addElectric.remark"
             auto-complete="off"
-            placeholder="备注">
-          </el-input>
+            placeholder="备注" />
         </el-form-item>
         <el-form-item
           label="抄表时间"
@@ -78,11 +76,11 @@
             v-model="addElectric.addTime"
             type="datetime"
             placeholder="输入抄表时间"
-            :editable="false">
-          </el-date-picker>
+            :editable="false" />
         </el-form-item>
       </el-form>
-      <div class="dialog-footer"
+      <div
+        class="dialog-footer"
         slot="footer">
         <el-button
           @click="getAddElectricDialog"
@@ -99,7 +97,8 @@
     </el-dialog>
 
     <!-- 计费弹窗 -->
-    <el-dialog custom-class="cal-electric-dialog"
+    <el-dialog
+      custom-class="cal-electric-dialog"
       :key="'calElectric' + dialogId"
       :title="calElectric.fanghao + cedDialogTitle"
       :visible.sync="calElectricflag"
@@ -116,8 +115,7 @@
         <!-- 电底信息 -->
         <el-alert
           title="本抄表数据来源于最新一次抄表，可修改作为本次副本保存（不增加抄表数据），但建议按照逻辑操作，先抄表再计费"
-          type="info">
-        </el-alert>
+          type="info" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -142,8 +140,7 @@
                 type="datetime"
                 placeholder="输入抄表时间"
                 style="width: 100%;"
-                :editable="false">
-              </el-date-picker>
+                :editable="false" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -153,13 +150,11 @@
           <el-input
             v-model="calElectric.tnew.remark"
             auto-complete="off"
-            placeholder="抄表备注">
-          </el-input>
+            placeholder="抄表备注" />
         </el-form-item>
         <el-alert
           title="本底表数来源于上一次计费数据，可修改作为本次副本保存（不创建底表计费信息），但建议按照逻辑操作，分次计费"
-          type="info">
-        </el-alert>
+          type="info" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -184,8 +179,7 @@
                 type="datetime"
                 placeholder="输入底表时间"
                 style="width: 100%;"
-                :editable="false">
-              </el-date-picker>
+                :editable="false" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -195,15 +189,13 @@
           <el-input
             v-model="calElectric.old.remark"
             auto-complete="off"
-            placeholder="底表备注">
-          </el-input>
+            placeholder="底表备注" />
         </el-form-item>
 
         <!-- 计费方式 -->
         <el-alert
           title="本计费方式及结果来源于租户信息，临时调整可修改作为本次副本保存（不更新租户信息），但建议按照逻辑操作，修改租住管理的租户信息"
-          type="info">
-        </el-alert>
+          type="info" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -265,7 +257,7 @@
                 :prop="'calElectric.stepPrice.' + index + '.step'"
                 :rules="{
                   type: 'number', required: true, message: '请填写', trigger: 'blur'
-                }">
+              }">
                 <el-input
                   v-model.number="step.step"
                   auto-complete="off"
@@ -274,13 +266,15 @@
                 </el-input>
               </el-form-item>
             </el-col>
-            <el-col class="line" :span="1"></el-col>
+            <el-col
+              class="line"
+              :span="1" />
             <el-col :span="9">
               <el-form-item
                 :prop="'calElectric.stepPrice.' + index + '.price'"
                 :rules="{
                   type: 'number', required: true, message: '请填写', trigger: 'blur'
-                }">
+              }">
                 <el-input
                   v-model.number="step.price"
                   auto-complete="off"
@@ -290,11 +284,13 @@
                 </el-input>
               </el-form-item>
             </el-col>
-            <el-col class="line" :span="1"></el-col>
-            <el-col :span="3"
+            <el-col
+              class="line"
+              :span="1" />
+            <el-col
+              :span="3"
               class="step-btn">
-              <el-button
-                @click.prevent="removeStep(step)">
+              <el-button @click.prevent="removeStep(step)">
                 删除
               </el-button>
             </el-col>
@@ -336,8 +332,7 @@
                 type="datetime"
                 placeholder="输入计费时间"
                 style="width: 100%;"
-                :editable="false">
-              </el-date-picker>
+                :editable="false" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -345,13 +340,13 @@
           label="计费备注"
           :label-width="cedLabelWidth">
           <el-input
-          v-model="calElectric.remark"
-          auto-complete="off"
-          placeholder="计费备注">
-        </el-input>
+            v-model="calElectric.remark"
+            auto-complete="off"
+            placeholder="计费备注" />
         </el-form-item>
       </el-form>
-      <div class="dialog-footer"
+      <div
+        class="dialog-footer"
         slot="footer">
         <el-button
           @click="getCalElectricDialog"
@@ -368,7 +363,8 @@
     </el-dialog>
 
     <!-- 电费数据表 -->
-    <el-table class="electric-table"
+    <el-table
+      class="electric-table"
       :data="filterElectricData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -376,19 +372,19 @@
       <el-table-column
         prop="fanghao"
         label="房屋"
-        width="120">
-      </el-table-column>
+        width="120" />
       <el-table-column
         prop="electricId.electric"
         label="最新抄表数(度)"
         width="160">
         <template slot-scope="scope">
-          <span class="main-txt-highline"
+          <span
+            class="main-txt-highline"
             v-if="scope.row.electricId.electric > 0">
-            {{scope.row.electricId.electric}}
+            {{ scope.row.electricId.electric }}
           </span>
           <span v-else>
-            {{scope.row.electricId.electric}}
+            {{ scope.row.electricId.electric }}
           </span>
         </template>
       </el-table-column>
@@ -405,12 +401,13 @@
         label="上计底表数(度)"
         width="160">
         <template slot-scope="scope">
-          <span class="main-txt-highline"
+          <span
+            class="main-txt-highline"
             v-if="scope.row.calElectricId.electric > 0">
-            {{scope.row.calElectricId.electric}}
+            {{ scope.row.calElectricId.electric }}
           </span>
           <span v-else>
-            {{scope.row.calElectricId.electric}}
+            {{ scope.row.calElectricId.electric }}
           </span>
         </template>
       </el-table-column>
@@ -427,12 +424,13 @@
         label="本期实用数(度)"
         width="160">
         <template slot-scope="scope">
-          <span class="main-txt-highline"
+          <span
+            class="main-txt-highline"
             v-if="scope.row.gap > 0">
-            {{scope.row.gap}}
+            {{ scope.row.gap }}
           </span>
           <span v-else>
-            {{scope.row.gap}}
+            {{ scope.row.gap }}
           </span>
         </template>
       </el-table-column>
@@ -466,10 +464,11 @@
                 <div
                   v-for="(item, index) in scope.row.leaseId.stepPrice"
                   :key="index">
-                  {{item.step}}度及以下￥{{item.price}}元/度；
+                  {{ item.step }}度及以下￥{{ item.price }}元/度；
                 </div>
                 超出按最后阶梯计算。
-                <div class="show-tag"
+                <div
+                  class="show-tag"
                   slot="reference">
                   <el-tag>阶梯</el-tag>
                 </div>
@@ -641,8 +640,9 @@
             if (!item.price) return
             const prevPrices = arr[i - 1] || {}
             if (
-              (theGap > (prevPrices || 0) && theGap <= item.step) ||
-              (i === (arr.length - 1) && theGap >= item.step)) {
+              (theGap > (prevPrices.step || 0) && theGap <= item.step) ||
+              (i === (arr.length - 1) && theGap >= item.step)
+            ) {
               result = theGap * item.price
             }
           })

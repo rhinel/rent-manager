@@ -1,5 +1,5 @@
 <template>
-  <router-view class="rent-index"></router-view>
+  <router-view class="rent-index" />
 </template>
 
 <script>
