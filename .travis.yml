@@ -21,7 +21,8 @@ script:
 after_success:
   - tar -jcf dist.tar.bz2 dist/*
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    scp dist.tar.bz2 rhinelkc@35.185.176.209:~/gitcode/rent-manager/;
+    scp dist.tar.bz2 rhinelkc@35.185.176.209:~/;
+    ssh rhinelkc@35.185.176.209 "sudo -i mv /home/rhinelkc/dist ./gitcode/rent-manager/";
     ssh rhinelkc@35.185.176.209 "sudo -i ./gitcode/rent-manager/autoFetch.sh $TRAVIS_BRANCH";
     fi
   - if [ "$TRAVIS_BRANCH" != "master" ]; then
