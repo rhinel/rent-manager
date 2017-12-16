@@ -5,19 +5,20 @@ import Vue from 'vue'
 import MintUI from 'mint-ui'
 import 'normalize.css'
 
-// 应用配置加载
-import App from '../index'
 // import stores from './stores'
 // import routes from './routes'
 // import routerEach from './routerEach'
-import ajax from 'common/js/request'
+// import ajax from 'common/js/request'
 import plugin from 'common/js/plugin'
+
+// 应用配置加载
+import App from '../index'
 
 // 载入应用层
 // Vue.use(Vuex)
 // Vue.use(VueRouter)
 Vue.use(MintUI)
-Vue.prototype.Ajax = ajax
+// Vue.prototype.Ajax = ajax
 Vue.prototype.GetTimeFormat = plugin.getTimeFormat
 Vue.prototype.GetDateFormat = plugin.getDateFormat
 
@@ -39,5 +40,5 @@ const app = new Vue({
   el: '#app',
   // router,
   // store,
-  render: h => h(App)
+  render: h => h(App),
 })

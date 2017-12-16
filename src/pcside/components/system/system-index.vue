@@ -1,13 +1,9 @@
-<style lang="scss">
-  
-</style>
-
 <template>
   <router-view class="system-index"></router-view>
 </template>
 
 <script>
   export default {
-    name: 'system-index'
+    name: 'system-index',
   }
 </script>

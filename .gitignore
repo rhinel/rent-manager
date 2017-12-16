@@ -1,11 +1,14 @@
 .DS_Store
 node_modules/
 dist/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
 debug.log
 
 log/*
+logs/*
 server-node/auth.js
+dist.tar.bz2
+

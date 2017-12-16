@@ -1,13 +1,9 @@
-<style lang="scss">
-  
-</style>
-
 <template>
-  <router-view class="rent-index"></router-view>
+  <router-view class="rent-index" />
 </template>
 
 <script>
   export default {
-    name: 'rent-index'
+    name: 'rent-index',
   }
 </script>

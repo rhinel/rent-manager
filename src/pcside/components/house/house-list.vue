@@ -1,63 +1,85 @@
-<style lang="scss">
-  .house-list{
-    .table-btn{
-      margin-bottom: 20px;
-    }
-    .table-btn-input{
-      max-width: 300px;
-      display: inline-block;
-      margin-left: 10px;
-    }
-    .add-house-dialog{
-      max-width: 400px;
-      .el-input{
-        max-width: 300px;
-      }
-      .el-select{
-        width: 100%;
-        max-width: 300px;
-      }
-    }
-    .house-show-pop{
-      display: inline-block;
-      margin-left: 10px;
-    }
-  }
-  .house-list-d-house-pop-cont{
-    text-align: right;
-    margin: 0;
-  }
-</style>
-
 <template>
   <div class="house-list">
     <!-- 顶部按钮组 -->
     <div class="table-btn">
-      <el-button type="primary" @click="getAddHouseDialog">新增</el-button>
-      <el-button type="primary" @click="getListRefresh" :loading="gettingListRefresh">刷新</el-button>
+      <el-button
+        type="primary"
+        @click="getAddHouseDialog">
+        新增
+      </el-button>
+      <el-button
+        type="primary"
+        @click="getListRefresh"
+        :loading="gettingListRefresh">
+        刷新
+      </el-button>
       <div class="table-btn-input">
-        <el-input v-model="houseDataSearch" placeholder="搜索"></el-input>
+        <el-input
+          v-model="houseDataSearch"
+          placeholder="搜索">
+        </el-input>
       </div>
     </div>
-    
+
     <!-- 新增弹窗 -->
-    <el-dialog :title="ahdDialogTitle" v-model="addHouseFlag" size="small" custom-class="add-house-dialog" :close-on-click-modal="false" @close="onAddHouseDialogClose">
-      <el-form :model="addHouse" ref="addHouse" :rules="addHouserules">
-        <el-form-item label="坊号" :label-width="ahdLabelWidth" prop="fang">
-          <el-select v-model="addHouse.fang" placeholder="选择坊号">
-            <el-option v-for="item in houseFang" :label="item" :value="item" :key="item"></el-option>
+    <el-dialog custom-class="add-house-dialog"
+      :key="dialogId"
+      :title="ahdDialogTitle"
+      :visible.sync="addHouseFlag"
+      size="small"
+      :close-on-click-modal="false"
+      @close="onAddHouseDialogClose">
+      <el-form
+        :model="addHouse"
+        ref="addHouse"
+        :rules="addHouserules">
+        <el-form-item
+          label="坊号"
+          :label-width="ahdLabelWidth"
+          prop="fang">
+          <el-select
+            v-model="addHouse.fang"
+            placeholder="选择坊号">
+            <el-option
+              v-for="item in houseFang"
+              :label="item"
+              :value="item"
+              :key="item">
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="房间号" :label-width="ahdLabelWidth" prop="hao">
-          <el-input v-model="addHouse.hao" auto-complete="off" placeholder="输入房间号"></el-input>
+        <el-form-item
+          label="房间号"
+          :label-width="ahdLabelWidth"
+          prop="hao">
+          <el-input
+            v-model="addHouse.hao"
+            auto-complete="off"
+            placeholder="输入房间号">
+          </el-input>
         </el-form-item>
-        <el-form-item label="说明" :label-width="ahdLabelWidth">
-          <el-input v-model="addHouse.detail" auto-complete="off" placeholder="选填"></el-input>
+        <el-form-item
+          label="说明"
+          :label-width="ahdLabelWidth">
+          <el-input
+            v-model="addHouse.detail"
+            auto-complete="off"
+            placeholder="选填">
+          </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="getAddHouseDialog" :loading="gettingAddHouse">取消</el-button>
-        <el-button type="primary" @click="getAddHouse" :loading="gettingAddHouse">确定</el-button>
+        <el-button
+          @click="getAddHouseDialog"
+          :loading="gettingAddHouse">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="getAddHouse"
+          :loading="gettingAddHouse">
+          确定
+        </el-button>
       </div>
     </el-dialog>
 
@@ -71,14 +93,12 @@
       <el-table-column
         prop="fang"
         label="坊号"
-        width="180"
-        sortable>
+        width="180">
       </el-table-column>
       <el-table-column
         prop="hao"
         label="房间号"
-        width="180"
-        sortable>
+        width="180">
       </el-table-column>
       <el-table-column
         prop="detail"
@@ -87,45 +107,58 @@
       <el-table-column
         prop="createTime"
         label="创建时间"
-        width="180"
-        sortable>
-        <template scope="scope">
+        width="180">
+        <template slot-scope="scope">
           {{ getTime(scope.row.createTime) }}
         </template>
       </el-table-column>
       <el-table-column
         prop="updateTime"
         label="修改时间"
-        width="180"
-        sortable>
-        <template scope="scope">
+        width="180">
+        <template slot-scope="scope">
           {{ getTime(scope.row.updateTime) }}
         </template>
       </el-table-column>
       <el-table-column
         label="操作"
         width="180">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             size="small"
             type="primary"
-            @click="getAddHouseDialog(scope.$index, scope.row)">修改</el-button>
+            @click="getAddHouseDialog(scope.$index, scope.row)">
+            修改
+          </el-button>
           <el-popover
             placement="top"
             width="150"
             trigger="click"
             v-model="scope.row.dHousePopFlag">
             <p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
-            <div class="house-list-d-house-pop-cont">
-              <el-button size="mini" type="text" @click="scope.row.dHousePopFlag = false">取消</el-button>
-              <el-button type="danger" size="mini" @click="(scope.row.dHousePopFlag = false) || getDelHouse(scope.$index, scope.row)">确定</el-button>
+            <div class="pop-cont">
+              <el-button
+                size="mini"
+                type="text"
+                @click="scope.row.dHousePopFlag = false">
+                取消
+              </el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="getDelHouse(scope.$index, scope.row)">
+                确定
+              </el-button>
             </div>
-            <div slot="reference" class="house-show-pop">
+            <span class="show-pop"
+              slot="reference">
               <el-button
                 size="small"
                 type="danger"
-                :loading="scope.row.gettingdelHouse">删除</el-button>
-            </div>
+                :loading="scope.row.gettingdelHouse">
+                删除
+              </el-button>
+            </span>
           </el-popover>
         </template>
       </el-table-column>
@@ -134,163 +167,179 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: 'house-list',
-    beforeCreate () {
+    beforeCreate() {
       this.$store.dispatch('updateMenu', '/inner/house/index')
     },
-    created () {
+    created() {
       this.getListRefresh()
       this.getResetHouse()
     },
-    data () {
+    data() {
       return {
         addHouseFlag: false,
         gettingAddHouse: false,
         gettingListRefresh: false,
 
-        houseFang: ['6坊65栋', '8坊68栋', '公司楼'],
+        dialogId: Date.now(),
+
         ahdDialogTitle: '',
         ahdLabelWidth: '80px',
-        addHouse: {
+        addHouse: {},
+        addHouseClear: {
+          _id: '',
           fang: '',
           hao: '',
-          detail: ''
+          detail: '',
         },
         addHouserules: {
           hao: [
-            { required: true, message: '请填写', trigger: 'blur' }
+            { required: true, message: '请填写', trigger: 'blur' },
           ],
           fang: [
-            { required: true, message: '请选择', trigger: 'change' }
-          ]
+            { required: true, message: '请选择', trigger: 'change' },
+          ],
         },
-        editHouseId: '',
+
+        // 前端搜索
         houseData: [],
-        houseDataSearch: ''
+        houseDataSearch: '',
       }
     },
     computed: {
-      filterHouseData () {
+      filterHouseData() {
         if (!this.houseDataSearch) {
           return this.houseData
-        } else {
-          let _houseDataSearch = new RegExp(this.houseDataSearch, 'i')
-          return this.houseData.filter((item) => {
-            for (var i in item) {
-              if (i !== 'fang' && i !== 'hao' && i !== 'detail') {
-                continue
-              } else if (String(item[i]).match(_houseDataSearch)) {
-                return true
-              }
-            }
-            return false
-          })
         }
-      }
+        const searchKeys = ['fang', 'hao', 'detail']
+
+        const _houseDataSearch = new RegExp(this.houseDataSearch, 'i')
+        return this.houseData.filter(item => {
+          const testObject = {}
+          searchKeys.forEach((key) => {
+            testObject[key] = item[key]
+          })
+          const testItem = Object.values(testObject).join(' ')
+          return _houseDataSearch.test(testItem)
+        })
+      },
+      ...mapState({
+        houseFang: state => state.config.houseFang,
+      }),
     },
     methods: {
+      // 时间格式化
+      getTime(t) {
+        return t ? this.GetTimeFormat(t) : '--'
+      },
       // 打开关闭添加/修改弹窗
-      getAddHouseDialog (index, row) {
+      getAddHouseDialog(index, row) {
         this.addHouseFlag = !this.addHouseFlag
-        if (row) {
+        if (this.addHouseFlag && row) {
+          this.ahdDialogTitle = '修改房间'
+          this.addHouse._id = row._id
           this.addHouse.fang = row.fang
           this.addHouse.hao = row.hao
           this.addHouse.detail = row.detail
-          this.ahdDialogTitle = '修改房间'
-          this.editHouseId = row._id
+        } else if (this.addHouseFlag) {
+          this.ahdDialogTitle = '新增房间'
+          this.addHouse.fang = this.houseFang[0]
         }
       },
       // 弹窗数据初始化
-      getResetHouse () {
-        this.addHouse.fang = this.houseFang[0]
-        this.addHouse.hao = ''
-        this.addHouse.detail = ''
-        this.ahdDialogTitle = '新增房间'
-        this.editHouseId = ''
+      getResetHouse() {
+        this.addHouse = Object.assign({}, this.addHouse, this.addHouseClear)
+        this.dialogId = Date.now()
       },
       // 关闭弹窗回调
-      onAddHouseDialogClose () {
-        this.$refs.addHouse.resetFields()
-        this.getResetHouse()
+      onAddHouseDialogClose() {
+        setTimeout(() => {
+          this.$refs.addHouse.resetFields()
+          this.getResetHouse()
+        }, 500)
       },
       // 添加/修改房屋
-      getAddHouse () {
-        if (this.gettingAddHouse) {
-          return true
+      async getAddHouse() {
+        if (this.gettingAddHouse) return
+
+        // 表单校验
+        try {
+          await this.$refs.addHouse.validate()
+        } catch (err) {
+          return
         }
+
+        // 接口提交
         this.gettingAddHouse = true
-        this.$refs.addHouse.validate((valid) => {
-          if (valid) {
-            let _data = Object.assign({}, this.addHouse)
-            this.editHouseId && (_data._id = this.editHouseId)
-            this.Ajax('/inner/house/add', _data, (res) => {
-              this.$message({
-                type: 'success',
-                message: this.editHouseId ? '修改成功' : '添加成功',
-                duration: 2000
-              })
-              this.getAddHouseDialog()
-              this.gettingAddHouse = false
-              this.getListRefresh()
-            }, (res) => {
-              this.$message({
-                type: 'error',
-                message: '编号：' + res.body.code + '，' + res.body.msg,
-                duration: 2000
-              })
-              this.gettingAddHouse = false
+
+        const _data = Object.assign({}, this.addHouse)
+        await this.Ajax('/inner/house/add', _data)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: this.addHouse._id ? '修改成功' : '添加成功',
+              duration: 2000,
             })
-          } else {
-            this.gettingAddHouse = false
-          }
-        })
+            this.getAddHouseDialog()
+            this.getListRefresh()
+          })
+          .catch(() => {})
+
+        this.gettingAddHouse = false
       },
       // 获取房屋列表
-      getListRefresh () {
-        if (this.gettingListRefresh) {
-          return true
-        }
+      async getListRefresh() {
+        if (this.gettingListRefresh) return
+
+        // 接口提交
         this.gettingListRefresh = true
-        this.Ajax('/inner/house/list', {}, (res) => {
-          this.houseData = res.body.data
-          this.gettingListRefresh = false
-        }, (res) => {
-          this.$message({
-            type: 'error',
-            message: '编号：' + res.body.code + '，' + res.body.msg,
-            duration: 2000
+
+        await this.Ajax('/inner/house/list', {})
+          .then(res => {
+            this.houseData = res
           })
-          this.gettingListRefresh = false
-        })
-      },
-      // 时间格式化
-      getTime (t) {
-        return t ? this.GetTimeFormat(t) : '--'
+          .catch(() => {})
+
+        this.gettingListRefresh = false
       },
       // 删除房屋
-      getDelHouse (index, row) {
-        if (row.gettingdelHouse) {
-          return true
-        }
+      async getDelHouse(index, row) {
+        row.dHousePopFlag = false
+        if (row.gettingdelHouse) return
+
+        // 接口提交
         row.gettingdelHouse = true
-        this.Ajax('/inner/house/del', {_id: row._id}, (res) => {
-          this.$message({
-            type: 'success',
-            message: '删除成功',
-            duration: 2000
+
+        await this.Ajax('/inner/house/del', { _id: row._id })
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功',
+              duration: 2000,
+            })
           })
-          row.gettingdelHouse = false
-          this.getListRefresh()
-        }, (res) => {
-          this.$message({
-            type: 'error',
-            message: '编号：' + res.body.code + '，' + res.body.msg,
-            duration: 2000
-          })
-          row.gettingdelHouse = false
-        })
-      }
-    }
+          .catch(() => {})
+
+        row.gettingdelHouse = false
+      },
+    },
   }
 </script>
+
+<style lang="scss">
+.house-list {
+  .add-house-dialog {
+    max-width: 400px;
+    .el-input {
+      max-width: 300px;
+    }
+    .el-select {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+}
+</style>
