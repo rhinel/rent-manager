@@ -31,7 +31,7 @@ module.exports = {
     }
 
     houseInfo.forEach(house => {
-      if (house.leaseId) count.leaseEmpty += 1
+      if (!house.leaseId) count.leaseEmpty += 1
     })
 
     // 2返回数据
@@ -240,8 +240,11 @@ module.exports = {
 
     // 2返回数据
     return {
+      // 数据列表
       data: rentInfo,
+      // 今天的数据列表
       isToday,
+      // 今天的租金统计
       isTodayCountMoney: isTodayCount,
     }
   },
@@ -250,9 +253,12 @@ module.exports = {
     const dutyData = await this.waitingList(req)
 
     return {
-      data: dutyData.data.length,
+      // 数据count
+      count: dutyData.data.length,
+      // 今天的count
       isTodayCount: dutyData.isToday.length,
-      isTodayCountMoney: dutyData.isTodayCount,
+      // 今天的租金统计
+      isTodayCountMoney: dutyData.isTodayCountMoney,
     }
   },
 
@@ -332,21 +338,28 @@ module.exports = {
     })
 
     return {
+      // 数据列表
       data: rentInfo,
+      // 今天的数据列表
       isToday,
+      // 今天的租金统计
       isTodayCountMoney: countMoney,
+      // 月度信息
       month: newestMonth.month,
     }
   },
 
   async okListCount(req) {
     const dutyData = await this.okList(req)
-    const countMoney = dutyData.count
-      .reduce((sum, rent) => sum + rent.calRentResult)
+    const countMoney = dutyData.data
+      .reduce((sum, rent) => sum + rent.calRentResult, 0)
 
     return {
+      // 数据count
       count: dutyData.data.length,
+      // 数据租金统计
       countMoney,
+      // 今天的租金统计
       isTodayCount: dutyData.isToday.length,
       month: dutyData.month,
     }
