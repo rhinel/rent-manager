@@ -17,7 +17,7 @@ const app = express()
 
 // http转发
 const httpServer = http.createServer(app)
-const httpPORT = process.env.HTTPPORT || 80
+const httpPORT = process.env.npm_config_port || 80
 
 // 初始化logs和http记录
 log4js.configure(configLog)
