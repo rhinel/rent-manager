@@ -10,7 +10,7 @@ module.exports = {
       backups: 1024,
     },
 
-    // 系统日志，如：程序启动和db链接日志，框架错误，catch程序错误，db连接错误等
+    // 系统日志，如：程序启动和db链接日志，框架错误，catch框架错误，db连接错误等
     sys: {
       type: 'dateFile',
       filename: `${path.resolve(__dirname, '../logs/sysLogs/logs')}Sys.log`,
