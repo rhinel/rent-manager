@@ -452,6 +452,10 @@ module.exports = {
 
     const houseAndMonth = await Promise.all([houseInfo(), monthInfo()])
 
+    if (!houseAndMonth[1]) {
+      return Promise.reject(new FoundError('暂无最新月度信息'))
+    }
+
     // 2再根据monthId查询月度信息
     const rentInfo = await db
       .dbModel('rent')
