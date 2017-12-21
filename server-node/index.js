@@ -14,8 +14,6 @@ db.connect()
 
 // 启动路由及端口处理
 const app = express()
-
-// http转发
 const httpServer = http.createServer(app)
 const httpPORT = process.env.npm_config_port || 80
 
