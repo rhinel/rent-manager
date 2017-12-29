@@ -281,6 +281,8 @@
         <!-- 月周期图表 -->
         <el-table
           class="month-table"
+          ref="monthTable"
+          :max-height="tableMaxHeight"
           :data="filterMonthDetData"
           v-loading.body="gettingListRefresh"
           stripe
@@ -991,6 +993,14 @@
       if (this.activeName === 'landordHistory') this.landordHistoryActive()
       if (this.activeName === 'rentCount') this.rentCountActive()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
     data() {
       return {
         activeName: 'rentHistory',
@@ -1068,6 +1078,7 @@
         },
 
         // 列表渲染
+        tableMaxHeight: 0,
         monthDetData: [],
         monthDetSearch: '',
 
@@ -1130,7 +1141,12 @@
         this.addRent.fix = n !== this.calRentResult
       },
       activeName(n) {
-        if (n === 'rentHistory') this.rentHistoryActive()
+        if (n === 'rentHistory') {
+          this.$nextTick(() => {
+            window.onresize()
+            this.rentHistoryActive()
+          })
+        }
         if (n === 'landordHistoryTemp') this.landordHistoryTempActive()
         if (n === 'landordHistory') this.landordHistoryActive()
         if (n === 'rentCount') this.rentCountActive()

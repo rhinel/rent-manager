@@ -766,6 +766,7 @@
 
         // 列表数据
         gettingListRefresh: false,
+        tableMaxHeight: 0,
         leaseData: [],
         leaseDataSearch: '',
 
@@ -775,7 +776,6 @@
         lidLabelWidth: '90px',
         leaseInflag: false,
         // 入住数据对象
-        tableMaxHeight: 0,
         lease: {},
         leaseClear: {
           _id: '',
