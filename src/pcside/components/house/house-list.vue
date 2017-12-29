@@ -86,6 +86,8 @@
     <!-- 房屋数据表 -->
     <el-table
       class="house-table"
+      ref="houseTable"
+      :max-height="tableMaxHeight"
       :data="filterHouseData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -178,6 +180,17 @@
       this.getListRefresh()
       this.getResetHouse()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.houseTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         addHouseFlag: false,
@@ -205,6 +218,7 @@
         },
 
         // 前端搜索
+        tableMaxHeight: 0,
         houseData: [],
         houseDataSearch: '',
       }

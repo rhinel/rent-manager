@@ -469,6 +469,8 @@
 
         <!-- 租住数据表 -->
         <el-table class="lease-table"
+          ref="leaseTable"
+          :max-height="tableMaxHeight"
           :data="filterLeaseData"
           v-loading.body="gettingListRefresh"
           stripe
@@ -737,6 +739,17 @@
       if (this.activeName === 'leaseList') this.leaseListActive()
       if (this.activeName === 'leaseCount') this.leaseCountActive()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       // 校验周期时间选择器
       const validatePass = (rule, value, callback) => {
@@ -762,6 +775,7 @@
         lidLabelWidth: '90px',
         leaseInflag: false,
         // 入住数据对象
+        tableMaxHeight: 0,
         lease: {},
         leaseClear: {
           _id: '',
@@ -888,7 +902,12 @@
     },
     watch: {
       activeName(n) {
-        if (n === 'leaseList') this.leaseListActive()
+        if (n === 'leaseList') {
+          this.$nextTick(() => {
+            window.onresize()
+            this.leaseListActive()
+          })
+        }
         if (n === 'leaseCount') this.leaseCountActive()
       },
     },

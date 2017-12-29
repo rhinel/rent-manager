@@ -12,16 +12,23 @@
 // reset
 html,
 body {
+  padding: 0;
+  margin: 0;
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
   height: 100%;
   width: 100%;
   font-size: 14px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
 }
-// button text
-html,
-body,
-.el-button--text {
-  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
 }
+
 // 页面=顶部按钮样式
 .table-btn {
   margin-bottom: 20px;
@@ -32,15 +39,18 @@ body,
   display: inline-block;
   margin-left: 10px;
 }
+
 // 表格=高亮样式
 .main-txt-highline {
   color: #1d8ce0;
 }
+
 // 表格=非低亮
 .unimportant {
   color: #999;
   font-weight: normal;
 }
+
 // 表格=悬浮高亮样式
 .el-table--enable-row-hover
   .el-table__body
@@ -48,6 +58,7 @@ body,
   > td:not(.el-table__expanded-cell) {
   font-weight: bold;
 }
+
 // 表格=折页打开样式
 .table-expand {
   font-size: 0;
@@ -61,6 +72,7 @@ body,
     color: #99a9bf;
   }
 }
+
 // 表格=信息悬浮窗样式
 .show-tag {
   cursor: pointer;
@@ -85,6 +97,7 @@ body,
     flex: 1;
   }
 }
+
 // 表格=删除pop样式
 .show-pop {
   margin-left: 10px;
@@ -113,10 +126,14 @@ body,
     background-color: #f5f7fa;
   }
 }
+
 // 重写组件样式
 .el-popover {
   font-size: 14px;
   line-height: 1.5;
+}
+.el-alert {
+  line-height: initial;
 }
 .el-table--border
   .has-gutter
