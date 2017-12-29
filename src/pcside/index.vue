@@ -31,7 +31,7 @@ button, input, select, textarea {
 
 // 页面=顶部按钮样式
 .table-btn {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 .table-btn-input {
   vertical-align: top;
