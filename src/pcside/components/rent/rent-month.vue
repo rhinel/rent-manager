@@ -842,7 +842,7 @@
         <template v-for="(fang, fangi) in rentCount">
           <div
             class="rent-count-title"
-            :key="fangi">
+            :key="`${fangi}Title`">
             <el-alert
               class="table-btn"
               type="info"
@@ -853,7 +853,7 @@
           </div>
           <el-collapse
             v-model="activeRentCount[fangi]"
-            :key="fangi">
+            :key="`${fangi}Collapse`">
             <el-collapse-item
               v-for="(floor, floori) in fang.list"
               :name="floori"
