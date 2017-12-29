@@ -41,7 +41,8 @@
         <a
           href="http://www.miitbeian.gov.cn/"
           target="_blank">
-          粤ICP备17070491号-3
+          粤ICP备17164727号-1<br>
+          粤ICP备17164727号-2
         </a>
       </div>
     </el-card>
