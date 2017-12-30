@@ -153,8 +153,10 @@ button, input, select, textarea {
   margin-left: -8px;
   margin-right: -7px;
 }
-[class*=" el-icon-"],
-  [class^=el-icon-] {
-  vertical-align: top;
+.el-button {
+  [class*=" el-icon-"],
+    [class^=el-icon-] {
+    vertical-align: top;
+  }
 }
 </style>
