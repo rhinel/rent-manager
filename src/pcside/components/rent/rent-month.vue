@@ -524,7 +524,7 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="230">
+            width="250">
             <template slot-scope="scope">
               <el-button
                 size="small"
@@ -1237,6 +1237,7 @@
           const prevPrices = arr[i - 1] || {}
 
           if (
+            (gap <= 0 && i === 0) ||
             (gap > (prevPrices.step || 0) && gap <= item.step) ||
             ((i + 1) === arr.length && gap > item.step)
           ) {
@@ -1591,12 +1592,12 @@
     .el-input {
       width: 100%;
     }
-    .el-input__inner {
-      vertical-align: top;
-    }
     .el-select {
       width: 100%;
       max-width: 300px;
+    }
+    .el-input__inner {
+      vertical-align: top;
     }
     .el-checkbox-group {
       overflow: hidden;
@@ -1621,6 +1622,7 @@
       font-size: 13px;
     }
   }
+  // 详情样式
   .landord-content {
     font-size: 14px;
     .collapse-btn {
@@ -1643,14 +1645,10 @@
       width: 120px;
     }
     .landord-content-type {
-      position: relative;
-      .el-tag {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-      }
+      padding: 2px 0;
     }
   }
+  // 月租统计小标题
   .rent-count-title:not(:first-child) {
     padding-top: 20px;
   }

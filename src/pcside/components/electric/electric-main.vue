@@ -363,6 +363,8 @@
     <!-- 电费数据表 -->
     <el-table
       class="electric-table"
+      ref="electricTable"
+      :max-height="tableMaxHeight"
       :data="filterElectricData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -512,6 +514,17 @@
       this.getResetAddElectric()
       this.getResetCalElectric()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         addElectricflag: false,
@@ -543,6 +556,7 @@
           }],
         },
 
+        tableMaxHeight: 0,
         electricData: [],
         electricDataSearch: '',
         // 计费弹窗
@@ -849,13 +863,10 @@
   // 弹窗样式
   .add-electric-dialog {
     max-width: 400px;
+    .el-select,
     .el-input {
       max-width: 300px;
       width: 100%;
-    }
-    .el-select {
-      width: 100%;
-      max-width: 300px;
     }
   }
   // 弹窗样式

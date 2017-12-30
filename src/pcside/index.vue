@@ -42,12 +42,12 @@ button, input, select, textarea {
 
 // 表格=高亮样式
 .main-txt-highline {
-  color: #1d8ce0;
+  color: #409EFF;
 }
 
 // 表格=非低亮
 .unimportant {
-  color: #999;
+  color: #99a9bf;
   font-weight: normal;
 }
 
@@ -121,6 +121,7 @@ button, input, select, textarea {
     height: 14px;
   }
 }
+
 // 折页=内表格高亮
 .content-bg {
   &:hover {
@@ -135,6 +136,9 @@ button, input, select, textarea {
 }
 .el-alert {
   line-height: initial;
+  .el-alert__closebtn {
+    top: 11px;
+  }
 }
 .el-table--border
   .has-gutter
@@ -148,5 +152,11 @@ button, input, select, textarea {
   .el-range__close-icon {
   margin-left: -8px;
   margin-right: -7px;
+}
+.el-button {
+  [class*=" el-icon-"],
+    [class^=el-icon-] {
+    vertical-align: top;
+  }
 }
 </style>
