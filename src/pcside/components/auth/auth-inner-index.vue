@@ -136,11 +136,12 @@
     transition: left 0.3s;
     bottom: 0;
   }
+  // header
   .inner-header {
     width: 100%;
     height: 50px;
     line-height: 50px;
-    color: #f9fafc;
+    color: #fff;
     position: fixed;
     top: 0;
     left: 0;
@@ -159,15 +160,16 @@
         top: 50%;
         transform: translateY(-50%);
         background: transparent;
-        border-color: #d3dce6;
-        color: #d3dce6;
+        border-color: #fff;
+        color: #fff;
+        opacity: 0.69;
+        transition: opacity 0.3s;
         .el-icon-d-arrow-left {
           transition: transform 0.3s;
           transform: rotateZ(0deg);
         }
         &:hover {
-          color: #fff;
-        border-color: #fff;
+          opacity: 1;
         }
       }
     }
@@ -176,19 +178,21 @@
       flex: 1;
     }
     .header-right {
+      opacity: 0.69;
+      transition: opacity 0.3s;
       width: 120px;
       cursor: pointer;
-      color: #d3dce6;
       text-align: right;
       padding-right: 20px;
       .el-icon-star-on {
         margin-right: 10px;
       }
       &:hover {
-        color: #fff;
+        opacity: 1;
       }
     }
   }
+  // body
   .inner-body {
     padding: 20px;
   }

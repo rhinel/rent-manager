@@ -21,7 +21,6 @@
       :key="'changeType' + dialogId"
       :title="changeType.fanghao + ctdDialogTitle"
       :visible.sync="changeTypeflag"
-      size="large"
       :close-on-click-modal="false"
       @close="onChangeTypeDialogClose">
       <el-form
@@ -620,6 +619,8 @@
   .change-type-dialog {
     .el-input {
       width: 100%;
+    }
+    .el-input__inner {
       vertical-align: top;
     }
     .el-select {
@@ -628,6 +629,9 @@
     }
     .el-checkbox-group {
       overflow: hidden;
+    }
+    .el-checkbox {
+      vertical-align: top;
     }
     .el-row-margin {
       margin-bottom: 20px;

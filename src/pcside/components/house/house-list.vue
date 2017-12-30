@@ -26,7 +26,6 @@
       :key="dialogId"
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
-      size="small"
       :close-on-click-modal="false"
       @close="onAddHouseDialogClose">
       <el-form
@@ -86,6 +85,8 @@
     <!-- 房屋数据表 -->
     <el-table
       class="house-table"
+      ref="houseTable"
+      :max-height="tableMaxHeight"
       :data="filterHouseData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -178,6 +179,17 @@
       this.getListRefresh()
       this.getResetHouse()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.houseTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         addHouseFlag: false,
@@ -187,7 +199,7 @@
         dialogId: Date.now(),
 
         ahdDialogTitle: '',
-        ahdLabelWidth: '80px',
+        ahdLabelWidth: '90px',
         addHouse: {},
         addHouseClear: {
           _id: '',
@@ -205,6 +217,7 @@
         },
 
         // 前端搜索
+        tableMaxHeight: 0,
         houseData: [],
         houseDataSearch: '',
       }

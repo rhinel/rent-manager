@@ -27,7 +27,6 @@
       :key="'addElectric' + dialogId"
       :title="aedDialogTitle"
       :visible.sync="addElectricflag"
-      size="small"
       :close-on-click-modal="false"
       @close="onAddElectricDialogClose">
       <el-form
@@ -102,7 +101,6 @@
       :key="'calElectric' + dialogId"
       :title="calElectric.fanghao + cedDialogTitle"
       :visible.sync="calElectricflag"
-      size="large"
       top="50px"
       :close-on-click-modal="false"
       @close="onCalElectricDialogClose">
@@ -755,7 +753,7 @@
             this.calElectric.tnew.addTime = new Date()
           }
           // old
-          if (row.calElectricId.water) this.calElectric.old.water = row.calElectricId.water
+          if (row.calElectricId.electric) this.calElectric.old.electric = row.calElectricId.electric
           if (row.calElectricId.remark) this.calElectric.old.remark = row.calElectricId.remark
           if (row.calElectricId.addTime) {
             this.calElectric.old.addTime = new Date(row.calElectricId.addTime)
@@ -862,7 +860,7 @@
   }
   // 弹窗样式
   .cal-electric-dialog {
-    max-width: 790px;
+    max-width: 800px;
   }
 }
 </style>

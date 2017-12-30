@@ -28,7 +28,6 @@
           :key="'leaseIn' + dialogId"
           :title="lease.fanghao + lidDialogTitle"
           :visible.sync="leaseInflag"
-          size="large"
           top="50px"
           :close-on-click-modal="false"
           @close="onLeaseInDialogClose">
@@ -427,7 +426,6 @@
           :key="'leaseOut' + dialogId"
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
-          size="small"
           :close-on-click-modal="false"
           @close="onLeaseOutDialogClose">
           <el-form
@@ -469,6 +467,8 @@
 
         <!-- 租住数据表 -->
         <el-table class="lease-table"
+          ref="leaseTable"
+          :max-height="tableMaxHeight"
           :data="filterLeaseData"
           v-loading.body="gettingListRefresh"
           stripe
@@ -737,6 +737,17 @@
       if (this.activeName === 'leaseList') this.leaseListActive()
       if (this.activeName === 'leaseCount') this.leaseCountActive()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       // 校验周期时间选择器
       const validatePass = (rule, value, callback) => {
@@ -753,6 +764,7 @@
 
         // 列表数据
         gettingListRefresh: false,
+        tableMaxHeight: 0,
         leaseData: [],
         leaseDataSearch: '',
 
@@ -888,7 +900,12 @@
     },
     watch: {
       activeName(n) {
-        if (n === 'leaseList') this.leaseListActive()
+        if (n === 'leaseList') {
+          this.$nextTick(() => {
+            window.onresize()
+            this.leaseListActive()
+          })
+        }
         if (n === 'leaseCount') this.leaseCountActive()
       },
     },
@@ -1150,8 +1167,7 @@
 .lease-main {
   // 弹窗样式
   .lease-in-dialog {
-    max-width: 790px;
-    width: 65%;
+    max-width: 800px;
     .el-date-editor--daterange.el-input__inner {
       width: 100%;
     }

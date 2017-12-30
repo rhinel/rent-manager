@@ -5,7 +5,6 @@
       :key="'note' + dialogId"
       :title="ndDialogTitle"
       :visible.sync="noteflag"
-      size="large"
       top="50px"
       :close-on-click-modal="false"
       @close="onNoteDialogClose">
