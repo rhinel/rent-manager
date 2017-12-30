@@ -517,7 +517,7 @@
     mounted() {
       window.onresize = () => {
         const height = window.innerHeight || document.body.clientHeight
-        const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
+        const offsetTop = this.$refs.waterTable.$el.getBoundingClientRect().top
         this.tableMaxHeight = height - offsetTop - 20 - 0.5
       }
       this.$nextTick(() => window.onresize())
