@@ -159,4 +159,7 @@ button, input, select, textarea {
     vertical-align: top;
   }
 }
+.el-input__inner {
+  vertical-align: top;
+}
 </style>
