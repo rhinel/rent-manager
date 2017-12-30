@@ -346,10 +346,8 @@
 .house-list {
   .add-house-dialog {
     max-width: 400px;
+    .el-select,
     .el-input {
-      max-width: 300px;
-    }
-    .el-select {
       width: 100%;
       max-width: 300px;
     }

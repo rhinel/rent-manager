@@ -363,6 +363,8 @@
     <!-- 水费数据表 -->
     <el-table
       class="water-table"
+      ref="waterTable"
+      :max-height="tableMaxHeight"
       :data="filterWaterData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -512,6 +514,17 @@
       this.getResetAddWater()
       this.getResetCalWater()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         addWaterflag: false,
@@ -543,6 +556,7 @@
           }],
         },
 
+        tableMaxHeight: 0,
         waterData: [],
         waterDataSearch: '',
         // 计费弹窗
@@ -847,13 +861,10 @@
   // 弹窗样式
   .add-water-dialog {
     max-width: 400px;
+    .el-select,
     .el-input {
       max-width: 300px;
       width: 100%;
-    }
-    .el-select {
-      width: 100%;
-      max-width: 300px;
     }
   }
   // 弹窗样式

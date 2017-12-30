@@ -24,6 +24,8 @@
 
         <!-- 水费数据表 -->
         <el-table class="water-table"
+          ref="waterTable"
+          :max-height="tableMaxHeight"
           :data="filterWaterData"
           v-loading.body="gettingListRefresh"
           stripe
@@ -111,6 +113,8 @@
 
         <!-- 水费数据表 -->
         <el-table class="water-table"
+          ref="waterCalTable"
+          :max-height="tableMaxHeight"
           :data="filterWaterCalData"
           v-loading.body="gettingListRefresh2"
           stripe
@@ -275,6 +279,18 @@
       if (this.activeName === 'water') this.getWaterList()
       if (this.activeName === 'waterCal') this.getWaterCalList()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.waterTable.$el.getBoundingClientRect().top
+        const offsetTopCal = this.$refs.waterCalTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - Math.max(offsetTop, offsetTopCal) - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         gettingListRefresh: false,
@@ -282,6 +298,7 @@
         activeName: 'water',
         houseData: {},
 
+        tableMaxHeight: 0,
         waterList: [],
         waterDataSearch: '',
         waterCalList: [],

@@ -412,11 +412,8 @@
   // 弹窗样式
   .add-month-list-dialog {
     max-width: 800px;
+    .el-select,
     .el-input {
-      width: 100%;
-      max-width: 300px;
-    }
-    .el-select {
       width: 100%;
       max-width: 300px;
     }
