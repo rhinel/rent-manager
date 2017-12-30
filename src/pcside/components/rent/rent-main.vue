@@ -26,7 +26,6 @@
       :key="dialogId"
       :title="amldDialogTitle"
       :visible.sync="addMonthListflag"
-      size="small"
       :close-on-click-modal="false"
       @close="onAddMonthListDialogClose">
       <el-form
@@ -133,6 +132,8 @@
     <!-- 月份数据表 -->
     <el-table
       class="month-table"
+      ref="monthTable"
+      :max-height="tableMaxHeight"
       :data="filterMonthListData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -227,6 +228,17 @@
       this.getListRefresh()
       this.getResetAddMonthList()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         addMonthListflag: false,
@@ -250,6 +262,7 @@
             type: 'date', required: true, message: '请选择', trigger: 'change',
           }],
         },
+        tableMaxHeight: 0,
         monthListData: [],
         monthListDataSearch: '',
       }
@@ -398,7 +411,7 @@
 .rent-main {
   // 弹窗样式
   .add-month-list-dialog {
-    max-width: 790px;
+    max-width: 800px;
     .el-input {
       width: 100%;
       max-width: 300px;

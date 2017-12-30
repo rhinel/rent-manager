@@ -18,6 +18,8 @@
 
     <!-- 租住数据表 -->
     <el-table class="lease-table"
+      ref="leaseTable"
+      :max-height="tableMaxHeight"
       :data="filterLeaseData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -224,9 +226,21 @@
     created() {
       this.getListRefresh()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         gettingListRefresh: false,
+        tableMaxHeight: 0,
         leaseList: [],
         leaseDataSearch: '',
       }

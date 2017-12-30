@@ -41,7 +41,7 @@
         <a
           href="http://www.miitbeian.gov.cn/"
           target="_blank">
-          粤ICP备17070491号-3
+          粤ICP备17164727号-1　　粤ICP备17164727号-2
         </a>
       </div>
     </el-card>
@@ -142,6 +142,7 @@
   background-size: cover;
   background-position: center center;
   background-image: url(../../img/index_intro_bg.jpg);
+
   .login-wrap {
     width: 500px;
     max-width: 90%;
@@ -162,6 +163,7 @@
       }
     }
   }
+
   .login-hello {
     font-size: 30px;
     text-align: center;
@@ -186,9 +188,11 @@
       animation: hello 1.5s infinite;
     }
   }
+
   .login-go {
     width: 100%;
   }
+
   #index-canvas {
     width: 100vw;
     height: 100vh;

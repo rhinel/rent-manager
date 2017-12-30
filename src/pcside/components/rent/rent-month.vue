@@ -25,7 +25,6 @@
           :key="'addMonthDet' + dialogId"
           :title="addRent.fanghao + ardDialogTitle"
           :visible.sync="addRentflag"
-          size="large"
           top="50px"
           :close-on-click-modal="false"
           @close="onAddRentDialogClose">
@@ -169,7 +168,6 @@
           :key="'changeType' + dialogId"
           :title="changeType.fanghao + ctdDialogTitle"
           :visible.sync="changeTypeflag"
-          size="large"
           :close-on-click-modal="false"
           @close="onChangeTypeDialogClose">
           <el-form
@@ -281,6 +279,8 @@
         <!-- 月周期图表 -->
         <el-table
           class="month-table"
+          ref="monthTable"
+          :max-height="tableMaxHeight"
           :data="filterMonthDetData"
           v-loading.body="gettingListRefresh"
           stripe
@@ -842,7 +842,7 @@
         <template v-for="(fang, fangi) in rentCount">
           <div
             class="rent-count-title"
-            :key="fangi">
+            :key="`${fangi}Title`">
             <el-alert
               class="table-btn"
               type="info"
@@ -853,7 +853,7 @@
           </div>
           <el-collapse
             v-model="activeRentCount[fangi]"
-            :key="fangi">
+            :key="`${fangi}Collapse`">
             <el-collapse-item
               v-for="(floor, floori) in fang.list"
               :name="floori"
@@ -991,6 +991,14 @@
       if (this.activeName === 'landordHistory') this.landordHistoryActive()
       if (this.activeName === 'rentCount') this.rentCountActive()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
     data() {
       return {
         activeName: 'rentHistory',
@@ -1068,6 +1076,7 @@
         },
 
         // 列表渲染
+        tableMaxHeight: 0,
         monthDetData: [],
         monthDetSearch: '',
 
@@ -1130,7 +1139,12 @@
         this.addRent.fix = n !== this.calRentResult
       },
       activeName(n) {
-        if (n === 'rentHistory') this.rentHistoryActive()
+        if (n === 'rentHistory') {
+          this.$nextTick(() => {
+            window.onresize()
+            this.rentHistoryActive()
+          })
+        }
         if (n === 'landordHistoryTemp') this.landordHistoryTempActive()
         if (n === 'landordHistory') this.landordHistoryActive()
         if (n === 'rentCount') this.rentCountActive()
@@ -1576,6 +1590,8 @@
     max-width: 800px;
     .el-input {
       width: 100%;
+    }
+    .el-input__inner {
       vertical-align: top;
     }
     .el-select {
@@ -1584,6 +1600,9 @@
     }
     .el-checkbox-group {
       overflow: hidden;
+    }
+    .el-checkbox {
+      vertical-align: top;
     }
     .el-row-margin {
       margin-bottom: 20px;
