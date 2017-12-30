@@ -637,9 +637,6 @@
       width: 100%;
       max-width: 300px;
     }
-    .el-input__inner {
-      vertical-align: top;
-    }
     .el-checkbox-group {
       overflow: hidden;
     }
