@@ -20,7 +20,7 @@
     "superagent": "^3.8.2"
   },
   "devDependencies": {
-    "element-ui": "^2.0.9",
+    "element-ui": "^2.0.10",
     "mint-ui": "^2.2.13",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",

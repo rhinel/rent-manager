@@ -27,7 +27,6 @@
       :key="'addWater' + dialogId"
       :title="awdDialogTitle"
       :visible.sync="addWaterflag"
-      size="small"
       :close-on-click-modal="false"
       @close="onAddWaterDialogClose">
       <el-form
@@ -102,7 +101,6 @@
       :key="'calWater' + dialogId"
       :title="calWater.fanghao + cwdDialogTitle"
       :visible.sync="calWaterflag"
-      size="large"
       top="50px"
       :close-on-click-modal="false"
       @close="onCalWaterDialogClose">
@@ -860,7 +858,7 @@
   }
   // 弹窗样式
   .cal-water-dialog {
-    max-width: 790px;
+    max-width: 800px;
   }
 }
 </style>

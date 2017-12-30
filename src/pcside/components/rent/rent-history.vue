@@ -21,7 +21,6 @@
       :key="'changeType' + dialogId"
       :title="changeType.fanghao + ctdDialogTitle"
       :visible.sync="changeTypeflag"
-      size="large"
       :close-on-click-modal="false"
       @close="onChangeTypeDialogClose">
       <el-form

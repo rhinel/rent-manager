@@ -25,7 +25,6 @@
           :key="'addMonthDet' + dialogId"
           :title="addRent.fanghao + ardDialogTitle"
           :visible.sync="addRentflag"
-          size="large"
           top="50px"
           :close-on-click-modal="false"
           @close="onAddRentDialogClose">
@@ -169,7 +168,6 @@
           :key="'changeType' + dialogId"
           :title="changeType.fanghao + ctdDialogTitle"
           :visible.sync="changeTypeflag"
-          size="large"
           :close-on-click-modal="false"
           @close="onChangeTypeDialogClose">
           <el-form

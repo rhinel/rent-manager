@@ -28,7 +28,6 @@
           :key="'leaseIn' + dialogId"
           :title="lease.fanghao + lidDialogTitle"
           :visible.sync="leaseInflag"
-          size="large"
           top="50px"
           :close-on-click-modal="false"
           @close="onLeaseInDialogClose">
@@ -427,7 +426,6 @@
           :key="'leaseOut' + dialogId"
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
-          size="small"
           :close-on-click-modal="false"
           @close="onLeaseOutDialogClose">
           <el-form
@@ -1169,8 +1167,7 @@
 .lease-main {
   // 弹窗样式
   .lease-in-dialog {
-    max-width: 790px;
-    width: 65%;
+    max-width: 800px;
     .el-date-editor--daterange.el-input__inner {
       width: 100%;
     }

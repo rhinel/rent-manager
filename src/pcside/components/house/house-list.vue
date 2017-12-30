@@ -26,7 +26,6 @@
       :key="dialogId"
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
-      size="small"
       :close-on-click-modal="false"
       @close="onAddHouseDialogClose">
       <el-form
@@ -200,7 +199,7 @@
         dialogId: Date.now(),
 
         ahdDialogTitle: '',
-        ahdLabelWidth: '80px',
+        ahdLabelWidth: '90px',
         addHouse: {},
         addHouseClear: {
           _id: '',
