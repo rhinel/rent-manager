@@ -24,6 +24,8 @@
 
         <!-- 电费数据表 -->
         <el-table class="electric-table"
+          ref="electricTable"
+          :max-height="tableMaxHeight"
           :data="filterElectricData"
           v-loading.body="gettingListRefresh"
           stripe
@@ -111,6 +113,8 @@
 
         <!-- 电费数据表 -->
         <el-table class="electric-table"
+          ref="electricCalTable"
+          :max-height="tableMaxHeight"
           :data="filterElectricCalData"
           v-loading.body="gettingListRefresh2"
           stripe
@@ -275,6 +279,18 @@
       if (this.activeName === 'electric') this.getElectricList()
       if (this.activeName === 'electricCal') this.getElectricCalList()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
+        const offsetTopCal = this.$refs.electricCalTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - Math.max(offsetTop, offsetTopCal) - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         gettingListRefresh: false,
@@ -282,6 +298,7 @@
         activeName: 'electric',
         houseData: {},
 
+        tableMaxHeight: 0,
         electricList: [],
         electricDataSearch: '',
         electricCalList: [],

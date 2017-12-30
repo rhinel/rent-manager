@@ -132,6 +132,8 @@
     <!-- 月周期图表 -->
     <el-table
       class="month-table"
+      ref="monthTable"
+      :max-height="tableMaxHeight"
       :data="filterRentHistoryData"
       v-loading.body="gettingListRefresh"
       stripe
@@ -385,6 +387,17 @@
       this.getListRefresh()
       this.getResetChangeType()
     },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
     data() {
       return {
         changeTypeflag: false,
@@ -427,6 +440,7 @@
         },
 
         // 列表渲染
+        tableMaxHeight: 0,
         rentHistoryData: [],
         rentHistorySearch: '',
       }
@@ -617,15 +631,14 @@
 .rent-history {
   // 弹窗表单样式
   .change-type-dialog {
+    max-width: 800px;
+    .el-select,
     .el-input {
       width: 100%;
+      max-width: 300px;
     }
     .el-input__inner {
       vertical-align: top;
-    }
-    .el-select {
-      width: 100%;
-      max-width: 300px;
     }
     .el-checkbox-group {
       overflow: hidden;
@@ -635,13 +648,6 @@
     }
     .el-row-margin {
       margin-bottom: 20px;
-    }
-  }
-  // 弹窗表单样式
-  .change-type-dialog {
-    max-width: 800px;
-    .el-input {
-      max-width: 300px;
     }
   }
 }

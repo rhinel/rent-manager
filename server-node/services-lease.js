@@ -142,6 +142,7 @@ module.exports = {
     createLease.createTime = Date.now()
     createLease.userId = req.userId
     createLease.status = 1
+    delete createLease._id
 
     const newInfo = await db
       .dbModel('lease', createLeaseModel)//* //标记，新增数据类型
