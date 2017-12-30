@@ -135,6 +135,9 @@ button, input, select, textarea {
 }
 .el-alert {
   line-height: initial;
+  .el-alert__closebtn {
+    top: 11px;
+  }
 }
 .el-table--border
   .has-gutter

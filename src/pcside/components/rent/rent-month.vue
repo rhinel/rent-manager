@@ -1237,6 +1237,7 @@
           const prevPrices = arr[i - 1] || {}
 
           if (
+            (gap <= 0 && i === 0) ||
             (gap > (prevPrices.step || 0) && gap <= item.step) ||
             ((i + 1) === arr.length && gap > item.step)
           ) {
