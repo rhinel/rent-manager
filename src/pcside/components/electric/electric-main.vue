@@ -255,7 +255,7 @@
                 :prop="'calElectric.stepPrice.' + index + '.step'"
                 :rules="{
                   type: 'number', required: true, message: '请填写', trigger: 'blur'
-              }">
+                }">
                 <el-input
                   v-model.number="step.step"
                   auto-complete="off"
@@ -272,7 +272,7 @@
                 :prop="'calElectric.stepPrice.' + index + '.price'"
                 :rules="{
                   type: 'number', required: true, message: '请填写', trigger: 'blur'
-              }">
+                }">
                 <el-input
                   v-model.number="step.price"
                   auto-complete="off"
@@ -501,361 +501,361 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
-  export default {
-    name: 'electric-main',
-    beforeCreate() {
-      this.$store.dispatch('updateMenu', '/inner/electric/index')
-    },
-    created() {
-      this.getHouseList()
-      this.getListRefresh()
-      this.getResetAddElectric()
-      this.getResetCalElectric()
-    },
-    mounted() {
-      window.onresize = () => {
-        const height = window.innerHeight || document.body.clientHeight
-        const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
-        this.tableMaxHeight = height - offsetTop - 20 - 0.5
-      }
-      this.$nextTick(() => window.onresize())
-    },
-    beforeDestroy() {
-      window.onresize = null
-    },
-    data() {
-      return {
-        addElectricflag: false,
-        calElectricflag: false,
-        gettingAddElectric: false,
-        gettingListRefresh: false,
-        gettingCalElectric: false,
+export default {
+  name: 'ElectricMain',
+  data() {
+    return {
+      addElectricflag: false,
+      calElectricflag: false,
+      gettingAddElectric: false,
+      gettingListRefresh: false,
+      gettingCalElectric: false,
 
-        houseData: [],
-        dialogId: Date.now(),
-        // 超表弹窗
-        aedDialogTitle: '抄电表',
-        aedLabelWidth: '90px',
-        // 抄表数据对象
-        addElectric: {},
-        addElectricClear: {
-          haoId: '',
-          electric: '',
+      houseData: [],
+      dialogId: Date.now(),
+      // 超表弹窗
+      aedDialogTitle: '抄电表',
+      aedLabelWidth: '90px',
+      // 抄表数据对象
+      addElectric: {},
+      addElectricClear: {
+        haoId: '',
+        electric: '',
+        remark: '',
+        addTime: '',
+      },
+      addElectricrules: {
+        haoId: [{ required: true, message: '请选择', trigger: 'change' }],
+        electric: [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+        addTime: [{
+          type: 'date', required: true, message: '请填写', trigger: 'change',
+        }],
+      },
+
+      tableMaxHeight: 0,
+      electricData: [],
+      electricDataSearch: '',
+      // 计费弹窗
+      cedDialogTitle: '电表计费',
+      cedLabelWidth: '90px',
+      // 计费数据对象
+      calElectric: {},
+      calElectricClear: {
+        haoId: '',
+        fanghao: '',
+        tnew: {
+          electric: 0,
           remark: '',
           addTime: '',
         },
-        addElectricrules: {
-          haoId: [{ required: true, message: '请选择', trigger: 'change' }],
-          electric: [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-          addTime: [{
-            type: 'date', required: true, message: '请填写', trigger: 'change',
-          }],
-        },
-
-        tableMaxHeight: 0,
-        electricData: [],
-        electricDataSearch: '',
-        // 计费弹窗
-        cedDialogTitle: '电表计费',
-        cedLabelWidth: '90px',
-        // 计费数据对象
-        calElectric: {},
-        calElectricClear: {
-          haoId: '',
-          fanghao: '',
-          tnew: {
-            electric: 0,
-            remark: '',
-            addTime: '',
-          },
-          old: {
-            electric: 0,
-            remark: '',
-            addTime: '',
-          },
-          calElectric: {
-            minPrice: 0,
-            calType: 'single',
-            singlePrice: 0,
-            stepPrice: [{
-              step: 0,
-              price: 0,
-            }],
-          },
+        old: {
+          electric: 0,
           remark: '',
           addTime: '',
-          fix: false,
-          calElectricResult: 0,
         },
+        calElectric: {
+          minPrice: 0,
+          calType: 'single',
+          singlePrice: 0,
+          stepPrice: [{
+            step: 0,
+            price: 0,
+          }],
+        },
+        remark: '',
+        addTime: '',
+        fix: false,
+        calElectricResult: 0,
+      },
 
-        calElectricrules: {
-          'tnew.electric': [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-          'tnew.addTime': [{
-            type: 'date', required: true, message: '请填写', trigger: 'change',
-          }],
-          'old.electric': [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-          'old.addTime': [{
-            type: 'date', required: true, message: '请填写', trigger: 'change',
-          }],
-          'calElectric.minPrice': [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-          'calElectric.singlePrice': [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-          addTime: [{
-            type: 'date', required: true, message: '请填写', trigger: 'change',
-          }],
-          calElectricResult: [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-        },
+      calElectricrules: {
+        'tnew.electric': [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+        'tnew.addTime': [{
+          type: 'date', required: true, message: '请填写', trigger: 'change',
+        }],
+        'old.electric': [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+        'old.addTime': [{
+          type: 'date', required: true, message: '请填写', trigger: 'change',
+        }],
+        'calElectric.minPrice': [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+        'calElectric.singlePrice': [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+        addTime: [{
+          type: 'date', required: true, message: '请填写', trigger: 'change',
+        }],
+        calElectricResult: [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+      },
+    }
+  },
+  computed: {
+    filterElectricData() {
+      if (!this.electricDataSearch) {
+        return this.electricData
       }
-    },
-    computed: {
-      filterElectricData() {
-        if (!this.electricDataSearch) {
-          return this.electricData
-        }
 
-        const searchKeys = ['fanghao', 'remark']
+      const searchKeys = ['fanghao', 'remark']
 
-        const _electricDataSearch = new RegExp(this.electricDataSearch, 'i')
-        return this.electricData.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _electricDataSearch.test(testItem)
+      const _electricDataSearch = new RegExp(this.electricDataSearch, 'i')
+      return this.electricData.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
         })
-      },
-      calElectricResult() {
-        // 电表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
-        let result = 0
-        if (!this.calElectric.tnew || !this.calElectric.old) return result
-        let theGap = this.calElectric.tnew.electric - this.calElectric.old.electric
-        theGap = Math.max(theGap, this.calElectric.calElectric.minPrice || 0)
-        if (this.calElectric.calElectric.calType === 'single') {
-          result = theGap * this.calElectric.calElectric.singlePrice
+        const testItem = Object.values(testObject).join(' ')
+        return _electricDataSearch.test(testItem)
+      })
+    },
+    calElectricResult() {
+      // 电表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
+      let result = 0
+      if (!this.calElectric.tnew || !this.calElectric.old) return result
+      let theGap = this.calElectric.tnew.electric - this.calElectric.old.electric
+      theGap = Math.max(theGap, this.calElectric.calElectric.minPrice || 0)
+      if (this.calElectric.calElectric.calType === 'single') {
+        result = theGap * this.calElectric.calElectric.singlePrice
+      } else {
+        this.calElectric.calElectric.stepPrice.forEach((item, i, arr) => {
+          // 假阶梯，取范围内的计算，大于按照最大的
+          if (!item.price) return
+          const prevPrices = arr[i - 1] || {}
+          if (
+            (theGap > (prevPrices.step || 0) && theGap <= item.step) ||
+            (i === (arr.length - 1) && theGap >= item.step)
+          ) {
+            result = theGap * item.price
+          }
+        })
+        result = Math.round(result * 100) / 100
+      }
+      return result
+    },
+    ...mapState({
+      defaultCalElePrice: state => state.config.defaultCalElePrice,
+      defaultStep: state => state.config.defaultStep,
+    }),
+  },
+  watch: {
+    calElectricResult(n) {
+      this.calElectric.calElectricResult = n
+    },
+    /* eslint object-shorthand: 0 */
+    'calElectric.calElectricResult'(n) {
+      this.calElectric.fix = n !== this.calElectricResult
+    },
+  },
+  beforeCreate() {
+    this.$store.dispatch('updateMenu', '/inner/electric/index')
+  },
+  created() {
+    this.getHouseList()
+    this.getListRefresh()
+    this.getResetAddElectric()
+    this.getResetCalElectric()
+  },
+  mounted() {
+    window.onresize = () => {
+      const height = window.innerHeight || document.body.clientHeight
+      const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
+      this.tableMaxHeight = height - offsetTop - 20 - 0.5
+    }
+    this.$nextTick(() => window.onresize())
+  },
+  beforeDestroy() {
+    window.onresize = null
+  },
+  methods: {
+    // 时间格式化
+    getTime(t) {
+      return t ? this.GetTimeFormat(t) : '--'
+    },
+    // 获取弹窗房屋列表
+    async getHouseList() {
+      await this.Ajax('/inner/house/list', {})
+        .then(res => {
+          this.houseData = res
+        })
+        .catch(() => {})
+    },
+    // 打开关闭添加弹窗
+    getAddElectricDialog() {
+      this.addElectricflag = !this.addElectricflag
+      if (this.addElectricflag) this.addElectric.addTime = new Date()
+    },
+    // 弹窗数据初始化
+    getResetAddElectric() {
+      this.addElectric = Object.assign({}, this.addElectric, this.addElectricClear)
+      this.addElectric.addTime = new Date()
+      this.dialogId = Date.now()
+    },
+    // 关闭弹窗回调
+    onAddElectricDialogClose() {
+      setTimeout(() => {
+        this.$refs.addElectric.resetFields()
+        this.getResetAddElectric()
+      }, 500)
+    },
+    // 抄表
+    async getAddElectric() {
+      if (this.gettingAddElectric) return
+
+      // 表单校验
+      try {
+        await this.$refs.addElectric.validate()
+      } catch (err) {
+        return
+      }
+
+      // 请求接口
+      this.gettingAddElectric = true
+
+      const _data = Object.assign({}, this.addElectric)
+      await this.Ajax('/inner/electric/add', _data)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '抄表成功',
+            duration: 2000,
+          })
+          this.getAddElectricDialog()
+          this.getListRefresh()
+        })
+        .catch(() => {})
+
+      this.gettingAddElectric = false
+    },
+    // 拉取电费信息列表
+    async getListRefresh() {
+      if (this.gettingListRefresh) return
+
+      // 请求接口
+      this.gettingListRefresh = true
+      await this.Ajax('/inner/electric/mainList', {})
+        .then(res => {
+          this.electricData = res
+        })
+        .catch(() => {})
+
+      this.gettingListRefresh = false
+    },
+    // 打开关闭计费弹窗
+    getCalElectricDialog(index, row) {
+      this.calElectricflag = !this.calElectricflag
+      if (this.calElectricflag && row) {
+        // 基本信息
+        this.calElectric.haoId = row._id
+        this.calElectric.fanghao = row.fanghao
+        this.calElectric.addTime = new Date()
+        // tnew
+        if (row.electricId.electric) this.calElectric.tnew.electric = row.electricId.electric
+        if (row.electricId.remark) this.calElectric.tnew.remark = row.electricId.remark
+        if (row.electricId.addTime) {
+          this.calElectric.tnew.addTime = new Date(row.electricId.addTime)
         } else {
-          this.calElectric.calElectric.stepPrice.forEach((item, i, arr) => {
-            // 假阶梯，取范围内的计算，大于按照最大的
-            if (!item.price) return
-            const prevPrices = arr[i - 1] || {}
-            if (
-              (theGap > (prevPrices.step || 0) && theGap <= item.step) ||
-              (i === (arr.length - 1) && theGap >= item.step)
-            ) {
-              result = theGap * item.price
-            }
-          })
-          result = Math.round(result * 100) / 100
+          this.calElectric.tnew.addTime = new Date()
         }
-        return result
-      },
-      ...mapState({
-        defaultCalElePrice: state => state.config.defaultCalElePrice,
-        defaultStep: state => state.config.defaultStep,
-      }),
-    },
-    watch: {
-      calElectricResult(n) {
-        this.calElectric.calElectricResult = n
-      },
-      /* eslint object-shorthand: 0 */
-      'calElectric.calElectricResult'(n) {
-        this.calElectric.fix = n !== this.calElectricResult
-      },
-    },
-    methods: {
-      // 时间格式化
-      getTime(t) {
-        return t ? this.GetTimeFormat(t) : '--'
-      },
-      // 获取弹窗房屋列表
-      async getHouseList() {
-        await this.Ajax('/inner/house/list', {})
-          .then(res => {
-            this.houseData = res
-          })
-          .catch(() => {})
-      },
-      // 打开关闭添加弹窗
-      getAddElectricDialog() {
-        this.addElectricflag = !this.addElectricflag
-        if (this.addElectricflag) this.addElectric.addTime = new Date()
-      },
-      // 弹窗数据初始化
-      getResetAddElectric() {
-        this.addElectric = Object.assign({}, this.addElectric, this.addElectricClear)
-        this.addElectric.addTime = new Date()
-        this.dialogId = Date.now()
-      },
-      // 关闭弹窗回调
-      onAddElectricDialogClose() {
-        setTimeout(() => {
-          this.$refs.addElectric.resetFields()
-          this.getResetAddElectric()
-        }, 500)
-      },
-      // 抄表
-      async getAddElectric() {
-        if (this.gettingAddElectric) return
+        // old
+        if (row.calElectricId.electric) this.calElectric.old.electric = row.calElectricId.electric
+        if (row.calElectricId.remark) this.calElectric.old.remark = row.calElectricId.remark
+        if (row.calElectricId.addTime) {
+          this.calElectric.old.addTime = new Date(row.calElectricId.addTime)
+        } else {
+          this.calElectric.old.addTime = new Date()
+        }
 
-        // 表单校验
-        try {
-          await this.$refs.addElectric.validate()
-        } catch (err) {
+        // 电费初始化
+        if (!row.leaseId || !row.leaseId.calType) {
+          this.calElectric.calElectric =
+            Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalElePrice)))
           return
         }
 
-        // 请求接口
-        this.gettingAddElectric = true
-
-        const _data = Object.assign({}, this.addElectric)
-        await this.Ajax('/inner/electric/add', _data)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '抄表成功',
-              duration: 2000,
-            })
-            this.getAddElectricDialog()
-            this.getListRefresh()
-          })
-          .catch(() => {})
-
-        this.gettingAddElectric = false
-      },
-      // 拉取电费信息列表
-      async getListRefresh() {
-        if (this.gettingListRefresh) return
-
-        // 请求接口
-        this.gettingListRefresh = true
-        await this.Ajax('/inner/electric/mainList', {})
-          .then(res => {
-            this.electricData = res
-          })
-          .catch(() => {})
-
-        this.gettingListRefresh = false
-      },
-      // 打开关闭计费弹窗
-      getCalElectricDialog(index, row) {
-        this.calElectricflag = !this.calElectricflag
-        if (this.calElectricflag && row) {
-          // 基本信息
-          this.calElectric.haoId = row._id
-          this.calElectric.fanghao = row.fanghao
-          this.calElectric.addTime = new Date()
-          // tnew
-          if (row.electricId.electric) this.calElectric.tnew.electric = row.electricId.electric
-          if (row.electricId.remark) this.calElectric.tnew.remark = row.electricId.remark
-          if (row.electricId.addTime) {
-            this.calElectric.tnew.addTime = new Date(row.electricId.addTime)
-          } else {
-            this.calElectric.tnew.addTime = new Date()
+        // 水费
+        Object.keys(this.calElectric.calElectric).forEach(key => {
+          if (
+            this.calElectric.calElectric[key].constructor === Array &&
+            row.leaseId[key]
+          ) {
+            this.calElectric.calElectric[key] =
+              JSON.parse(JSON.stringify(row.leaseId[key]))
+          } else if (row.leaseId[key]) {
+            this.calElectric.calElectric[key] = row.leaseId[key]
           }
-          // old
-          if (row.calElectricId.electric) this.calElectric.old.electric = row.calElectricId.electric
-          if (row.calElectricId.remark) this.calElectric.old.remark = row.calElectricId.remark
-          if (row.calElectricId.addTime) {
-            this.calElectric.old.addTime = new Date(row.calElectricId.addTime)
-          } else {
-            this.calElectric.old.addTime = new Date()
-          }
-
-          // 电费初始化
-          if (!row.leaseId || !row.leaseId.calType) {
-            this.calElectric.calElectric =
-              Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalElePrice)))
-            return
-          }
-
-          // 水费
-          Object.keys(this.calElectric.calElectric).forEach(key => {
-            if (
-              this.calElectric.calElectric[key].constructor === Array &&
-              row.leaseId[key]
-            ) {
-              this.calElectric.calElectric[key] =
-                JSON.parse(JSON.stringify(row.leaseId[key]))
-            } else if (row.leaseId[key]) {
-              this.calElectric.calElectric[key] = row.leaseId[key]
-            }
-          })
-          if (!this.calElectric.calElectric.stepPrice.length) this.addStep()
-        }
-      },
-      // 计费弹窗数据初始化
-      getResetCalElectric() {
-        this.calElectric = Object.assign({}, JSON.parse(JSON.stringify(this.calElectricClear)))
-        this.dialogId = Date.now()
-      },
-      // 关闭计费弹窗回调
-      onCalElectricDialogClose() {
-        setTimeout(() => {
-          this.$refs.calElectric.resetFields()
-          this.getResetCalElectric()
-        }, 500)
-      },
-      // 添加步骤
-      addStep() {
-        const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
-        this.calElectric.calElectric.stepPrice.push(step)
-      },
-      // 删除步骤
-      removeStep(step) {
-        const index = this.calElectric.calElectric.stepPrice.indexOf(step)
-        if (index !== -1) {
-          this.calElectric.calElectric.stepPrice.splice(index, 1)
-        }
-      },
-      // 计费
-      async getCalElectric() {
-        if (this.gettingCalElectric) return
-
-        // 表单校验
-        try {
-          await this.$refs.calElectric.validate()
-        } catch (err) {
-          return
-        }
-
-        // 请求接口
-        this.gettingCalElectric = true
-
-        const _data = Object.assign({}, this.calElectric)
-        await this.Ajax('/inner/electric/cal', _data)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '计费成功',
-              duration: 2000,
-            })
-            this.getCalElectricDialog()
-            this.getListRefresh()
-          })
-          .catch(() => {})
-
-        this.gettingCalElectric = false
-      },
-      // 进入历史
-      getElectricHistory(index, row) {
-        this.$router.push(`/inner/electric/history?haoid=${row._id}`)
-      },
+        })
+        if (!this.calElectric.calElectric.stepPrice.length) this.addStep()
+      }
     },
-  }
+    // 计费弹窗数据初始化
+    getResetCalElectric() {
+      this.calElectric = Object.assign({}, JSON.parse(JSON.stringify(this.calElectricClear)))
+      this.dialogId = Date.now()
+    },
+    // 关闭计费弹窗回调
+    onCalElectricDialogClose() {
+      setTimeout(() => {
+        this.$refs.calElectric.resetFields()
+        this.getResetCalElectric()
+      }, 500)
+    },
+    // 添加步骤
+    addStep() {
+      const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
+      this.calElectric.calElectric.stepPrice.push(step)
+    },
+    // 删除步骤
+    removeStep(step) {
+      const index = this.calElectric.calElectric.stepPrice.indexOf(step)
+      if (index !== -1) {
+        this.calElectric.calElectric.stepPrice.splice(index, 1)
+      }
+    },
+    // 计费
+    async getCalElectric() {
+      if (this.gettingCalElectric) return
+
+      // 表单校验
+      try {
+        await this.$refs.calElectric.validate()
+      } catch (err) {
+        return
+      }
+
+      // 请求接口
+      this.gettingCalElectric = true
+
+      const _data = Object.assign({}, this.calElectric)
+      await this.Ajax('/inner/electric/cal', _data)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '计费成功',
+            duration: 2000,
+          })
+          this.getCalElectricDialog()
+          this.getListRefresh()
+        })
+        .catch(() => {})
+
+      this.gettingCalElectric = false
+    },
+    // 进入历史
+    getElectricHistory(index, row) {
+      this.$router.push(`/inner/electric/history?haoid=${row._id}`)
+    },
+  },
+}
 </script>
 
 <style lang="scss">

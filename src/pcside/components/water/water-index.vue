@@ -1,9 +1,9 @@
 <template>
-  <router-view class="water-index"></router-view>
+  <router-view class="water-index" />
 </template>
 
 <script>
-  export default {
-    name: 'water-index',
-  }
+export default {
+  name: 'WaterIndex',
+}
 </script>

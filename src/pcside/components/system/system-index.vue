@@ -1,9 +1,9 @@
 <template>
-  <router-view class="system-index"></router-view>
+  <router-view class="system-index" />
 </template>
 
 <script>
-  export default {
-    name: 'system-index',
-  }
+export default {
+  name: 'SystemIndex',
+}
 </script>

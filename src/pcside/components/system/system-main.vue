@@ -5,34 +5,37 @@
         <el-collapse-item
           title="坊号类型（不可修改）"
           name="houseFang">
-          <el-tag class="show-tag show-tag3"
+          <el-tag
+            class="show-tag show-tag3"
             type="success"
             v-for="(fang, index) in houseFang"
             :key="index">
-            {{fang}}
+            {{ fang }}
           </el-tag>
         </el-collapse-item>
 
         <el-collapse-item
           title="收租类型（不可修改）"
           name="payTypeVal">
-          <el-tag class="show-tag show-tag3"
+          <el-tag
+            class="show-tag show-tag3"
             type="success"
             v-for="(pay, index) in payTypeVal"
             :key="index">
-            {{pay}}
+            {{ pay }}
           </el-tag>
         </el-collapse-item>
 
         <el-collapse-item
           title="交租状态（不可修改）"
           name="typesVal">
-          <el-tag class="show-tag show-tag3"
+          <el-tag
+            class="show-tag show-tag3"
             type="success"
             v-for="(type, index) in typesVal"
             :key="index"
             v-if="!!type">
-            {{type}}
+            {{ type }}
           </el-tag>
         </el-collapse-item>
 
@@ -119,7 +122,9 @@
                     </el-input>
                   </el-form-item>
                 </el-col>
-                <el-col class="line" :span="1"></el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
                 <el-col :span="7">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.price'"
@@ -135,7 +140,9 @@
                     </el-input>
                   </el-form-item>
                 </el-col>
-                <el-col class="line" :span="1"></el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
                 <el-col :span="5">
                   <el-button
                     @click.prevent="removeStep(calWaterPrice, step)">
@@ -256,7 +263,9 @@
                     </el-input>
                   </el-form-item>
                 </el-col>
-                <el-col class="line" :span="1"></el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
                 <el-col :span="7">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.price'"
@@ -272,7 +281,9 @@
                     </el-input>
                   </el-form-item>
                 </el-col>
-                <el-col class="line" :span="1"></el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
                 <el-col :span="5">
                   <el-button
                     @click.prevent="removeStep(calElePrice, step)">
@@ -317,140 +328,140 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
-  export default {
-    name: 'system-main',
-    beforeCreate() {
-      this.$store.dispatch('updateMenu', '/inner/system/index')
+export default {
+  name: 'SystemMain',
+  data() {
+    return {
+      activeNames: [],
+      submitLoading: false,
+
+      labelWidth: '90px',
+
+      // 水费编辑表单
+      calWaterPrice: {},
+
+      // 电费编辑表单
+      calElePrice: {},
+
+      // 表单校验
+      calrules: {
+        minPrice: [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+        singlePrice: [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur',
+        }],
+      },
+    }
+  },
+  computed: {
+    ...mapState({
+      houseFang: state => state.config.houseFang,
+      payTypeVal: state => state.config.payTypeVal,
+      typesVal: state => state.config.typesVal,
+      defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+      defaultCalElePrice: state => state.config.defaultCalElePrice,
+      defaultStep: state => state.config.defaultStep,
+      defaultKeysHasSet: state => state.defaultKeysHasSet,
+    }),
+    calWaterEdit() {
+      const local = JSON.stringify(this.calWaterPrice)
+      const def = JSON.stringify(this.defaultCalWaterPrice)
+      return local !== def
     },
-    mounted() {
-      this.activeNames = Object.keys(this._computedWatchers)
+    calEleEdit() {
+      const local = JSON.stringify(this.calElePrice)
+      const def = JSON.stringify(this.defaultCalElePrice)
+      return local !== def
     },
-    data() {
-      return {
-        activeNames: [],
-        submitLoading: false,
-
-        labelWidth: '90px',
-
-        // 水费编辑表单
-        calWaterPrice: {},
-
-        // 电费编辑表单
-        calElePrice: {},
-
-        // 表单校验
-        calrules: {
-          minPrice: [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-          singlePrice: [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur',
-          }],
-        },
-      }
-    },
-    created() {
+  },
+  watch: {
+    // 获取数据
+    defaultCalWaterPrice() {
       this.cancel('water')
+    },
+    defaultCalElePrice() {
       this.cancel('ele')
     },
-    computed: {
-      ...mapState({
-        houseFang: state => state.config.houseFang,
-        payTypeVal: state => state.config.payTypeVal,
-        typesVal: state => state.config.typesVal,
-        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
-        defaultCalElePrice: state => state.config.defaultCalElePrice,
-        defaultStep: state => state.config.defaultStep,
-        defaultKeysHasSet: state => state.defaultKeysHasSet,
-      }),
-      calWaterEdit() {
-        const local = JSON.stringify(this.calWaterPrice)
-        const def = JSON.stringify(this.defaultCalWaterPrice)
-        return local !== def
-      },
-      calEleEdit() {
-        const local = JSON.stringify(this.calElePrice)
-        const def = JSON.stringify(this.defaultCalElePrice)
-        return local !== def
-      },
+  },
+  beforeCreate() {
+    this.$store.dispatch('updateMenu', '/inner/system/index')
+  },
+  created() {
+    this.cancel('water')
+    this.cancel('ele')
+  },
+  mounted() {
+    this.activeNames = Object.keys(this._computedWatchers)
+  },
+  methods: {
+    // 添加步骤
+    addStep(wrap) {
+      const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
+      wrap.stepPrice.push(step)
     },
-    watch: {
-      // 获取数据
-      defaultCalWaterPrice() {
-        this.cancel('water')
-      },
-      defaultCalElePrice() {
-        this.cancel('ele')
-      },
+    // 删除步骤
+    removeStep(wrap, step) {
+      const index = wrap.stepPrice.indexOf(step)
+      if (index !== -1) {
+        wrap.stepPrice.splice(index, 1)
+      }
     },
-    methods: {
-      // 添加步骤
-      addStep(wrap) {
-        const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
-        wrap.stepPrice.push(step)
-      },
-      // 删除步骤
-      removeStep(wrap, step) {
-        const index = wrap.stepPrice.indexOf(step)
-        if (index !== -1) {
-          wrap.stepPrice.splice(index, 1)
-        }
-      },
-      // 取消修改
-      cancel(type) {
-        if (type === 'water') {
-          if (this.$refs.calWaterPrice) this.$refs.calWaterPrice.resetFields()
-          this.calWaterPrice =
-            Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalWaterPrice)))
-        } else {
-          if (this.$refs.calElePrice) this.$refs.calElePrice.resetFields()
-          this.calElePrice =
-            Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalElePrice)))
-        }
-      },
-      // 提交修改
-      async submit() {
-        if (this.submitLoading) return
+    // 取消修改
+    cancel(type) {
+      if (type === 'water') {
+        if (this.$refs.calWaterPrice) this.$refs.calWaterPrice.resetFields()
+        this.calWaterPrice =
+          Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalWaterPrice)))
+      } else {
+        if (this.$refs.calElePrice) this.$refs.calElePrice.resetFields()
+        this.calElePrice =
+          Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalElePrice)))
+      }
+    },
+    // 提交修改
+    async submit() {
+      if (this.submitLoading) return
 
-        try {
-          await this.$refs.calWaterPrice.validate()
-          await this.$refs.calElePrice.validate()
-        } catch (err) {
-          return
-        }
+      try {
+        await this.$refs.calWaterPrice.validate()
+        await this.$refs.calElePrice.validate()
+      } catch (err) {
+        return
+      }
 
-        // 请求接口
-        this.submitLoading = true
+      // 请求接口
+      this.submitLoading = true
 
-        const {
-          calWaterPrice,
-          calElePrice,
-        } = this
-        const postData = Object.assign({}, {
-          defaultCalWaterPrice: calWaterPrice,
-          defaultCalElePrice: calElePrice,
-        })
+      const {
+        calWaterPrice,
+        calElePrice,
+      } = this
+      const postData = Object.assign({}, {
+        defaultCalWaterPrice: calWaterPrice,
+        defaultCalElePrice: calElePrice,
+      })
 
-        try {
-          await this.Ajax('/inner/auth/updateSysInfo', postData)
-        } catch (err) {
-          this.submitLoading = false
-          return
-        }
-
-        await this.$store.dispatch('getDefaults')
-        this.$message({
-          type: 'success',
-          message: '更新 成功',
-          duration: 2000,
-        })
-
+      try {
+        await this.Ajax('/inner/auth/updateSysInfo', postData)
+      } catch (err) {
         this.submitLoading = false
-      },
+        return
+      }
+
+      await this.$store.dispatch('getDefaults')
+      this.$message({
+        type: 'success',
+        message: '更新 成功',
+        duration: 2000,
+      })
+
+      this.submitLoading = false
     },
-  }
+  },
+}
 </script>
 
 <style lang="scss">

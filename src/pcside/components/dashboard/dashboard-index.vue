@@ -1,9 +1,9 @@
 <template>
-  <router-view class="dashboard-index"></router-view>
+  <router-view class="dashboard-index" />
 </template>
 
 <script>
-  export default {
-    name: 'dashboard-index',
-  }
+export default {
+  name: 'DashboardIndex',
+}
 </script>

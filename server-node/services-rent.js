@@ -617,6 +617,18 @@ module.exports = {
       }
     })
 
+    const sortFun = (a, b) => {
+      if (a.fanghao > b.fanghao) return 1
+      if (a.fanghao < b.fanghao) return -1
+      return 0
+    }
+
+    // 重新排序
+    Object.keys(list).forEach(time => {
+      list[time].sixList.sort(sortFun)
+      list[time].eightList.sort(sortFun)
+    })
+
     // 2返回数据
     return list
   },
@@ -697,6 +709,16 @@ module.exports = {
         list.sixList.push(rent)
       }
     })
+
+    const sortFun = (a, b) => {
+      if (a.fanghao > b.fanghao) return 1
+      if (a.fanghao < b.fanghao) return -1
+      return 0
+    }
+
+    // 重新排序
+    list.sixList.sort(sortFun)
+    list.eightList.sort(sortFun)
 
     // 2返回数据
     return list

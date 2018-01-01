@@ -1,9 +1,9 @@
 <template>
-  <router-view class="house-index"></router-view>
+  <router-view class="house-index" />
 </template>
 
 <script>
-  export default {
-    name: 'house-index',
-  }
+export default {
+  name: 'HouseIndex',
+}
 </script>
