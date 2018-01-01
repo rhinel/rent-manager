@@ -11,13 +11,13 @@
       <div class="table-btn-input">
         <el-input
           v-model="leaseDataSearch"
-          placeholder="搜索">
-        </el-input>
+          placeholder="搜索" />
       </div>
     </div>
 
     <!-- 租住数据表 -->
-    <el-table class="lease-table"
+    <el-table
+      class="lease-table"
       ref="leaseTable"
       :max-height="tableMaxHeight"
       :data="filterLeaseData"
@@ -27,8 +27,7 @@
       <el-table-column
         prop="fanghao"
         label="房屋"
-        width="120">
-      </el-table-column>
+        width="120" />
       <el-table-column
         label="租户信息">
         <el-table-column
@@ -68,7 +67,8 @@
               <div class="remark-pop">
                 {{ scope.row.remark }}
               </div>
-              <div class="show-tag"
+              <div
+                class="show-tag"
                 slot="reference">
                 <div class="remark-tag">
                   {{ scope.row.remark }}
@@ -110,10 +110,11 @@
                   <div
                     v-for="(item, index) in scope.row.calWaterPrice.stepPrice"
                     :key="index">
-                    {{item.step}}吨及以下￥{{item.price}}元/吨；
+                    {{ item.step }}吨及以下￥{{ item.price }}元/吨；
                   </div>
                   超出按最后阶梯计算。
-                  <div class="show-tag"
+                  <div
+                    class="show-tag"
                     slot="reference">
                     <el-tag>阶梯</el-tag>
                   </div>
@@ -144,10 +145,11 @@
                   <div
                     v-for="(item, index) in scope.row.calElePrice.stepPrice"
                     :key="index">
-                    {{item.step}}度及以下￥{{item.price}}元/度；
+                    {{ item.step }}度及以下￥{{ item.price }}元/度；
                   </div>
                   超出按最后阶梯计算。
-                  <div class="show-tag"
+                  <div
+                    class="show-tag"
                     slot="reference">
                     <el-tag>阶梯</el-tag>
                   </div>
@@ -179,36 +181,36 @@
         width="100">
         <template slot-scope="scope">
           <el-popover
-              placement="top"
-              width="150"
-              trigger="click"
-              v-if="scope.row._id"
-              v-model="scope.row.dLeasePopFlag">
-              <p>确认删除此租住历史？此行为不可撤销</p>
-              <div class="pop-cont">
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="scope.row.dLeasePopFlag = false">
-                  取消
-                </el-button>
-                <el-button
-                  type="danger"
-                  size="mini"
-                  @click="delLease(scope.$index, scope.row)">
-                  确定
-                </el-button>
-              </div>
-              <div
-                slot="reference">
-                <el-button
-                  size="small"
-                  type="danger"
-                  :loading="scope.row.gettingdelLease">
-                  删除
-                </el-button>
-              </div>
-            </el-popover>
+            placement="top"
+            width="150"
+            trigger="click"
+            v-if="scope.row._id"
+            v-model="scope.row.dLeasePopFlag">
+            <p>确认删除此租住历史？此行为不可撤销</p>
+            <div class="pop-cont">
+              <el-button
+                size="mini"
+                type="text"
+                @click="scope.row.dLeasePopFlag = false">
+                取消
+              </el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="delLease(scope.$index, scope.row)">
+                确定
+              </el-button>
+            </div>
+            <div
+              slot="reference">
+              <el-button
+                size="small"
+                type="danger"
+                :loading="scope.row.gettingdelLease">
+                删除
+              </el-button>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
     </el-table>
@@ -216,101 +218,101 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
-  export default {
-    name: 'lease-history',
-    beforeCreate() {
-      this.$store.dispatch('updateMenu', '/inner/lease/index')
-    },
-    created() {
-      this.getListRefresh()
-    },
-    mounted() {
-      window.onresize = () => {
-        const height = window.innerHeight || document.body.clientHeight
-        const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
-        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+export default {
+  name: 'LeaseHistory',
+  data() {
+    return {
+      gettingListRefresh: false,
+      tableMaxHeight: 0,
+      leaseList: [],
+      leaseDataSearch: '',
+    }
+  },
+  computed: {
+    filterLeaseData() {
+      if (!this.leaseDataSearch) {
+        return this.leaseList
       }
-      this.$nextTick(() => window.onresize())
-    },
-    beforeDestroy() {
-      window.onresize = null
-    },
-    data() {
-      return {
-        gettingListRefresh: false,
-        tableMaxHeight: 0,
-        leaseList: [],
-        leaseDataSearch: '',
-      }
-    },
-    computed: {
-      filterLeaseData() {
-        if (!this.leaseDataSearch) {
-          return this.leaseList
-        }
-        const searchKeys = ['fanghao', 'name', 'call', 'remark']
+      const searchKeys = ['fanghao', 'name', 'call', 'remark']
 
-        const _leaseDataSearch = new RegExp(this.leaseDataSearch, 'i')
-        return this.leaseData.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _leaseDataSearch.test(testItem)
+      const _leaseDataSearch = new RegExp(this.leaseDataSearch, 'i')
+      return this.leaseData.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
         })
-      },
-      ...mapState({
-        payTypeVal: state => state.config.payTypeVal,
-        typesVal: state => state.config.typesVal,
-      }),
+        const testItem = Object.values(testObject).join(' ')
+        return _leaseDataSearch.test(testItem)
+      })
     },
-    methods: {
-      // 时间格式化
-      getTime(t) {
-        return t ? this.GetTimeFormat(t) : '--'
-      },
-      // 拉取入住信息列表
-      async getListRefresh() {
-        if (this.gettingListRefresh) return
-
-        // 拉取接口
-        this.gettingListRefresh = true
-
-        await this.Ajax('/inner/lease/list', {
-          haoId: this.$route.query.haoid,
-        })
-          .then(res => {
-            this.leaseList = res
-          })
-          .catch(() => {})
-
-        this.gettingListRefresh = false
-      },
-      async delLease(index, row) {
-        row.dLeasePopFlag = false
-        if (row.gettingdelLease) return
-
-        // 拉取接口
-        row.gettingdelLease = true
-
-        await this.Ajax('/inner/lease/del', {
-          _id: row._id,
-        })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-              duration: 2000,
-            })
-            this.getListRefresh()
-          })
-          .catch(() => {})
-
-        row.gettingdelLease = false
-      },
+    ...mapState({
+      payTypeVal: state => state.config.payTypeVal,
+      typesVal: state => state.config.typesVal,
+    }),
+  },
+  beforeCreate() {
+    this.$store.dispatch('updateMenu', '/inner/lease/index')
+  },
+  created() {
+    this.getListRefresh()
+  },
+  mounted() {
+    window.onresize = () => {
+      const height = window.innerHeight || document.body.clientHeight
+      const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
+      this.tableMaxHeight = height - offsetTop - 20 - 0.5
+    }
+    this.$nextTick(() => window.onresize())
+  },
+  beforeDestroy() {
+    window.onresize = null
+  },
+  methods: {
+    // 时间格式化
+    getTime(t) {
+      return t ? this.GetTimeFormat(t) : '--'
     },
-  }
+    // 拉取入住信息列表
+    async getListRefresh() {
+      if (this.gettingListRefresh) return
+
+      // 拉取接口
+      this.gettingListRefresh = true
+
+      await this.Ajax('/inner/lease/list', {
+        haoId: this.$route.query.haoid,
+      })
+        .then(res => {
+          this.leaseList = res
+        })
+        .catch(() => {})
+
+      this.gettingListRefresh = false
+    },
+    async delLease(index, row) {
+      row.dLeasePopFlag = false
+      if (row.gettingdelLease) return
+
+      // 拉取接口
+      row.gettingdelLease = true
+
+      await this.Ajax('/inner/lease/del', {
+        _id: row._id,
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功',
+            duration: 2000,
+          })
+          this.getListRefresh()
+        })
+        .catch(() => {})
+
+      row.gettingdelLease = false
+    },
+  },
+}
 </script>

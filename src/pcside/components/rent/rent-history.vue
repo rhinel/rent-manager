@@ -173,7 +173,10 @@
               min-width="150">
               <template>
                 <div v-if="getRent(props).calElectric">
-                  {{ getRent(props).calElectric.tnew.electric - getRent(props).calElectric.old.electric }}度
+                  {{
+                    getRent(props).calElectric.tnew.electric -
+                      getRent(props).calElectric.old.electric
+                  }}度
                   <el-popover
                     placement="top"
                     trigger="hover">
@@ -330,7 +333,10 @@
                 </el-tag>
               </el-popover>
             </div>
-            <el-tag v-if="getRent(scope).type && !getRent(scope).type.type.length || !getRent(scope).type">
+            <el-tag
+              v-if="
+                (getRent(scope).type && !getRent(scope).type.type.length) || !getRent(scope).type
+              ">
               新建
             </el-tag>
             <div>
@@ -376,256 +382,256 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
-  export default {
-    name: 'rent-history',
-    beforeCreate() {
-      this.$store.dispatch('updateMenu', '/inner/rent/index')
-    },
-    created() {
-      this.getListRefresh()
-      this.getResetChangeType()
-    },
-    mounted() {
-      window.onresize = () => {
-        const height = window.innerHeight || document.body.clientHeight
-        const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
-        this.tableMaxHeight = height - offsetTop - 20 - 0.5
-      }
-      this.$nextTick(() => window.onresize())
-    },
-    beforeDestroy() {
-      window.onresize = null
-    },
-    data() {
-      return {
-        changeTypeflag: false,
-        gettingChangeType: false,
-        gettingListRefresh: false,
+export default {
+  name: 'RentHistory',
+  data() {
+    return {
+      changeTypeflag: false,
+      gettingChangeType: false,
+      gettingListRefresh: false,
 
-        dialogId: Date.now(),
+      dialogId: Date.now(),
 
-        // 修改状态
-        ctdDialogTitle: '状态修改',
-        ctdLabelWidth: '90px',
-        types: [
-          { label: '已交', value: 1 },
-          { label: '给单', value: 2 },
-          { label: '房东', value: 3 },
-        ],
-        changeType: {},
-        changeTypeClear: {
-          fanghao: '',
-          rentId: '',
-          type: [],
-          typeTime: {
-            1: '',
-            2: '',
-            3: '',
-          },
-          isIndeterminate: false,
-          checkAll: false,
-
-          payType: 0,
-          remark: '',
+      // 修改状态
+      ctdDialogTitle: '状态修改',
+      ctdLabelWidth: '90px',
+      types: [
+        { label: '已交', value: 1 },
+        { label: '给单', value: 2 },
+        { label: '房东', value: 3 },
+      ],
+      changeType: {},
+      changeTypeClear: {
+        fanghao: '',
+        rentId: '',
+        type: [],
+        typeTime: {
+          1: '',
+          2: '',
+          3: '',
         },
-        changeTyperules: {
-          payType: [{
-            type: 'number', required: true, message: '请选择', trigger: 'change',
-          }],
-          typeTime: [{
-            type: 'date', required: true, message: '请填写', trigger: 'change',
-          }],
-        },
+        isIndeterminate: false,
+        checkAll: false,
 
-        // 列表渲染
-        tableMaxHeight: 0,
-        rentHistoryData: [],
-        rentHistorySearch: '',
+        payType: 0,
+        remark: '',
+      },
+      changeTyperules: {
+        payType: [{
+          type: 'number', required: true, message: '请选择', trigger: 'change',
+        }],
+        typeTime: [{
+          type: 'date', required: true, message: '请填写', trigger: 'change',
+        }],
+      },
+
+      // 列表渲染
+      tableMaxHeight: 0,
+      rentHistoryData: [],
+      rentHistorySearch: '',
+    }
+  },
+  computed: {
+    filterRentHistoryData() {
+      if (!this.rentHistorySearch) {
+        return this.rentHistoryData
       }
+      const searchKeys = ['fanghao', 'remark']
+
+      const _rentHistorySearch = new RegExp(this.rentHistorySearch, 'i')
+      return this.rentHistoryData.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
+        })
+        const testItem = Object.values(testObject).join(' ')
+        return _rentHistorySearch.test(testItem)
+      })
     },
-    computed: {
-      filterRentHistoryData() {
-        if (!this.rentHistorySearch) {
-          return this.rentHistoryData
-        }
-        const searchKeys = ['fanghao', 'remark']
-
-        const _rentHistorySearch = new RegExp(this.rentHistorySearch, 'i')
-        return this.rentHistoryData.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _rentHistorySearch.test(testItem)
-        })
-      },
-      ...mapState({
-        payTypeVal: state => state.config.payTypeVal,
-        typesVal: state => state.config.typesVal,
-      }),
+    ...mapState({
+      payTypeVal: state => state.config.payTypeVal,
+      typesVal: state => state.config.typesVal,
+    }),
+  },
+  beforeCreate() {
+    this.$store.dispatch('updateMenu', '/inner/rent/index')
+  },
+  created() {
+    this.getListRefresh()
+    this.getResetChangeType()
+  },
+  mounted() {
+    window.onresize = () => {
+      const height = window.innerHeight || document.body.clientHeight
+      const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
+      this.tableMaxHeight = height - offsetTop - 20 - 0.5
+    }
+    this.$nextTick(() => window.onresize())
+  },
+  beforeDestroy() {
+    window.onresize = null
+  },
+  methods: {
+    // 时间格式化
+    getTime(t) {
+      return t ? this.GetTimeFormat(t) : '--'
     },
-    methods: {
-      // 时间格式化
-      getTime(t) {
-        return t ? this.GetTimeFormat(t) : '--'
-      },
-      async getListRefresh() {
-        if (this.gettingListRefresh) return
+    async getListRefresh() {
+      if (this.gettingListRefresh) return
 
-        // 请求接口
-        this.gettingListRefresh = true
+      // 请求接口
+      this.gettingListRefresh = true
 
-        await this.Ajax('/inner/rent/listByHao', {
-          haoId: this.$route.query.id,
+      await this.Ajax('/inner/rent/listByHao', {
+        haoId: this.$route.query.id,
+      })
+        .then(res => {
+          this.rentHistoryData = res
         })
-          .then(res => {
-            this.rentHistoryData = res
-          })
-          .catch(() => {})
+        .catch(() => {})
 
-        this.gettingListRefresh = false
-      },
-      // 获取价格档次
-      getPrice(data, key) {
-        if (data[key][key].calType === 'single') {
-          return data[key][key].singlePrice
+      this.gettingListRefresh = false
+    },
+    // 获取价格档次
+    getPrice(data, key) {
+      if (data[key][key].calType === 'single') {
+        return data[key][key].singlePrice
+      }
+
+      const steps = data[key][key].stepPrice
+      const numKey = key === 'calWater' ? 'water' : 'electric'
+      const gap = data[key].tnew[numKey] - data[key].old[numKey]
+
+      let rprice = 0
+      steps.forEach((item, i, arr) => {
+        if (!item.price) return
+        const prevPrices = arr[i - 1] || {}
+
+        if (
+          (gap > (prevPrices.step || 0) && gap <= item.step) ||
+          ((i + 1) === arr.length && gap > item.step)
+        ) {
+          rprice = item.price
         }
-
-        const steps = data[key][key].stepPrice
-        const numKey = key === 'calWater' ? 'water' : 'electric'
-        const gap = data[key].tnew[numKey] - data[key].old[numKey]
-
-        let rprice = 0
-        steps.forEach((item, i, arr) => {
-          if (!item.price) return
-          const prevPrices = arr[i - 1] || {}
-
-          if (
-            (gap > (prevPrices.step || 0) && gap <= item.step) ||
-            ((i + 1) === arr.length && gap > item.step)
-          ) {
-            rprice = item.price
-          }
-        })
-        return rprice
-      },
-      // 获取租单
-      getRent(scope) {
-        return scope.row
-      },
-      getChangeTypeDialog(index, row) {
-        this.changeTypeflag = !this.changeTypeflag
-        if (this.changeTypeflag && row) {
-          const rent = row
-          this.changeType.fanghao = rent.fanghao
-          this.changeType.rentId = rent._id
-          // type
-          this.changeType.type = (
-            rent.type &&
-            JSON.parse(JSON.stringify(rent.type.type))
-          ) ||
-            this.changeType.type
-          this.changeType.typeTime = (
-            rent.type &&
-            JSON.parse(JSON.stringify(rent.type.typeTime))
-          ) ||
-            this.changeType.typeTime
-          Object.keys(this.changeType.typeTime).forEach(key => {
-            if (this.changeType.typeTime[key]) {
-              this.changeType.typeTime[key] = new Date(this.changeType.typeTime[key])
-            }
-          })
-
-          this.changeType.isIndeterminate = (rent.type && rent.type.isIndeterminate) ||
-            this.changeType.isIndeterminate
-          this.changeType.checkAll = (rent.type && rent.type.checkAll) ||
-            this.changeType.checkAll
-
-          this.changeType.payType = rent.lease.payType ||
-            this.changeType.payType
-          this.changeType.remark = rent.remark ||
-            this.changeType.remark
-        }
-      },
-      getResetChangeType() {
-        this.changeType = Object.assign(
-          {},
-          this.changeType,
-          JSON.parse(JSON.stringify(this.changeTypeClear)),
-        )
-        this.dialogId = Date.now()
-      },
-      onChangeTypeDialogClose() {
-        setTimeout(() => {
-          this.$refs.changeType.resetFields()
-          this.getResetChangeType()
-        }, 500)
-      },
-      // 处理修改状态
-      onChangeType(value) {
-        const checkedCount = value.length
-        // 状态打开则初始化时间
-        const checkItem = value[checkedCount - 1]
-        if (checkItem && !this.changeType.typeTime[checkItem]) {
-          this.changeType.typeTime[checkItem] = new Date()
-        }
-        // 状态关闭则清空时间
-        this.types.forEach((i) => {
-          if (value.indexOf(i.value) === -1) this.changeType.typeTime[i.value] = ''
-        })
-        this.changeType.checkAll = checkedCount === this.types.length
-        this.changeType.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
-      },
-      // 处理全选状态
-      onCheckAllChange(event) {
-        const flag = event.target.checked
-        this.changeType.type = flag ? [1, 2, 3] : []
-        Object.values(this.changeType.typeTime).forEach(i => {
-          if (flag) {
-            if (!this.changeType.typeTime[i]) {
-              this.changeType.typeTime[i] = new Date()
-            }
-          } else {
-            this.changeType.typeTime[i] = ''
+      })
+      return rprice
+    },
+    // 获取租单
+    getRent(scope) {
+      return scope.row
+    },
+    getChangeTypeDialog(index, row) {
+      this.changeTypeflag = !this.changeTypeflag
+      if (this.changeTypeflag && row) {
+        const rent = row
+        this.changeType.fanghao = rent.fanghao
+        this.changeType.rentId = rent._id
+        // type
+        this.changeType.type = (
+          rent.type &&
+          JSON.parse(JSON.stringify(rent.type.type))
+        ) ||
+          this.changeType.type
+        this.changeType.typeTime = (
+          rent.type &&
+          JSON.parse(JSON.stringify(rent.type.typeTime))
+        ) ||
+          this.changeType.typeTime
+        Object.keys(this.changeType.typeTime).forEach(key => {
+          if (this.changeType.typeTime[key]) {
+            this.changeType.typeTime[key] = new Date(this.changeType.typeTime[key])
           }
         })
 
-        this.changeType.isIndeterminate = false
-      },
-      // 提交状态修改
-      async getChangeType() {
-        if (this.gettingChangeType) return
+        this.changeType.isIndeterminate = (rent.type && rent.type.isIndeterminate) ||
+          this.changeType.isIndeterminate
+        this.changeType.checkAll = (rent.type && rent.type.checkAll) ||
+          this.changeType.checkAll
 
-        // 表单校验
-        try {
-          await this.$refs.changeType.validate()
-        } catch (err) {
-          return
-        }
-
-        // 提交接口
-        this.gettingChangeType = true
-
-        const _data = Object.assign({}, this.changeType)
-        await this.Ajax('/inner/rent/type', _data)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '状态更新成功',
-              duration: 2000,
-            })
-            this.getChangeTypeDialog()
-            this.getListRefresh()
-          })
-          .catch(() => {})
-
-        this.gettingChangeType = false
-      },
+        this.changeType.payType = rent.lease.payType ||
+          this.changeType.payType
+        this.changeType.remark = rent.remark ||
+          this.changeType.remark
+      }
     },
-  }
+    getResetChangeType() {
+      this.changeType = Object.assign(
+        {},
+        this.changeType,
+        JSON.parse(JSON.stringify(this.changeTypeClear)),
+      )
+      this.dialogId = Date.now()
+    },
+    onChangeTypeDialogClose() {
+      setTimeout(() => {
+        this.$refs.changeType.resetFields()
+        this.getResetChangeType()
+      }, 500)
+    },
+    // 处理修改状态
+    onChangeType(value) {
+      const checkedCount = value.length
+      // 状态打开则初始化时间
+      const checkItem = value[checkedCount - 1]
+      if (checkItem && !this.changeType.typeTime[checkItem]) {
+        this.changeType.typeTime[checkItem] = new Date()
+      }
+      // 状态关闭则清空时间
+      this.types.forEach((i) => {
+        if (value.indexOf(i.value) === -1) this.changeType.typeTime[i.value] = ''
+      })
+      this.changeType.checkAll = checkedCount === this.types.length
+      this.changeType.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
+    },
+    // 处理全选状态
+    onCheckAllChange(event) {
+      const flag = event.target.checked
+      this.changeType.type = flag ? [1, 2, 3] : []
+      Object.values(this.changeType.typeTime).forEach(i => {
+        if (flag) {
+          if (!this.changeType.typeTime[i]) {
+            this.changeType.typeTime[i] = new Date()
+          }
+        } else {
+          this.changeType.typeTime[i] = ''
+        }
+      })
+
+      this.changeType.isIndeterminate = false
+    },
+    // 提交状态修改
+    async getChangeType() {
+      if (this.gettingChangeType) return
+
+      // 表单校验
+      try {
+        await this.$refs.changeType.validate()
+      } catch (err) {
+        return
+      }
+
+      // 提交接口
+      this.gettingChangeType = true
+
+      const _data = Object.assign({}, this.changeType)
+      await this.Ajax('/inner/rent/type', _data)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '状态更新成功',
+            duration: 2000,
+          })
+          this.getChangeTypeDialog()
+          this.getListRefresh()
+        })
+        .catch(() => {})
+
+      this.gettingChangeType = false
+    },
+  },
+}
 </script>
 <style lang="scss">
 .rent-history {

@@ -1,11 +1,11 @@
 <template>
-  <router-view class="index"></router-view>
+  <router-view class="index" />
 </template>
 
 <script>
-  export default {
-    name: 'index',
-  }
+export default {
+  name: 'Index',
+}
 </script>
 
 <style lang="scss">
@@ -14,7 +14,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+  font-family: Helvetica Neue,Helvetica,PingFang SC,
+               Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
   height: 100%;
   width: 100%;
   font-size: 14px;

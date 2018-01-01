@@ -1,9 +1,9 @@
 <template>
-  <router-view class="lease-index"></router-view>
+  <router-view class="lease-index" />
 </template>
 
 <script>
-  export default {
-    name: 'lease-index',
-  }
+export default {
+  name: 'LeaseIndex',
+}
 </script>

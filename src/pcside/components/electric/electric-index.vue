@@ -1,9 +1,9 @@
 <template>
-  <router-view class="electric-index"></router-view>
+  <router-view class="electric-index" />
 </template>
 
 <script>
-  export default {
-    name: 'electric-index',
-  }
+export default {
+  name: 'ElectricIndex',
+}
 </script>

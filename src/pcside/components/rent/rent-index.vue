@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  export default {
-    name: 'rent-index',
-  }
+export default {
+  name: 'RentIndex',
+}
 </script>

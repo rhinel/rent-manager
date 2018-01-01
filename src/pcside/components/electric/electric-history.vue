@@ -17,13 +17,13 @@
           <div class="table-btn-input">
             <el-input
               v-model="electricDataSearch"
-              placeholder="搜索">
-            </el-input>
+              placeholder="搜索" />
           </div>
         </div>
 
         <!-- 电费数据表 -->
-        <el-table class="electric-table"
+        <el-table
+          class="electric-table"
           ref="electricTable"
           :max-height="tableMaxHeight"
           :data="filterElectricData"
@@ -33,13 +33,11 @@
           <el-table-column
             prop="fanghao"
             label="房屋"
-            width="180">
-          </el-table-column>
+            width="180" />
           <el-table-column
             prop="electric"
             label="抄表数(度)"
-            width="180">
-          </el-table-column>
+            width="180" />
           <el-table-column
             prop="addTime"
             label="抄表时间"
@@ -50,8 +48,7 @@
           </el-table-column>
           <el-table-column
             prop="remark"
-            label="备注">
-          </el-table-column>
+            label="备注" />
           <el-table-column
             label="操作"
             width="100">
@@ -106,13 +103,13 @@
           <div class="table-btn-input">
             <el-input
               v-model="electricCalDataSearch"
-              placeholder="搜索">
-            </el-input>
+              placeholder="搜索" />
           </div>
         </div>
 
         <!-- 电费数据表 -->
-        <el-table class="electric-table"
+        <el-table
+          class="electric-table"
           ref="electricCalTable"
           :max-height="tableMaxHeight"
           :data="filterElectricCalData"
@@ -122,15 +119,13 @@
           <el-table-column
             prop="fanghao"
             label="房屋"
-            width="180">
-          </el-table-column>
+            width="180" />
           <el-table-column
             label="今次(度)">
             <el-table-column
               prop="tnew.electric"
               label="抄表数"
-              width="100">
-            </el-table-column>
+              width="100" />
             <el-table-column
               prop="tnew.addTime"
               label="抄表时间"
@@ -145,8 +140,7 @@
             <el-table-column
               prop="old.electric"
               label="底表数"
-              width="100">
-            </el-table-column>
+              width="100" />
             <el-table-column
               prop="old.addTime"
               label="底表时间"
@@ -159,8 +153,7 @@
           <el-table-column
             prop="gap"
             label="小计(度)"
-            width="110">
-          </el-table-column>
+            width="110" />
           <el-table-column
             label="计费">
             <el-table-column
@@ -198,15 +191,17 @@
                     {{ scope.row.calElectric.singlePrice }}
                     元/吨
                   </div>
-                  <div class="history-step-p-wrap"
+                  <div
+                    class="history-step-p-wrap"
                     v-if="scope.row.calElectric.calType == 'step'">
                     <div class="step-p-title">
                       阶梯：
                     </div>
                     <div class="step-p-val">
-                      <div v-for="(item, index) in scope.row.calElectric.stepPrice"
+                      <div
+                        v-for="(item, index) in scope.row.calElectric.stepPrice"
                         :key="index">
-                        阶梯{{item.step}}度及以下￥{{item.price}}元/度
+                        阶梯{{ item.step }}度及以下￥{{ item.price }}元/度
                       </div>
                     </div>
                   </div>
@@ -218,7 +213,8 @@
                     v-if="scope.row.fix">
                     本计费结果已被修正，计算方式仅供参考
                   </div>
-                  <div class="show-tag"
+                  <div
+                    class="show-tag"
                     slot="reference">
                     <el-tag>计费方式</el-tag>
                   </div>
@@ -270,160 +266,160 @@
 </template>
 
 <script>
-  export default {
-    name: 'electric-history',
-    beforeCreate() {
-      this.$store.dispatch('updateMenu', '/inner/electric/index')
-    },
-    created() {
-      if (this.activeName === 'electric') this.getElectricList()
-      if (this.activeName === 'electricCal') this.getElectricCalList()
-    },
-    mounted() {
-      window.onresize = () => {
-        const height = window.innerHeight || document.body.clientHeight
-        const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
-        const offsetTopCal = this.$refs.electricCalTable.$el.getBoundingClientRect().top
-        this.tableMaxHeight = height - Math.max(offsetTop, offsetTopCal) - 20 - 0.5
+export default {
+  name: 'ElectricHistory',
+  data() {
+    return {
+      gettingListRefresh: false,
+      gettingListRefresh2: false,
+      activeName: 'electric',
+      houseData: {},
+
+      tableMaxHeight: 0,
+      electricList: [],
+      electricDataSearch: '',
+      electricCalList: [],
+      electricCalDataSearch: '',
+    }
+  },
+  computed: {
+    filterElectricData() {
+      if (!this.electricDataSearch) {
+        return this.electricList
       }
-      this.$nextTick(() => window.onresize())
-    },
-    beforeDestroy() {
-      window.onresize = null
-    },
-    data() {
-      return {
-        gettingListRefresh: false,
-        gettingListRefresh2: false,
-        activeName: 'electric',
-        houseData: {},
+      const searchKeys = ['fanghao', 'electric', 'remark']
 
-        tableMaxHeight: 0,
-        electricList: [],
-        electricDataSearch: '',
-        electricCalList: [],
-        electricCalDataSearch: '',
+      const _electricDataSearch = new RegExp(this.electricDataSearch, 'i')
+      return this.electricList.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
+        })
+        const testItem = Object.values(testObject).join(' ')
+        return _electricDataSearch.test(testItem)
+      })
+    },
+    filterElectricCalData() {
+      if (!this.electricCalDataSearch) {
+        return this.electricCalList
       }
-    },
-    computed: {
-      filterElectricData() {
-        if (!this.electricDataSearch) {
-          return this.electricList
-        }
-        const searchKeys = ['fanghao', 'electric', 'remark']
+      const searchKeys = ['fanghao', 'remark']
 
-        const _electricDataSearch = new RegExp(this.electricDataSearch, 'i')
-        return this.electricList.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _electricDataSearch.test(testItem)
+      const _electricCalDataSearch = new RegExp(this.electricCalDataSearch, 'i')
+      return this.electricCalList.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
         })
-      },
-      filterElectricCalData() {
-        if (!this.electricCalDataSearch) {
-          return this.electricCalList
-        }
-        const searchKeys = ['fanghao', 'remark']
-
-        const _electricCalDataSearch = new RegExp(this.electricCalDataSearch, 'i')
-        return this.electricCalList.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _electricCalDataSearch.test(testItem)
-        })
-      },
+        const testItem = Object.values(testObject).join(' ')
+        return _electricCalDataSearch.test(testItem)
+      })
     },
-    watch: {
-      activeName(n) {
-        if (n === 'electric') this.getElectricList()
-        if (n === 'electricCal') this.getElectricCalList()
-      },
+  },
+  watch: {
+    activeName(n) {
+      if (n === 'electric') this.getElectricList()
+      if (n === 'electricCal') this.getElectricCalList()
     },
-    methods: {
-      // 获取时间格式
-      getTime(t) {
-        return t ? this.GetTimeFormat(t) : '--'
-      },
-      async getElectricList() {
-        if (this.gettingListRefresh) return
-
-        // 请求接口
-        this.gettingListRefresh = true
-
-        await this.Ajax('/inner/electric/list', { haoId: this.$route.query.haoid })
-          .then(res => {
-            this.electricList = res
-          })
-          .catch(() => {})
-
-        this.gettingListRefresh = false
-      },
-      async getElectricCalList() {
-        if (this.gettingListRefresh2) return
-
-        // 请求接口
-        this.gettingListRefresh2 = true
-
-        await this.Ajax('/inner/electric/calList', { haoId: this.$route.query.haoid })
-          .then(res => {
-            this.electricCalList = res
-          })
-          .catch(() => {})
-
-        this.gettingListRefresh2 = false
-      },
-      async delElectric(index, row) {
-        row.dElectricPopFlag = false
-        if (row.gettingdelElectric) return
-
-        // 请求接口
-        row.gettingdelElectric = true
-
-        await this.Ajax('/inner/electric/del', {
-          _id: row._id,
-          haoId: row.haoId._id,
-        })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-              duration: 2000,
-            })
-            this.getElectricList()
-          })
-          .catch(() => {})
-
-        row.gettingdelElectric = false
-      },
-      async delCalElectric(index, row) {
-        row.dCalElectricPopFlag = false
-        if (row.gettingdelCalElectric) return
-
-        // 请求接口
-        row.gettingdelCalElectric = true
-
-        await this.Ajax('/inner/electric/delCal', {
-          _id: row._id,
-          haoId: row.haoId._id,
-        })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-              duration: 2000,
-            })
-            this.getElectricCalList()
-          })
-          .catch(() => {})
-
-        row.gettingdelCalElectric = false
-      },
+  },
+  beforeCreate() {
+    this.$store.dispatch('updateMenu', '/inner/electric/index')
+  },
+  created() {
+    if (this.activeName === 'electric') this.getElectricList()
+    if (this.activeName === 'electricCal') this.getElectricCalList()
+  },
+  mounted() {
+    window.onresize = () => {
+      const height = window.innerHeight || document.body.clientHeight
+      const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
+      const offsetTopCal = this.$refs.electricCalTable.$el.getBoundingClientRect().top
+      this.tableMaxHeight = height - Math.max(offsetTop, offsetTopCal) - 20 - 0.5
+    }
+    this.$nextTick(() => window.onresize())
+  },
+  beforeDestroy() {
+    window.onresize = null
+  },
+  methods: {
+    // 获取时间格式
+    getTime(t) {
+      return t ? this.GetTimeFormat(t) : '--'
     },
-  }
+    async getElectricList() {
+      if (this.gettingListRefresh) return
+
+      // 请求接口
+      this.gettingListRefresh = true
+
+      await this.Ajax('/inner/electric/list', { haoId: this.$route.query.haoid })
+        .then(res => {
+          this.electricList = res
+        })
+        .catch(() => {})
+
+      this.gettingListRefresh = false
+    },
+    async getElectricCalList() {
+      if (this.gettingListRefresh2) return
+
+      // 请求接口
+      this.gettingListRefresh2 = true
+
+      await this.Ajax('/inner/electric/calList', { haoId: this.$route.query.haoid })
+        .then(res => {
+          this.electricCalList = res
+        })
+        .catch(() => {})
+
+      this.gettingListRefresh2 = false
+    },
+    async delElectric(index, row) {
+      row.dElectricPopFlag = false
+      if (row.gettingdelElectric) return
+
+      // 请求接口
+      row.gettingdelElectric = true
+
+      await this.Ajax('/inner/electric/del', {
+        _id: row._id,
+        haoId: row.haoId._id,
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功',
+            duration: 2000,
+          })
+          this.getElectricList()
+        })
+        .catch(() => {})
+
+      row.gettingdelElectric = false
+    },
+    async delCalElectric(index, row) {
+      row.dCalElectricPopFlag = false
+      if (row.gettingdelCalElectric) return
+
+      // 请求接口
+      row.gettingdelCalElectric = true
+
+      await this.Ajax('/inner/electric/delCal', {
+        _id: row._id,
+        haoId: row.haoId._id,
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功',
+            duration: 2000,
+          })
+          this.getElectricCalList()
+        })
+        .catch(() => {})
+
+      row.gettingdelCalElectric = false
+    },
+  },
+}
 </script>
