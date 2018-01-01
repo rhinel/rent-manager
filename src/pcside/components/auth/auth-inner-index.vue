@@ -1,92 +1,98 @@
 <template>
-  <div class="auth-inner-index"
+  <div
+    class="auth-inner-index"
     :class="{ 'in': !Navtg }">
     <div class="inner-header">
       <div class="header-left">
         <span>Rent Manager</span>
-        <el-button class="nav-flag"
+        <el-button
+          class="nav-flag"
           size="mini"
           icon="el-icon-d-arrow-left"
-          @click="getNavtg"></el-button>
+          @click="getNavtg" />
       </div>
       <div class="header-name">
-        {{`${$route.meta.name} ${titleAdd}`}}
+        {{ `${$route.meta.name} ${titleAdd}` }}
       </div>
-      <div class="header-right"
+      <div
+        class="header-right"
         @click="logout">
-        <i class="el-icon-star-on"></i>
+        <i class="el-icon-star-on" />
         登出
-        <i class="el-icon-loading"
-          v-show="logouting"></i>
+        <i
+          class="el-icon-loading"
+          v-show="logouting" />
       </div>
     </div>
-    <el-menu class="inner-sidebar"
+    <el-menu
+      class="inner-sidebar"
       :default-active="menuing"
       :router="true">
       <el-menu-item
         v-for="(menuItem, index) in config.menu"
         :key="index"
         :index="menuItem.index">
-        <i :class="menuItem.icon"></i>
+        <i :class="menuItem.icon" />
         <span slot="title">
-          {{menuItem.name}}
-          <i class="el-icon-loading"
-            v-show="menuCheck.includes(menuItem.check)"></i>
+          {{ menuItem.name }}
+          <i
+            class="el-icon-loading"
+            v-show="menuCheck.includes(menuItem.check)" />
         </span>
       </el-menu-item>
     </el-menu>
-    <router-view class="inner-body"></router-view>
+    <router-view class="inner-body" />
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
-  export default {
-    name: 'auth-inner-index',
-    data() {
-      return {
-        logouting: false,
-        Navtg: true,
-      }
+export default {
+  name: 'AuthInnerIndex',
+  data() {
+    return {
+      logouting: false,
+      Navtg: true,
+    }
+  },
+  computed: {
+    ...mapState([
+      'menuing',
+      'menuCheck',
+      'titleAdd',
+      'config',
+    ]),
+  },
+  methods: {
+    // 伸缩菜单
+    getNavtg() {
+      this.Navtg = !this.Navtg
     },
-    computed: {
-      ...mapState([
-        'menuing',
-        'menuCheck',
-        'titleAdd',
-        'config',
-      ]),
-    },
-    methods: {
-      // 伸缩菜单
-      getNavtg() {
-        this.Navtg = !this.Navtg
-      },
-      // 登出
-      async logout() {
-        if (this.logouting) return
+    // 登出
+    async logout() {
+      if (this.logouting) return
 
-        // 接口提交
-        this.logouting = true
+      // 接口提交
+      this.logouting = true
 
-        await this.Ajax('/outer/log/logout', {})
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '退出成功',
-              duration: 2000,
-            })
-            localStorage.removeItem('token')
-            this.$store.dispatch('clearDefaults')
-            this.$router.push('/login')
+      await this.Ajax('/outer/log/logout', {})
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '退出成功',
+            duration: 2000,
           })
-          .catch(() => {})
+          localStorage.removeItem('token')
+          this.$store.dispatch('clearDefaults')
+          this.$router.push('/login')
+        })
+        .catch(() => {})
 
-        this.logouting = false
-      },
+      this.logouting = false
     },
-  }
+  },
+}
 </script>
 
 <style lang="scss">

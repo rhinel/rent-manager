@@ -41,14 +41,21 @@
                   label="水费信息"
                   :label-width="ardLabelWidth">
                   <div v-if="addRent.calWater.calWater">
-                    计费方式：{{ addRent.calWater.calWater.calType == 'single' ? '单一价格' : '阶梯价格' }}<br>
+                    计费方式：{{
+                      addRent.calWater.calWater.calType == 'single' ?
+                        '单一价格' : '阶梯价格'
+                    }}<br>
                     最低消费：{{ addRent.calWater.calWater.minPrice }}吨<br>
                     本次表数：{{ addRent.calWater.tnew.water }}吨<br>
                     （{{ getTime(addRent.calWater.tnew.addTime) }}）<br>
                     上次表数：{{ addRent.calWater.old.water }}吨<br>
                     （{{ getTime(addRent.calWater.old.addTime) }}）<br>
                     计费单价：￥{{ getPrice(addRent, 'calWater') }}元/吨<br>
-                    水费：￥{{ addRent.calWater.calWaterResult }}元（{{ addRent.calWater.fix ? '修' : '计' }}）<br>
+                    水费：￥{{
+                      addRent.calWater.calWaterResult
+                    }}元（{{
+                      addRent.calWater.fix ? '修' : '计'
+                    }}）<br>
                     计费时间：{{ getTime(addRent.calWater.addTime) }}
                   </div>
                   <div v-else>
@@ -61,14 +68,21 @@
                   label="电费信息"
                   :label-width="ardLabelWidth">
                   <div v-if="addRent.calElectric.calElectric">
-                    计费方式：{{ addRent.calElectric.calElectric.calType == 'single' ? '单一价格' : '阶梯价格' }}<br>
+                    计费方式：{{
+                      addRent.calElectric.calElectric.calType == 'single' ?
+                        '单一价格' : '阶梯价格'
+                    }}<br>
                     最低消费：{{ addRent.calElectric.calElectric.minPrice }}度<br>
                     本次表数：{{ addRent.calElectric.tnew.electric }}度<br>
                     （{{ getTime(addRent.calElectric.tnew.addTime) }}）<br>
                     上次表数：{{ addRent.calElectric.old.electric }}度<br>
                     （{{ getTime(addRent.calElectric.old.addTime) }}）<br>
                     计费单价：￥{{ getPrice(addRent, 'calElectric') }}元/度<br>
-                    电费：￥{{ addRent.calElectric.calElectricResult }}元（{{ addRent.calElectric.fix ? '修' : '计' }}）<br>
+                    电费：￥{{
+                      addRent.calElectric.calElectricResult
+                    }}元（{{
+                      addRent.calElectric.fix ? '修' : '计'
+                    }}）<br>
                     计费时间：{{ getTime(addRent.calElectric.addTime) }}
                   </div>
                   <div v-else>
@@ -296,7 +310,10 @@
                   min-width="150">
                   <template>
                     <div v-if="props.row.rents.length && getRent(props).calWater">
-                      {{ getRent(props).calWater.tnew.water - getRent(props).calWater.old.water }}吨
+                      {{
+                        getRent(props).calWater.tnew.water -
+                          getRent(props).calWater.old.water
+                      }}吨
                       <el-popover
                         placement="top"
                         trigger="hover">
@@ -320,7 +337,10 @@
                   min-width="150">
                   <template>
                     <div v-if="props.row.rents.length && getRent(props).calElectric">
-                      {{ getRent(props).calElectric.tnew.electric - getRent(props).calElectric.old.electric }}度
+                      {{
+                        getRent(props).calElectric.tnew.electric -
+                          getRent(props).calElectric.old.electric
+                      }}度
                       <el-popover
                         placement="top"
                         trigger="hover">
@@ -347,7 +367,11 @@
             label="房屋"
             width="150">
             <template slot-scope="scope">
-              <router-link :to="{ path: '/inner/rent/history', query: { id: scope.row._id }}">
+              <router-link
+                :to="{
+                  path: '/inner/rent/history',
+                  query: { id: scope.row._id }
+                }">
                 <el-button type="text">
                   {{ scope.row.fanghao }}
                 </el-button>
@@ -366,7 +390,10 @@
                       {{ getRent(scope).calWater.fix ? '修' : '计' }}
                     </el-tag>
                     <span>
-                      {{ getRent(scope).calWater.tnew.water - getRent(scope).calWater.old.water }}
+                      {{
+                        getRent(scope).calWater.tnew.water -
+                          getRent(scope).calWater.old.water
+                      }}
                       *
                       {{ getPrice(getRent(scope), 'calWater') }}
                       =￥
@@ -395,7 +422,10 @@
                       {{ getRent(scope).calElectric.fix ? '修' : '计' }}
                     </el-tag>
                     <span>
-                      {{ getRent(scope).calElectric.tnew.electric - getRent(scope).calElectric.old.electric }}
+                      {{
+                        getRent(scope).calElectric.tnew.electric -
+                          getRent(scope).calElectric.old.electric
+                      }}
                       *
                       {{ getPrice(getRent(scope), 'calElectric') }}
                       =￥
@@ -490,7 +520,13 @@
                     </el-tag>
                   </el-popover>
                 </div>
-                <el-tag v-if="scope.row.rents.length && (getRent(scope).type && !getRent(scope).type.type.length || !getRent(scope).type)">
+                <el-tag
+                  v-if="
+                    scope.row.rents.length &&
+                      ((
+                      getRent(scope).type && !getRent(scope).type.type.length
+                      ) || !getRent(scope).type)
+                  ">
                   新建
                 </el-tag>
                 <div
@@ -592,14 +628,7 @@
         <el-collapse
           v-model="activeLandordHistoryTemp"
           v-loading.body="gettingLandordRentTemp"
-          v-if="(
-            landordHistoryTemp.sixList &&
-            landordHistoryTemp.sixList.length
-          ) ||
-            (
-            landordHistoryTemp.eightList &&
-            landordHistoryTemp.eightList.length
-        )">
+          v-if="checkObjectTemp(landordHistoryTemp)">
           <el-collapse-item name="temp">
             <template slot="title">
               <span class="landord-title">
@@ -629,7 +658,10 @@
               :key="i._id">
               <router-link
                 class="collapse-btn"
-                :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+                :to="{
+                  path: '/inner/rent/history',
+                  query: { id: i.haoId }
+                }">
                 <el-button
                   type="text"
                   size="medium">
@@ -671,7 +703,10 @@
               :key="i._id">
               <router-link
                 class="collapse-btn"
-                :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+                :to="{
+                  path: '/inner/rent/history',
+                  query: { id: i.haoId }
+                }">
                 <el-button
                   type="text"
                   size="medium">
@@ -699,15 +734,7 @@
           </el-collapse-item>
         </el-collapse>
         <el-alert
-          v-if="!gettingLandordRentTemp &&
-            (
-            !landordHistoryTemp.sixList ||
-            !landordHistoryTemp.sixList.length
-            ) &&
-            (
-            !landordHistoryTemp.eightList ||
-            !landordHistoryTemp.eightList.length
-          )"
+          v-if="!gettingLandordRentTemp && !checkObjectTemp(landordHistoryTemp)"
           title="暂无数据！请先处理单据状态"
           type="info"
           :closable="false" />
@@ -778,7 +805,10 @@
               :key="i._id">
               <router-link
                 class="collapse-btn"
-                :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+                :to="{
+                  path: '/inner/rent/history',
+                  query: { id: i.haoId }
+                }">
                 <el-button
                   type="text"
                   size="medium">
@@ -811,7 +841,10 @@
               :key="i._id">
               <router-link
                 class="collapse-btn"
-                :to="{ path: '/inner/rent/history', query: { id: i.haoId }}">
+                :to="{
+                  path: '/inner/rent/history',
+                  query: { id: i.haoId }
+                }">
                 <el-button
                   type="text"
                   size="medium">
@@ -868,7 +901,11 @@
                 class="landord-content"
                 v-for="(hao, haoi) in floor.list"
                 :key="haoi">
-                <router-link :to="{ path: '/inner/rent/history', query: { id: hao.haoId }}">
+                <router-link
+                  :to="{
+                    path: '/inner/rent/history',
+                    query: { id: hao.haoId }
+                  }">
                   <el-button
                     type="text"
                     size="medium">
@@ -919,13 +956,40 @@
               <th>{{ item.hao }}</th>
               <th>{{ item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--' }}吨</th>
               <th>{{ item.rents[0].calWater ? item.rents[0].calWater.old.water : '--' }}吨</th>
-              <th>{{ item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--' }}吨</th>
-              <th>{{ item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--' }}元</th>
+              <th>
+                {{
+                  item.rents[0].calWater ?
+                    (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'
+                }}吨
+              </th>
+              <th>
+                {{
+                  item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--'
+                }}元
+              </th>
               <th />
-              <th>{{ item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--' }}度</th>
-              <th>{{ item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--' }}度</th>
-              <th>{{ item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric : '--' }}度</th>
-              <th>{{ item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--' }}元</th>
+              <th>
+                {{
+                  item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'
+                }}度
+              </th>
+              <th>
+                {{
+                  item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'
+                }}度
+              </th>
+              <th>
+                {{
+                  item.rents[0].calElectric ?
+                    item.rents[0].calElectric.tnew.electric -
+                    item.rents[0].calElectric.old.electric : '--'
+                }}度
+              </th>
+              <th>
+                {{
+                  item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--'
+                }}元
+              </th>
             </tr>
           </table>
         </div>
@@ -961,13 +1025,40 @@
               <th>{{ item.hao }}</th>
               <th>{{ item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--' }}吨</th>
               <th>{{ item.rents[0].calWater ? item.rents[0].calWater.old.water : '--' }}吨</th>
-              <th>{{ item.rents[0].calWater ? (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--' }}吨</th>
-              <th>{{ item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--' }}元</th>
+              <th>
+                {{
+                  item.rents[0].calWater ?
+                    (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'
+                }}吨
+              </th>
+              <th>
+                {{
+                  item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--'
+                }}元
+              </th>
               <th />
-              <th>{{ item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--' }}度</th>
-              <th>{{ item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--' }}度</th>
-              <th>{{ item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric - item.rents[0].calElectric.old.electric : '--' }}度</th>
-              <th>{{ item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--' }}元</th>
+              <th>
+                {{
+                  item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'
+                }}度
+              </th>
+              <th>
+                {{
+                  item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'
+                }}度
+              </th>
+              <th>
+                {{
+                  item.rents[0].calElectric ?
+                    item.rents[0].calElectric.tnew.electric -
+                    item.rents[0].calElectric.old.electric : '--'
+                }}度
+              </th>
+              <th>
+                {{
+                  item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--'
+                }}元
+              </th>
             </tr>
           </table>
         </div>
@@ -977,601 +1068,606 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
-  export default {
-    name: 'rent-month',
-    beforeCreate() {
-      this.$store.dispatch('updateMenu', '/inner/rent/index')
-    },
-    created() {
-      this.getMonthDet()
-      if (this.activeName === 'rentHistory') this.rentHistoryActive()
-      if (this.activeName === 'landordHistoryTemp') this.landordHistoryTempActive()
-      if (this.activeName === 'landordHistory') this.landordHistoryActive()
-      if (this.activeName === 'rentCount') this.rentCountActive()
-    },
-    mounted() {
-      window.onresize = () => {
-        const height = window.innerHeight || document.body.clientHeight
-        const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
-        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+export default {
+  name: 'RentMonth',
+  data() {
+    return {
+      activeName: 'rentHistory',
+      // 状态
+      addRentflag: false,
+      gettingAddRent: false,
+      changeTypeflag: false,
+      gettingChangeType: false,
+      gettingListRefresh: false,
+
+      // 周期对象
+      monthDet: {},
+
+      dialogId: Date.now(),
+
+      // 计租
+      ardDialogTitle: '计租',
+      ardLabelWidth: '90px',
+      addRent: {},
+      addRentClear: {
+        calWater: {}, // 水费计费信息
+        calElectric: {}, // 电费计费信息
+        lease: { rent: 0 }, // 租户信息
+        fanghao: '',
+        haoId: '',
+        monthId: this.$route.query.id,
+        calRentResult: 0,
+        fix: false,
+        remark: '',
+        addTime: '',
+      },
+      addRentrules: {
+        'lease.rent': [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur change',
+        }],
+        calRentResult: [{
+          type: 'number', required: true, message: '请填写', trigger: 'blur change',
+        }],
+        addTime: [{
+          type: 'date', required: true, message: '请填写', trigger: 'blur change',
+        }],
+      },
+
+      // 修改状态
+      ctdDialogTitle: '状态修改',
+      ctdLabelWidth: '90px',
+      types: [
+        { label: '已交', value: 1 },
+        { label: '给单', value: 2 },
+        { label: '房东', value: 3 },
+      ],
+      changeType: {},
+      changeTypeClear: {
+        fanghao: '',
+        rentId: '',
+        type: [],
+        typeTime: {
+          1: '',
+          2: '',
+          3: '',
+        },
+        isIndeterminate: false,
+        checkAll: false,
+
+        payType: 0,
+        remark: '',
+      },
+      changeTyperules: {
+        payType: [{
+          type: 'number', required: true, message: '请选择', trigger: 'change',
+        }],
+        typeTime: [{
+          type: 'date', required: true, message: '请填写', trigger: 'change',
+        }],
+      },
+
+      // 列表渲染
+      tableMaxHeight: 0,
+      monthDetData: [],
+      monthDetSearch: '',
+
+      // 未交统计
+      gettingLandordRentTemp: false,
+      landordHistoryTemp: {},
+      activeLandordHistoryTemp: ['temp'],
+
+      // 房东列表
+      landordHistorySearch: '',
+      gettingLandordRent: false,
+      landordData: {},
+      activeDate: [],
+
+      // rentCount列表
+      rentCount: {},
+      activeRentCount: {},
+    }
+  },
+  computed: {
+    filterMonthDetData() {
+      if (!this.monthDetSearch) {
+        return this.monthDetData
       }
-      this.$nextTick(() => window.onresize())
-    },
-    data() {
-      return {
-        activeName: 'rentHistory',
-        // 状态
-        addRentflag: false,
-        gettingAddRent: false,
-        changeTypeflag: false,
-        gettingChangeType: false,
-        gettingListRefresh: false,
+      const searchKeys = ['fanghao', 'remark']
 
-        // 周期对象
-        monthDet: {},
-
-        dialogId: Date.now(),
-
-        // 计租
-        ardDialogTitle: '计租',
-        ardLabelWidth: '90px',
-        addRent: {},
-        addRentClear: {
-          calWater: {}, // 水费计费信息
-          calElectric: {}, // 电费计费信息
-          lease: { rent: 0 }, // 租户信息
-          fanghao: '',
-          haoId: '',
-          monthId: this.$route.query.id,
-          calRentResult: 0,
-          fix: false,
-          remark: '',
-          addTime: '',
-        },
-        addRentrules: {
-          'lease.rent': [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur change',
-          }],
-          calRentResult: [{
-            type: 'number', required: true, message: '请填写', trigger: 'blur change',
-          }],
-          addTime: [{
-            type: 'date', required: true, message: '请填写', trigger: 'blur change',
-          }],
-        },
-
-        // 修改状态
-        ctdDialogTitle: '状态修改',
-        ctdLabelWidth: '90px',
-        types: [
-          { label: '已交', value: 1 },
-          { label: '给单', value: 2 },
-          { label: '房东', value: 3 },
-        ],
-        changeType: {},
-        changeTypeClear: {
-          fanghao: '',
-          rentId: '',
-          type: [],
-          typeTime: {
-            1: '',
-            2: '',
-            3: '',
-          },
-          isIndeterminate: false,
-          checkAll: false,
-
-          payType: 0,
-          remark: '',
-        },
-        changeTyperules: {
-          payType: [{
-            type: 'number', required: true, message: '请选择', trigger: 'change',
-          }],
-          typeTime: [{
-            type: 'date', required: true, message: '请填写', trigger: 'change',
-          }],
-        },
-
-        // 列表渲染
-        tableMaxHeight: 0,
-        monthDetData: [],
-        monthDetSearch: '',
-
-        // 未交统计
-        gettingLandordRentTemp: false,
-        landordHistoryTemp: {},
-        activeLandordHistoryTemp: ['temp'],
-
-        // 房东列表
-        landordHistorySearch: '',
-        gettingLandordRent: false,
-        landordData: {},
-        activeDate: [],
-
-        // rentCount列表
-        rentCount: {},
-        activeRentCount: {},
-      }
-    },
-    computed: {
-      filterMonthDetData() {
-        if (!this.monthDetSearch) {
-          return this.monthDetData
-        }
-        const searchKeys = ['fanghao', 'remark']
-
-        const _monthDetSearch = new RegExp(this.monthDetSearch, 'i')
-        return this.monthDetData.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _monthDetSearch.test(testItem)
+      const _monthDetSearch = new RegExp(this.monthDetSearch, 'i')
+      return this.monthDetData.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
         })
-      },
-      calRentResult() {
-        let result = 0
-        const add = this.addRent
-        if (!add.lease) return result
-        // 房租计算
-        result = (add.calWater.calWaterResult || 0) +
-           (add.calElectric.calElectricResult || 0) +
-           (add.lease.rent || 0)
-        return result
-      },
-      ...mapState({
-        payTypeVal: state => state.config.payTypeVal,
-        typesVal: state => state.config.typesVal,
-        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
-        defaultCalElePrice: state => state.config.defaultCalElePrice,
-      }),
+        const testItem = Object.values(testObject).join(' ')
+        return _monthDetSearch.test(testItem)
+      })
     },
-    watch: {
-      calRentResult(n) {
-        this.addRent.calRentResult = n
-      },
-      /* eslint object-shorthand: 0 */
-      'addRent.calRentResult'(n) {
-        this.addRent.fix = n !== this.calRentResult
-      },
-      activeName(n) {
-        if (n === 'rentHistory') {
-          this.$nextTick(() => {
-            window.onresize()
-            this.rentHistoryActive()
-          })
-        }
-        if (n === 'landordHistoryTemp') this.landordHistoryTempActive()
-        if (n === 'landordHistory') this.landordHistoryActive()
-        if (n === 'rentCount') this.rentCountActive()
-      },
+    calRentResult() {
+      let result = 0
+      const add = this.addRent
+      if (!add.lease) return result
+      // 房租计算
+      result = (add.calWater.calWaterResult || 0) +
+          (add.calElectric.calElectricResult || 0) +
+          (add.lease.rent || 0)
+      return result
     },
-    methods: {
-      // 时间格式化
-      getTime(t) {
-        return t ? this.GetTimeFormat(t) : '--'
-      },
-      rentHistoryActive() {
-        this.getListRefresh()
+    ...mapState({
+      payTypeVal: state => state.config.payTypeVal,
+      typesVal: state => state.config.typesVal,
+      defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+      defaultCalElePrice: state => state.config.defaultCalElePrice,
+    }),
+  },
+  watch: {
+    calRentResult(n) {
+      this.addRent.calRentResult = n
+    },
+    /* eslint object-shorthand: 0 */
+    'addRent.calRentResult'(n) {
+      this.addRent.fix = n !== this.calRentResult
+    },
+    activeName(n) {
+      if (n === 'rentHistory') {
+        this.$nextTick(() => {
+          window.onresize()
+          this.rentHistoryActive()
+        })
+      }
+      if (n === 'landordHistoryTemp') this.landordHistoryTempActive()
+      if (n === 'landordHistory') this.landordHistoryActive()
+      if (n === 'rentCount') this.rentCountActive()
+    },
+  },
+  beforeCreate() {
+    this.$store.dispatch('updateMenu', '/inner/rent/index')
+  },
+  created() {
+    this.getMonthDet()
+    if (this.activeName === 'rentHistory') this.rentHistoryActive()
+    if (this.activeName === 'landordHistoryTemp') this.landordHistoryTempActive()
+    if (this.activeName === 'landordHistory') this.landordHistoryActive()
+    if (this.activeName === 'rentCount') this.rentCountActive()
+  },
+  mounted() {
+    window.onresize = () => {
+      const height = window.innerHeight || document.body.clientHeight
+      const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
+      this.tableMaxHeight = height - offsetTop - 20 - 0.5
+    }
+    this.$nextTick(() => window.onresize())
+  },
+  methods: {
+    // 时间格式化
+    getTime(t) {
+      return t ? this.GetTimeFormat(t) : '--'
+    },
+    rentHistoryActive() {
+      this.getListRefresh()
+      this.getResetAddRent()
+      this.getResetChangeType()
+    },
+    landordHistoryTempActive() {
+      this.getLandordRentTemp()
+    },
+    landordHistoryActive() {
+      this.getLandordRent()
+    },
+    rentCountActive() {
+      this.getCalRentCount()
+    },
+    // 获取月度周期对象
+    async getMonthDet() {
+      await this.Ajax('/inner/month/find', {
+        _id: this.$route.query.id,
+      })
+        .then(res => {
+          this.monthDet = res
+          this.$store.dispatch('titleAdd', this.monthDet.month)
+        })
+        .catch(() => {})
+    },
+    // 获取月度周期数据
+    async getListRefresh() {
+      if (this.gettingListRefresh) return
+
+      // 请求接口
+      this.gettingListRefresh = true
+      await this.Ajax('/inner/rent/listByMonth', {
+        monthId: this.$route.query.id,
+      })
+        .then(res => {
+          this.monthDetData = res
+        })
+        .catch(() => {})
+
+      this.gettingListRefresh = false
+    },
+    getAddRentDialog(index, row) {
+      this.addRentflag = !this.addRentflag
+      if (this.addRentflag && row) {
+        // 用于展示
+        this.addRent.calWater = row.calWaterId
+        this.addRent.calElectric = row.calElectricId
+        // 编辑部分
+        this.addRent.lease = {}.hasOwnProperty.call(row.leaseId, 'rent') ?
+          JSON.parse(JSON.stringify(row.leaseId)) : this.addRent.lease
+        this.addRent.fanghao = row.fanghao
+        this.addRent.haoId = row._id
+        this.addRent.remark = row.leaseId.remark || ''
+        this.addRent.addTime = new Date()
+      }
+    },
+    getResetAddRent() {
+      this.addRent = Object.assign({}, this.addRent, JSON.parse(JSON.stringify(this.addRentClear)))
+      this.dialogId = Date.now()
+    },
+    onAddRentDialogClose() {
+      setTimeout(() => {
+        this.$refs.addRent.resetFields()
         this.getResetAddRent()
-        this.getResetChangeType()
-      },
-      landordHistoryTempActive() {
-        this.getLandordRentTemp()
-      },
-      landordHistoryActive() {
-        this.getLandordRent()
-      },
-      rentCountActive() {
-        this.getCalRentCount()
-      },
-      // 获取月度周期对象
-      async getMonthDet() {
-        await this.Ajax('/inner/month/find', {
-          _id: this.$route.query.id,
-        })
-          .then(res => {
-            this.monthDet = res
-            this.$store.dispatch('titleAdd', this.monthDet.month)
-          })
-          .catch(() => {})
-      },
-      // 获取月度周期数据
-      async getListRefresh() {
-        if (this.gettingListRefresh) return
-
-        // 请求接口
-        this.gettingListRefresh = true
-        await this.Ajax('/inner/rent/listByMonth', {
-          monthId: this.$route.query.id,
-        })
-          .then(res => {
-            this.monthDetData = res
-          })
-          .catch(() => {})
-
-        this.gettingListRefresh = false
-      },
-      getAddRentDialog(index, row) {
-        this.addRentflag = !this.addRentflag
-        if (this.addRentflag && row) {
-          // 用于展示
-          this.addRent.calWater = row.calWaterId
-          this.addRent.calElectric = row.calElectricId
-          // 编辑部分
-          this.addRent.lease = {}.hasOwnProperty.call(row.leaseId, 'rent') ?
-            JSON.parse(JSON.stringify(row.leaseId)) : this.addRent.lease
-          this.addRent.fanghao = row.fanghao
-          this.addRent.haoId = row._id
-          this.addRent.remark = row.leaseId.remark || ''
-          this.addRent.addTime = new Date()
-        }
-      },
-      getResetAddRent() {
-        this.addRent = Object.assign({}, this.addRent, JSON.parse(JSON.stringify(this.addRentClear)))
-        this.dialogId = Date.now()
-      },
-      onAddRentDialogClose() {
-        setTimeout(() => {
-          this.$refs.addRent.resetFields()
-          this.getResetAddRent()
-        }, 500)
-      },
-      // 获取价格档次
-      getPrice(data, key) {
-        if (data[key][key].calType === 'single') {
-          return data[key][key].singlePrice
-        }
-
-        const steps = data[key][key].stepPrice
-        const numKey = key === 'calWater' ? 'water' : 'electric'
-        const gap = data[key].tnew[numKey] - data[key].old[numKey]
-
-        let rprice = 0
-        steps.forEach((item, i, arr) => {
-          if (!item.price) return
-          const prevPrices = arr[i - 1] || {}
-
-          if (
-            (gap <= 0 && i === 0) ||
-            (gap > (prevPrices.step || 0) && gap <= item.step) ||
-            ((i + 1) === arr.length && gap > item.step)
-          ) {
-            rprice = item.price
-          }
-        })
-        return rprice
-      },
-      // 获取最新租单
-      getRent(scope) {
-        return (scope.row.rents[scope.row.rents.length - 1])
-      },
-      // 提交计租
-      async getAddRent() {
-        if (this.gettingAddRent) return
-
-        // 表单校验
-        try {
-          await this.$refs.addRent.validate()
-        } catch (err) {
-          return
-        }
-
-        // 请求接口
-        this.gettingAddRent = true
-
-        const _data = Object.assign({}, this.addRent)
-        await this.Ajax('/inner/rent/add', _data)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '计租成功',
-              duration: 2000,
-            })
-            this.getAddRentDialog()
-            this.getListRefresh()
-          })
-          .catch(() => {})
-
-        this.gettingAddRent = false
-      },
-      // 删除计租
-      async getDelRent(index, row) {
-        row.dRentPopFlag = false
-        if (row.gettingdelRent) return
-
-        // 请求接口
-        row.gettingdelRent = true
-
-        const id = row.rents[row.rents.length - 1]._id
-        await this.Ajax('/inner/rent/del', {
-          _id: id,
-          haoId: row._id,
-        })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-              duration: 2000,
-            })
-            this.getListRefresh()
-          })
-          .catch(() => {})
-
-        row.gettingdelRent = false
-      },
-      getChangeTypeDialog(index, row) {
-        this.changeTypeflag = !this.changeTypeflag
-        if (this.changeTypeflag && row) {
-          const rent = row.rents[row.rents.length - 1]
-          this.changeType.fanghao = rent.fanghao
-          this.changeType.rentId = rent._id
-          // type
-          this.changeType.type = (
-            rent.type &&
-            JSON.parse(JSON.stringify(rent.type.type))
-          ) ||
-            this.changeType.type
-          this.changeType.typeTime = (
-            rent.type &&
-            JSON.parse(JSON.stringify(rent.type.typeTime))
-          ) ||
-            this.changeType.typeTime
-          Object.keys(this.changeType.typeTime).forEach(key => {
-            if (this.changeType.typeTime[key]) {
-              this.changeType.typeTime[key] = new Date(this.changeType.typeTime[key])
-            }
-          })
-
-          this.changeType.isIndeterminate = (rent.type && rent.type.isIndeterminate) ||
-            this.changeType.isIndeterminate
-          this.changeType.checkAll = (rent.type && rent.type.checkAll) ||
-            this.changeType.checkAll
-
-          this.changeType.payType = rent.lease.payType ||
-            this.changeType.payType
-          this.changeType.remark = rent.remark ||
-            this.changeType.remark
-        }
-      },
-      getResetChangeType() {
-        this.changeType = Object.assign(
-          {},
-          this.changeType,
-          JSON.parse(JSON.stringify(this.changeTypeClear)),
-        )
-        this.dialogId = Date.now()
-      },
-      onChangeTypeDialogClose() {
-        setTimeout(() => {
-          this.$refs.changeType.resetFields()
-          this.getResetChangeType()
-        }, 500)
-      },
-      // 处理修改状态
-      onChangeType(value) {
-        const checkedCount = value.length
-        // 状态打开则初始化时间
-        const checkItem = value[checkedCount - 1]
-        if (checkItem && !this.changeType.typeTime[checkItem]) {
-          this.changeType.typeTime[checkItem] = new Date()
-        }
-        // 状态关闭则清空时间
-        this.types.forEach((i) => {
-          if (value.indexOf(i.value) === -1) this.changeType.typeTime[i.value] = ''
-        })
-        this.changeType.checkAll = checkedCount === this.types.length
-        this.changeType.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
-      },
-      // 处理全选状态
-      onCheckAllChange(event) {
-        const flag = event.target.checked
-        this.changeType.type = flag ? [1, 2, 3] : []
-        Object.values(this.changeType.typeTime).forEach(i => {
-          if (flag) {
-            if (!this.changeType.typeTime[i]) {
-              this.changeType.typeTime[i] = new Date()
-            }
-          } else {
-            this.changeType.typeTime[i] = ''
-          }
-        })
-
-        this.changeType.isIndeterminate = false
-      },
-      // 提交状态修改
-      async getChangeType() {
-        if (this.gettingChangeType) return
-
-        // 表单校验
-        try {
-          await this.$refs.changeType.validate()
-        } catch (err) {
-          return
-        }
-        // 提交接口
-        this.gettingChangeType = true
-
-        const _data = Object.assign({}, this.changeType)
-        await this.Ajax('/inner/rent/type', _data)
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '状态更新成功',
-              duration: 2000,
-            })
-            this.getChangeTypeDialog()
-            this.getListRefresh()
-          })
-          .catch(() => {})
-
-        this.gettingChangeType = false
-      },
-      // 获取已交列表
-      async getLandordRent() {
-        if (this.gettingLandordRent) return
-
-        // 请求接口
-        this.gettingLandordRent = true
-
-        await this.Ajax('/inner/rent/listByLandord', {
-          monthId: this.$route.query.id,
-        })
-          .then((res) => {
-            this.landordData = res
-            const firstkey = Object.keys(res)[0]
-            this.activeDate.push(new Date(Number(firstkey)).toLocaleDateString())
-            this.landordHistorySearch = new Date(Number(firstkey)).toLocaleDateString()
-          })
-          .catch(() => {})
-
-        this.gettingLandordRent = false
-      },
-      // 处理已交时间选择
-      getfilterLandordData(v) {
-        if (!v) return
-        this.activeDate = [new Date(v).toLocaleDateString()]
-      },
-      // 获取待交房东统计
-      async getLandordRentTemp() {
-        if (this.gettingLandordRentTemp) return
-
-        // 请求接口
-        this.gettingLandordRentTemp = true
-
-        await this.Ajax('/inner/rent/listByLandordTemp', {
-          monthId: this.$route.query.id,
-        })
-          .then(res => {
-            this.landordHistoryTemp = res
-          })
-          .catch(() => {})
-
-        this.gettingLandordRentTemp = false
-      },
-      // 提交对账变化
-      async checkBillChange(newValue, i) {
-        if (i.checkBilling) return
-
-        // 提交接口
-        i.checkBilling = true
-
-        await this.Ajax('/inner/rent/checkBill', {
-          rentId: i._id,
-          checkBill: i.checkBill,
-        })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '更新成功',
-              duration: 2000,
-            })
-            i.checkBill = newValue
-          })
-          .catch(() => {
-            i.checkBill = !newValue
-          })
-
-        i.checkBilling = false
-      },
-      // 获取月租统计
-      getCalRentCount() {
-        this.rentCount = {}
-        this.monthDetData.forEach((i) => {
-          if (!i.rents[0]) return
-          const floor = i.hao.substr(0, 1)
-          const { rent } = i.rents[0].lease
-
-          if (!this.rentCount[i.fang]) {
-            this.rentCount[i.fang] = {
-              count: 0,
-              list: {},
-            }
-            this.activeRentCount[i.fang] = []
-          }
-
-          if (!this.rentCount[i.fang].list[floor]) {
-            this.rentCount[i.fang].list[floor] = {
-              count: 0,
-              list: [],
-            }
-          }
-
-          this.rentCount[i.fang].count += rent
-          this.rentCount[i.fang].list[floor].count += rent
-          this.rentCount[i.fang].list[floor].list.push({
-            haoId: i._id,
-            hao: i.hao,
-            rent: rent,
-          })
-        })
-      },
-      // 检查是否为空对象
-      checkObject(val) {
-        if (typeof val !== 'object') return false
-        return !!Object.keys(val).length
-      },
-      // 获取月份
-      getCalMonth(monthStr) {
-        if (!monthStr) return ''
-        const date = new Date(monthStr)
-        date.setMonth(date.getMonth() - 1)
-        let month = date.getMonth() + 1
-        month = month > 9 ? month : `0${month}`
-        return `${date.getFullYear()}-${month}`
-      },
-      // 获取抄表日期，计租数据中第一条可用数据的时间
-      getTnewTime() {
-        const takeTime = this.monthDetData.find(item => item.rents[0] && item.rents[0].calWater)
-        if (!takeTime) return ''
-        return this.GetDateFormat(takeTime.rents[0].calWater.tnew.addTime)
-      },
-      // 计算张贴的价格
-      getCal(rent, type) {
-        // 用于张贴展示，不做真实计费，所有计费按月度周期来计算
-        const {
-          calType,
-          minPrice,
-          singlePrice,
-          stepPrice,
-        } =
-          type === 'water' ? (
-            this.monthDet.defaultCalWaterPrice ||
-            this.defaultCalWaterPrice
-          ) : (
-            this.monthDet.defaultCalElePrice ||
-            this.defaultCalElePrice
-          )
-
-        let gap = type === 'water' ?
-          (rent.tnew.water - rent.old.water) :
-          (rent.tnew.electric - rent.old.electric)
-        gap = Math.max(0, gap, minPrice)
-
-        let result = 0
-        if (calType === 'single') {
-          result = gap * singlePrice
-        } else if (calType === 'step') {
-          result = stepPrice.reduce((cal, price, index) => {
-            if (!price.price) return cal
-            const prevPrices = stepPrice[index - 1] || {}
-            if (
-              (gap > (prevPrices.step || 0) && gap <= price.step) ||
-              (index === (stepPrice.length - 1) && gap >= price.step)
-            ) {
-              return gap * price.price
-            }
-            return cal
-          }, result)
-        }
-        return Math.floor(Math.round(result * 100) / 100)
-      },
+      }, 500)
     },
-  }
+    // 获取价格档次
+    getPrice(data, key) {
+      if (data[key][key].calType === 'single') {
+        return data[key][key].singlePrice
+      }
+
+      const steps = data[key][key].stepPrice
+      const numKey = key === 'calWater' ? 'water' : 'electric'
+      const gap = data[key].tnew[numKey] - data[key].old[numKey]
+
+      let rprice = 0
+      steps.forEach((item, i, arr) => {
+        if (!item.price) return
+        const prevPrices = arr[i - 1] || {}
+
+        if (
+          (gap <= 0 && i === 0) ||
+          (gap > (prevPrices.step || 0) && gap <= item.step) ||
+          ((i + 1) === arr.length && gap > item.step)
+        ) {
+          rprice = item.price
+        }
+      })
+      return rprice
+    },
+    // 获取最新租单
+    getRent(scope) {
+      return (scope.row.rents[scope.row.rents.length - 1])
+    },
+    // 提交计租
+    async getAddRent() {
+      if (this.gettingAddRent) return
+
+      // 表单校验
+      try {
+        await this.$refs.addRent.validate()
+      } catch (err) {
+        return
+      }
+
+      // 请求接口
+      this.gettingAddRent = true
+
+      const _data = Object.assign({}, this.addRent)
+      await this.Ajax('/inner/rent/add', _data)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '计租成功',
+            duration: 2000,
+          })
+          this.getAddRentDialog()
+          this.getListRefresh()
+        })
+        .catch(() => {})
+
+      this.gettingAddRent = false
+    },
+    // 删除计租
+    async getDelRent(index, row) {
+      row.dRentPopFlag = false
+      if (row.gettingdelRent) return
+
+      // 请求接口
+      row.gettingdelRent = true
+
+      const id = row.rents[row.rents.length - 1]._id
+      await this.Ajax('/inner/rent/del', {
+        _id: id,
+        haoId: row._id,
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功',
+            duration: 2000,
+          })
+          this.getListRefresh()
+        })
+        .catch(() => {})
+
+      row.gettingdelRent = false
+    },
+    getChangeTypeDialog(index, row) {
+      this.changeTypeflag = !this.changeTypeflag
+      if (this.changeTypeflag && row) {
+        const rent = row.rents[row.rents.length - 1]
+        this.changeType.fanghao = rent.fanghao
+        this.changeType.rentId = rent._id
+        // type
+        this.changeType.type = (
+          rent.type &&
+          JSON.parse(JSON.stringify(rent.type.type))
+        ) ||
+          this.changeType.type
+        this.changeType.typeTime = (
+          rent.type &&
+          JSON.parse(JSON.stringify(rent.type.typeTime))
+        ) ||
+          this.changeType.typeTime
+        Object.keys(this.changeType.typeTime).forEach(key => {
+          if (this.changeType.typeTime[key]) {
+            this.changeType.typeTime[key] = new Date(this.changeType.typeTime[key])
+          }
+        })
+
+        this.changeType.isIndeterminate = (rent.type && rent.type.isIndeterminate) ||
+          this.changeType.isIndeterminate
+        this.changeType.checkAll = (rent.type && rent.type.checkAll) ||
+          this.changeType.checkAll
+
+        this.changeType.payType = rent.lease.payType ||
+          this.changeType.payType
+        this.changeType.remark = rent.remark ||
+          this.changeType.remark
+      }
+    },
+    getResetChangeType() {
+      this.changeType = Object.assign(
+        {},
+        this.changeType,
+        JSON.parse(JSON.stringify(this.changeTypeClear)),
+      )
+      this.dialogId = Date.now()
+    },
+    onChangeTypeDialogClose() {
+      setTimeout(() => {
+        this.$refs.changeType.resetFields()
+        this.getResetChangeType()
+      }, 500)
+    },
+    // 处理修改状态
+    onChangeType(value) {
+      const checkedCount = value.length
+      // 状态打开则初始化时间
+      const checkItem = value[checkedCount - 1]
+      if (checkItem && !this.changeType.typeTime[checkItem]) {
+        this.changeType.typeTime[checkItem] = new Date()
+      }
+      // 状态关闭则清空时间
+      this.types.forEach((i) => {
+        if (value.indexOf(i.value) === -1) this.changeType.typeTime[i.value] = ''
+      })
+      this.changeType.checkAll = checkedCount === this.types.length
+      this.changeType.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
+    },
+    // 处理全选状态
+    onCheckAllChange(event) {
+      const flag = event.target.checked
+      this.changeType.type = flag ? [1, 2, 3] : []
+      Object.values(this.changeType.typeTime).forEach(i => {
+        if (flag) {
+          if (!this.changeType.typeTime[i]) {
+            this.changeType.typeTime[i] = new Date()
+          }
+        } else {
+          this.changeType.typeTime[i] = ''
+        }
+      })
+
+      this.changeType.isIndeterminate = false
+    },
+    // 提交状态修改
+    async getChangeType() {
+      if (this.gettingChangeType) return
+
+      // 表单校验
+      try {
+        await this.$refs.changeType.validate()
+      } catch (err) {
+        return
+      }
+      // 提交接口
+      this.gettingChangeType = true
+
+      const _data = Object.assign({}, this.changeType)
+      await this.Ajax('/inner/rent/type', _data)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '状态更新成功',
+            duration: 2000,
+          })
+          this.getChangeTypeDialog()
+          this.getListRefresh()
+        })
+        .catch(() => {})
+
+      this.gettingChangeType = false
+    },
+    // 获取已交列表
+    async getLandordRent() {
+      if (this.gettingLandordRent) return
+
+      // 请求接口
+      this.gettingLandordRent = true
+
+      await this.Ajax('/inner/rent/listByLandord', {
+        monthId: this.$route.query.id,
+      })
+        .then((res) => {
+          this.landordData = res
+          const firstkey = Object.keys(res)[0]
+          this.activeDate.push(new Date(Number(firstkey)).toLocaleDateString())
+          this.landordHistorySearch = new Date(Number(firstkey)).toLocaleDateString()
+        })
+        .catch(() => {})
+
+      this.gettingLandordRent = false
+    },
+    // 处理已交时间选择
+    getfilterLandordData(v) {
+      if (!v) return
+      this.activeDate = [new Date(v).toLocaleDateString()]
+    },
+    // 获取待交房东统计
+    async getLandordRentTemp() {
+      if (this.gettingLandordRentTemp) return
+
+      // 请求接口
+      this.gettingLandordRentTemp = true
+
+      await this.Ajax('/inner/rent/listByLandordTemp', {
+        monthId: this.$route.query.id,
+      })
+        .then(res => {
+          this.landordHistoryTemp = res
+        })
+        .catch(() => {})
+
+      this.gettingLandordRentTemp = false
+    },
+    // 提交对账变化
+    async checkBillChange(newValue, i) {
+      if (i.checkBilling) return
+
+      // 提交接口
+      i.checkBilling = true
+
+      await this.Ajax('/inner/rent/checkBill', {
+        rentId: i._id,
+        checkBill: i.checkBill,
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '更新成功',
+            duration: 2000,
+          })
+          i.checkBill = newValue
+        })
+        .catch(() => {
+          i.checkBill = !newValue
+        })
+
+      i.checkBilling = false
+    },
+    checkObjectTemp(val) {
+      if (val.sixList && val.sixList.length) return true
+      if (val.eightList && val.eightList.length) return true
+      return false
+    },
+    // 获取月租统计
+    getCalRentCount() {
+      this.rentCount = {}
+      this.monthDetData.forEach((i) => {
+        if (!i.rents[0]) return
+        const floor = i.hao.substr(0, 1)
+        const { rent } = i.rents[0].lease
+
+        if (!this.rentCount[i.fang]) {
+          this.rentCount[i.fang] = {
+            count: 0,
+            list: {},
+          }
+          this.activeRentCount[i.fang] = []
+        }
+
+        if (!this.rentCount[i.fang].list[floor]) {
+          this.rentCount[i.fang].list[floor] = {
+            count: 0,
+            list: [],
+          }
+        }
+
+        this.rentCount[i.fang].count += rent
+        this.rentCount[i.fang].list[floor].count += rent
+        this.rentCount[i.fang].list[floor].list.push({
+          haoId: i._id,
+          hao: i.hao,
+          rent: rent,
+        })
+      })
+    },
+    // 检查是否为空对象
+    checkObject(val) {
+      if (typeof val !== 'object') return false
+      return !!Object.keys(val).length
+    },
+    // 获取月份
+    getCalMonth(monthStr) {
+      if (!monthStr) return ''
+      const date = new Date(monthStr)
+      date.setMonth(date.getMonth() - 1)
+      let month = date.getMonth() + 1
+      month = month > 9 ? month : `0${month}`
+      return `${date.getFullYear()}-${month}`
+    },
+    // 获取抄表日期，计租数据中第一条可用数据的时间
+    getTnewTime() {
+      const takeTime = this.monthDetData.find(item => item.rents[0] && item.rents[0].calWater)
+      if (!takeTime) return ''
+      return this.GetDateFormat(takeTime.rents[0].calWater.tnew.addTime)
+    },
+    // 计算张贴的价格
+    getCal(rent, type) {
+      // 用于张贴展示，不做真实计费，所有计费按月度周期来计算
+      const {
+        calType,
+        minPrice,
+        singlePrice,
+        stepPrice,
+      } =
+        type === 'water' ? (
+          this.monthDet.defaultCalWaterPrice ||
+          this.defaultCalWaterPrice
+        ) : (
+          this.monthDet.defaultCalElePrice ||
+          this.defaultCalElePrice
+        )
+
+      let gap = type === 'water' ?
+        (rent.tnew.water - rent.old.water) :
+        (rent.tnew.electric - rent.old.electric)
+      gap = Math.max(0, gap, minPrice)
+
+      let result = 0
+      if (calType === 'single') {
+        result = gap * singlePrice
+      } else if (calType === 'step') {
+        result = stepPrice.reduce((cal, price, index) => {
+          if (!price.price) return cal
+          const prevPrices = stepPrice[index - 1] || {}
+          if (
+            (gap > (prevPrices.step || 0) && gap <= price.step) ||
+            (index === (stepPrice.length - 1) && gap >= price.step)
+          ) {
+            return gap * price.price
+          }
+          return cal
+        }, result)
+      }
+      return Math.floor(Math.round(result * 100) / 100)
+    },
+  },
+}
 </script>
 
 <style lang="scss">

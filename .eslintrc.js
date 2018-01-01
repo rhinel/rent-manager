@@ -2,27 +2,28 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
+    parser: 'babel-eslint',
     sourceType: 'module'
   },
   env: {
     browser: true,
     node: true,
   },
-  // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  extends: 'airbnb-base',
-  // required to lint *.vue files
-  plugins: [
-    'html'
+  extends: [
+    'airbnb-base',
+    'plugin:vue/recommended',
   ],
+  // required to lint *.vue files
+  plugins: ['html'],
   // check if imports actually resolve
   'settings': {
     'import/resolver': {
       'webpack': {
         'config': 'build/webpack.base.conf.js'
       }
-    }
+    },
+    'html/html-extensions': ['.html']
   },
   // add your custom rules here
   'rules': {
@@ -44,12 +45,19 @@ module.exports = {
     // 末尾不要求分号
     'semi': [2, 'never'],
     // 变量或属性可以下划线
-    "no-underscore-dangle": 0,
+    'no-underscore-dangle': 0,
     // 数组不要求结构赋值
-    "prefer-destructuring": ["error", {"object": true, "array": false}],
+    'prefer-destructuring': ['error', { 'object': true, 'array': false }],
     // 可以进行参数赋值
-    "no-param-reassign": 0,
+    'no-param-reassign': 0,
     // 不校验换行符
-    'linebreak-style': 0
+    'linebreak-style': 0,
+    // closeBracket: 1
+    'vue/html-indent': ['error', 2, {
+      'attribute': 1,
+      'closeBracket': 1,
+      'alignAttributesVertically': true,
+      'ignores': []
+    }]
   }
 }

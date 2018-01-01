@@ -1,36 +1,34 @@
 <template>
-  <div class="auth-login"
+  <div
+    class="auth-login"
     id="large-header"
     @keyup.enter="getLogin">
     <!--  :style="{backgroundImage:'url('+ bingBg +')'}" -->
-    <canvas id="index-canvas"></canvas>
+    <canvas id="index-canvas" />
     <el-card class="login-wrap">
       <div class="login-hello">
-        Hello {{logininfo.name}} <i></i>
+        Hello {{ logininfo.name }} <i />
       </div>
       <el-form
         ref="logininfo"
         :model="logininfo"
         :rules="loginrules">
-        <el-form-item
-          prop="name">
+        <el-form-item prop="name">
           <el-input
             placeholder="Name"
             icon="star-on"
             :maxlength="10"
-            v-model="logininfo.name">
-          </el-input>
+            v-model="logininfo.name" />
         </el-form-item>
-        <el-form-item
-          prop="pwd">
+        <el-form-item prop="pwd">
           <el-input
             type="password"
             placeholder="Pwd"
             icon="star-on"
-            v-model="logininfo.pwd">
-          </el-input>
+            v-model="logininfo.pwd" />
         </el-form-item>
-        <el-button class="login-go"
+        <el-button
+          class="login-go"
           type="primary"
           :loading="logininfo.loading"
           @click="getLogin">
@@ -41,7 +39,7 @@
         <a
           href="http://www.miitbeian.gov.cn/"
           target="_blank">
-          粤ICP备17164727号-1　　粤ICP备17164727号-2
+          粤ICP备17164727号-1&nbsp;&nbsp;&nbsp;&nbsp;粤ICP备17164727号-2
         </a>
       </div>
     </el-card>
@@ -49,89 +47,89 @@
 </template>
 
 <script>
-  import Md5 from 'md5'
-  /* eslint-disable no-unused-vars */
-  import '../../js/indexCanvas/easePack.min'
-  import '../../js/indexCanvas/tweenLite.min'
-  /* eslint-enable no-unused-vars */
-  import indexCanvas from '../../js/indexCanvas/indexCanvas'
+import Md5 from 'md5'
+/* eslint-disable no-unused-vars */
+import '../../js/indexCanvas/easePack.min'
+import '../../js/indexCanvas/tweenLite.min'
+/* eslint-enable no-unused-vars */
+import indexCanvas from '../../js/indexCanvas/indexCanvas'
 
-  export default {
-    name: 'auth-login',
-    created() {
-      // this.getBingBg()
-    },
-    mounted() {
-      indexCanvas()
-    },
-    data() {
-      return {
-        bingBg: '',
-        logininfo: {
-          name: '',
-          pwd: '',
-          loading: false,
-        },
-        loginrules: {
-          name: [
-            { required: true, message: '请填写', trigger: 'blur change' },
-          ],
-          pwd: [
-            { required: true, message: '请填写', trigger: 'blur change' },
-            { min: 3, message: '太短了', trigger: 'blur' },
-          ],
-        },
-      }
-    },
-    methods: {
-      // bing背景
-      async getBingBg() {
-        await this.Ajax('/outer/log/bingBg', {})
-          .then(res => {
-            this.bingBg = res.fav.murl
-          })
-          .catch(() => {})
+export default {
+  name: 'AuthLogin',
+  data() {
+    return {
+      bingBg: '',
+      logininfo: {
+        name: '',
+        pwd: '',
+        loading: false,
       },
-      // 登录
-      async getLogin() {
-        if (this.logininfo.loading) return
-
-        // 表单校验
-        try {
-          await this.$refs.logininfo.validate()
-        } catch (err) {
-          return
-        }
-
-        // 接口提交
-        this.logininfo.loading = true
-
-        await this.Ajax('/outer/log/login', {
-          name: this.logininfo.name,
-          pwd: Md5(this.logininfo.pwd),
+      loginrules: {
+        name: [
+          { required: true, message: '请填写', trigger: 'blur change' },
+        ],
+        pwd: [
+          { required: true, message: '请填写', trigger: 'blur change' },
+          { min: 3, message: '太短了', trigger: 'blur' },
+        ],
+      },
+    }
+  },
+  created() {
+    // this.getBingBg()
+  },
+  mounted() {
+    indexCanvas()
+  },
+  methods: {
+    // bing背景
+    async getBingBg() {
+      await this.Ajax('/outer/log/bingBg', {})
+        .then(res => {
+          this.bingBg = res.fav.murl
         })
-          .then(res => {
-            localStorage.setItem('token', res)
-            return this.$store.dispatch('getDefaults')
-          })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '登陆成功',
-              duration: 2000,
-            })
-            if (this.$route.query.backurl) {
-              this.$router.push(this.$route.query.backurl)
-            } else {
-              this.$router.push('/inner')
-            }
-          })
-          .catch(() => {})
-
-        this.logininfo.loading = false
-      },
+        .catch(() => {})
     },
-  }
+    // 登录
+    async getLogin() {
+      if (this.logininfo.loading) return
+
+      // 表单校验
+      try {
+        await this.$refs.logininfo.validate()
+      } catch (err) {
+        return
+      }
+
+      // 接口提交
+      this.logininfo.loading = true
+
+      await this.Ajax('/outer/log/login', {
+        name: this.logininfo.name,
+        pwd: Md5(this.logininfo.pwd),
+      })
+        .then(res => {
+          localStorage.setItem('token', res)
+          return this.$store.dispatch('getDefaults')
+        })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '登陆成功',
+            duration: 2000,
+          })
+          if (this.$route.query.backurl) {
+            this.$router.push(this.$route.query.backurl)
+          } else {
+            this.$router.push('/inner')
+          }
+        })
+        .catch(() => {})
+
+      this.logininfo.loading = false
+    },
+  },
+}
 </script>
 
 <style lang="scss">

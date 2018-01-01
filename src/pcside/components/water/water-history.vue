@@ -17,13 +17,13 @@
           <div class="table-btn-input">
             <el-input
               v-model="waterDataSearch"
-              placeholder="搜索">
-            </el-input>
+              placeholder="搜索" />
           </div>
         </div>
 
         <!-- 水费数据表 -->
-        <el-table class="water-table"
+        <el-table
+          class="water-table"
           ref="waterTable"
           :max-height="tableMaxHeight"
           :data="filterWaterData"
@@ -33,13 +33,11 @@
           <el-table-column
             prop="fanghao"
             label="房屋"
-            width="180">
-          </el-table-column>
+            width="180" />
           <el-table-column
             prop="water"
             label="抄表数(吨)"
-            width="180">
-          </el-table-column>
+            width="180" />
           <el-table-column
             prop="addTime"
             label="抄表时间"
@@ -50,8 +48,7 @@
           </el-table-column>
           <el-table-column
             prop="remark"
-            label="备注">
-          </el-table-column>
+            label="备注" />
           <el-table-column
             label="操作"
             width="100">
@@ -106,13 +103,13 @@
           <div class="table-btn-input">
             <el-input
               v-model="waterCalDataSearch"
-              placeholder="搜索">
-            </el-input>
+              placeholder="搜索" />
           </div>
         </div>
 
         <!-- 水费数据表 -->
-        <el-table class="water-table"
+        <el-table
+          class="water-table"
           ref="waterCalTable"
           :max-height="tableMaxHeight"
           :data="filterWaterCalData"
@@ -122,15 +119,13 @@
           <el-table-column
             prop="fanghao"
             label="房屋"
-            width="180">
-          </el-table-column>
+            width="180" />
           <el-table-column
             label="今次(吨)">
             <el-table-column
               prop="tnew.water"
               label="抄表数"
-              width="100">
-            </el-table-column>
+              width="100" />
             <el-table-column
               prop="tnew.addTime"
               label="抄表时间"
@@ -145,8 +140,7 @@
             <el-table-column
               prop="old.water"
               label="底表数"
-              width="100">
-            </el-table-column>
+              width="100" />
             <el-table-column
               prop="old.addTime"
               label="底表时间"
@@ -159,8 +153,7 @@
           <el-table-column
             prop="gap"
             label="小计(吨)"
-            width="110">
-          </el-table-column>
+            width="110" />
           <el-table-column
             label="计费">
             <el-table-column
@@ -198,15 +191,17 @@
                     {{ scope.row.calWater.singlePrice }}
                     元/吨
                   </div>
-                  <div class="water-history-step-p-wrap"
+                  <div
+                    class="water-history-step-p-wrap"
                     v-if="scope.row.calWater.calType == 'step'">
                     <div class="step-p-title">
                       阶梯：
                     </div>
                     <div class="step-p-val">
-                      <div v-for="(item, index) in scope.row.calWater.stepPrice"
+                      <div
+                        v-for="(item, index) in scope.row.calWater.stepPrice"
                         :key="index">
-                        阶梯{{item.step}}吨及以下￥{{item.price}}元/吨
+                        阶梯{{ item.step }}吨及以下￥{{ item.price }}元/吨
                       </div>
                     </div>
                   </div>
@@ -218,7 +213,8 @@
                     v-if="scope.row.fix">
                     本计费结果已被修正，计算方式仅供参考
                   </div>
-                  <div class="show-tag"
+                  <div
+                    class="show-tag"
                     slot="reference">
                     <el-tag>计费方式</el-tag>
                   </div>
@@ -270,160 +266,160 @@
 </template>
 
 <script>
-  export default {
-    name: 'water-history',
-    beforeCreate() {
-      this.$store.dispatch('updateMenu', '/inner/water/index')
-    },
-    created() {
-      if (this.activeName === 'water') this.getWaterList()
-      if (this.activeName === 'waterCal') this.getWaterCalList()
-    },
-    mounted() {
-      window.onresize = () => {
-        const height = window.innerHeight || document.body.clientHeight
-        const offsetTop = this.$refs.waterTable.$el.getBoundingClientRect().top
-        const offsetTopCal = this.$refs.waterCalTable.$el.getBoundingClientRect().top
-        this.tableMaxHeight = height - Math.max(offsetTop, offsetTopCal) - 20 - 0.5
+export default {
+  name: 'WaterHistory',
+  data() {
+    return {
+      gettingListRefresh: false,
+      gettingListRefresh2: false,
+      activeName: 'water',
+      houseData: {},
+
+      tableMaxHeight: 0,
+      waterList: [],
+      waterDataSearch: '',
+      waterCalList: [],
+      waterCalDataSearch: '',
+    }
+  },
+  computed: {
+    filterWaterData() {
+      if (!this.waterDataSearch) {
+        return this.waterList
       }
-      this.$nextTick(() => window.onresize())
-    },
-    beforeDestroy() {
-      window.onresize = null
-    },
-    data() {
-      return {
-        gettingListRefresh: false,
-        gettingListRefresh2: false,
-        activeName: 'water',
-        houseData: {},
+      const searchKeys = ['fanghao', 'water', 'remark']
 
-        tableMaxHeight: 0,
-        waterList: [],
-        waterDataSearch: '',
-        waterCalList: [],
-        waterCalDataSearch: '',
+      const _waterDataSearch = new RegExp(this.waterDataSearch, 'i')
+      return this.waterList.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
+        })
+        const testItem = Object.values(testObject).join(' ')
+        return _waterDataSearch.test(testItem)
+      })
+    },
+    filterWaterCalData() {
+      if (!this.waterCalDataSearch) {
+        return this.waterCalList
       }
-    },
-    computed: {
-      filterWaterData() {
-        if (!this.waterDataSearch) {
-          return this.waterList
-        }
-        const searchKeys = ['fanghao', 'water', 'remark']
+      const searchKeys = ['fanghao', 'remark']
 
-        const _waterDataSearch = new RegExp(this.waterDataSearch, 'i')
-        return this.waterList.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _waterDataSearch.test(testItem)
+      const _waterCalDataSearch = new RegExp(this.waterCalDataSearch, 'i')
+      return this.waterCalList.filter(item => {
+        const testObject = {}
+        searchKeys.forEach((key) => {
+          testObject[key] = item[key]
         })
-      },
-      filterWaterCalData() {
-        if (!this.waterCalDataSearch) {
-          return this.waterCalList
-        }
-        const searchKeys = ['fanghao', 'remark']
-
-        const _waterCalDataSearch = new RegExp(this.waterCalDataSearch, 'i')
-        return this.waterCalList.filter(item => {
-          const testObject = {}
-          searchKeys.forEach((key) => {
-            testObject[key] = item[key]
-          })
-          const testItem = Object.values(testObject).join(' ')
-          return _waterCalDataSearch.test(testItem)
-        })
-      },
+        const testItem = Object.values(testObject).join(' ')
+        return _waterCalDataSearch.test(testItem)
+      })
     },
-    watch: {
-      activeName(n) {
-        if (n === 'water') this.getWaterList()
-        if (n === 'waterCal') this.getWaterCalList()
-      },
+  },
+  watch: {
+    activeName(n) {
+      if (n === 'water') this.getWaterList()
+      if (n === 'waterCal') this.getWaterCalList()
     },
-    methods: {
-      // 获取时间格式
-      getTime(t) {
-        return t ? this.GetTimeFormat(t) : '--'
-      },
-      async getWaterList() {
-        if (this.gettingListRefresh) return
-
-        // 请求接口
-        this.gettingListRefresh = true
-
-        await this.Ajax('/inner/water/list', { haoId: this.$route.query.haoid })
-          .then(res => {
-            this.waterList = res
-          })
-          .catch(() => {})
-
-        this.gettingListRefresh = false
-      },
-      async getWaterCalList() {
-        if (this.gettingListRefresh2) return
-
-        // 请求接口
-        this.gettingListRefresh2 = true
-
-        await this.Ajax('/inner/water/calList', { haoId: this.$route.query.haoid })
-          .then(res => {
-            this.waterCalList = res
-          })
-          .catch(() => {})
-
-        this.gettingListRefresh2 = false
-      },
-      async delWater(index, row) {
-        row.dWaterPopFlag = false
-        if (row.gettingdelWater) return
-
-        // 请求接口
-        row.gettingdelWater = true
-
-        await this.Ajax('/inner/water/del', {
-          _id: row._id,
-          haoId: row.haoId._id,
-        })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-              duration: 2000,
-            })
-            this.getWaterList()
-          })
-          .catch(() => {})
-
-        row.gettingdelWater = false
-      },
-      async delCalWater(index, row) {
-        row.dCalWaterPopFlag = false
-        if (row.gettingdelCalWater) return
-
-        // 请求接口
-        row.gettingdelCalWater = true
-
-        await this.Ajax('/inner/water/delCal', {
-          _id: row._id,
-          haoId: row.haoId._id,
-        })
-          .then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-              duration: 2000,
-            })
-            this.getWaterCalList()
-          })
-          .catch(() => {})
-
-        row.gettingdelCalWater = false
-      },
+  },
+  beforeCreate() {
+    this.$store.dispatch('updateMenu', '/inner/water/index')
+  },
+  created() {
+    if (this.activeName === 'water') this.getWaterList()
+    if (this.activeName === 'waterCal') this.getWaterCalList()
+  },
+  mounted() {
+    window.onresize = () => {
+      const height = window.innerHeight || document.body.clientHeight
+      const offsetTop = this.$refs.waterTable.$el.getBoundingClientRect().top
+      const offsetTopCal = this.$refs.waterCalTable.$el.getBoundingClientRect().top
+      this.tableMaxHeight = height - Math.max(offsetTop, offsetTopCal) - 20 - 0.5
+    }
+    this.$nextTick(() => window.onresize())
+  },
+  beforeDestroy() {
+    window.onresize = null
+  },
+  methods: {
+    // 获取时间格式
+    getTime(t) {
+      return t ? this.GetTimeFormat(t) : '--'
     },
-  }
+    async getWaterList() {
+      if (this.gettingListRefresh) return
+
+      // 请求接口
+      this.gettingListRefresh = true
+
+      await this.Ajax('/inner/water/list', { haoId: this.$route.query.haoid })
+        .then(res => {
+          this.waterList = res
+        })
+        .catch(() => {})
+
+      this.gettingListRefresh = false
+    },
+    async getWaterCalList() {
+      if (this.gettingListRefresh2) return
+
+      // 请求接口
+      this.gettingListRefresh2 = true
+
+      await this.Ajax('/inner/water/calList', { haoId: this.$route.query.haoid })
+        .then(res => {
+          this.waterCalList = res
+        })
+        .catch(() => {})
+
+      this.gettingListRefresh2 = false
+    },
+    async delWater(index, row) {
+      row.dWaterPopFlag = false
+      if (row.gettingdelWater) return
+
+      // 请求接口
+      row.gettingdelWater = true
+
+      await this.Ajax('/inner/water/del', {
+        _id: row._id,
+        haoId: row.haoId._id,
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功',
+            duration: 2000,
+          })
+          this.getWaterList()
+        })
+        .catch(() => {})
+
+      row.gettingdelWater = false
+    },
+    async delCalWater(index, row) {
+      row.dCalWaterPopFlag = false
+      if (row.gettingdelCalWater) return
+
+      // 请求接口
+      row.gettingdelCalWater = true
+
+      await this.Ajax('/inner/water/delCal', {
+        _id: row._id,
+        haoId: row.haoId._id,
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功',
+            duration: 2000,
+          })
+          this.getWaterCalList()
+        })
+        .catch(() => {})
+
+      row.gettingdelCalWater = false
+    },
+  },
+}
 </script>
