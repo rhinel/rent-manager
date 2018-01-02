@@ -603,6 +603,9 @@ module.exports = {
       // (i.calWater ? i.calWater.calWaterResult : 0) +
       // (i.calElectric ? i.calElectric.calElectricResult : 0)
       rent.cost = rent.calRentResult - rent.lease.rent
+      // 默认字段提供
+      if (!rent.checkBill) rent.checkBill = false
+      rent.checkBilling = false
       // 定制计算，分类房屋，租单数据没有分开房屋，其实可以的
       if (rent.fanghao.indexOf('8坊68栋') >= 0) {
         list[time].eight += rent.calRentResult

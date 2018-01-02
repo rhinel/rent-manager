@@ -818,6 +818,16 @@
               <span>[房租￥{{ i.calRentResult }}元]</span>
               <span>[租金￥{{ i.lease.rent }}元]</span>
               <span>[水电￥{{ i.cost }}元]</span>
+              <el-checkbox
+                class="landord-check"
+                v-model="i.checkBill"
+                :disabled="i.checkBilling"
+                @change="checkBillChange($event, i)">
+                已对账
+                <i
+                  class="el-icon-loading"
+                  v-if="i.checkBilling" />
+              </el-checkbox>
               <span class="landord-content-type">
                 交租方式：
                 <el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
@@ -854,6 +864,16 @@
               <span>[房租￥{{ i.calRentResult }}元]</span>
               <span>[租金￥{{ i.lease.rent }}元]</span>
               <span>[水电￥{{ i.cost }}元]</span>
+              <el-checkbox
+                class="landord-check"
+                v-model="i.checkBill"
+                :disabled="i.checkBilling"
+                @change="checkBillChange($event, i)">
+                已对账
+                <i
+                  class="el-icon-loading"
+                  v-if="i.checkBilling" />
+              </el-checkbox>
               <span class="landord-content-type">
                 交租方式：
                 <el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
