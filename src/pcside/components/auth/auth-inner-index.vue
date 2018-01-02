@@ -111,7 +111,7 @@ export default {
 
 .auth-inner-index {
   // 页面布局
-  padding-left: 180px;
+  padding-left: 181px;
   transition: padding-left 0.3s;
   padding-top: 50px;
   // 顶部开关按钮
@@ -123,7 +123,7 @@ export default {
       transform: rotateZ(180deg)!important;
     }
     .inner-sidebar {
-      left: -180px;
+      left: -181px;
     }
   }
   // menu
