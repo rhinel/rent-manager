@@ -1692,8 +1692,7 @@ export default {
 
 <style lang="scss">
 @media print {
-
-  // 特殊打印样式
+  /* 特殊打印样式 */
   .rent-month {
     .el-tabs__header {
       display: none !important;
@@ -1702,8 +1701,7 @@ export default {
 }
 
 .rent-month {
-
-  // 弹窗表单样式
+  /* 弹窗表单样式 */
   .add-month-det-dialog,
   .change-type-dialog {
     max-width: 800px;
@@ -1735,7 +1733,8 @@ export default {
       max-width: 300px;
     }
   }
-  // 标题样式
+
+  /* 标题样式 */
   .landord-title {
     display: inline-block;
     margin-right: 20px;
@@ -1744,7 +1743,8 @@ export default {
       font-size: 13px;
     }
   }
-  // 详情样式
+
+  /* 详情样式 */
   .landord-content {
     font-size: 14px;
 
@@ -1775,11 +1775,13 @@ export default {
       padding: 2px 0;
     }
   }
-  // 月租统计小标题
+
+  /* 月租统计小标题 */
   .rent-count-title:not(:first-child) {
     padding-top: 20px;
   }
-  // 打印标题样式
+
+  /* 打印标题样式 */
   .cal-title {
     text-align: center;
 
@@ -1794,7 +1796,8 @@ export default {
       padding-bottom: 40px;
     }
   }
-  // 打印报表样式
+
+  /* 打印报表样式 */
   .cal-body {
     width: 100%;
     font-size: 20px;

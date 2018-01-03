@@ -97,8 +97,7 @@ export default {
 
 <style lang="scss">
 @media print {
-
-  // 打印样式
+  /* 打印样式 */
   .auth-inner-index {
     padding-top: 0 !important;
 
@@ -113,13 +112,12 @@ export default {
 }
 
 .auth-inner-index {
-
-  // 页面布局
+  /* 页面布局 */
   padding-left: 181px;
   transition: padding-left 0.3s;
   padding-top: 50px;
 
-  // 顶部开关按钮
+  /* 顶部开关按钮 */
   &.in {
     padding-left: 0;
 
@@ -134,7 +132,7 @@ export default {
     }
   }
 
-  // menu
+  /* menu */
   .inner-sidebar {
     .el-icon-loading {
       vertical-align: text-bottom;
@@ -152,7 +150,7 @@ export default {
     bottom: 0;
   }
 
-  // header
+  /* header */
   .inner-header {
     width: 100%;
     height: 50px;
@@ -217,7 +215,7 @@ export default {
     }
   }
 
-  // body
+  /* body */
   .inner-body {
     padding: 20px;
   }

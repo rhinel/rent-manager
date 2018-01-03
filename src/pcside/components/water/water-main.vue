@@ -858,8 +858,7 @@ export default {
 
 <style lang="scss">
 .water-main {
-
-  // 弹窗样式
+  /* 弹窗样式 */
   .add-water-dialog {
     max-width: 400px;
 
@@ -870,7 +869,7 @@ export default {
     }
   }
 
-  // 弹窗样式
+  /* 弹窗样式 */
   .cal-water-dialog {
     max-width: 800px;
   }

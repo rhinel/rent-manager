@@ -9,7 +9,7 @@ export default {
 </script>
 
 <style lang="scss">
-// reset
+/* reset */
 html,
 body {
   padding: 0;
@@ -39,7 +39,7 @@ textarea {
   color: inherit;
 }
 
-// 页面=顶部按钮样式
+/* 页面=顶部按钮样式 */
 .table-btn {
   margin-bottom: 15px;
 }
@@ -51,18 +51,18 @@ textarea {
   margin-left: 10px;
 }
 
-// 表格=高亮样式
+/* 表格=高亮样式 */
 .main-txt-highline {
   color: #409eff;
 }
 
-// 表格=非低亮
+/* 表格=非低亮 */
 .unimportant {
   color: #99a9bf;
   font-weight: normal;
 }
 
-// 表格=悬浮高亮样式
+/* 表格=悬浮高亮样式 */
 .el-table--enable-row-hover
   .el-table__body
   tr:hover
@@ -70,7 +70,7 @@ textarea {
   font-weight: bold;
 }
 
-// 表格=折页打开样式
+/* 表格=折页打开样式 */
 .table-expand {
   font-size: 0;
 
@@ -86,7 +86,7 @@ textarea {
   }
 }
 
-// 表格=信息悬浮窗样式
+/* 表格=信息悬浮窗样式 */
 .show-tag {
   cursor: pointer;
   display: inline-block;
@@ -116,7 +116,7 @@ textarea {
   }
 }
 
-// 表格=删除pop样式
+/* 表格=删除pop样式 */
 .show-pop {
   margin-left: 10px;
 }
@@ -125,33 +125,32 @@ textarea {
   text-align: right;
 }
 
-// 表单
+/* 表单 */
 .el-form {
-
-  // 表单=alert
+  /* 表单=alert */
   .el-alert {
     margin-bottom: 22px;
   }
 
-  // 表单=删除按钮
+  /* 表单=删除按钮 */
   .step-btn {
     text-align: right;
   }
 
-  // 表单=分割
+  /* 表单=分割 */
   .line {
     height: 14px;
   }
 }
 
-// 折页=内表格高亮
+/* 折页=内表格高亮 */
 .content-bg {
   &:hover {
     background-color: #f5f7fa;
   }
 }
 
-// 重写组件样式
+/* 重写组件样式 */
 .el-popover {
   font-size: 14px;
   line-height: 1.5;

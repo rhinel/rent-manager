@@ -1182,8 +1182,7 @@ export default {
 
 <style lang="scss">
 .lease-main {
-
-  // 弹窗样式
+  /* 弹窗样式 */
   .lease-in-dialog {
     max-width: 800px;
 
@@ -1196,7 +1195,7 @@ export default {
     }
   }
 
-  // 弹窗样式
+  /* 弹窗样式 */
   .lease-out-dialog {
     max-width: 400px;
 
@@ -1205,7 +1204,7 @@ export default {
     }
   }
 
-  // 统计标题
+  /* 统计标题 */
   .lease-count-title:not(:first-child) {
     padding-top: 20px;
   }

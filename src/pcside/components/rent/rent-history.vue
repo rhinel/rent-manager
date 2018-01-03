@@ -635,8 +635,7 @@ export default {
 </script>
 <style lang="scss">
 .rent-history {
-
-  // 弹窗表单样式
+  /* 弹窗表单样式 */
   .change-type-dialog {
     max-width: 800px;
 

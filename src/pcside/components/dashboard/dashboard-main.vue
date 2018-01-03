@@ -711,8 +711,7 @@ export default {
 
 <style lang="scss">
 .dashboard-main {
-
-  // 页面样式
+  /* 页面样式 */
   .el-row {
     margin-bottom: 20px;
   }
@@ -736,7 +735,7 @@ export default {
     transform: translateY(-50%);
   }
 
-  // 计数card
+  /* 计数card */
   .count-wrap
     .el-card__body {
     display: flex;
@@ -757,10 +756,9 @@ export default {
     }
   }
 
-  // 自定义card
+  /* 自定义card */
   .detail-wrap {
-
-    // 记事列表
+    /* 记事列表 */
     .card-list {
       list-style: none;
       padding: 0;
@@ -789,21 +787,21 @@ export default {
       }
     }
 
-    // card暂无数据
+    /* card暂无数据 */
     .card-nodata {
       color: #5a5e66;
       text-align: center;
       line-height: 20px;
     }
 
-    // 文字内容
+    /* 文字内容 */
     .detail-content {
       line-height: 2;
       margin: -7px 0;
     }
   }
 
-  // 记事弹窗
+  /* 记事弹窗 */
   .note-dialog {
     max-width: 800px;
 

@@ -860,8 +860,7 @@ export default {
 
 <style lang="scss">
 .electric-main {
-
-  // 弹窗样式
+  /* 弹窗样式 */
   .add-electric-dialog {
     max-width: 400px;
 
@@ -872,7 +871,7 @@ export default {
     }
   }
 
-  // 弹窗样式
+  /* 弹窗样式 */
   .cal-electric-dialog {
     max-width: 800px;
   }
