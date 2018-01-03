@@ -343,6 +343,7 @@ export default {
 .house-list {
   .add-house-dialog {
     max-width: 400px;
+
     .el-select,
     .el-input {
       width: 100%;

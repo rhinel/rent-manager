@@ -860,15 +860,18 @@ export default {
 
 <style lang="scss">
 .electric-main {
+
   // 弹窗样式
   .add-electric-dialog {
     max-width: 400px;
+
     .el-select,
     .el-input {
       max-width: 300px;
       width: 100%;
     }
   }
+
   // 弹窗样式
   .cal-electric-dialog {
     max-width: 800px;

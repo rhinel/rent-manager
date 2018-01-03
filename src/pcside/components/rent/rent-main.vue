@@ -413,9 +413,11 @@ export default {
 
 <style lang="scss">
 .rent-main {
+
   // 弹窗样式
   .add-month-list-dialog {
     max-width: 800px;
+
     .el-select,
     .el-input {
       width: 100%;

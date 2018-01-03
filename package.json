@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
+    "serve": "node server-node/index.js",
     "lint": "eslint --ext .js,.vue src,server-node",
-    "serve": "node server-node/index.js"
+    "lint:css": "stylelint src/**/*.vue --syntax scss"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -20,6 +21,7 @@
     "superagent": "^3.8.2"
   },
   "devDependencies": {
+    "@mapbox/stylelint-processor-arbitrary-tags": "^0.2.0",
     "autoprefixer": "^7.2.3",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.1.2",
@@ -63,6 +65,10 @@
     "sass-loader": "^6.0.6",
     "semver": "^5.4.1",
     "shelljs": "^0.7.8",
+    "stylelint": "^8.4.0",
+    "stylelint-config-standard": "^18.0.0",
+    "stylelint-processor-html": "^1.0.0",
+    "stylelint-webpack-plugin": "^0.9.0",
     "tween.js": "^16.6.0",
     "url-loader": "^0.6.2",
     "vue": "^2.5.13",

@@ -1,0 +1,11 @@
+{
+  "extends": "stylelint-config-standard",
+  "processors": ["@mapbox/stylelint-processor-arbitrary-tags"],
+  "rules": {
+    "no-empty-source": null,
+    "no-descending-specificity": null,
+    "selector-descendant-combinator-no-non-space": null,
+    "indentation": null,
+    "selector-combinator-space-before": null,
+  }
+}

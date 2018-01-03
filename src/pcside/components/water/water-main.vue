@@ -858,15 +858,18 @@ export default {
 
 <style lang="scss">
 .water-main {
+
   // 弹窗样式
   .add-water-dialog {
     max-width: 400px;
+
     .el-select,
     .el-input {
       max-width: 300px;
       width: 100%;
     }
   }
+
   // 弹窗样式
   .cal-water-dialog {
     max-width: 800px;

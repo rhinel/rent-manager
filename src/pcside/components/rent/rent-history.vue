@@ -635,20 +635,25 @@ export default {
 </script>
 <style lang="scss">
 .rent-history {
+
   // 弹窗表单样式
   .change-type-dialog {
     max-width: 800px;
+
     .el-select,
     .el-input {
       width: 100%;
       max-width: 300px;
     }
+
     .el-checkbox-group {
       overflow: hidden;
     }
+
     .el-checkbox {
       vertical-align: top;
     }
+
     .el-row-margin {
       margin-bottom: 20px;
     }

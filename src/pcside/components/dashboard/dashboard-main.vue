@@ -711,59 +711,74 @@ export default {
 
 <style lang="scss">
 .dashboard-main {
+
   // 页面样式
   .el-row {
     margin-bottom: 20px;
   }
+
   .el-row.main-wrap {
     margin-bottom: -20px;
   }
+
   .el-card__header {
     position: relative;
   }
+
   .card-header {
     font-weight: bold;
   }
+
   .card-btn {
     position: absolute;
     top: 50%;
     right: 20px;
     transform: translateY(-50%);
   }
+
   // 计数card
   .count-wrap
     .el-card__body {
     display: flex;
     justify-content: space-around;
   }
+
   .count {
     padding: 10px 0;
     text-align: center;
+
     & > div {
       padding-top: 10px;
       padding-bottom: 10px;
     }
+
     & > span:first-of-type {
       font-size: 48px;
     }
   }
+
   // 自定义card
   .detail-wrap {
+
     // 记事列表
     .card-list {
       list-style: none;
       padding: 0;
       margin: -10px 0;
+
       & > li {
         display: flex;
+
         &.done {
           text-decoration: line-through;
           color: #bfcbd9;
         }
+
         & > span {
           padding: 12px 0;
           display: inline-block;
         }
+
         .card-list-item {
           flex: 1;
           white-space: nowrap;
@@ -773,24 +788,29 @@ export default {
         }
       }
     }
+
     // card暂无数据
     .card-nodata {
       color: #5a5e66;
       text-align: center;
       line-height: 20px;
     }
+
     // 文字内容
     .detail-content {
       line-height: 2;
       margin: -7px 0;
     }
   }
+
   // 记事弹窗
   .note-dialog {
     max-width: 800px;
+
     .el-row {
       margin-bottom: 0;
     }
+
     .el-input,
     .el-select {
       width: 100%;

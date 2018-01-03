@@ -1691,8 +1691,9 @@ export default {
 </script>
 
 <style lang="scss">
-// 特殊打印样式
 @media print {
+
+  // 特殊打印样式
   .rent-month {
     .el-tabs__header {
       display: none !important;
@@ -1701,27 +1702,34 @@ export default {
 }
 
 .rent-month {
+
   // 弹窗表单样式
   .add-month-det-dialog,
   .change-type-dialog {
     max-width: 800px;
+
     .el-input {
       width: 100%;
     }
+
     .el-select {
       width: 100%;
       max-width: 300px;
     }
+
     .el-checkbox-group {
       overflow: hidden;
     }
+
     .el-checkbox {
       vertical-align: top;
     }
+
     .el-row-margin {
       margin-bottom: 20px;
     }
   }
+
   .change-type-dialog {
     .el-input {
       max-width: 300px;
@@ -1731,6 +1739,7 @@ export default {
   .landord-title {
     display: inline-block;
     margin-right: 20px;
+
     .el-button {
       font-size: 13px;
     }
@@ -1738,11 +1747,13 @@ export default {
   // 详情样式
   .landord-content {
     font-size: 14px;
+
     .collapse-btn {
       width: auto;
       min-width: 90px;
       display: inline-block;
     }
+
     & > span {
       display: inline-block;
       line-height: 1;
@@ -1750,13 +1761,16 @@ export default {
       width: 180px;
       vertical-align: top;
     }
+
     & > span:last-child {
       min-width: 180px;
       width: auto;
     }
+
     .landord-check {
       width: 120px;
     }
+
     .landord-content-type {
       padding: 2px 0;
     }
@@ -1768,11 +1782,13 @@ export default {
   // 打印标题样式
   .cal-title {
     text-align: center;
+
     div:first-child {
       letter-spacing: 0.5em;
       padding-bottom: 40px;
       font-size: 40px;
     }
+
     div:last-child {
       font-size: 20px;
       padding-bottom: 40px;
@@ -1782,16 +1798,20 @@ export default {
   .cal-body {
     width: 100%;
     font-size: 20px;
+
     tr {
       display: flex;
       border-top: 1px solid #000;
+
       &:last-child {
         border-bottom: 1px solid #000;
       }
+
       th {
         flex: 1;
         border-left: 1px solid #000;
         padding: 15px 0;
+
         &:last-child {
           border-right: 1px solid #000;
         }

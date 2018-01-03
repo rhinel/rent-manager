@@ -149,12 +149,14 @@ export default {
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     overflow: visible;
+
     .beian {
       width: 100%;
       text-align: center;
       position: absolute;
       bottom: -35px;
       left: 0;
+
       a {
         color: #fff;
         text-decoration: none;
@@ -166,17 +168,21 @@ export default {
     font-size: 30px;
     text-align: center;
     margin-bottom: 20px;
+
     @keyframes hello {
       0% {
         opacity: 0;
       }
+
       50% {
         opacity: 1;
       }
+
       100% {
         opacity: 0;
       }
     }
+
     & > i {
       display: inline-block;
       width: 15px;

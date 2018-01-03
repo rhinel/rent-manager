@@ -1182,23 +1182,29 @@ export default {
 
 <style lang="scss">
 .lease-main {
+
   // 弹窗样式
   .lease-in-dialog {
     max-width: 800px;
+
     .el-date-editor--daterange.el-input__inner {
       width: 100%;
     }
+
     .el-select {
       width: 100%;
     }
   }
+
   // 弹窗样式
   .lease-out-dialog {
     max-width: 400px;
+
     .el-date-editor {
       max-width: 300px;
     }
   }
+
   // 统计标题
   .lease-count-title:not(:first-child) {
     padding-top: 20px;
