@@ -5,7 +5,6 @@
     "no-empty-source": null,
     "no-descending-specificity": null,
     "selector-descendant-combinator-no-non-space": null,
-    "indentation": null,
     "selector-combinator-space-before": null,
   }
 }

@@ -122,8 +122,8 @@ export default {
     padding-left: 0;
 
     .header-left
-      .el-button
-      .el-icon-d-arrow-left {
+    .el-button
+    .el-icon-d-arrow-left {
       transform: rotateZ(180deg) !important;
     }
 

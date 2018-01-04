@@ -64,9 +64,9 @@ textarea {
 
 /* 表格=悬浮高亮样式 */
 .el-table--enable-row-hover
-  .el-table__body
-  tr:hover
-  > td:not(.el-table__expanded-cell) {
+.el-table__body
+tr:hover
+> td:not(.el-table__expanded-cell) {
   font-weight: bold;
 }
 
@@ -165,23 +165,23 @@ textarea {
 }
 
 .el-table--border
-  .has-gutter
-  td:nth-last-of-type(2),
+.has-gutter
+td:nth-last-of-type(2),
 .el-table--border
-  .has-gutter
-  th:nth-last-of-type(2) {
+.has-gutter
+th:nth-last-of-type(2) {
   border-right: 1px solid #e6ebf5;
 }
 
 .el-date-editor
-  .el-range__close-icon {
+.el-range__close-icon {
   margin-left: -8px;
   margin-right: -7px;
 }
 
 .el-button {
   [class*=" el-icon-"],
-    [class^=el-icon-] {
+  [class^=el-icon-] {
     vertical-align: top;
   }
 }

@@ -172,8 +172,7 @@
                       path: '/inner/rent/history',
                       query: { id: scope.row.haoId }
                     }">
-                    <el-button
-                      type="text">
+                    <el-button type="text">
                       {{ scope.row.fanghao }}
                     </el-button>
                   </router-link>
@@ -184,88 +183,33 @@
                 label="房租/计费时间"
                 width="180">
                 <template slot-scope="scope">
-                  <div>
-                    <el-tag>{{ scope.row.fix ? '修' : '计' }}</el-tag>
-                    <span>￥{{ scope.row.calRentResult }}元</span>
-                  </div>
-                  <div>{{ getDate(scope.row.addTime) }}</div>
+                  <table-rent-view-item
+                    :rent="scope.row"/>
                 </template>
               </el-table-column>
               <el-table-column
                 label="租户信息"
                 width="180">
                 <template slot-scope="scope">
-                  <div v-if="scope.row.lease.name">
-                    <el-tag>{{ scope.row.lease.payDay }}日</el-tag>
-                    <el-popover
-                      placement="top"
-                      trigger="hover">
-                      <div>姓名：{{ scope.row.lease.name }}</div>
-                      <div>联系方式：{{ scope.row.lease.call }}</div>
-                      <div>房租：￥{{ scope.row.lease.rent }}元</div>
-                      <div>租住起始：{{ getDate(scope.row.lease.leaserange[0]) }}</div>
-                      <div>租住结束：{{ getDate(scope.row.lease.leaserange[1]) }}</div>
-                      <div>入住时间：{{ getDate(scope.row.lease.addTime) }}</div>
-                      <div>搬出时间：{{ getDate(scope.row.lease.outTime) }}</div>
-                      <div>备注：{{ scope.row.lease.remark || '--' }}</div>
-                      <el-tag
-                        class="show-tag"
-                        slot="reference">
-                        {{ payTypeVal[scope.row.lease.payType] }}
-                      </el-tag>
-                    </el-popover>
-                  </div>
-                  <div v-if="!scope.row.lease.name">
-                    暂无
-                  </div>
+                  <table-lease-view-item
+                    :lease="scope.row.lease"
+                    rent-inline />
                 </template>
               </el-table-column>
               <el-table-column
                 label="状态/更新时间"
                 width="180">
                 <template slot-scope="scope">
-                  <div v-if="scope.row.type">
-                    <el-popover
-                      placement="top"
-                      trigger="hover"
-                      v-for="item in scope.row.type.type"
-                      :key="item">
-                      <div class="remark-pop">
-                        {{ getDate(scope.row.type.typeTime[item]) }}
-                      </div>
-                      <el-tag
-                        class="show-tag show-tag3"
-                        slot="reference"
-                        :type="item != 2? 'success' : ''">
-                        {{ typesVal[item] }}
-                      </el-tag>
-                    </el-popover>
-                  </div>
-                  <el-tag
-                    v-if="(scope.row.type && !scope.row.type.type.length) || !scope.row.type">
-                    新建
-                  </el-tag>
-                  <div>{{ getDate(scope.row.updateTime) }}</div>
+                  <table-rent-type-item
+                    :rent="scope.row" />
                 </template>
               </el-table-column>
               <el-table-column
                 label="备注"
                 min-width="140">
                 <template slot-scope="scope">
-                  <el-popover
-                    placement="top"
-                    trigger="hover">
-                    <div class="remark-pop">
-                      {{ scope.row.remark }}
-                    </div>
-                    <span
-                      class="show-tag"
-                      slot="reference">
-                      <div class="remark-tag">
-                        {{ scope.row.remark }}
-                      </div>
-                    </span>
-                  </el-popover>
+                  <table-rent-remark-item
+                    :rent="scope.row" />
                 </template>
               </el-table-column>
             </el-table>
@@ -319,8 +263,7 @@
                       path: '/inner/rent/history',
                       query: { id: scope.row.haoId }
                     }">
-                    <el-button
-                      type="text">
+                    <el-button type="text">
                       {{ scope.row.fanghao }}
                     </el-button>
                   </router-link>
@@ -331,88 +274,33 @@
                 label="房租/计费时间"
                 width="180">
                 <template slot-scope="scope">
-                  <div>
-                    <el-tag>{{ scope.row.fix ? '修' : '计' }}</el-tag>
-                    <span>￥{{ scope.row.calRentResult }}元</span>
-                  </div>
-                  <div>{{ getDate(scope.row.addTime) }}</div>
+                  <table-rent-view-item
+                    :rent="scope.row"/>
                 </template>
               </el-table-column>
               <el-table-column
                 label="租户信息"
                 width="180">
                 <template slot-scope="scope">
-                  <div v-if="scope.row.lease.name">
-                    <el-tag>{{ scope.row.lease.payDay }}日</el-tag>
-                    <el-popover
-                      placement="top"
-                      trigger="hover">
-                      <div>姓名：{{ scope.row.lease.name }}</div>
-                      <div>联系方式：{{ scope.row.lease.call }}</div>
-                      <div>房租：￥{{ scope.row.lease.rent }}元</div>
-                      <div>租住起始：{{ getDate(scope.row.lease.leaserange[0]) }}</div>
-                      <div>租住结束：{{ getDate(scope.row.lease.leaserange[1]) }}</div>
-                      <div>入住时间：{{ getDate(scope.row.lease.addTime) }}</div>
-                      <div>搬出时间：{{ getDate(scope.row.lease.outTime) }}</div>
-                      <div>备注：{{ scope.row.lease.remark || '--' }}</div>
-                      <el-tag
-                        class="show-tag"
-                        slot="reference">
-                        {{ payTypeVal[scope.row.lease.payType] }}
-                      </el-tag>
-                    </el-popover>
-                  </div>
-                  <div v-if="!scope.row.lease.name">
-                    暂无
-                  </div>
+                  <table-lease-view-item
+                    :lease="scope.row.lease"
+                    rent-inline />
                 </template>
               </el-table-column>
               <el-table-column
                 label="状态/更新时间"
                 width="180">
                 <template slot-scope="scope">
-                  <div v-if="scope.row.type">
-                    <el-popover
-                      placement="top"
-                      trigger="hover"
-                      v-for="item in scope.row.type.type"
-                      :key="item">
-                      <div class="remark-pop">
-                        {{ getDate(scope.row.type.typeTime[item]) }}
-                      </div>
-                      <el-tag
-                        class="show-tag show-tag3"
-                        slot="reference"
-                        :type="item != 2? 'success' : ''">
-                        {{ typesVal[item] }}
-                      </el-tag>
-                    </el-popover>
-                  </div>
-                  <el-tag
-                    v-if="(scope.row.type && !scope.row.type.type.length) || !scope.row.type">
-                    新建
-                  </el-tag>
-                  <div>{{ getDate(scope.row.updateTime) }}</div>
+                  <table-rent-type-item
+                    :rent="scope.row" />
                 </template>
               </el-table-column>
               <el-table-column
                 label="备注"
                 min-width="140">
                 <template slot-scope="scope">
-                  <el-popover
-                    placement="top"
-                    trigger="hover">
-                    <div class="remark-pop">
-                      {{ scope.row.remark }}
-                    </div>
-                    <span
-                      class="show-tag"
-                      slot="reference">
-                      <div class="remark-tag">
-                        {{ scope.row.remark }}
-                      </div>
-                    </span>
-                  </el-popover>
+                  <table-rent-remark-item
+                    :rent="scope.row" />
                 </template>
               </el-table-column>
             </el-table>
@@ -444,7 +332,7 @@
               class="card-list"
               v-show="noteList.length">
               <li
-                :class="{'done': item.status == 2}"
+                :class="{ 'done': item.status == 2 }"
                 v-for="(item, index) in noteList"
                 :key="item._id">
                 <span>[{{ item.haoId.fang + item.haoId.hao }}]</span>
@@ -494,9 +382,21 @@
 <script>
 import TWEEN from 'tween.js'
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
+import TableRentViewItem from 'pcside/common/table-rent-view-item'
+import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
+import TableRentTypeItem from 'pcside/common/table-rent-type-item'
+import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
 export default {
   name: 'DashboardMain',
+  components: {
+    TableRentViewItem,
+    TableLeaseViewItem,
+    TableRentTypeItem,
+    TableRentRemarkItem,
+  },
+  mixins: [mixinDef],
   data() {
     return {
       // 获取统计和数据列表
@@ -532,7 +432,9 @@ export default {
       },
       noteRules: {
         haoId: [
-          { required: true, message: '请选择', trigger: 'change' },
+          {
+            required: true, message: '请选择', trigger: 'change',
+          },
         ],
         addTime: [
           {
@@ -575,10 +477,6 @@ export default {
     this.getNoteReset()
   },
   methods: {
-    // 时间格式化
-    getDate(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 获取计数
     async getCount() {
       if (this.gettingCount) return
@@ -737,7 +635,7 @@ export default {
 
   /* 计数card */
   .count-wrap
-    .el-card__body {
+  .el-card__body {
     display: flex;
     justify-content: space-around;
   }
