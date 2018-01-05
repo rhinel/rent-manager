@@ -566,96 +566,15 @@
                 {{ j }}：{{ landordHistoryTemp[indexj] }}元
               </span>
             </template>
-            <div
-              class="landord-content"
-              v-if="landordHistoryTemp.sixList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                6坊65栋
-              </span>
-              <span>[房租合计￥{{ landordHistoryTemp.six }}元]</span>
-              <span>[租金合计￥{{ landordHistoryTemp.sixRent }}元]</span>
-              <span>[水电合计￥{{ landordHistoryTemp.sixCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in landordHistoryTemp.sixList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：<el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
-            <div
-              class="landord-content"
-              v-if="landordHistoryTemp.eightList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                8坊68栋
-              </span>
-              <span>[房租合计￥{{ landordHistoryTemp.eight }}元]</span>
-              <span>[租金合计￥{{ landordHistoryTemp.eightRent }}元]</span>
-              <span>[水电合计￥{{ landordHistoryTemp.eightCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in landordHistoryTemp.eightList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：<el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
+
+            <collapse-landord-item
+              :landord="landordHistoryTemp"
+              type="six" />
+
+            <collapse-landord-item
+              :landord="landordHistoryTemp"
+              type="eight" />
+
           </el-collapse-item>
         </el-collapse>
         <el-alert
@@ -713,98 +632,15 @@
                 </el-popover>
               </span>
             </template>
-            <div
-              class="landord-content"
-              v-if="item.sixList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                6坊65栋
-              </span>
-              <span>[房租合计￥{{ item.six }}元]</span>
-              <span>[租金合计￥{{ item.sixRent }}元]</span>
-              <span>[水电合计￥{{ item.sixCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in item.sixList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：
-                <el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
-            <div
-              class="landord-content"
-              v-if="item.eightList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                8坊68栋
-              </span>
-              <span>[房租合计￥{{ item.eight }}元]</span>
-              <span>[租金合计￥{{ item.eightRent }}元]</span>
-              <span>[水电合计￥{{ item.eightCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in item.eightList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：
-                <el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
+
+            <collapse-landord-item
+              :landord="item"
+              type="six" />
+
+            <collapse-landord-item
+              :landord="item"
+              type="eight" />
+
           </el-collapse-item>
         </el-collapse>
         <el-alert
@@ -817,53 +653,14 @@
       <el-tab-pane
         label="月租统计"
         name="rentCount">
-        <template v-for="(fang, fangi) in rentCount">
-          <div
-            class="rent-count-title"
-            :key="`${fangi}Title`">
-            <el-alert
-              class="table-btn"
-              type="info"
-              title=""
-              :closable="false">
-              {{ fangi }} 合计：￥{{ fang.count }}元
-            </el-alert>
-          </div>
-          <el-collapse
-            v-model="activeRentCount[fangi]"
-            :key="`${fangi}Collapse`">
-            <el-collapse-item
-              v-for="(floor, floori) in fang.list"
-              :name="floori"
-              :key="floori">
-              <template slot="title">
-                {{ floori }}楼
-                <span class="landord-title">
-                  合计：￥{{ floor.count }}元
-                </span>
-              </template>
-              <div
-                class="landord-content"
-                v-for="(hao, haoi) in floor.list"
-                :key="haoi">
-                <router-link
-                  :to="{
-                    path: '/inner/rent/history',
-                    query: { id: hao.haoId }
-                  }">
-                  <el-button
-                    type="text"
-                    size="medium">
-                    [{{ fangi + hao.hao }}]
-                  </el-button>
-                </router-link>
-                <span>
-                  租金：￥{{ hao.rent }}元
-                </span>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
+
+        <collapse-rent-count-item
+          v-for="(fang, fangi) in rentCount"
+          :key="fangi"
+          :fang="fang"
+          :fangi="fangi"
+          :active-rent-count="activeRentCount" />
+
         <el-alert
           v-if="!checkObject(rentCount)"
           title="暂无数据！请先处理单据状态"
@@ -1020,6 +817,9 @@ import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
 import TableRentTypeItem from 'pcside/common/table-rent-type-item'
 import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
+import CollapseLandordItem from 'pcside/common/collapse-landord-item'
+import CollapseRentCountItem from 'pcside/common/collapse-rent-count-item'
+
 export default {
   name: 'RentMonth',
   components: {
@@ -1027,6 +827,9 @@ export default {
     TableLeaseViewItem,
     TableRentTypeItem,
     TableRentRemarkItem,
+
+    CollapseLandordItem,
+    CollapseRentCountItem,
   },
   mixins: [mixinDef],
   data() {
@@ -1497,31 +1300,6 @@ export default {
 
       this.gettingLandordRentTemp = false
     },
-    // 提交对账变化
-    async checkBillChange(newValue, i) {
-      if (i.checkBilling) return
-
-      // 提交接口
-      i.checkBilling = true
-
-      await this.Ajax('/inner/rent/checkBill', {
-        rentId: i._id,
-        checkBill: i.checkBill,
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '更新成功',
-            duration: 2000,
-          })
-          i.checkBill = newValue
-        })
-        .catch(() => {
-          i.checkBill = !newValue
-        })
-
-      i.checkBilling = false
-    },
     checkObjectTemp(val) {
       if (val.sixList && val.sixList.length) return true
       if (val.eightList && val.eightList.length) return true
@@ -1637,8 +1415,6 @@ export default {
   /* 弹窗表单样式 */
   .add-month-det-dialog,
   .change-type-dialog {
-    max-width: 800px;
-
     .el-input {
       width: 100%;
     }
@@ -1665,53 +1441,6 @@ export default {
     .el-input {
       max-width: 300px;
     }
-  }
-
-  /* 标题样式 */
-  .landord-title {
-    display: inline-block;
-    margin-right: 20px;
-
-    .el-button {
-      font-size: 13px;
-    }
-  }
-
-  /* 详情样式 */
-  .landord-content {
-    font-size: 14px;
-
-    .collapse-btn {
-      width: auto;
-      min-width: 90px;
-      display: inline-block;
-    }
-
-    & > span {
-      display: inline-block;
-      line-height: 1;
-      padding: 11px 0;
-      width: 180px;
-      vertical-align: top;
-    }
-
-    & > span:last-child {
-      min-width: 180px;
-      width: auto;
-    }
-
-    .landord-check {
-      width: 120px;
-    }
-
-    .landord-content-type {
-      padding: 2px 0;
-    }
-  }
-
-  /* 月租统计小标题 */
-  .rent-count-title:not(:first-child) {
-    padding-top: 20px;
   }
 
   /* 打印标题样式 */

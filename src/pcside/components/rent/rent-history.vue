@@ -576,8 +576,6 @@ export default {
 .rent-history {
   /* 弹窗表单样式 */
   .change-type-dialog {
-    max-width: 800px;
-
     .el-select,
     .el-input {
       width: 100%;

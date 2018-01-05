@@ -150,7 +150,53 @@ tr:hover
   }
 }
 
+/* 折页标题样式 */
+.landord-title {
+  display: inline-block;
+  margin-right: 20px;
+
+  .el-button {
+    font-size: 13px;
+  }
+}
+
+/* 详情样式 */
+.landord-content {
+  font-size: 14px;
+
+  .collapse-btn {
+    width: auto;
+    min-width: 90px;
+    display: inline-block;
+  }
+
+  & > span {
+    display: inline-block;
+    line-height: 1;
+    padding: 11px 0;
+    width: 180px;
+    vertical-align: top;
+  }
+
+  & > span:last-child {
+    min-width: 180px;
+    width: auto;
+  }
+
+  .landord-check {
+    width: 120px;
+  }
+
+  .landord-content-type {
+    padding: 2px 0;
+  }
+}
+
 /* 重写组件样式 */
+.el-dialog {
+  max-width: 800px;
+}
+
 .el-popover {
   font-size: 14px;
   line-height: 1.5;

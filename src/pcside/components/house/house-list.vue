@@ -166,9 +166,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
 
 export default {
   name: 'HouseList',
+  mixins: [mixinDef],
   data() {
     return {
       addHouseFlag: false,
@@ -241,10 +243,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 打开关闭添加/修改弹窗
     getAddHouseDialog(index, row) {
       this.addHouseFlag = !this.addHouseFlag

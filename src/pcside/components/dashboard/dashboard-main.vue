@@ -246,8 +246,7 @@
                       path: '/inner/rent/month',
                       query: { id: scope.row.monthId._id }
                     }">
-                    <el-button
-                      type="text">
+                    <el-button type="text">
                       {{ scope.row.monthId.month }}
                     </el-button>
                   </router-link>
@@ -381,8 +380,6 @@
 
 <script>
 import TWEEN from 'tween.js'
-import { mapState } from 'vuex'
-import { mixinDef } from 'pcside/js/mixins'
 import TableRentViewItem from 'pcside/common/table-rent-view-item'
 import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
 import TableRentTypeItem from 'pcside/common/table-rent-type-item'
@@ -396,7 +393,6 @@ export default {
     TableRentTypeItem,
     TableRentRemarkItem,
   },
-  mixins: [mixinDef],
   data() {
     return {
       // 获取统计和数据列表
@@ -446,12 +442,6 @@ export default {
       gettingNotes: false,
       noteList: [],
     }
-  },
-  computed: {
-    ...mapState({
-      payTypeVal: state => state.config.payTypeVal,
-      typesVal: state => state.config.typesVal,
-    }),
   },
   watch: {
     /* eslint object-shorthand: 0 */
@@ -701,8 +691,6 @@ export default {
 
   /* 记事弹窗 */
   .note-dialog {
-    max-width: 800px;
-
     .el-row {
       margin-bottom: 0;
     }
