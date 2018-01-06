@@ -96,18 +96,6 @@ tr:hover
   margin-right: 4px;
 }
 
-.remark-tag {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.remark-pop {
-  max-width: 300px;
-}
-
 .history-step-p-wrap {
   display: flex;
 
@@ -195,6 +183,10 @@ tr:hover
 /* 重写组件样式 */
 .el-dialog {
   max-width: 800px;
+
+  &.small {
+    min-width: 400px;
+  }
 }
 
 .el-popover {

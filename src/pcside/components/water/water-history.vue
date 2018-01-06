@@ -192,7 +192,7 @@
                     元/吨
                   </div>
                   <div
-                    class="water-history-step-p-wrap"
+                    class="history-step-p-wrap"
                     v-if="scope.row.calWater.calType == 'step'">
                     <div class="step-p-title">
                       阶梯：

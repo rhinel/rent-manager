@@ -27,3 +27,16 @@ export default {
 }
 </script>
 
+<style lang="scss">
+.remark-tag {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.remark-pop {
+  max-width: 300px;
+}
+</style>

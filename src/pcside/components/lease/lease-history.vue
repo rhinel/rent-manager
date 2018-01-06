@@ -61,20 +61,8 @@
           prop="leaseId.remark"
           label="备注">
           <template slot-scope="scope">
-            <el-popover
-              placement="top"
-              trigger="hover">
-              <div class="remark-pop">
-                {{ scope.row.remark }}
-              </div>
-              <div
-                class="show-tag"
-                slot="reference">
-                <div class="remark-tag">
-                  {{ scope.row.remark }}
-                </div>
-              </div>
-            </el-popover>
+            <table-rent-remark-item
+              :rent="scope.row" />
           </template>
         </el-table-column>
         <el-table-column
@@ -220,9 +208,13 @@
 <script>
 import { mapState } from 'vuex'
 import { mixinDef } from 'pcside/js/mixins'
+import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
 export default {
   name: 'LeaseHistory',
+  components: {
+    TableRentRemarkItem,
+  },
   mixins: [mixinDef],
   data() {
     return {
