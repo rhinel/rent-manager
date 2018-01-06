@@ -14,13 +14,13 @@ const redisct = callback => {
     auth_pass: auth.redisPa,
     retry_strategy: () => 5000,
   })
-  rds.on('connect', sysLog.info.bind(sysLog, 'redis connecting...'))
   rds.on('ready', () => {
     if (callback) callback()
     sysLog.info(`redis://${auth.redisPa}@${auth.redisIp}:${auth.redisPo} redis ready !`)
   })
-  rds.on('error', sysLog.error.bind(sysLog, 'redis connection error: '))
+  rds.on('connect', sysLog.info.bind(sysLog, 'redis connecting...'))
   rds.on('reconnecting', sysLog.info.bind(sysLog, 'redis reconnecting...'))
+  rds.on('error', sysLog.error.bind(sysLog, 'redis connection error: '))
 }
 
 // set
@@ -93,21 +93,22 @@ const redisIncr = key => new Promise((resolve, reject) => {
 // 链接数据库
 const connect = callback => {
   mongoose.Promise = global.Promise
-  mongoose
-    .connect(auth.mongodbPs, {
-      useMongoClient: true,
-      reconnectTries: Number.MAX_VALUE,
-      reconnectInterval: 5000,
-      autoReconnect: true,
-    })
-    .catch(err => sysLog.error(err))
   db = mongoose.connection
   db.once('open', () => {
     if (callback) callback()
     sysLog.info(`${auth.mongodbPs} mongoose opened !`)
   })
+  db.on('connecting', sysLog.info.bind(sysLog, 'mongoose connecting...'))
+  db.on('connected', sysLog.info.bind(sysLog, 'mongoose connected !'))
+  db.on('reconnected', sysLog.info.bind(sysLog, 'mongoose reconnected !'))
   db.on('error', sysLog.error.bind(sysLog, 'mongoose connection error: '))
-  db.on('reconnect', sysLog.info.bind(sysLog, 'mongoose reconnecting...'))
+  mongoose
+    .connect(auth.mongodbPs, {
+      reconnectTries: Number.MAX_VALUE,
+      reconnectInterval: 5000,
+      autoReconnect: true,
+    })
+    .catch(err => sysLog.error(err))
 }
 
 // model
