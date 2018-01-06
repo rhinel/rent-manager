@@ -148,51 +148,26 @@
               label="水表本次用数/单价"
               min-width="150">
               <template>
-                <div v-if="getRent(props).calWater">
-                  {{ getRent(props).calWater.tnew.water - getRent(props).calWater.old.water }}吨
-                  <el-popover
-                    placement="top"
-                    trigger="hover">
-                    <div>本次抄表数：{{ getRent(props).calWater.tnew.water }}吨</div>
-                    <div>抄表时间：{{ getTime(getRent(props).calWater.tnew.addTime) }}</div>
-                    <div>上次表底数：{{ getRent(props).calWater.old.water }}吨</div>
-                    <div>表底时间：{{ getTime(getRent(props).calWater.old.addTime) }}</div>
-                    <el-tag
-                      class="show-tag"
-                      slot="reference">计数</el-tag>
-                  </el-popover>
-                  ￥{{ getPrice(getRent(props), 'calWater') }}元/吨
-                </div>
-                <div v-if="!getRent(props).calWater">
-                  暂无
-                </div>
+
+                <table-expand-eandw-item
+                  :rent="getRent(props)"
+                  type="water"
+                  cal-type="calWater"
+                  unit="吨" />
+
               </template>
             </el-form-item>
             <el-form-item
               label="电表本次用数/单价"
               min-width="150">
               <template>
-                <div v-if="getRent(props).calElectric">
-                  {{
-                    getRent(props).calElectric.tnew.electric -
-                      getRent(props).calElectric.old.electric
-                  }}度
-                  <el-popover
-                    placement="top"
-                    trigger="hover">
-                    <div>本次抄表数：{{ getRent(props).calElectric.tnew.electric }}度</div>
-                    <div>抄表时间：{{ getTime(getRent(props).calElectric.tnew.addTime) }}</div>
-                    <div>上次表底数：{{ getRent(props).calElectric.old.electric }}度</div>
-                    <div>表底时间：{{ getTime(getRent(props).calElectric.old.addTime) }}</div>
-                    <el-tag
-                      class="show-tag"
-                      slot="reference">计数</el-tag>
-                  </el-popover>
-                  ￥{{ getPrice(getRent(props), 'calElectric') }}元/度
-                </div>
-                <div v-if="!getRent(props).calElectric">
-                  暂无
-                </div>
+
+                <table-expand-eandw-item
+                  :rent="getRent(props)"
+                  type="electric"
+                  cal-type="calElectric"
+                  unit="度" />
+
               </template>
             </el-form-item>
           </el-form>
@@ -211,50 +186,32 @@
         <el-table-column label="水费信息">
           <el-table-column
             label="本次计费/时间"
-            width="180">
+            width="200">
             <template slot-scope="scope">
-              <div v-if="getRent(scope).calWater">
-                <el-tag>
-                  {{ getRent(scope).calWater.fix ? '修' : '计' }}
-                </el-tag>
-                <span>
-                  ￥
-                  <span class="main-txt-highline">
-                    {{ getRent(scope).calWater.calWaterResult }}
-                  </span>
-                  元
-                </span>
-                <div>
-                  {{ getTime(getRent(scope).calWater.addTime) }}
-                </div>
-              </div>
-              <div v-if="!getRent(scope).calWater">
-                暂无
-              </div>
+
+              <table-rent-eandw-item
+                :rent="getRent(scope)"
+                type="water"
+                cal-type="calWater"
+                result-type="calWaterResult"
+                unit="吨" />
+
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column label="电费信息">
           <el-table-column
             label="本次计费/时间"
-            width="180">
+            width="200">
             <template slot-scope="scope">
-              <div v-if="getRent(scope).calElectric">
-                <el-tag>
-                  {{ getRent(scope).calElectric.fix ? '修' : '计' }}
-                </el-tag>
-                ￥
-                <span class="main-txt-highline">
-                  {{ getRent(scope).calElectric.calElectricResult }}
-                </span>
-                元
-                <div>
-                  {{ getTime(getRent(scope).calElectric.addTime) }}
-                </div>
-              </div>
-              <div v-if="!getRent(scope).calElectric">
-                暂无
-              </div>
+
+              <table-rent-eandw-item
+                :rent="getRent(scope)"
+                type="electric"
+                cal-type="calElectric"
+                result-type="calElectricResult"
+                unit="度" />
+
             </template>
           </el-table-column>
         </el-table-column>
@@ -315,6 +272,8 @@
 <script>
 import { mapState } from 'vuex'
 import { mixinDef } from 'pcside/js/mixins'
+import TableExpandEandwItem from 'pcside/common/table-expand-eandw-item'
+import TableRentEandwItem from 'pcside/common/table-rent-eandw-item'
 import TableRentViewItem from 'pcside/common/table-rent-view-item'
 import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
 import TableRentTypeItem from 'pcside/common/table-rent-type-item'
@@ -323,6 +282,8 @@ import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 export default {
   name: 'RentHistory',
   components: {
+    TableExpandEandwItem,
+    TableRentEandwItem,
     TableRentViewItem,
     TableLeaseViewItem,
     TableRentTypeItem,
@@ -417,6 +378,7 @@ export default {
     window.onresize = null
   },
   methods: {
+    // 获取列表数据
     async getListRefresh() {
       if (this.gettingListRefresh) return
 
@@ -432,30 +394,6 @@ export default {
         .catch(() => {})
 
       this.gettingListRefresh = false
-    },
-    // 获取价格档次
-    getPrice(data, key) {
-      if (data[key][key].calType === 'single') {
-        return data[key][key].singlePrice
-      }
-
-      const steps = data[key][key].stepPrice
-      const numKey = key === 'calWater' ? 'water' : 'electric'
-      const gap = data[key].tnew[numKey] - data[key].old[numKey]
-
-      let rprice = 0
-      steps.forEach((item, i, arr) => {
-        if (!item.price) return
-        const prevPrices = arr[i - 1] || {}
-
-        if (
-          (gap > (prevPrices.step || 0) && gap <= item.step) ||
-          ((i + 1) === arr.length && gap > item.step)
-        ) {
-          rprice = item.price
-        }
-      })
-      return rprice
     },
     // 获取租单
     getRent(scope) {
