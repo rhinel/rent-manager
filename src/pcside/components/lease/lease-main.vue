@@ -529,7 +529,8 @@
 
                 <table-eandw-cal-price-view-item
                   :lease="scope.row.leaseId"
-                  type="calWaterPrice" />
+                  type="calWaterPrice"
+                  unit="吨" />
 
               </template>
             </el-table-column>
@@ -540,7 +541,8 @@
 
                 <table-eandw-cal-price-view-item
                   :lease="scope.row.leaseId"
-                  type="calElePrice" />
+                  type="calElePrice"
+                  unit="度" />
 
               </template>
             </el-table-column>

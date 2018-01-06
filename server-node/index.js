@@ -7,6 +7,12 @@ const log4js = require('log4js')
 const configLog = require('./config-log')
 const db = require('./models')
 
+// 初始化logs
+log4js.configure(configLog)
+const sysLog = log4js.getLogger('sys')
+sysLog.info('--------------------------------------')
+sysLog.info(new Date())
+
 // 启动缓存链接
 db.redisct()
 // 启动数据库链接
@@ -17,9 +23,11 @@ const app = express()
 const httpServer = http.createServer(app)
 const httpPORT = process.env.npm_config_port || 80
 
-// 初始化logs和http记录
-log4js.configure(configLog)
-app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'auto' }))
+// 初始化http记录
+app.use(log4js.connectLogger(
+  log4js.getLogger('http'),
+  { level: 'auto' },
+))
 
 // 路由
 app.use(express.static(`${__dirname}/`))
@@ -32,7 +40,7 @@ app.use(bodyParser.json())
 require('./routes')(app, express)
 
 // 启动监听
-const sysLog = log4js.getLogger('sys')
-sysLog.info('--------------------------------------')
-sysLog.info(new Date())
-httpServer.listen(httpPORT, sysLog.info(`TechNode http is on port ${httpPORT} !`))
+httpServer.listen(
+  httpPORT,
+  sysLog.info.bind(sysLog, `TechNode http is on port ${httpPORT} !`),
+)
