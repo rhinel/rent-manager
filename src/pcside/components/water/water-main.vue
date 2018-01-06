@@ -23,7 +23,7 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-water-dialog"
+      custom-class="add-water-dialog small"
       :key="'addWater' + dialogId"
       :title="awdDialogTitle"
       :visible.sync="addWaterflag"
@@ -406,7 +406,8 @@
             v-if="scope.row.calWaterId.water > 0">
             {{ scope.row.calWaterId.water }}
           </span>
-          <span v-else>
+          <span
+            v-else>
             {{ scope.row.calWaterId.water }}
           </span>
         </template>
@@ -429,7 +430,8 @@
             v-if="scope.row.gap > 0">
             {{ scope.row.gap }}
           </span>
-          <span v-else>
+          <span
+            v-else>
             {{ scope.row.gap }}
           </span>
         </template>
@@ -446,36 +448,11 @@
         label="当前计费方式"
         min-width="180">
         <template slot-scope="scope">
-          <div v-if="scope.row.leaseId.calType">
-            <div>
-              低消：
-              {{ scope.row.leaseId.minPrice }}
-              吨
-            </div>
-            <div v-if="scope.row.leaseId.calType == 'single'">
-              单价：￥
-              {{ scope.row.leaseId.singlePrice }}
-              元/吨
-            </div>
-            <div v-else>
-              <el-popover
-                placement="right"
-                trigger="hover">
-                <div
-                  v-for="(item, index) in scope.row.leaseId.stepPrice"
-                  :key="index">
-                  {{ item.step }}吨及以下￥{{ item.price }}元/吨；
-                </div>
-                超出按最后阶梯计算。
-                <div
-                  class="show-tag"
-                  slot="reference">
-                  <el-tag>阶梯</el-tag>
-                </div>
-              </el-popover>
-            </div>
-          </div>
-          <div v-else>暂无</div>
+
+          <table-eandw-cal-price-view-item
+            :lease="scope.row"
+            type="leaseId" />
+
         </template>
       </el-table-column>
       <el-table-column
@@ -502,9 +479,15 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
+import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
 
 export default {
   name: 'WaterMain',
+  components: {
+    TableEandwCalPriceViewItem,
+  },
+  mixins: [mixinDef],
   data() {
     return {
       addWaterflag: false,
@@ -675,10 +658,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 获取弹窗房屋列表
     async getHouseList() {
       await this.Ajax('/inner/house/list', {})
@@ -855,21 +834,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.water-main {
-  // 弹窗样式
-  .add-water-dialog {
-    max-width: 400px;
-    .el-select,
-    .el-input {
-      max-width: 300px;
-      width: 100%;
-    }
-  }
-  // 弹窗样式
-  .cal-water-dialog {
-    max-width: 800px;
-  }
-}
-</style>

@@ -161,7 +161,9 @@
               label="计费"
               width="180">
               <template slot-scope="scope">
-                <el-tag>{{ scope.row.fix ? '修' : '计' }}</el-tag>
+                <el-tag>
+                  {{ scope.row.fix ? '修' : '计' }}
+                </el-tag>
                 ￥{{ scope.row.calElectricResult }}元
               </template>
             </el-table-column>
@@ -266,8 +268,11 @@
 </template>
 
 <script>
+import { mixinDef } from 'pcside/js/mixins'
+
 export default {
   name: 'ElectricHistory',
+  mixins: [mixinDef],
   data() {
     return {
       gettingListRefresh: false,
@@ -342,10 +347,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 获取时间格式
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     async getElectricList() {
       if (this.gettingListRefresh) return
 

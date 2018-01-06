@@ -156,7 +156,12 @@
       </el-table-column>
       <el-table-column
         prop="remark"
-        label="备注" />
+        label="备注">
+        <template slot-scope="scope">
+          <table-rent-remark-item
+            :rent="scope.row" />
+        </template>
+      </el-table-column>
       <el-table-column
         prop="createTime"
         label="创建时间"
@@ -222,9 +227,15 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
+import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
 export default {
   name: 'RentMain',
+  components: {
+    TableRentRemarkItem,
+  },
+  mixins: [mixinDef],
   data() {
     return {
       addMonthListflag: false,
@@ -294,10 +305,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     getAddMonthListDialog(index, row) {
       this.addMonthListflag = !this.addMonthListflag
       if (this.addMonthListflag && row) {
@@ -410,17 +417,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.rent-main {
-  // 弹窗样式
-  .add-month-list-dialog {
-    max-width: 800px;
-    .el-select,
-    .el-input {
-      width: 100%;
-      max-width: 300px;
-    }
-  }
-}
-</style>

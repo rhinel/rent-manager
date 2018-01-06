@@ -161,7 +161,9 @@
               label="计费"
               width="180">
               <template slot-scope="scope">
-                <el-tag>{{ scope.row.fix ? '修' : '计' }}</el-tag>
+                <el-tag>
+                  {{ scope.row.fix ? '修' : '计' }}
+                </el-tag>
                 ￥{{ scope.row.calWaterResult }}元
               </template>
             </el-table-column>
@@ -192,7 +194,7 @@
                     元/吨
                   </div>
                   <div
-                    class="water-history-step-p-wrap"
+                    class="history-step-p-wrap"
                     v-if="scope.row.calWater.calType == 'step'">
                     <div class="step-p-title">
                       阶梯：
@@ -266,8 +268,11 @@
 </template>
 
 <script>
+import { mixinDef } from 'pcside/js/mixins'
+
 export default {
   name: 'WaterHistory',
+  mixins: [mixinDef],
   data() {
     return {
       gettingListRefresh: false,
@@ -342,10 +347,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 获取时间格式
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     async getWaterList() {
       if (this.gettingListRefresh) return
 
