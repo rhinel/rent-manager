@@ -451,7 +451,8 @@
 
           <table-eandw-cal-price-view-item
             :lease="scope.row"
-            type="leaseId" />
+            type="leaseId"
+            unit="吨" />
 
         </template>
       </el-table-column>
@@ -619,8 +620,8 @@ export default {
             result = theGap * item.price
           }
         })
-        result = Math.round(result * 100) / 100
       }
+      result = Math.round(result * 100) / 100
       return result
     },
     ...mapState({
