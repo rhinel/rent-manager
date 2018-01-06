@@ -426,7 +426,7 @@
 
         <!-- 搬出弹窗 -->
         <el-dialog
-          custom-class="lease-out-dialog"
+          custom-class="lease-out-dialog small"
           :key="'leaseOut' + dialogId"
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
@@ -489,11 +489,9 @@
                   label="姓名/联系方式"
                   width="150">
                   <template>
-                    <div>
-                      {{ props.row.leaseId.name || '--' }}
-                      /
-                      {{ props.row.leaseId.call || '--' }}
-                    </div>
+                    {{ props.row.leaseId.name || '--' }}
+                    /
+                    {{ props.row.leaseId.call || '--' }}
                   </template>
                 </el-form-item>
                 <el-form-item
@@ -501,7 +499,7 @@
                   label="入住时间"
                   width="180">
                   <template>
-                    <div>{{ getTime(props.row.leaseId.addTime) }}</div>
+                    {{ getTime(props.row.leaseId.addTime) }}
                   </template>
                 </el-form-item>
                 <el-form-item
@@ -510,11 +508,9 @@
                   label="租住周期"
                   width="180">
                   <template>
-                    <div>
-                      {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[0]) }}
-                      ~
-                      {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[1]) }}
-                    </div>
+                    {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[0]) }}
+                    ~
+                    {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[1]) }}
                   </template>
                 </el-form-item>
               </el-form>
@@ -530,76 +526,22 @@
               label="水费"
               width="150">
               <template slot-scope="scope">
-                <div
-                  v-if="scope.row.leaseId.calWaterPrice">
-                  <div>
-                    低消：
-                    {{ scope.row.leaseId.calWaterPrice.minPrice }}
-                    吨
-                  </div>
-                  <div
-                    v-if="scope.row.leaseId.calWaterPrice.calType == 'single'">
-                    单价：￥
-                    {{ scope.row.leaseId.calWaterPrice.singlePrice }}
-                    元/吨
-                  </div>
-                  <div v-else>
-                    <el-popover
-                      placement="right"
-                      trigger="hover">
-                      <div
-                        v-for="(item, index) in scope.row.leaseId.calWaterPrice.stepPrice"
-                        :key="index">
-                        {{ item.step }}吨及以下￥{{ item.price }}元/吨；
-                      </div>
-                      超出按最后阶梯计算。
-                      <div
-                        class="show-tag"
-                        slot="reference">
-                        <el-tag>阶梯</el-tag>
-                      </div>
-                    </el-popover>
-                  </div>
-                </div>
-                <div v-else>暂无</div>
+
+                <table-eandw-cal-price-view-item
+                  :lease="scope.row.leaseId"
+                  type="calWaterPrice" />
+
               </template>
             </el-table-column>
             <el-table-column
               label="电费"
               width="150">
               <template slot-scope="scope">
-                <div
-                  v-if="scope.row.leaseId.calElePrice">
-                  <div>
-                    低消：
-                    {{ scope.row.leaseId.calElePrice.minPrice }}
-                    度
-                  </div>
-                  <div
-                    v-if="scope.row.leaseId.calElePrice.calType == 'single'">
-                    单价：￥
-                    {{ scope.row.leaseId.calElePrice.singlePrice }}
-                    元/度
-                  </div>
-                  <div v-else>
-                    <el-popover
-                      placement="right"
-                      trigger="hover">
-                      <div
-                        v-for="(item, index) in scope.row.leaseId.calElePrice.stepPrice"
-                        :key="index">
-                        {{ item.step }}度及以下￥{{ item.price }}元/度；
-                      </div>
-                      超出按最后阶梯计算。
-                      <div
-                        class="show-tag"
-                        slot="reference">
-                        <el-tag>阶梯</el-tag>
-                      </div>
-                    </el-popover>
-                  </div>
-                </div>
-                <div v-else>暂无</div>
+
+                <table-eandw-cal-price-view-item
+                  :lease="scope.row.leaseId"
+                  type="calElePrice" />
+
               </template>
             </el-table-column>
             <el-table-column
@@ -608,7 +550,9 @@
               <template slot-scope="scope">
                 <div>
                   租金：￥
-                  <span class="main-txt-highline">{{ (scope.row.leaseId.rent || 0) }}</span>
+                  <span class="main-txt-highline">
+                    {{ (scope.row.leaseId.rent || 0) }}
+                  </span>
                   元/月
                 </div>
                 <div>
@@ -627,31 +571,24 @@
               <template slot-scope="scope">
                 <div>
                   {{
-                    scope.row.leaseId.payDay ?
-                      ('每月' + scope.row.leaseId.payDay + '日') : '--'
+                    scope.row.leaseId.payDay
+                      ? `每月${scope.row.leaseId.payDay}日`
+                      : '--'
                   }}
                 </div>
-                <div>{{ payTypeVal[scope.row.leaseId.payType] || '--' }}</div>
+                <div>
+                  {{ payTypeVal[scope.row.leaseId.payType] || '--' }}
+                </div>
               </template>
             </el-table-column>
             <el-table-column
               prop="leaseId.remark"
               label="备注">
               <template slot-scope="scope">
-                <el-popover
-                  placement="top"
-                  trigger="hover">
-                  <div class="remark-pop">
-                    {{ scope.row.leaseId.remark }}
-                  </div>
-                  <div
-                    class="show-tag"
-                    slot="reference">
-                    <div class="remark-tag">
-                      {{ scope.row.leaseId.remark }}
-                    </div>
-                  </div>
-                </el-popover>
+
+                <table-rent-remark-item
+                  :rent="scope.row.leaseId" />
+
               </template>
             </el-table-column>
           </el-table-column>
@@ -687,49 +624,12 @@
         label="当前租金统计"
         name="leaseCount">
 
-        <template
-          v-for="(fang, fangi) in leaseCount">
-          <div
-            class="lease-count-title"
-            :key="fangi + `title`">
-            <el-alert
-              class="table-btn"
-              type="info"
-              title=""
-              :closable="false">
-              {{ fangi }} 合计：￥{{ fang.count }}元
-            </el-alert>
-          </div>
-          <el-collapse
-            v-model="activeLeaseCount[fangi]"
-            :key="fangi + `coll`">
-            <el-collapse-item
-              v-for="(floor, floori) in fang.list"
-              :name="floori"
-              :key="floori">
-              <template slot="title">
-                {{ floori }}楼
-                <span class="count-title">合计：￥{{ floor.count }}元</span>
-              </template>
-              <div
-                class="content-bg"
-                v-for="(hao, haoi) in floor.list"
-                :key="haoi">
-                <router-link
-                  :to="{
-                    path: '/inner/rent/history',
-                    query: { id: hao.haoId }
-                  }">
-                  <el-button
-                    type="text">
-                    [{{ fangi + hao.hao }}]
-                  </el-button>
-                </router-link>
-                <span>租金：￥{{ hao.rent }}元</span>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
+        <collapse-rent-count-item
+          v-for="(fang, fangi) in leaseCount"
+          :key="fangi"
+          :fang="fang"
+          :fangi="fangi"
+          :active-rent-count="activeLeaseCount" />
 
         <el-alert
           v-if="!leaseData.length"
@@ -743,9 +643,19 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
+import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
+import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
+import CollapseRentCountItem from 'pcside/common/collapse-rent-count-item'
 
 export default {
   name: 'LeaseMain',
+  components: {
+    TableEandwCalPriceViewItem,
+    TableRentRemarkItem,
+    CollapseRentCountItem,
+  },
+  mixins: [mixinDef],
   data() {
     // 校验周期时间选择器
     const validatePass = (rule, value, callback) => {
@@ -952,10 +862,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 列表tab
     leaseListActive() {
       this.getListRefresh()
@@ -1146,6 +1052,7 @@ export default {
 
       this.gettingLeaseOut = false
     },
+    // 计算月租统计
     getCalLeaseCount() {
       this.leaseCount = {}
       this.activeLeaseCount = {}
@@ -1182,26 +1089,15 @@ export default {
 
 <style lang="scss">
 .lease-main {
-  // 弹窗样式
+  /* 弹窗样式 */
   .lease-in-dialog {
-    max-width: 800px;
     .el-date-editor--daterange.el-input__inner {
       width: 100%;
     }
+
     .el-select {
       width: 100%;
     }
-  }
-  // 弹窗样式
-  .lease-out-dialog {
-    max-width: 400px;
-    .el-date-editor {
-      max-width: 300px;
-    }
-  }
-  // 统计标题
-  .lease-count-title:not(:first-child) {
-    padding-top: 20px;
   }
 }
 </style>

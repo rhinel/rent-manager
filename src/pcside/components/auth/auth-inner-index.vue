@@ -97,12 +97,14 @@ export default {
 
 <style lang="scss">
 @media print {
-  // 打印样式
+  /* 打印样式 */
   .auth-inner-index {
     padding-top: 0 !important;
+
     .inner-header {
       display: none !important;
     }
+
     .inner-body {
       padding: 0 !important;
     }
@@ -110,29 +112,34 @@ export default {
 }
 
 .auth-inner-index {
-  // 页面布局
-  padding-left: 180px;
+  /* 页面布局 */
+  padding-left: 181px;
   transition: padding-left 0.3s;
   padding-top: 50px;
-  // 顶部开关按钮
+
+  /* 顶部开关按钮 */
   &.in {
     padding-left: 0;
+
     .header-left
-      .el-button
-      .el-icon-d-arrow-left {
-      transform: rotateZ(180deg)!important;
+    .el-button
+    .el-icon-d-arrow-left {
+      transform: rotateZ(180deg) !important;
     }
+
     .inner-sidebar {
-      left: -180px;
+      left: -181px;
     }
   }
-  // menu
+
+  /* menu */
   .inner-sidebar {
     .el-icon-loading {
       vertical-align: text-bottom;
       position: relative;
       top: 0.5px;
     }
+
     width: 180px;
     height: calc(100vh - 50px);
     border-radius: 0;
@@ -142,7 +149,8 @@ export default {
     transition: left 0.3s;
     bottom: 0;
   }
-  // header
+
+  /* header */
   .inner-header {
     width: 100%;
     height: 50px;
@@ -153,13 +161,15 @@ export default {
     left: 0;
     right: 0;
     z-index: 3;
-    background-color: #409EFF;
+    background-color: #409eff;
     display: flex;
+
     .header-left {
       width: 161px;
       position: relative;
       background-color: #1d8ce0;
       padding-left: 20px;
+
       .el-button {
         position: absolute;
         right: 20px;
@@ -170,19 +180,23 @@ export default {
         color: #fff;
         opacity: 0.69;
         transition: opacity 0.3s;
+
         .el-icon-d-arrow-left {
           transition: transform 0.3s;
           transform: rotateZ(0deg);
         }
+
         &:hover {
           opacity: 1;
         }
       }
     }
+
     .header-name {
       padding-left: 20px;
       flex: 1;
     }
+
     .header-right {
       opacity: 0.69;
       transition: opacity 0.3s;
@@ -190,15 +204,18 @@ export default {
       cursor: pointer;
       text-align: right;
       padding-right: 20px;
+
       .el-icon-star-on {
         margin-right: 10px;
       }
+
       &:hover {
         opacity: 1;
       }
     }
   }
-  // body
+
+  /* body */
   .inner-body {
     padding: 20px;
   }

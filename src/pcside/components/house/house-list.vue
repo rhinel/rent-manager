@@ -22,7 +22,7 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-house-dialog"
+      custom-class="add-house-dialog small"
       :key="dialogId"
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
@@ -166,9 +166,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
 
 export default {
   name: 'HouseList',
+  mixins: [mixinDef],
   data() {
     return {
       addHouseFlag: false,
@@ -241,10 +243,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 打开关闭添加/修改弹窗
     getAddHouseDialog(index, row) {
       this.addHouseFlag = !this.addHouseFlag
@@ -338,16 +336,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.house-list {
-  .add-house-dialog {
-    max-width: 400px;
-    .el-select,
-    .el-input {
-      width: 100%;
-      max-width: 300px;
-    }
-  }
-}
-</style>

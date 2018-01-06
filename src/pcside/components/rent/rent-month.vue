@@ -50,7 +50,7 @@
                     （{{ getTime(addRent.calWater.tnew.addTime) }}）<br>
                     上次表数：{{ addRent.calWater.old.water }}吨<br>
                     （{{ getTime(addRent.calWater.old.addTime) }}）<br>
-                    计费单价：￥{{ getPrice(addRent, 'calWater') }}元/吨<br>
+                    计费单价：￥{{ eandwCalGetPrice(addRent, 'water', 'calWater') }}元/吨<br>
                     水费：￥{{
                       addRent.calWater.calWaterResult
                     }}元（{{
@@ -77,7 +77,7 @@
                     （{{ getTime(addRent.calElectric.tnew.addTime) }}）<br>
                     上次表数：{{ addRent.calElectric.old.electric }}度<br>
                     （{{ getTime(addRent.calElectric.old.addTime) }}）<br>
-                    计费单价：￥{{ getPrice(addRent, 'calElectric') }}元/度<br>
+                    计费单价：￥{{ eandwCalGetPrice(addRent, 'electric', 'calElectric') }}元/度<br>
                     电费：￥{{
                       addRent.calElectric.calElectricResult
                     }}元（{{
@@ -309,54 +309,28 @@
                   label="水表本次用数/单价"
                   min-width="150">
                   <template>
-                    <div v-if="props.row.rents.length && getRent(props).calWater">
-                      {{
-                        getRent(props).calWater.tnew.water -
-                          getRent(props).calWater.old.water
-                      }}吨
-                      <el-popover
-                        placement="top"
-                        trigger="hover">
-                        <div>本次抄表数：{{ getRent(props).calWater.tnew.water }}吨</div>
-                        <div>抄表时间：{{ getTime(getRent(props).calWater.tnew.addTime) }}</div>
-                        <div>上次表底数：{{ getRent(props).calWater.old.water }}吨</div>
-                        <div>表底时间：{{ getTime(getRent(props).calWater.old.addTime) }}</div>
-                        <el-tag
-                          class="show-tag"
-                          slot="reference">计数</el-tag>
-                      </el-popover>
-                      ￥{{ getPrice(getRent(props), 'calWater') }}元/吨
-                    </div>
-                    <div v-if="props.row.rents.length && !getRent(props).calWater">
-                      暂无
-                    </div>
+
+                    <table-expand-eandw-item
+                      v-if="props.row.rents.length"
+                      :rent="getRent(props)"
+                      type="water"
+                      cal-type="calWater"
+                      unit="吨" />
+
                   </template>
                 </el-form-item>
                 <el-form-item
                   label="电表本次用数/单价"
                   min-width="150">
                   <template>
-                    <div v-if="props.row.rents.length && getRent(props).calElectric">
-                      {{
-                        getRent(props).calElectric.tnew.electric -
-                          getRent(props).calElectric.old.electric
-                      }}度
-                      <el-popover
-                        placement="top"
-                        trigger="hover">
-                        <div>本次抄表数：{{ getRent(props).calElectric.tnew.electric }}度</div>
-                        <div>抄表时间：{{ getTime(getRent(props).calElectric.tnew.addTime) }}</div>
-                        <div>上次表底数：{{ getRent(props).calElectric.old.electric }}度</div>
-                        <div>表底时间：{{ getTime(getRent(props).calElectric.old.addTime) }}</div>
-                        <el-tag
-                          class="show-tag"
-                          slot="reference">计数</el-tag>
-                      </el-popover>
-                      ￥{{ getPrice(getRent(props), 'calElectric') }}元/度
-                    </div>
-                    <div v-if="props.row.rents.length && !getRent(props).calElectric">
-                      暂无
-                    </div>
+
+                    <table-expand-eandw-item
+                      v-if="props.row.rents.length"
+                      :rent="getRent(props)"
+                      type="electric"
+                      cal-type="calElectric"
+                      unit="度" />
+
                   </template>
                 </el-form-item>
               </el-form>
@@ -385,30 +359,15 @@
                 label="本次计费/时间"
                 width="200">
                 <template slot-scope="scope">
-                  <div v-if="scope.row.rents.length && getRent(scope).calWater">
-                    <el-tag>
-                      {{ getRent(scope).calWater.fix ? '修' : '计' }}
-                    </el-tag>
-                    <span>
-                      {{
-                        getRent(scope).calWater.tnew.water -
-                          getRent(scope).calWater.old.water
-                      }}
-                      *
-                      {{ getPrice(getRent(scope), 'calWater') }}
-                      =￥
-                      <span class="main-txt-highline">
-                        {{ getRent(scope).calWater.calWaterResult }}
-                      </span>
-                      元
-                    </span>
-                    <div class="unimportant">
-                      {{ getTime(getRent(scope).calWater.addTime) }}
-                    </div>
-                  </div>
-                  <div v-if="scope.row.rents.length && !getRent(scope).calWater">
-                    暂无
-                  </div>
+
+                  <table-rent-eandw-item
+                    v-if="scope.row.rents.length"
+                    :rent="getRent(scope)"
+                    type="water"
+                    cal-type="calWater"
+                    result-type="calWaterResult"
+                    unit="吨" />
+
                 </template>
               </el-table-column>
             </el-table-column>
@@ -417,30 +376,15 @@
                 label="本次计费/时间"
                 width="200">
                 <template slot-scope="scope">
-                  <div v-if="scope.row.rents.length && getRent(scope).calElectric">
-                    <el-tag>
-                      {{ getRent(scope).calElectric.fix ? '修' : '计' }}
-                    </el-tag>
-                    <span>
-                      {{
-                        getRent(scope).calElectric.tnew.electric -
-                          getRent(scope).calElectric.old.electric
-                      }}
-                      *
-                      {{ getPrice(getRent(scope), 'calElectric') }}
-                      =￥
-                      <span class="main-txt-highline">
-                        {{ getRent(scope).calElectric.calElectricResult }}
-                      </span>
-                      元
-                    </span>
-                    <div class="unimportant">
-                      {{ getTime(getRent(scope).calElectric.addTime) }}
-                    </div>
-                  </div>
-                  <div v-if="scope.row.rents.length && !getRent(scope).calElectric">
-                    暂无
-                  </div>
+
+                  <table-rent-eandw-item
+                    v-if="scope.row.rents.length"
+                    :rent="getRent(scope)"
+                    type="electric"
+                    cal-type="calElectric"
+                    result-type="calElectricResult"
+                    unit="度" />
+
                 </template>
               </el-table-column>
             </el-table-column>
@@ -448,113 +392,38 @@
               label="房租信息"
               width="150">
               <template slot-scope="scope">
-                <div v-if="scope.row.rents.length && getRent(scope).lease.name">
-                  <el-tag>
-                    {{ getRent(scope).lease.payDay }}日
-                  </el-tag>
-                  <el-popover
-                    placement="top"
-                    trigger="hover">
-                    <div>姓名：{{ getRent(scope).lease.name }}</div>
-                    <div>联系方式：{{ getRent(scope).lease.call }}</div>
-                    <div>租住起始：{{ getTime(getRent(scope).lease.leaserange[0]) }}</div>
-                    <div>租住结束：{{ getTime(getRent(scope).lease.leaserange[1]) }}</div>
-                    <div>入住时间：{{ getTime(getRent(scope).lease.addTime) }}</div>
-                    <div>备注：{{ getRent(scope).lease.remark || '--' }}</div>
-                    <el-tag
-                      class="show-tag"
-                      slot="reference">
-                      {{ payTypeVal[getRent(scope).lease.payType] }}
-                    </el-tag>
-                  </el-popover>
-                  <div>
-                    ￥
-                    <span class="main-txt-highline">
-                      {{ getRent(scope).lease.rent }}
-                    </span>
-                    元
-                  </div>
-                </div>
-                <div v-if="scope.row.rents.length && !getRent(scope).lease.name">
-                  暂无
-                </div>
+                <table-lease-view-item
+                  v-if="scope.row.rents.length"
+                  :lease="getRent(scope).lease" />
               </template>
             </el-table-column>
             <el-table-column
               label="合计/计费时间"
               width="170">
               <template slot-scope="scope">
-                <div v-if="scope.row.rents.length">
-                  <el-tag>
-                    {{ getRent(scope).fix ? '修' : '计' }}
-                  </el-tag>
-                  ￥
-                  <span class="main-txt-highline">
-                    {{ getRent(scope).calRentResult }}
-                  </span>
-                  元
-                </div>
-                <div
-                  class="unimportant"
-                  v-if="scope.row.rents.length">
-                  {{ getTime(getRent(scope).addTime) }}
-                </div>
+                <table-rent-view-item
+                  v-if="scope.row.rents.length"
+                  :rent="getRent(scope)"
+                  highline />
               </template>
             </el-table-column>
             <el-table-column
               label="状态/更新时间"
               width="180">
               <template slot-scope="scope">
-                <div v-if="scope.row.rents.length && getRent(scope).type">
-                  <el-popover
-                    placement="top"
-                    trigger="hover"
-                    v-for="item in getRent(scope).type.type"
-                    :key="item">
-                    {{ getTime(getRent(scope).type.typeTime[item]) }}
-                    <el-tag
-                      class="show-tag show-tag3"
-                      slot="reference"
-                      :type="item != 2 ? 'success' : ''">
-                      {{ typesVal[item] }}
-                    </el-tag>
-                  </el-popover>
-                </div>
-                <el-tag
-                  v-if="
-                    scope.row.rents.length &&
-                      ((
-                      getRent(scope).type && !getRent(scope).type.type.length
-                      ) || !getRent(scope).type)
-                  ">
-                  新建
-                </el-tag>
-                <div
-                  class="unimportant"
-                  v-if="scope.row.rents.length">
-                  {{ getTime(getRent(scope).updateTime) }}
-                </div>
+                <table-rent-type-item
+                  v-if="scope.row.rents.length"
+                  :rent="getRent(scope)"
+                  highline />
               </template>
             </el-table-column>
             <el-table-column
               label="备注"
               min-width="140">
               <template slot-scope="scope">
-                <el-popover
-                  placement="top"
-                  trigger="hover"
-                  v-if="scope.row.rents.length">
-                  <div class="remark-pop">
-                    {{ getRent(scope).remark }}
-                  </div>
-                  <span
-                    class="show-tag"
-                    slot="reference">
-                    <div class="remark-tag">
-                      {{ getRent(scope).remark }}
-                    </div>
-                  </span>
-                </el-popover>
+                <table-rent-remark-item
+                  v-if="scope.row.rents.length"
+                  :rent="getRent(scope)" />
               </template>
             </el-table-column>
           </el-table-column>
@@ -641,96 +510,15 @@
                 {{ j }}：{{ landordHistoryTemp[indexj] }}元
               </span>
             </template>
-            <div
-              class="landord-content"
-              v-if="landordHistoryTemp.sixList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                6坊65栋
-              </span>
-              <span>[房租合计￥{{ landordHistoryTemp.six }}元]</span>
-              <span>[租金合计￥{{ landordHistoryTemp.sixRent }}元]</span>
-              <span>[水电合计￥{{ landordHistoryTemp.sixCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in landordHistoryTemp.sixList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：<el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
-            <div
-              class="landord-content"
-              v-if="landordHistoryTemp.eightList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                8坊68栋
-              </span>
-              <span>[房租合计￥{{ landordHistoryTemp.eight }}元]</span>
-              <span>[租金合计￥{{ landordHistoryTemp.eightRent }}元]</span>
-              <span>[水电合计￥{{ landordHistoryTemp.eightCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in landordHistoryTemp.eightList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：<el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
+
+            <collapse-landord-item
+              :landord="landordHistoryTemp"
+              type="six" />
+
+            <collapse-landord-item
+              :landord="landordHistoryTemp"
+              type="eight" />
+
           </el-collapse-item>
         </el-collapse>
         <el-alert
@@ -788,98 +576,15 @@
                 </el-popover>
               </span>
             </template>
-            <div
-              class="landord-content"
-              v-if="item.sixList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                6坊65栋
-              </span>
-              <span>[房租合计￥{{ item.six }}元]</span>
-              <span>[租金合计￥{{ item.sixRent }}元]</span>
-              <span>[水电合计￥{{ item.sixCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in item.sixList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：
-                <el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
-            <div
-              class="landord-content"
-              v-if="item.eightList.length"
-              style="font-weight: bold;">
-              <span class="collapse-btn">
-                8坊68栋
-              </span>
-              <span>[房租合计￥{{ item.eight }}元]</span>
-              <span>[租金合计￥{{ item.eightRent }}元]</span>
-              <span>[水电合计￥{{ item.eightCost }}元]</span>
-            </div>
-            <div
-              class="landord-content content-bg"
-              v-for="i in item.eightList"
-              :key="i._id">
-              <router-link
-                class="collapse-btn"
-                :to="{
-                  path: '/inner/rent/history',
-                  query: { id: i.haoId }
-                }">
-                <el-button
-                  type="text"
-                  size="medium">
-                  [{{ i.fanghao }}]
-                </el-button>
-              </router-link>
-              <span>[房租￥{{ i.calRentResult }}元]</span>
-              <span>[租金￥{{ i.lease.rent }}元]</span>
-              <span>[水电￥{{ i.cost }}元]</span>
-              <el-checkbox
-                class="landord-check"
-                v-model="i.checkBill"
-                :disabled="i.checkBilling"
-                @change="checkBillChange($event, i)">
-                已对账
-                <i
-                  class="el-icon-loading"
-                  v-if="i.checkBilling" />
-              </el-checkbox>
-              <span class="landord-content-type">
-                交租方式：
-                <el-tag>{{ payTypeVal[i.lease.payType] }}</el-tag>
-              </span>
-              <span>备注：{{ i.remark }}</span>
-            </div>
+
+            <collapse-landord-item
+              :landord="item"
+              type="six" />
+
+            <collapse-landord-item
+              :landord="item"
+              type="eight" />
+
           </el-collapse-item>
         </el-collapse>
         <el-alert
@@ -892,53 +597,14 @@
       <el-tab-pane
         label="月租统计"
         name="rentCount">
-        <template v-for="(fang, fangi) in rentCount">
-          <div
-            class="rent-count-title"
-            :key="`${fangi}Title`">
-            <el-alert
-              class="table-btn"
-              type="info"
-              title=""
-              :closable="false">
-              {{ fangi }} 合计：￥{{ fang.count }}元
-            </el-alert>
-          </div>
-          <el-collapse
-            v-model="activeRentCount[fangi]"
-            :key="`${fangi}Collapse`">
-            <el-collapse-item
-              v-for="(floor, floori) in fang.list"
-              :name="floori"
-              :key="floori">
-              <template slot="title">
-                {{ floori }}楼
-                <span class="landord-title">
-                  合计：￥{{ floor.count }}元
-                </span>
-              </template>
-              <div
-                class="landord-content"
-                v-for="(hao, haoi) in floor.list"
-                :key="haoi">
-                <router-link
-                  :to="{
-                    path: '/inner/rent/history',
-                    query: { id: hao.haoId }
-                  }">
-                  <el-button
-                    type="text"
-                    size="medium">
-                    [{{ fangi + hao.hao }}]
-                  </el-button>
-                </router-link>
-                <span>
-                  租金：￥{{ hao.rent }}元
-                </span>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
+
+        <collapse-rent-count-item
+          v-for="(fang, fangi) in rentCount"
+          :key="fangi"
+          :fang="fang"
+          :fangi="fangi"
+          :active-rent-count="activeRentCount" />
+
         <el-alert
           v-if="!checkObject(rentCount)"
           title="暂无数据！请先处理单据状态"
@@ -949,139 +615,23 @@
       <el-tab-pane
         label="6坊65栋水电张贴"
         name="waterandeleCal6">
-        <div class="rent-count-title">
-          <div class="cal-title">
-            <div>6坊65栋{{ getCalMonth(monthDet.month) }}水电</div>
-            <div>抄表日期：{{ getTnewTime() }}</div>
-          </div>
-        </div>
-        <div>
-          <table class="cal-body">
-            <tr>
-              <th>房间号</th>
-              <th>本次水表</th>
-              <th>上次水表</th>
-              <th>实用数</th>
-              <th>小计</th>
-              <th />
-              <th>本次电表</th>
-              <th>上次电表</th>
-              <th>实用数</th>
-              <th>小计</th>
-            </tr>
-            <tr
-              v-for="item in monthDetData"
-              v-if="item.rents[0] && item.fang == '6坊65栋'"
-              :key="item._id">
-              <th>{{ item.hao }}</th>
-              <th>{{ item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--' }}吨</th>
-              <th>{{ item.rents[0].calWater ? item.rents[0].calWater.old.water : '--' }}吨</th>
-              <th>
-                {{
-                  item.rents[0].calWater ?
-                    (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'
-                }}吨
-              </th>
-              <th>
-                {{
-                  item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--'
-                }}元
-              </th>
-              <th />
-              <th>
-                {{
-                  item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'
-                }}度
-              </th>
-              <th>
-                {{
-                  item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'
-                }}度
-              </th>
-              <th>
-                {{
-                  item.rents[0].calElectric ?
-                    item.rents[0].calElectric.tnew.electric -
-                    item.rents[0].calElectric.old.electric : '--'
-                }}度
-              </th>
-              <th>
-                {{
-                  item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--'
-                }}元
-              </th>
-            </tr>
-          </table>
-        </div>
+
+        <print-cal-table
+          :month-det="monthDet"
+          :month-det-data="monthDetData"
+          type-string="6坊65栋" />
+
       </el-tab-pane>
 
       <el-tab-pane
         label="8坊68栋水电张贴"
         name="waterandeleCal8">
-        <div class="rent-count-title">
-          <div class="cal-title">
-            <div>8坊68栋{{ getCalMonth(monthDet.month) }}水电</div>
-            <div>抄表日期：{{ getTnewTime() }}</div>
-          </div>
-        </div>
-        <div>
-          <table class="cal-body">
-            <tr>
-              <th>房间号</th>
-              <th>本次水表</th>
-              <th>上次水表</th>
-              <th>实用数</th>
-              <th>小计</th>
-              <th />
-              <th>本次电表</th>
-              <th>上次电表</th>
-              <th>实用数</th>
-              <th>小计</th>
-            </tr>
-            <tr
-              v-for="item in monthDetData"
-              v-if="item.rents[0] && item.fang == '8坊68栋'"
-              :key="item._id">
-              <th>{{ item.hao }}</th>
-              <th>{{ item.rents[0].calWater ? item.rents[0].calWater.tnew.water : '--' }}吨</th>
-              <th>{{ item.rents[0].calWater ? item.rents[0].calWater.old.water : '--' }}吨</th>
-              <th>
-                {{
-                  item.rents[0].calWater ?
-                    (item.rents[0].calWater.tnew.water - item.rents[0].calWater.old.water) : '--'
-                }}吨
-              </th>
-              <th>
-                {{
-                  item.rents[0].calWater ? getCal(item.rents[0].calWater, 'water') : '--'
-                }}元
-              </th>
-              <th />
-              <th>
-                {{
-                  item.rents[0].calElectric ? item.rents[0].calElectric.tnew.electric : '--'
-                }}度
-              </th>
-              <th>
-                {{
-                  item.rents[0].calElectric ? item.rents[0].calElectric.old.electric : '--'
-                }}度
-              </th>
-              <th>
-                {{
-                  item.rents[0].calElectric ?
-                    item.rents[0].calElectric.tnew.electric -
-                    item.rents[0].calElectric.old.electric : '--'
-                }}度
-              </th>
-              <th>
-                {{
-                  item.rents[0].calElectric ? getCal(item.rents[0].calElectric, 'ele') : '--'
-                }}元
-              </th>
-            </tr>
-          </table>
-        </div>
+
+        <print-cal-table
+          :month-det="monthDet"
+          :month-det-data="monthDetData"
+          type-string="8坊68栋" />
+
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -1089,9 +639,35 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef, eandwCalGetPrice } from 'pcside/js/mixins'
+import TableExpandEandwItem from 'pcside/common/table-expand-eandw-item'
+import TableRentEandwItem from 'pcside/common/table-rent-eandw-item'
+import TableRentViewItem from 'pcside/common/table-rent-view-item'
+import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
+import TableRentTypeItem from 'pcside/common/table-rent-type-item'
+import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
+
+import CollapseLandordItem from 'pcside/common/collapse-landord-item'
+import CollapseRentCountItem from 'pcside/common/collapse-rent-count-item'
+
+import PrintCalTable from 'pcside/common/print-cal-table'
 
 export default {
   name: 'RentMonth',
+  components: {
+    TableExpandEandwItem,
+    TableRentEandwItem,
+    TableRentViewItem,
+    TableLeaseViewItem,
+    TableRentTypeItem,
+    TableRentRemarkItem,
+
+    CollapseLandordItem,
+    CollapseRentCountItem,
+
+    PrintCalTable,
+  },
+  mixins: [mixinDef, eandwCalGetPrice],
   data() {
     return {
       activeName: 'rentHistory',
@@ -1261,11 +837,10 @@ export default {
     }
     this.$nextTick(() => window.onresize())
   },
+  beforeDestroy() {
+    window.onresize = null
+  },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     rentHistoryActive() {
       this.getListRefresh()
       this.getResetAddRent()
@@ -1331,31 +906,6 @@ export default {
         this.$refs.addRent.resetFields()
         this.getResetAddRent()
       }, 500)
-    },
-    // 获取价格档次
-    getPrice(data, key) {
-      if (data[key][key].calType === 'single') {
-        return data[key][key].singlePrice
-      }
-
-      const steps = data[key][key].stepPrice
-      const numKey = key === 'calWater' ? 'water' : 'electric'
-      const gap = data[key].tnew[numKey] - data[key].old[numKey]
-
-      let rprice = 0
-      steps.forEach((item, i, arr) => {
-        if (!item.price) return
-        const prevPrices = arr[i - 1] || {}
-
-        if (
-          (gap <= 0 && i === 0) ||
-          (gap > (prevPrices.step || 0) && gap <= item.step) ||
-          ((i + 1) === arr.length && gap > item.step)
-        ) {
-          rprice = item.price
-        }
-      })
-      return rprice
     },
     // 获取最新租单
     getRent(scope) {
@@ -1564,31 +1114,7 @@ export default {
 
       this.gettingLandordRentTemp = false
     },
-    // 提交对账变化
-    async checkBillChange(newValue, i) {
-      if (i.checkBilling) return
-
-      // 提交接口
-      i.checkBilling = true
-
-      await this.Ajax('/inner/rent/checkBill', {
-        rentId: i._id,
-        checkBill: i.checkBill,
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '更新成功',
-            duration: 2000,
-          })
-          i.checkBill = newValue
-        })
-        .catch(() => {
-          i.checkBill = !newValue
-        })
-
-      i.checkBilling = false
-    },
+    // 检查是否空计算合集
     checkObjectTemp(val) {
       if (val.sixList && val.sixList.length) return true
       if (val.eightList && val.eightList.length) return true
@@ -1631,171 +1157,31 @@ export default {
       if (typeof val !== 'object') return false
       return !!Object.keys(val).length
     },
-    // 获取月份
-    getCalMonth(monthStr) {
-      if (!monthStr) return ''
-      const date = new Date(monthStr)
-      date.setMonth(date.getMonth() - 1)
-      let month = date.getMonth() + 1
-      month = month > 9 ? month : `0${month}`
-      return `${date.getFullYear()}-${month}`
-    },
-    // 获取抄表日期，计租数据中第一条可用数据的时间
-    getTnewTime() {
-      const takeTime = this.monthDetData.find(item => item.rents[0] && item.rents[0].calWater)
-      if (!takeTime) return ''
-      return this.GetDateFormat(takeTime.rents[0].calWater.tnew.addTime)
-    },
-    // 计算张贴的价格
-    getCal(rent, type) {
-      // 用于张贴展示，不做真实计费，所有计费按月度周期来计算
-      const {
-        calType,
-        minPrice,
-        singlePrice,
-        stepPrice,
-      } =
-        type === 'water' ? (
-          this.monthDet.defaultCalWaterPrice ||
-          this.defaultCalWaterPrice
-        ) : (
-          this.monthDet.defaultCalElePrice ||
-          this.defaultCalElePrice
-        )
-
-      let gap = type === 'water' ?
-        (rent.tnew.water - rent.old.water) :
-        (rent.tnew.electric - rent.old.electric)
-      gap = Math.max(0, gap, minPrice)
-
-      let result = 0
-      if (calType === 'single') {
-        result = gap * singlePrice
-      } else if (calType === 'step') {
-        result = stepPrice.reduce((cal, price, index) => {
-          if (!price.price) return cal
-          const prevPrices = stepPrice[index - 1] || {}
-          if (
-            (gap > (prevPrices.step || 0) && gap <= price.step) ||
-            (index === (stepPrice.length - 1) && gap >= price.step)
-          ) {
-            return gap * price.price
-          }
-          return cal
-        }, result)
-      }
-      return Math.floor(Math.round(result * 100) / 100)
-    },
   },
 }
 </script>
 
 <style lang="scss">
-// 特殊打印样式
-@media print {
-  .rent-month {
-    .el-tabs__header {
-      display: none !important;
-    }
-  }
-}
-
 .rent-month {
-  // 弹窗表单样式
+  /* 弹窗表单样式 */
   .add-month-det-dialog,
   .change-type-dialog {
-    max-width: 800px;
-    .el-input {
-      width: 100%;
-    }
+    .el-input,
     .el-select {
       width: 100%;
       max-width: 300px;
     }
+
     .el-checkbox-group {
       overflow: hidden;
     }
+
     .el-checkbox {
       vertical-align: top;
     }
+
     .el-row-margin {
       margin-bottom: 20px;
-    }
-  }
-  .change-type-dialog {
-    .el-input {
-      max-width: 300px;
-    }
-  }
-  // 标题样式
-  .landord-title {
-    display: inline-block;
-    margin-right: 20px;
-    .el-button {
-      font-size: 13px;
-    }
-  }
-  // 详情样式
-  .landord-content {
-    font-size: 14px;
-    .collapse-btn {
-      width: auto;
-      min-width: 90px;
-      display: inline-block;
-    }
-    & > span {
-      display: inline-block;
-      line-height: 1;
-      padding: 11px 0;
-      width: 180px;
-      vertical-align: top;
-    }
-    & > span:last-child {
-      min-width: 180px;
-      width: auto;
-    }
-    .landord-check {
-      width: 120px;
-    }
-    .landord-content-type {
-      padding: 2px 0;
-    }
-  }
-  // 月租统计小标题
-  .rent-count-title:not(:first-child) {
-    padding-top: 20px;
-  }
-  // 打印标题样式
-  .cal-title {
-    text-align: center;
-    div:first-child {
-      letter-spacing: 0.5em;
-      padding-bottom: 40px;
-      font-size: 40px;
-    }
-    div:last-child {
-      font-size: 20px;
-      padding-bottom: 40px;
-    }
-  }
-  // 打印报表样式
-  .cal-body {
-    width: 100%;
-    font-size: 20px;
-    tr {
-      display: flex;
-      border-top: 1px solid #000;
-      &:last-child {
-        border-bottom: 1px solid #000;
-      }
-      th {
-        flex: 1;
-        border-left: 1px solid #000;
-        padding: 15px 0;
-        &:last-child {
-          border-right: 1px solid #000;
-        }
-      }
     }
   }
 }

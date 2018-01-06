@@ -5,6 +5,7 @@ const config = require('../config')
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const StylelintPlugin = require('stylelint-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 // add hot-reload related code to entry chunks
@@ -38,6 +39,12 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['mobileside'],
       inject: true
     }),
-    new FriendlyErrorsPlugin()
+    new StylelintPlugin({
+      files: ['src/**/*.vue', 'src/**/*.scss'],
+      syntax: ['scss']
+    }),
+    new FriendlyErrorsPlugin({
+      clearConsole: false
+    })
   ]
 })
