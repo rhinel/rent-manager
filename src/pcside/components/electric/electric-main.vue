@@ -23,7 +23,7 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-electric-dialog"
+      custom-class="add-electric-dialog small"
       :key="'addElectric' + dialogId"
       :title="aedDialogTitle"
       :visible.sync="addElectricflag"
@@ -855,18 +855,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.electric-main {
-  /* 弹窗样式 */
-  .add-electric-dialog {
-    max-width: 400px;
-
-    .el-select,
-    .el-input {
-      max-width: 300px;
-      width: 100%;
-    }
-  }
-}
-</style>

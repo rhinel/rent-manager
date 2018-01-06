@@ -426,7 +426,7 @@
 
         <!-- 搬出弹窗 -->
         <el-dialog
-          custom-class="lease-out-dialog"
+          custom-class="lease-out-dialog small"
           :key="'leaseOut' + dialogId"
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
@@ -1146,15 +1146,6 @@ export default {
 
     .el-select {
       width: 100%;
-    }
-  }
-
-  /* 弹窗样式 */
-  .lease-out-dialog {
-    max-width: 400px;
-
-    .el-date-editor {
-      max-width: 300px;
     }
   }
 }

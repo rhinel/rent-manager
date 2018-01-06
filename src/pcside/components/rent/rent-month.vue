@@ -50,7 +50,7 @@
                     （{{ getTime(addRent.calWater.tnew.addTime) }}）<br>
                     上次表数：{{ addRent.calWater.old.water }}吨<br>
                     （{{ getTime(addRent.calWater.old.addTime) }}）<br>
-                    计费单价：￥{{ getPrice(addRent, 'calWater') }}元/吨<br>
+                    计费单价：￥{{ eandwCalGetPrice(addRent, 'water', 'calWater') }}元/吨<br>
                     水费：￥{{
                       addRent.calWater.calWaterResult
                     }}元（{{
@@ -77,7 +77,7 @@
                     （{{ getTime(addRent.calElectric.tnew.addTime) }}）<br>
                     上次表数：{{ addRent.calElectric.old.electric }}度<br>
                     （{{ getTime(addRent.calElectric.old.addTime) }}）<br>
-                    计费单价：￥{{ getPrice(addRent, 'calElectric') }}元/度<br>
+                    计费单价：￥{{ eandwCalGetPrice(addRent, 'electric', 'calElectric') }}元/度<br>
                     电费：￥{{
                       addRent.calElectric.calElectricResult
                     }}元（{{
@@ -639,7 +639,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { mixinDef } from 'pcside/js/mixins'
+import { mixinDef, eandwCalGetPrice } from 'pcside/js/mixins'
 import TableExpandEandwItem from 'pcside/common/table-expand-eandw-item'
 import TableRentEandwItem from 'pcside/common/table-rent-eandw-item'
 import TableRentViewItem from 'pcside/common/table-rent-view-item'
@@ -667,7 +667,7 @@ export default {
 
     PrintCalTable,
   },
-  mixins: [mixinDef],
+  mixins: [mixinDef, eandwCalGetPrice],
   data() {
     return {
       activeName: 'rentHistory',
@@ -1166,10 +1166,7 @@ export default {
   /* 弹窗表单样式 */
   .add-month-det-dialog,
   .change-type-dialog {
-    .el-input {
-      width: 100%;
-    }
-
+    .el-input,
     .el-select {
       width: 100%;
       max-width: 300px;
@@ -1185,12 +1182,6 @@ export default {
 
     .el-row-margin {
       margin-bottom: 20px;
-    }
-  }
-
-  .change-type-dialog {
-    .el-input {
-      max-width: 300px;
     }
   }
 }

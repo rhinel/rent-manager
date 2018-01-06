@@ -185,7 +185,13 @@ tr:hover
   max-width: 800px;
 
   &.small {
-    min-width: 400px;
+    max-width: 400px;
+
+    .el-select,
+    .el-input {
+      width: 100%;
+      max-width: 300px;
+    }
   }
 }
 

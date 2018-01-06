@@ -698,6 +698,7 @@ export default {
     .el-input,
     .el-select {
       width: 100%;
+      max-width: 300px;
     }
   }
 }

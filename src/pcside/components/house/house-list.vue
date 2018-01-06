@@ -22,7 +22,7 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-house-dialog"
+      custom-class="add-house-dialog small"
       :key="dialogId"
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
@@ -336,17 +336,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.house-list {
-  .add-house-dialog {
-    max-width: 400px;
-
-    .el-select,
-    .el-input {
-      width: 100%;
-      max-width: 300px;
-    }
-  }
-}
-</style>

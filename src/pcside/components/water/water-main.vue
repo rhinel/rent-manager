@@ -23,7 +23,7 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-water-dialog"
+      custom-class="add-water-dialog small"
       :key="'addWater' + dialogId"
       :title="awdDialogTitle"
       :visible.sync="addWaterflag"
@@ -853,18 +853,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.water-main {
-  /* 弹窗样式 */
-  .add-water-dialog {
-    max-width: 400px;
-
-    .el-select,
-    .el-input {
-      max-width: 300px;
-      width: 100%;
-    }
-  }
-}
-</style>

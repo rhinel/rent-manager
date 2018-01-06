@@ -417,16 +417,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.rent-main {
-  /* 弹窗样式 */
-  .add-month-list-dialog {
-    .el-select,
-    .el-input {
-      width: 100%;
-      max-width: 300px;
-    }
-  }
-}
-</style>
