@@ -502,9 +502,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
 
 export default {
   name: 'WaterMain',
+  mixins: [mixinDef],
   data() {
     return {
       addWaterflag: false,
@@ -675,10 +677,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 获取弹窗房屋列表
     async getHouseList() {
       await this.Ajax('/inner/house/list', {})
@@ -867,11 +865,6 @@ export default {
       max-width: 300px;
       width: 100%;
     }
-  }
-
-  /* 弹窗样式 */
-  .cal-water-dialog {
-    max-width: 800px;
   }
 }
 </style>

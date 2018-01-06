@@ -687,49 +687,12 @@
         label="当前租金统计"
         name="leaseCount">
 
-        <template
-          v-for="(fang, fangi) in leaseCount">
-          <div
-            class="lease-count-title"
-            :key="fangi + `title`">
-            <el-alert
-              class="table-btn"
-              type="info"
-              title=""
-              :closable="false">
-              {{ fangi }} 合计：￥{{ fang.count }}元
-            </el-alert>
-          </div>
-          <el-collapse
-            v-model="activeLeaseCount[fangi]"
-            :key="fangi + `coll`">
-            <el-collapse-item
-              v-for="(floor, floori) in fang.list"
-              :name="floori"
-              :key="floori">
-              <template slot="title">
-                {{ floori }}楼
-                <span class="count-title">合计：￥{{ floor.count }}元</span>
-              </template>
-              <div
-                class="content-bg"
-                v-for="(hao, haoi) in floor.list"
-                :key="haoi">
-                <router-link
-                  :to="{
-                    path: '/inner/rent/history',
-                    query: { id: hao.haoId }
-                  }">
-                  <el-button
-                    type="text">
-                    [{{ fangi + hao.hao }}]
-                  </el-button>
-                </router-link>
-                <span>租金：￥{{ hao.rent }}元</span>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
+        <collapse-rent-count-item
+          v-for="(fang, fangi) in leaseCount"
+          :key="fangi"
+          :fang="fang"
+          :fangi="fangi"
+          :active-rent-count="activeLeaseCount" />
 
         <el-alert
           v-if="!leaseData.length"
@@ -743,9 +706,15 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
+import CollapseRentCountItem from 'pcside/common/collapse-rent-count-item'
 
 export default {
   name: 'LeaseMain',
+  components: {
+    CollapseRentCountItem,
+  },
+  mixins: [mixinDef],
   data() {
     // 校验周期时间选择器
     const validatePass = (rule, value, callback) => {
@@ -952,10 +921,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 列表tab
     leaseListActive() {
       this.getListRefresh()
@@ -1146,6 +1111,7 @@ export default {
 
       this.gettingLeaseOut = false
     },
+    // 计算月租统计
     getCalLeaseCount() {
       this.leaseCount = {}
       this.activeLeaseCount = {}
@@ -1184,8 +1150,6 @@ export default {
 .lease-main {
   /* 弹窗样式 */
   .lease-in-dialog {
-    max-width: 800px;
-
     .el-date-editor--daterange.el-input__inner {
       width: 100%;
     }
@@ -1202,11 +1166,6 @@ export default {
     .el-date-editor {
       max-width: 300px;
     }
-  }
-
-  /* 统计标题 */
-  .lease-count-title:not(:first-child) {
-    padding-top: 20px;
   }
 }
 </style>

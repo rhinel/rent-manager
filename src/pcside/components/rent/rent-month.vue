@@ -889,6 +889,9 @@ export default {
     }
     this.$nextTick(() => window.onresize())
   },
+  beforeDestroy() {
+    window.onresize = null
+  },
   methods: {
     rentHistoryActive() {
       this.getListRefresh()

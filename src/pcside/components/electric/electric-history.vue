@@ -266,8 +266,11 @@
 </template>
 
 <script>
+import { mixinDef } from 'pcside/js/mixins'
+
 export default {
   name: 'ElectricHistory',
+  mixins: [mixinDef],
   data() {
     return {
       gettingListRefresh: false,
@@ -342,10 +345,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 获取时间格式
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     async getElectricList() {
       if (this.gettingListRefresh) return
 

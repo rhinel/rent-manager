@@ -219,9 +219,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mixinDef } from 'pcside/js/mixins'
 
 export default {
   name: 'LeaseHistory',
+  mixins: [mixinDef],
   data() {
     return {
       gettingListRefresh: false,
@@ -270,10 +272,6 @@ export default {
     window.onresize = null
   },
   methods: {
-    // 时间格式化
-    getTime(t) {
-      return t ? this.GetTimeFormat(t) : '--'
-    },
     // 拉取入住信息列表
     async getListRefresh() {
       if (this.gettingListRefresh) return
@@ -291,6 +289,7 @@ export default {
 
       this.gettingListRefresh = false
     },
+    // 删除入职信息
     async delLease(index, row) {
       row.dLeasePopFlag = false
       if (row.gettingdelLease) return
