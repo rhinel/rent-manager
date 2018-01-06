@@ -61,8 +61,10 @@
           prop="leaseId.remark"
           label="备注">
           <template slot-scope="scope">
+
             <table-rent-remark-item
               :rent="scope.row" />
+
           </template>
         </el-table-column>
         <el-table-column
@@ -81,70 +83,22 @@
           label="水费"
           width="150">
           <template slot-scope="scope">
-            <div v-if="scope.row.calWaterPrice">
-              <div>
-                低消：{{ scope.row.calWaterPrice.minPrice }}
-                吨
-              </div>
-              <div v-if="scope.row.calWaterPrice.calType == 'single'">
-                单价：￥
-                {{ scope.row.calWaterPrice.singlePrice }}
-                元/吨
-              </div>
-              <div v-else>
-                <el-popover
-                  placement="right"
-                  trigger="hover">
-                  <div
-                    v-for="(item, index) in scope.row.calWaterPrice.stepPrice"
-                    :key="index">
-                    {{ item.step }}吨及以下￥{{ item.price }}元/吨；
-                  </div>
-                  超出按最后阶梯计算。
-                  <div
-                    class="show-tag"
-                    slot="reference">
-                    <el-tag>阶梯</el-tag>
-                  </div>
-                </el-popover>
-              </div>
-            </div>
-            <div v-else>暂无</div>
+
+            <table-eandw-cal-price-view-item
+              :lease="scope.row"
+              type="calWaterPrice" />
+
           </template>
         </el-table-column>
         <el-table-column
           label="电费"
           width="150">
           <template slot-scope="scope">
-            <div v-if="scope.row.calElePrice">
-              <div>
-                低消：
-                {{ scope.row.calElePrice.minPrice }}度
-              </div>
-              <div v-if="scope.row.calElePrice.calType == 'single'">
-                单价：￥
-                {{ scope.row.calElePrice.singlePrice }}
-                元/度
-              </div>
-              <div v-else>
-                <el-popover
-                  placement="right"
-                  trigger="hover">
-                  <div
-                    v-for="(item, index) in scope.row.calElePrice.stepPrice"
-                    :key="index">
-                    {{ item.step }}度及以下￥{{ item.price }}元/度；
-                  </div>
-                  超出按最后阶梯计算。
-                  <div
-                    class="show-tag"
-                    slot="reference">
-                    <el-tag>阶梯</el-tag>
-                  </div>
-                </el-popover>
-              </div>
-            </div>
-            <div v-else>暂无</div>
+
+            <table-eandw-cal-price-view-item
+              :lease="scope.row"
+              type="calElePrice" />
+
           </template>
         </el-table-column>
         <el-table-column
@@ -208,11 +162,13 @@
 <script>
 import { mapState } from 'vuex'
 import { mixinDef } from 'pcside/js/mixins'
+import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
 import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
 export default {
   name: 'LeaseHistory',
   components: {
+    TableEandwCalPriceViewItem,
     TableRentRemarkItem,
   },
   mixins: [mixinDef],

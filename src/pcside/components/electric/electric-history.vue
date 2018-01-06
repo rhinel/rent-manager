@@ -161,7 +161,9 @@
               label="计费"
               width="180">
               <template slot-scope="scope">
-                <el-tag>{{ scope.row.fix ? '修' : '计' }}</el-tag>
+                <el-tag>
+                  {{ scope.row.fix ? '修' : '计' }}
+                </el-tag>
                 ￥{{ scope.row.calElectricResult }}元
               </template>
             </el-table-column>

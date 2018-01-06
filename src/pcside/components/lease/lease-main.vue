@@ -489,11 +489,9 @@
                   label="姓名/联系方式"
                   width="150">
                   <template>
-                    <div>
-                      {{ props.row.leaseId.name || '--' }}
-                      /
-                      {{ props.row.leaseId.call || '--' }}
-                    </div>
+                    {{ props.row.leaseId.name || '--' }}
+                    /
+                    {{ props.row.leaseId.call || '--' }}
                   </template>
                 </el-form-item>
                 <el-form-item
@@ -501,7 +499,7 @@
                   label="入住时间"
                   width="180">
                   <template>
-                    <div>{{ getTime(props.row.leaseId.addTime) }}</div>
+                    {{ getTime(props.row.leaseId.addTime) }}
                   </template>
                 </el-form-item>
                 <el-form-item
@@ -510,11 +508,9 @@
                   label="租住周期"
                   width="180">
                   <template>
-                    <div>
-                      {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[0]) }}
-                      ~
-                      {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[1]) }}
-                    </div>
+                    {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[0]) }}
+                    ~
+                    {{ getTime(props.row.leaseId.leaserange && props.row.leaseId.leaserange[1]) }}
                   </template>
                 </el-form-item>
               </el-form>
@@ -530,76 +526,22 @@
               label="水费"
               width="150">
               <template slot-scope="scope">
-                <div
-                  v-if="scope.row.leaseId.calWaterPrice">
-                  <div>
-                    低消：
-                    {{ scope.row.leaseId.calWaterPrice.minPrice }}
-                    吨
-                  </div>
-                  <div
-                    v-if="scope.row.leaseId.calWaterPrice.calType == 'single'">
-                    单价：￥
-                    {{ scope.row.leaseId.calWaterPrice.singlePrice }}
-                    元/吨
-                  </div>
-                  <div v-else>
-                    <el-popover
-                      placement="right"
-                      trigger="hover">
-                      <div
-                        v-for="(item, index) in scope.row.leaseId.calWaterPrice.stepPrice"
-                        :key="index">
-                        {{ item.step }}吨及以下￥{{ item.price }}元/吨；
-                      </div>
-                      超出按最后阶梯计算。
-                      <div
-                        class="show-tag"
-                        slot="reference">
-                        <el-tag>阶梯</el-tag>
-                      </div>
-                    </el-popover>
-                  </div>
-                </div>
-                <div v-else>暂无</div>
+
+                <table-eandw-cal-price-view-item
+                  :lease="scope.row.leaseId"
+                  type="calWaterPrice" />
+
               </template>
             </el-table-column>
             <el-table-column
               label="电费"
               width="150">
               <template slot-scope="scope">
-                <div
-                  v-if="scope.row.leaseId.calElePrice">
-                  <div>
-                    低消：
-                    {{ scope.row.leaseId.calElePrice.minPrice }}
-                    度
-                  </div>
-                  <div
-                    v-if="scope.row.leaseId.calElePrice.calType == 'single'">
-                    单价：￥
-                    {{ scope.row.leaseId.calElePrice.singlePrice }}
-                    元/度
-                  </div>
-                  <div v-else>
-                    <el-popover
-                      placement="right"
-                      trigger="hover">
-                      <div
-                        v-for="(item, index) in scope.row.leaseId.calElePrice.stepPrice"
-                        :key="index">
-                        {{ item.step }}度及以下￥{{ item.price }}元/度；
-                      </div>
-                      超出按最后阶梯计算。
-                      <div
-                        class="show-tag"
-                        slot="reference">
-                        <el-tag>阶梯</el-tag>
-                      </div>
-                    </el-popover>
-                  </div>
-                </div>
-                <div v-else>暂无</div>
+
+                <table-eandw-cal-price-view-item
+                  :lease="scope.row.leaseId"
+                  type="calElePrice" />
+
               </template>
             </el-table-column>
             <el-table-column
@@ -608,7 +550,9 @@
               <template slot-scope="scope">
                 <div>
                   租金：￥
-                  <span class="main-txt-highline">{{ (scope.row.leaseId.rent || 0) }}</span>
+                  <span class="main-txt-highline">
+                    {{ (scope.row.leaseId.rent || 0) }}
+                  </span>
                   元/月
                 </div>
                 <div>
@@ -627,19 +571,24 @@
               <template slot-scope="scope">
                 <div>
                   {{
-                    scope.row.leaseId.payDay ?
-                      ('每月' + scope.row.leaseId.payDay + '日') : '--'
+                    scope.row.leaseId.payDay
+                      ? `每月${scope.row.leaseId.payDay}日`
+                      : '--'
                   }}
                 </div>
-                <div>{{ payTypeVal[scope.row.leaseId.payType] || '--' }}</div>
+                <div>
+                  {{ payTypeVal[scope.row.leaseId.payType] || '--' }}
+                </div>
               </template>
             </el-table-column>
             <el-table-column
               prop="leaseId.remark"
               label="备注">
               <template slot-scope="scope">
+
                 <table-rent-remark-item
                   :rent="scope.row.leaseId" />
+
               </template>
             </el-table-column>
           </el-table-column>
@@ -695,12 +644,14 @@
 <script>
 import { mapState } from 'vuex'
 import { mixinDef } from 'pcside/js/mixins'
+import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
 import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 import CollapseRentCountItem from 'pcside/common/collapse-rent-count-item'
 
 export default {
   name: 'LeaseMain',
   components: {
+    TableEandwCalPriceViewItem,
     TableRentRemarkItem,
     CollapseRentCountItem,
   },
