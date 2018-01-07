@@ -26,7 +26,7 @@ module.exports = {
       backups: 1024,
     },
 
-    // APIERROR日志，所有API请求产生的错误日志
+    // APIERROR日志，所有API请求产生的程序错误日志
     apiError: {
       type: 'dateFile',
       filename: `${path.resolve(__dirname, '../logs/apiErrorLogs/logs')}apiError.log`,
@@ -41,12 +41,12 @@ module.exports = {
       maxLogSize: 102400,
       backups: 1024,
     },
-
     errors: {
       type: 'logLevelFilter',
       appender: 'errorsFile',
       level: 'error',
     },
+
     console: { type: 'console' },
   },
   categories: {
@@ -54,7 +54,7 @@ module.exports = {
     http: { appenders: ['http', 'errors'], level: 'info' },
     sys: { appenders: ['sys', 'console', 'errors'], level: 'info' },
 
-    login: { appenders: ['login', 'errors'], level: 'info' },
+    login: { appenders: ['login'], level: 'info' },
     apiError: { appenders: ['apiError', 'errors'], level: 'info' },
   },
 }
