@@ -661,7 +661,7 @@ export default {
   methods: {
     // 获取弹窗房屋列表
     async getHouseList() {
-      await this.Ajax('/inner/house/list', {})
+      await this.Ajax('/inner/house/list')
         .then(res => {
           this.houseData = res
         })
@@ -721,7 +721,7 @@ export default {
       // 请求接口
       this.gettingListRefresh = true
 
-      await this.Ajax('/inner/water/mainList', {})
+      await this.Ajax('/inner/water/mainList')
         .then(res => {
           this.waterData = res
         })

@@ -474,7 +474,7 @@ export default {
       // 接口提交
       this.gettingCount = true
 
-      await this.Ajax('/inner/dash/count', {})
+      await this.Ajax('/inner/dash/count')
         .then(res => {
           this.count.houseCount = res.houseCount
         })
@@ -542,7 +542,7 @@ export default {
     },
     // 房屋列表
     async getHouseList() {
-      await this.Ajax('/inner/house/list', {})
+      await this.Ajax('/inner/house/list')
         .then(res => {
           this.houseData = res
         })
@@ -555,7 +555,7 @@ export default {
       // 接口提交
       this.gettingNotes = true
 
-      await this.Ajax('/inner/dash/notes', {})
+      await this.Ajax('/inner/dash/notes')
         .then(res => {
           this.noteList = res
         })

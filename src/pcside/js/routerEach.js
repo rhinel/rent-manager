@@ -18,7 +18,7 @@ const beforeEach = async (router, to, from, next) => {
     next(nextConfig)
   } else if (to.path.includes('/inner')) {
     // 校验token，进入登陆页，中断后继续
-    await Ajax('/inner/auth/check', {})
+    await Ajax('/inner/auth/check')
       .then(() => {
         const { defaultGot, defaultGetting } = router.app.$store.state
         if (!defaultGot && !defaultGetting) {
@@ -39,7 +39,7 @@ const beforeEach = async (router, to, from, next) => {
       })
   } else if (to.path.includes('/login') && localStorage.getItem('token')) {
     // 登陆页面校验token，进入主页
-    await Ajax('/inner/auth/check', {})
+    await Ajax('/inner/auth/check')
       .then(() => {
         if (to.query.backurl) {
           next(to.query.backurl)

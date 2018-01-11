@@ -76,7 +76,7 @@ export default {
       // 接口提交
       this.logouting = true
 
-      await this.Ajax('/outer/log/logout', {})
+      await this.Ajax('/outer/log/logout')
         .then(() => {
           this.$message({
             type: 'success',
