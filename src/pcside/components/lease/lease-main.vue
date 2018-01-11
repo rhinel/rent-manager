@@ -879,7 +879,7 @@ export default {
       // 请求数据
       this.gettingListRefresh = true
 
-      await this.Ajax('/inner/lease/mainList', {})
+      await this.Ajax('/inner/lease/mainList')
         .then(res => {
           this.leaseData = res
         })

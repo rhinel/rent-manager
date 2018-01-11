@@ -84,7 +84,7 @@ export default {
   methods: {
     // bing背景
     async getBingBg() {
-      await this.Ajax('/outer/log/bingBg', {})
+      await this.Ajax('/outer/log/bingBg')
         .then(res => {
           this.bingBg = res.fav.murl
         })

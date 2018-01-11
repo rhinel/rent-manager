@@ -348,7 +348,7 @@ export default {
       // 请求接口
       this.gettingListRefresh = true
 
-      await this.Ajax('/inner/month/list', {})
+      await this.Ajax('/inner/month/list')
         .then(res => {
           this.monthListData = res
         })

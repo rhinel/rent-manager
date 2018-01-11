@@ -305,7 +305,7 @@ export default {
       // 接口提交
       this.gettingListRefresh = true
 
-      await this.Ajax('/inner/house/list', {})
+      await this.Ajax('/inner/house/list')
         .then(res => {
           this.houseData = res
         })
