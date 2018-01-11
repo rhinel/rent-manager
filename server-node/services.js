@@ -90,6 +90,7 @@ module.exports = {
         }
       })
   },
+
   saveData: (req, res, callback) => {
     db
       .dbModel('admin', { name: 'string' })
@@ -107,6 +108,7 @@ module.exports = {
         }
       })
   },
+
   removeData: (req, res, callback) => {
     if (!req.body.name) {
       return callback({
@@ -130,6 +132,7 @@ module.exports = {
         }
       })
   },
+
   redisSet: (req, res, callback) => {
     db.redisSet(req.body.setname, req.body.setval, req.body.settime || 0, (err, reply) => {
       if (err) {
@@ -145,6 +148,7 @@ module.exports = {
       }
     })
   },
+
   redisGet: (req, res, callback) => {
     db.redisGet(req.body.setname, (err, reply) => {
       if (err) {
