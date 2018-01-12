@@ -45,7 +45,7 @@ export default {
   props: {
     lease: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     rentInline: {
       type: Boolean,

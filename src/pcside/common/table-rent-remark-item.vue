@@ -21,7 +21,7 @@ export default {
   props: {
     rent: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
   },
 }

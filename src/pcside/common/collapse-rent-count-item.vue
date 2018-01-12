@@ -54,7 +54,7 @@ export default {
   props: {
     fang: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     fangi: {
       type: String,
@@ -62,7 +62,7 @@ export default {
     },
     activeRentCount: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
   },
 }
