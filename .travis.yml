@@ -21,6 +21,8 @@ before_install:
   - echo -e "Host 45.76.52.33\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 script:
+  - npm run lint
+  - npm run lint:css
   - npm run build
 
 after_success:
