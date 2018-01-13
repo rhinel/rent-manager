@@ -39,7 +39,7 @@ export default {
   props: {
     lease: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     type: {
       type: String,

@@ -93,7 +93,7 @@ export default {
   props: {
     monthDet: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     monthDetData: {
       type: Array,

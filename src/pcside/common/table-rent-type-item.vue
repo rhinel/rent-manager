@@ -35,7 +35,7 @@ export default {
   props: {
     rent: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     highline: {
       type: Boolean,

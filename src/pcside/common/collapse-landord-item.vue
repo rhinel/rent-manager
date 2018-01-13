@@ -69,7 +69,7 @@ export default {
   props: {
     landord: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     type: {
       type: String,

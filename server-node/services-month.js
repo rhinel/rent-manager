@@ -55,7 +55,10 @@ module.exports = {
     const createMonth = await db
       .dbModel('month', {//* //标记，初始月度周期数据类，创建类型
         userId: db.db.Schema.Types.ObjectId, // 用户ID
-        month: String, // 月份
+        month: { // 月份
+          type: String,
+          unique: true,
+        },
         remark: String, // 备注
         status: Number, // 状态
         defaultCalWaterPrice: Object, // 本月度默认水费计费方式
