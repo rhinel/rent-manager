@@ -42,7 +42,7 @@ export default {
   props: {
     rent: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     type: {
       type: String,

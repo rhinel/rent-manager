@@ -46,8 +46,3 @@ export {
   mixinDef,
   eandwCalGetPrice,
 }
-
-export default {
-  mixinDef,
-  eandwCalGetPrice,
-}
