@@ -38,8 +38,9 @@ after_success:
     fi
 
 addons:
-  - ssh_known_hosts: 35.185.176.209
-  - ssh_known_hosts: 45.76.52.33
+  ssh_known_hosts:
+    - 35.185.176.209
+    - 45.76.52.33
 
 branches:
   only:
