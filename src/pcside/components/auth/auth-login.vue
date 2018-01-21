@@ -36,6 +36,7 @@
         </el-button>
       </el-form>
       <div class="beian">
+        <div>v{{ version }}</div>
         <a
           href="http://www.miitbeian.gov.cn/"
           target="_blank">
@@ -53,11 +54,13 @@ import '../../js/indexCanvas/easePack.min'
 import '../../js/indexCanvas/tweenLite.min'
 /* eslint-enable no-unused-vars */
 import indexCanvas from '../../js/indexCanvas/indexCanvas'
+import packageConfig from '../../../../package.json'
 
 export default {
   name: 'AuthLogin',
   data() {
     return {
+      version: packageConfig.version,
       bingBg: '',
       logininfo: {
         name: '',
@@ -154,8 +157,10 @@ export default {
       width: 100%;
       text-align: center;
       position: absolute;
-      bottom: -35px;
+      bottom: -70px;
+      line-height: 30px;
       left: 0;
+      color: #fff;
 
       a {
         color: #fff;

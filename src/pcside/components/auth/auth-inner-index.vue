@@ -14,6 +14,7 @@
       <div class="header-name">
         {{ `${$route.meta.name} ${titleAdd}` }}
       </div>
+      <div class="version">v{{ version }}</div>
       <div
         class="header-right"
         @click="logout">
@@ -47,11 +48,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import packageConfig from '../../../../package.json'
 
 export default {
   name: 'AuthInnerIndex',
   data() {
     return {
+      version: packageConfig.version,
       logouting: false,
       Navtg: true,
     }
@@ -200,7 +203,7 @@ export default {
     .header-right {
       opacity: 0.69;
       transition: opacity 0.3s;
-      width: 120px;
+      width: 80px;
       cursor: pointer;
       text-align: right;
       padding-right: 20px;

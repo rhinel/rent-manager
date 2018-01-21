@@ -9,6 +9,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var packageConfig = require('../package.json')
+var checkGit = require('./check-git')
 
 const env = config.build.env
 
@@ -53,6 +55,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: 'pcside/index.html',
+      version: packageConfig.version,
+      gitPath: checkGit,
       template: './src/pcside/html/index.html',
       chunks: ['manifestPc', 'vendorPc', 'pcside'],
       inject: true,
@@ -68,6 +72,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new HtmlWebpackPlugin({
       filename: 'mobileside/index.html',
+      version: packageConfig.version,
+      gitPath: checkGit,
       template: './src/mobileside/html/index.html',
       chunks: ['manifestMs', 'vendorMs', 'mobileside'],
       inject: true,
