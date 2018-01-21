@@ -1,11 +1,13 @@
 const fs = require('fs')
 
 const gitHEAD = fs.readFileSync('.git/HEAD', 'utf-8').trim()
-console.log(gitHEAD)
-const ref = gitHEAD.split(': ')[1]
-console.log(ref)
-const gitVersion = fs.readFileSync(`.git/${ref}`, 'utf-8').trim()
-console.log(gitVersion)
-const gitCommitVersion = `${ref}: ${gitVersion}`
+let ref = gitHEAD.split(': ')[1]
+let gitVersion
+if (!ref) {
+  ref = 'travis'
+  gitVersion = gitHEAD
+} else {
+  gitVersion = fs.readFileSync(`.git/${ref}`, 'utf-8').trim()
+}
 
-module.exports = gitCommitVersion
+module.exports = `${ref}: ${gitVersion}`
