@@ -8,7 +8,7 @@
       style="font-weight: bold;">
 
       <span class="collapse-btn">
-        6坊65栋
+        {{ type === 'six' ? '6坊65栋' : '8坊68栋' }}
       </span>
       <span>[房租合计￥{{ landord[type] }}元]</span>
       <span>[租金合计￥{{ landord[`${type}Rent`] }}元]</span>
