@@ -172,7 +172,7 @@ tr:hover
   }
 
   .landord-check {
-    margin-right: 60px;
+    width: 120px;
   }
 
   .landord-content-type {
