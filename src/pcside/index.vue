@@ -172,6 +172,7 @@ tr:hover
   }
 
   .landord-check {
+    display: inline-block;
     width: 120px;
   }
 
