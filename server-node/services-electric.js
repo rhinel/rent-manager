@@ -264,7 +264,7 @@ module.exports = {
       }
       // 小计
       if (!electricCal.gap) {
-        electricCal.gap = (electricCal.tnew.water || 0) - (electricCal.old.water || 0)
+        electricCal.gap = (electricCal.tnew.electric || 0) - (electricCal.old.electric || 0)
       }
       if (electricCal.gap <= 0) electricCal.gap = 0
     })
