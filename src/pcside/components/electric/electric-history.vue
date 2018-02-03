@@ -186,12 +186,12 @@
                   <div>
                     低消：
                     {{ scope.row.calElectric.minPrice }}
-                    吨
+                    度
                   </div>
                   <div v-if="scope.row.calElectric.calType == 'single'">
                     单价：￥
                     {{ scope.row.calElectric.singlePrice }}
-                    元/吨
+                    元/度
                   </div>
                   <div
                     class="history-step-p-wrap"
