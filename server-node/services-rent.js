@@ -82,6 +82,8 @@ module.exports = {
       // 处理租住信息
       house.rents = dbInfo[1]
         .filter(rent => rent.haoId.toString() === house._id.toString())
+        // 时间倒序后要重新正序
+        .reverse()
     })
 
     // 2返回list
