@@ -520,7 +520,7 @@ export default {
         }],
       },
 
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       electricData: [],
       electricDataSearch: '',
       // 计费弹窗

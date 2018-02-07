@@ -332,7 +332,7 @@ export default {
       },
 
       // 列表渲染
-      tableMaxHeight: 0,
+      tableMaxHeight: 300,
       rentHistoryData: [],
       rentHistorySearch: '',
     }

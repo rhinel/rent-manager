@@ -17,6 +17,8 @@ export default {
       payTypeVal: ['微信', '支付宝', '银行转账', '现金', '房东自收', '其他'],
       // 交租状态，写死类型，后台根据1-3ID
       typesVal: ['', '已交', '给单', '房东'],
+      // 用户
+      username: '',
       // 入住时的默认计费数据，后台均以这为准
       // 默认水费计费规则
       defaultCalWaterPrice: {},
@@ -124,6 +126,9 @@ export default {
     titleAdd(state, add) {
       state.titleAdd = add
     },
+    upUsername(state, value) {
+      state.config.username = value || ''
+    },
     upDefaults(state, { key, value }) {
       if (value) {
         state.config[key] = JSON.parse(JSON.stringify(value))
@@ -162,6 +167,7 @@ export default {
     async getDefaults({ commit, state }) {
       commit('updefaultGetting', true)
       const datas = await Ajax('/inner/auth/sysInfo')
+      commit('upUsername', datas.name)
       state.defaultKeys.forEach(key => {
         if (datas[key]) {
           commit('upDefaults', { key, value: datas[key] })

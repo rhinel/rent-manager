@@ -674,7 +674,7 @@ export default {
 
       // 列表数据
       gettingListRefresh: false,
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       leaseData: [],
       leaseDataSearch: '',
 

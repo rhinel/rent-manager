@@ -259,7 +259,7 @@ export default {
           type: 'date', required: true, message: '请选择', trigger: 'change',
         }],
       },
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       monthListData: [],
       monthListDataSearch: '',
     }

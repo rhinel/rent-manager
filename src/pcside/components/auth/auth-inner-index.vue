@@ -14,15 +14,13 @@
       <div class="header-name">
         {{ `${$route.meta.name} ${titleAdd}` }}
       </div>
+      <div class="username">{{ config.username }}</div>
       <div class="version">v{{ version }}</div>
       <div
         class="header-right"
         @click="logout">
-        <i class="el-icon-star-on" />
+        <i :class="logouting ? 'el-icon-loading' : 'el-icon-star-on'" />
         登出
-        <i
-          class="el-icon-loading"
-          v-show="logouting" />
       </div>
     </div>
     <el-menu
@@ -200,15 +198,20 @@ export default {
       flex: 1;
     }
 
+    .username,
+    .version {
+      padding-right: 20px;
+    }
+
     .header-right {
       opacity: 0.69;
       transition: opacity 0.3s;
-      width: 80px;
       cursor: pointer;
       text-align: right;
       padding-right: 20px;
 
-      .el-icon-star-on {
+      [class*=" el-icon-"],
+      [class^=el-icon-] {
         margin-right: 10px;
       }
 

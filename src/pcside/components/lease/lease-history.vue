@@ -177,7 +177,7 @@ export default {
   data() {
     return {
       gettingListRefresh: false,
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       leaseList: [],
       leaseDataSearch: '',
     }
