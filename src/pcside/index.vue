@@ -209,15 +209,6 @@ tr:hover
   }
 }
 
-.el-table--border
-.has-gutter
-td:nth-last-of-type(2),
-.el-table--border
-.has-gutter
-th:nth-last-of-type(2) {
-  border-right: 1px solid #e6ebf5;
-}
-
 .el-date-editor
 .el-range__close-icon {
   margin-left: -8px;

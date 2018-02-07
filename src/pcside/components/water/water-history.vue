@@ -280,7 +280,7 @@ export default {
       activeName: 'water',
       houseData: {},
 
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       waterList: [],
       waterDataSearch: '',
       waterCalList: [],

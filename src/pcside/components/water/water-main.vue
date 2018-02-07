@@ -520,7 +520,7 @@ export default {
         }],
       },
 
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       waterData: [],
       waterDataSearch: '',
       // 计费弹窗

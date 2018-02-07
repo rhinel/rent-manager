@@ -280,7 +280,7 @@ export default {
       activeName: 'electric',
       houseData: {},
 
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       electricList: [],
       electricDataSearch: '',
       electricCalList: [],

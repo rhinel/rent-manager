@@ -198,7 +198,7 @@ export default {
       },
 
       // 前端搜索
-      tableMaxHeight: 0,
+      tableMaxHeight: 200,
       houseData: [],
       houseDataSearch: '',
     }
