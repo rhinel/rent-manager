@@ -1126,6 +1126,7 @@ export default {
       this.monthDetData.forEach((i) => {
         if (!i.rents[0]) return
         const floor = i.hao.substr(0, 1)
+        // 使用当月计租第一个的租住信息
         const { rent } = i.rents[0].lease
 
         if (!this.rentCount[i.fang]) {
