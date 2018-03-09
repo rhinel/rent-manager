@@ -1,5 +1,6 @@
 <template>
   <div class="electric-history">
+
     <el-tabs
       v-model="activeName">
       <el-tab-pane

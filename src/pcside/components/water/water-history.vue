@@ -1,5 +1,6 @@
 <template>
   <div class="water-history">
+
     <el-tabs
       v-model="activeName">
       <el-tab-pane

@@ -1,5 +1,6 @@
 <template>
   <div class="rent-month">
+
     <el-tabs v-model="activeName">
       <el-tab-pane
         label="计租信息"
