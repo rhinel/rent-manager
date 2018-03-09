@@ -3,8 +3,8 @@
 
     <!-- 统计部分 -->
     <div
-      class="landord-content"
       v-if="landord[`${type}List`].length"
+      class="landord-content"
       style="font-weight: bold;">
 
       <span class="collapse-btn">
@@ -18,16 +18,16 @@
 
     <!-- 租单信息 -->
     <div
-      class="landord-content content-bg"
       v-for="i in landord[`${type}List`]"
-      :key="i._id">
+      :key="i._id"
+      class="landord-content content-bg">
 
       <router-link
-        class="collapse-btn"
         :to="{
           path: '/inner/rent/history',
           query: { id: i.haoId }
-        }">
+        }"
+        class="collapse-btn">
         <el-button
           type="text"
           size="medium">
@@ -46,8 +46,8 @@
           @change="checkBillChange($event, i)">
           已对账
           <i
-            class="el-icon-loading"
-            v-if="i.checkBilling" />
+            v-if="i.checkBilling"
+            class="el-icon-loading" />
         </el-checkbox>
       </div>
 

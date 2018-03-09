@@ -2,15 +2,15 @@
   <div>
     <div v-if="rent.type">
       <el-popover
-        placement="top"
-        trigger="hover"
         v-for="item in rent.type.type"
-        :key="item">
+        :key="item"
+        placement="top"
+        trigger="hover">
         {{ getDate(rent.type.typeTime[item]) }}
         <el-tag
-          class="show-tag show-tag3"
           slot="reference"
-          :type="item != 2 ? 'success' : ''">
+          :type="item != 2 ? 'success' : ''"
+          class="show-tag show-tag3">
           {{ typesVal[item] }}
         </el-tag>
       </el-popover>

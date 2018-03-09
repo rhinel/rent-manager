@@ -2,28 +2,28 @@
   <div class="dashboard-main">
     <!-- 记事本弹窗 -->
     <el-dialog
-      custom-class="note-dialog"
       :key="'note' + dialogId"
       :title="ndDialogTitle"
       :visible.sync="noteflag"
-      top="50px"
       :close-on-click-modal="false"
+      custom-class="note-dialog"
+      top="50px"
       @close="onNoteDialogClose">
       <el-form
-        :model="note"
         ref="note"
+        :model="note"
         :rules="noteRules"
         label-position="top">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="房屋"
               :label-width="ndLabelWidth"
+              label="房屋"
               prop="haoId">
               <el-select
                 v-model="note.haoId"
-                placeholder="选择房屋"
-                :filterable="true">
+                :filterable="true"
+                placeholder="选择房屋">
                 <el-option
                   v-for="item in houseData"
                   :label="item.fang + item.hao"
@@ -36,69 +36,69 @@
           <el-col
             :span="12">
             <el-form-item
-              label="记事时间"
               :label-width="ndLabelWidth"
+              label="记事时间"
               prop="addTime">
               <el-date-picker
                 v-model="note.addTime"
+                :editable="false"
                 type="datetime"
-                placeholder="输入记事时间"
-                :editable="false" />
+                placeholder="输入记事时间" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          label="内容"
-          :label-width="ndLabelWidth">
+          :label-width="ndLabelWidth"
+          label="内容">
           <el-input
-            type="textarea"
             :rows="4"
-            placeholder="请输入内容"
-            v-model="note.content" />
+            v-model="note.content"
+            type="textarea"
+            placeholder="请输入内容" />
         </el-form-item>
       </el-form>
 
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getNoteAddDialog"
-          :loading="gettingAddNote">
+          :loading="gettingAddNote"
+          @click="getNoteAddDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingAddNote"
           type="primary"
-          @click="getAddNote"
-          :loading="gettingAddNote">
+          @click="getAddNote">
           保存
         </el-button>
         <el-button
-          type="success"
-          @click="getAddNote(2)"
+          v-if="note._id && note.status === 1"
           :loading="gettingAddNote"
-          v-if="note._id && note.status === 1">
+          type="success"
+          @click="getAddNote(2)">
           完成
         </el-button>
         <el-button
-          type="success"
-          @click="getAddNote(1)"
+          v-if="note._id && note.status === 2"
           :loading="gettingAddNote"
-          v-if="note._id && note.status === 2">
+          type="success"
+          @click="getAddNote(1)">
           重做
         </el-button>
         <el-button
-          type="danger"
-          @click="getAddNote(0)"
+          v-if="note._id"
           :loading="gettingAddNote"
-          v-if="note._id">
+          type="danger"
+          @click="getAddNote(0)">
           删除
         </el-button>
       </div>
     </el-dialog>
 
     <el-row
-      class="main-wrap"
-      :gutter="20">
+      :gutter="20"
+      class="main-wrap">
       <el-col
         :span="18"
         :md="16"
@@ -106,8 +106,8 @@
         :lg="18">
         <el-row>
           <el-card
-            class="count-wrap"
-            v-loading.body="gettingCount">
+            v-loading.body="gettingCount"
+            class="count-wrap">
             <div class="count">
               <div>房屋总数</div>
               <span>{{ countDown.houseCount }}</span>
@@ -133,17 +133,17 @@
                 待收租金列表
               </span>
               <el-button
+                :loading="gettingRentList1"
                 class="card-btn"
                 type="primary"
-                :loading="gettingRentList1"
                 @click="getList(1)">
                 刷新
               </el-button>
             </div>
             <el-table
-              class="rent-list-table"
-              :data="rentList1"
               v-loading.body="gettingRentList1"
+              :data="rentList1"
+              class="rent-list-table"
               stripe
               border>
               <el-table-column
@@ -223,19 +223,19 @@
                 待交房东列表
               </span>
               <el-button
+                :loading="gettingRentList3"
                 class="card-btn"
                 type="primary"
-                :loading="gettingRentList3"
                 @click="getList(3)">
                 刷新
               </el-button>
             </div>
             <el-table
-              class="rent-list-table"
-              :data="rentList3"
               v-loading.body="gettingRentList3"
+              :data="rentList3"
               stripe
-              border>
+              border
+              class="rent-list-table">
               <el-table-column
                 prop="monthId.month"
                 label="周期"
@@ -314,8 +314,8 @@
         :lg="6">
         <el-row>
           <el-card
-            class="detail-wrap"
-            v-loading.body="gettingNotes">
+            v-loading.body="gettingNotes"
+            class="detail-wrap">
             <div slot="header">
               <span class="card-header">
                 记事本
@@ -328,11 +328,11 @@
               </el-button>
             </div>
             <ul
-              class="card-list"
-              v-show="noteList.length">
+              v-show="noteList.length"
+              class="card-list">
               <li
-                :class="{ 'done': item.status == 2 }"
                 v-for="(item, index) in noteList"
+                :class="{ 'done': item.status == 2 }"
                 :key="item._id">
                 <span>[{{ item.haoId.fang + item.haoId.hao }}]</span>
                 <el-button
@@ -345,8 +345,8 @@
               </li>
             </ul>
             <div
-              class="card-nodata"
-              v-show="!noteList.length">
+              v-show="!noteList.length"
+              class="card-nodata">
               暂无数据
             </div>
           </el-card>

@@ -1,15 +1,16 @@
 <template>
   <div class="system-main">
+
     <el-card>
       <el-collapse v-model="activeNames">
         <el-collapse-item
           title="坊号类型（不可修改）"
           name="houseFang">
           <el-tag
-            class="show-tag show-tag3"
-            type="success"
             v-for="(fang, index) in houseFang"
-            :key="index">
+            :key="index"
+            class="show-tag show-tag3"
+            type="success">
             {{ fang }}
           </el-tag>
         </el-collapse-item>
@@ -18,10 +19,10 @@
           title="收租类型（不可修改）"
           name="payTypeVal">
           <el-tag
-            class="show-tag show-tag3"
-            type="success"
             v-for="(pay, index) in payTypeVal"
-            :key="index">
+            :key="index"
+            class="show-tag show-tag3"
+            type="success">
             {{ pay }}
           </el-tag>
         </el-collapse-item>
@@ -30,11 +31,11 @@
           title="交租状态（不可修改）"
           name="typesVal">
           <el-tag
-            class="show-tag show-tag3"
-            type="success"
             v-for="(type, index) in typesVal"
+            v-if="!!type"
             :key="index"
-            v-if="!!type">
+            class="show-tag show-tag3"
+            type="success">
             {{ type }}
           </el-tag>
         </el-collapse-item>
@@ -43,16 +44,16 @@
           title="默认水费计费方式（修改后将在下次新建月度/入住时生效）"
           name="defaultCalWaterPrice">
           <el-form
-            :model="calWaterPrice"
             ref="calWaterPrice"
+            :model="calWaterPrice"
             :rules="calrules">
 
             <!-- 水费 -->
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item
-                  label="水费低消"
                   :label-width="labelWidth"
+                  label="水费低消"
                   prop="minPrice">
                   <el-input
                     v-model.number="calWaterPrice.minPrice"
@@ -64,8 +65,8 @@
               </el-col>
               <el-col :span="14">
                 <el-form-item
-                  label="水费方式"
-                  :label-width="labelWidth">
+                  :label-width="labelWidth"
+                  label="水费方式">
                   <el-radio
                     v-model="calWaterPrice.calType"
                     label="single">
@@ -82,12 +83,12 @@
 
             <!-- 单价水费计费 -->
             <el-form-item
-              label="水费单价"
+              v-if="calWaterPrice.calType == 'single'"
               key="watSingle"
               :label-width="labelWidth"
-              v-if="calWaterPrice.calType == 'single'"
-              prop="singlePrice"
-              :rules="calrules.singlePrice[0]">
+              :rules="calrules.singlePrice[0]"
+              label="水费单价"
+              prop="singlePrice">
               <el-col :span="13">
                 <el-input
                   v-model.number="calWaterPrice.singlePrice"
@@ -123,8 +124,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col
-                  class="line"
-                  :span="1" />
+                  :span="1"
+                  class="line" />
                 <el-col :span="7">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.price'"
@@ -141,8 +142,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col
-                  class="line"
-                  :span="1" />
+                  :span="1"
+                  class="line" />
                 <el-col :span="5">
                   <el-button
                     @click.prevent="removeStep(calWaterPrice, step)">
@@ -152,8 +153,8 @@
               </el-form-item>
             </div>
             <el-form-item
-              key="watStep"
               v-if="calWaterPrice.calType == 'step'"
+              key="watStep"
               :label-width="labelWidth">
               <el-button
                 type="primary"
@@ -164,18 +165,18 @@
 
             <!-- 提交按钮 -->
             <el-form-item
-              key="watBtn"
               v-if="calWaterEdit || !defaultKeysHasSet.defaultCalWaterPrice"
+              key="watBtn"
               :label-width="labelWidth">
               <el-button
+                :loading="submitLoading"
                 type="danger"
-                @click="submit"
-                :loading="submitLoading">
+                @click="submit">
                 提交修改
               </el-button>
               <el-button
-                @click="cancel('water')"
-                :loading="submitLoading">
+                :loading="submitLoading"
+                @click="cancel('water')">
                 取消
               </el-button>
             </el-form-item>
@@ -186,16 +187,16 @@
           title="默认电费计费方式（修改后将在下次新建月度/入住时生效）"
           name="defaultCalElePrice">
           <el-form
-            :model="calElePrice"
             ref="calElePrice"
+            :model="calElePrice"
             :rules="calrules">
 
             <!-- 电费 -->
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item
-                  label="低消"
                   :label-width="labelWidth"
+                  label="低消"
                   prop="minPrice">
                   <el-input
                     v-model.number="calElePrice.minPrice"
@@ -207,8 +208,8 @@
               </el-col>
               <el-col :span="14">
                 <el-form-item
-                  label="计费方式"
-                  :label-width="labelWidth">
+                  :label-width="labelWidth"
+                  label="计费方式">
                   <el-radio
                     v-model="calElePrice.calType"
                     label="single">
@@ -224,12 +225,12 @@
             </el-row>
             <!-- 单价计费 -->
             <el-form-item
-              label="单价"
+              v-if="calElePrice.calType == 'single'"
               key="eleSingle"
               :label-width="labelWidth"
-              v-if="calElePrice.calType == 'single'"
-              prop="singlePrice"
-              :rules="calrules.singlePrice[0]">
+              :rules="calrules.singlePrice[0]"
+              label="单价"
+              prop="singlePrice">
               <el-col :span="13">
                 <el-input
                   v-model.number="calElePrice.singlePrice"
@@ -264,8 +265,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col
-                  class="line"
-                  :span="1" />
+                  :span="1"
+                  class="line" />
                 <el-col :span="7">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.price'"
@@ -282,8 +283,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col
-                  class="line"
-                  :span="1" />
+                  :span="1"
+                  class="line" />
                 <el-col :span="5">
                   <el-button
                     @click.prevent="removeStep(calElePrice, step)">
@@ -293,8 +294,8 @@
               </el-form-item>
             </div>
             <el-form-item
-              key="eleStep"
               v-if="calElePrice.calType == 'step'"
+              key="eleStep"
               :label-width="labelWidth">
               <el-button
                 type="primary"
@@ -305,18 +306,18 @@
 
             <!-- 提交按钮 -->
             <el-form-item
-              key="eleBtn"
               v-if="calEleEdit || !defaultKeysHasSet.defaultCalElePrice"
+              key="eleBtn"
               :label-width="labelWidth">
               <el-button
+                :loading="submitLoading"
                 type="danger"
-                @click="submit"
-                :loading="submitLoading">
+                @click="submit">
                 提交修改
               </el-button>
               <el-button
-                @click="cancel('ele')"
-                :loading="submitLoading">
+                :loading="submitLoading"
+                @click="cancel('ele')">
                 取消
               </el-button>
             </el-form-item>

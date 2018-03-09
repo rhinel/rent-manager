@@ -1,5 +1,6 @@
 <template>
   <div class="rent-month">
+
     <el-tabs v-model="activeName">
       <el-tab-pane
         label="计租信息"
@@ -7,9 +8,9 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
+            :loading="gettingListRefresh"
             type="primary"
-            @click="getListRefresh"
-            :loading="gettingListRefresh">
+            @click="getListRefresh">
             刷新
           </el-button>
           <div class="table-btn-input">
@@ -21,16 +22,16 @@
 
         <!-- 计租表单 -->
         <el-dialog
-          custom-class="add-month-det-dialog"
           :key="'addMonthDet' + dialogId"
           :title="addRent.fanghao + ardDialogTitle"
           :visible.sync="addRentflag"
-          top="50px"
           :close-on-click-modal="false"
+          top="50px"
+          custom-class="add-month-det-dialog"
           @close="onAddRentDialogClose">
           <el-form
-            :model="addRent"
             ref="addRent"
+            :model="addRent"
             :rules="addRentrules">
             <el-alert
               title="请确认计租信息，保存计租副本"
@@ -38,8 +39,8 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  label="水费信息"
-                  :label-width="ardLabelWidth">
+                  :label-width="ardLabelWidth"
+                  label="水费信息">
                   <div v-if="addRent.calWater.calWater">
                     计费方式：{{
                       addRent.calWater.calWater.calType == 'single' ?
@@ -65,8 +66,8 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  label="电费信息"
-                  :label-width="ardLabelWidth">
+                  :label-width="ardLabelWidth"
+                  label="电费信息">
                   <div v-if="addRent.calElectric.calElectric">
                     计费方式：{{
                       addRent.calElectric.calElectric.calType == 'single' ?
@@ -95,8 +96,8 @@
               title="租金及结果可做修正（不更新租户信息）作为本次副本保存，但建议租金调整先修改租户信息"
               type="info" />
             <el-form-item
-              label="租住周期"
-              :label-width="ardLabelWidth">
+              :label-width="ardLabelWidth"
+              label="租住周期">
               <div v-if="addRent.lease.leaserange">
                 {{ getTime(addRent.lease.leaserange[0]) }}
                 ~
@@ -107,8 +108,8 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  label="本月租金"
                   :label-width="ardLabelWidth"
+                  label="本月租金"
                   prop="lease.rent">
                   <el-input
                     v-model.number="addRent.lease.rent"
@@ -137,20 +138,20 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  label="计租时间"
                   :label-width="ardLabelWidth"
+                  label="计租时间"
                   prop="addTime">
                   <el-date-picker
                     v-model="addRent.addTime"
+                    :editable="false"
                     type="datetime"
-                    placeholder="输入计租时间"
-                    :editable="false" />
+                    placeholder="输入计租时间" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  label="计租备注"
-                  :label-width="ardLabelWidth">
+                  :label-width="ardLabelWidth"
+                  label="计租备注">
                   <el-input
                     v-model="addRent.remark"
                     auto-complete="off"
@@ -160,17 +161,17 @@
             </el-row>
           </el-form>
           <div
-            class="dialog-footer"
-            slot="footer">
+            slot="footer"
+            class="dialog-footer">
             <el-button
-              @click="getAddRentDialog"
-              :loading="gettingAddRent">
+              :loading="gettingAddRent"
+              @click="getAddRentDialog">
               取消
             </el-button>
             <el-button
+              :loading="gettingAddRent"
               type="primary"
-              @click="getAddRent"
-              :loading="gettingAddRent">
+              @click="getAddRent">
               确定
             </el-button>
           </div>
@@ -178,22 +179,22 @@
 
         <!-- 状态修改表单 -->
         <el-dialog
-          custom-class="change-type-dialog"
           :key="'changeType' + dialogId"
           :title="changeType.fanghao + ctdDialogTitle"
           :visible.sync="changeTypeflag"
           :close-on-click-modal="false"
+          custom-class="change-type-dialog"
           @close="onChangeTypeDialogClose">
           <el-form
-            :model="changeType"
             ref="changeType"
+            :model="changeType"
             :rules="changeTyperules">
             <el-alert
               title="多选状态信息"
               type="info" />
             <el-form-item
-              label="交租方式"
               :label-width="ctdLabelWidth"
+              label="交租方式"
               prop="payType">
               <div style="overflow: hidden;">
                 <el-row :gutter="20">
@@ -215,8 +216,8 @@
               </div>
             </el-form-item>
             <el-form-item
-              label="备注"
-              :label-width="ctdLabelWidth">
+              :label-width="ctdLabelWidth"
+              label="备注">
               <div style="overflow: hidden;">
                 <el-row :gutter="20">
                   <el-col
@@ -232,17 +233,17 @@
               </div>
             </el-form-item>
             <el-form-item
-              label="状态"
-              :label-width="ctdLabelWidth">
+              :label-width="ctdLabelWidth"
+              label="状态">
               <div>
                 <el-checkbox-group
                   v-model="changeType.type"
                   @change="onChangeType">
                   <el-row
-                    :gutter="20"
-                    class="el-row-margin"
                     v-for="(type, index) in types"
-                    :key="index">
+                    :gutter="20"
+                    :key="index"
+                    class="el-row-margin">
                     <el-col :span="4">
                       <el-checkbox :label="type.value">
                         {{ type.label }}
@@ -255,9 +256,9 @@
                         :rules="changeTyperules.typeTime[0]">
                         <el-date-picker
                           v-model="changeType.typeTime[type.value]"
+                          :editable="false"
                           type="datetime"
-                          placeholder="输入状态时间"
-                          :editable="false" />
+                          placeholder="输入状态时间" />
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -274,17 +275,17 @@
             </el-form-item>
           </el-form>
           <div
-            class="dialog-footer"
-            slot="footer">
+            slot="footer"
+            class="dialog-footer">
             <el-button
-              @click="getChangeTypeDialog"
-              :loading="gettingChangeType">
+              :loading="gettingChangeType"
+              @click="getChangeTypeDialog">
               取消
             </el-button>
             <el-button
+              :loading="gettingChangeType"
               type="primary"
-              @click="getChangeType"
-              :loading="gettingChangeType">
+              @click="getChangeType">
               确定
             </el-button>
           </div>
@@ -292,11 +293,11 @@
 
         <!-- 月周期图表 -->
         <el-table
-          class="month-table"
+          v-loading.body="gettingListRefresh"
           ref="monthTable"
           :max-height="tableMaxHeight"
           :data="filterMonthDetData"
-          v-loading.body="gettingListRefresh"
+          class="month-table"
           stripe
           border>
           <el-table-column type="expand">
@@ -432,25 +433,25 @@
             width="250">
             <template slot-scope="scope">
               <el-button
+                v-if="monthDet.newest"
                 size="small"
                 type="primary"
-                v-if="monthDet.newest"
                 @click="getAddRentDialog(scope.$index, scope.row)">
                 计租
               </el-button>
               <el-button
+                v-if="scope.row.rents.length"
                 size="small"
                 type="primary"
-                v-if="scope.row.rents.length"
                 @click="getChangeTypeDialog(scope.$index, scope.row)">
                 状态
               </el-button>
               <el-popover
+                v-if="scope.row.rents.length && monthDet.newest"
+                v-model="scope.row.dRentPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-if="scope.row.rents.length && monthDet.newest"
-                v-model="scope.row.dRentPopFlag">
+                trigger="click">
                 <p>确认删除该计租信息吗？其他数据不受影响，但无法恢复关联信息</p>
                 <div class="pop-cont">
                   <el-button
@@ -467,12 +468,12 @@
                   </el-button>
                 </div>
                 <span
-                  class="show-pop"
-                  slot="reference">
+                  slot="reference"
+                  class="show-pop">
                   <el-button
+                    :loading="scope.row.gettingdelRent"
                     size="small"
-                    type="danger"
-                    :loading="scope.row.gettingdelRent">
+                    type="danger">
                     删除
                   </el-button>
                 </span>
@@ -488,25 +489,25 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
+            :loading="gettingLandordRentTemp"
             type="primary"
-            @click="getLandordRentTemp"
-            :loading="gettingLandordRentTemp">
+            @click="getLandordRentTemp">
             刷新
           </el-button>
         </div>
         <el-collapse
-          v-model="activeLandordHistoryTemp"
           v-loading.body="gettingLandordRentTemp"
-          v-if="checkObjectTemp(landordHistoryTemp)">
+          v-if="checkObjectTemp(landordHistoryTemp)"
+          v-model="activeLandordHistoryTemp">
           <el-collapse-item name="temp">
             <template slot="title">
               <span class="landord-title">
                 合计：￥{{ landordHistoryTemp.all }}元
               </span>
               <span
-                class="landord-title"
                 v-for="(j, indexj) in payTypeVal"
-                :key="indexj">
+                :key="indexj"
+                class="landord-title">
                 {{ j }}：{{ landordHistoryTemp[indexj] }}元
               </span>
             </template>
@@ -523,9 +524,9 @@
         </el-collapse>
         <el-alert
           v-if="!gettingLandordRentTemp && !checkObjectTemp(landordHistoryTemp)"
+          :closable="false"
           title="暂无数据！请先处理单据状态"
-          type="info"
-          :closable="false" />
+          type="info" />
       </el-tab-pane>
 
       <el-tab-pane
@@ -534,24 +535,24 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
+            :loading="gettingLandordRent"
             type="primary"
-            @click="getLandordRent"
-            :loading="gettingLandordRent">
+            @click="getLandordRent">
             刷新
           </el-button>
           <div class="table-btn-input">
             <el-date-picker
               v-model="landordHistorySearch"
+              :editable="false"
               type="date"
               placeholder="选择日期"
-              :editable="false"
               @change="getfilterLandordData" />
           </div>
         </div>
         <el-collapse
-          v-model="activeDate"
           v-loading.body="gettingLandordRent"
-          v-if="checkObject(landordData)">
+          v-if="checkObject(landordData)"
+          v-model="activeDate">
           <el-collapse-item
             v-for="(item, index) in landordData"
             :name="new Date(Number(index)).toLocaleDateString()"
@@ -563,9 +564,9 @@
                   placement="right"
                   trigger="hover">
                   <div
-                    class="landord-title"
                     v-for="(j, indexj) in payTypeVal"
-                    :key="indexj">
+                    :key="indexj"
+                    class="landord-title">
                     {{ j }}：{{ item[indexj] }}元
                   </div>
                   <div slot="reference">
@@ -589,9 +590,9 @@
         </el-collapse>
         <el-alert
           v-if="!gettingLandordRent && !checkObject(landordData)"
+          :closable="false"
           title="暂无数据！请先处理单据状态"
-          type="info"
-          :closable="false" />
+          type="info" />
       </el-tab-pane>
 
       <el-tab-pane
@@ -607,9 +608,9 @@
 
         <el-alert
           v-if="!checkObject(rentCount)"
+          :closable="false"
           title="暂无数据！请先处理单据状态"
-          type="info"
-          :closable="false" />
+          type="info" />
       </el-tab-pane>
 
       <el-tab-pane

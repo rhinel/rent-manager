@@ -1,11 +1,12 @@
 <template>
   <div class="rent-history">
+
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
+        :loading="gettingListRefresh"
         type="primary"
-        @click="getListRefresh"
-        :loading="gettingListRefresh">
+        @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
@@ -17,22 +18,22 @@
 
     <!-- 状态修改表单 -->
     <el-dialog
-      custom-class="change-type-dialog"
       :key="'changeType' + dialogId"
       :title="changeType.fanghao + ctdDialogTitle"
       :visible.sync="changeTypeflag"
       :close-on-click-modal="false"
+      custom-class="change-type-dialog"
       @close="onChangeTypeDialogClose">
       <el-form
-        :model="changeType"
         ref="changeType"
+        :model="changeType"
         :rules="changeTyperules">
         <el-alert
           title="多选状态信息"
           type="info" />
         <el-form-item
-          label="交租方式"
           :label-width="ctdLabelWidth"
+          label="交租方式"
           prop="payType">
           <div style="overflow: hidden;">
             <el-row :gutter="20">
@@ -54,8 +55,8 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="备注"
-          :label-width="ctdLabelWidth">
+          :label-width="ctdLabelWidth"
+          label="备注">
           <div style="overflow: hidden;">
             <el-row :gutter="20">
               <el-col
@@ -71,17 +72,17 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="状态"
-          :label-width="ctdLabelWidth">
+          :label-width="ctdLabelWidth"
+          label="状态">
           <div>
             <el-checkbox-group
               v-model="changeType.type"
               @change="onChangeType">
               <el-row
-                class="el-row-margin"
-                :gutter="20"
                 v-for="(type, index) in types"
-                :key="index">
+                :key="index"
+                :gutter="20"
+                class="el-row-margin">
                 <el-col :span="4">
                   <el-checkbox :label="type.value">
                     {{ type.label }}
@@ -94,9 +95,9 @@
                     :rules="changeTyperules.typeTime[0]">
                     <el-date-picker
                       v-model="changeType.typeTime[type.value]"
+                      :editable="false"
                       type="datetime"
-                      placeholder="输入状态时间"
-                      :editable="false" />
+                      placeholder="输入状态时间" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -113,17 +114,17 @@
         </el-form-item>
       </el-form>
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getChangeTypeDialog"
-          :loading="gettingChangeType">
+          :loading="gettingChangeType"
+          @click="getChangeTypeDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingChangeType"
           type="primary"
-          @click="getChangeType"
-          :loading="gettingChangeType">
+          @click="getChangeType">
           确定
         </el-button>
       </div>
@@ -131,11 +132,11 @@
 
     <!-- 月周期图表 -->
     <el-table
-      class="month-table"
+      v-loading.body="gettingListRefresh"
       ref="monthTable"
       :max-height="tableMaxHeight"
       :data="filterRentHistoryData"
-      v-loading.body="gettingListRefresh"
+      class="month-table"
       stripe
       border>
       <el-table-column type="expand">

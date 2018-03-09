@@ -1,5 +1,6 @@
 <template>
   <div class="rent-main">
+
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
@@ -8,9 +9,9 @@
         新增
       </el-button>
       <el-button
+        :loading="gettingListRefresh"
         type="primary"
-        @click="getListRefresh"
-        :loading="gettingListRefresh">
+        @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
@@ -22,34 +23,34 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-month-list-dialog"
       :key="dialogId"
       :title="amldDialogTitle"
       :visible.sync="addMonthListflag"
       :close-on-click-modal="false"
+      custom-class="add-month-list-dialog"
       @close="onAddMonthListDialogClose">
       <el-form
-        :model="addMonthList"
         ref="addMonthList"
+        :model="addMonthList"
         :rules="addMonthListrules">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="收租周期"
               :label-width="amldLabelWidth"
+              label="收租周期"
               prop="month">
               <el-date-picker
                 v-model="addMonthList.month"
-                type="month"
                 :disabled="!amldInput"
                 :editable="false"
+                type="month"
                 placeholder="选择月份" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="备注"
-              :label-width="amldLabelWidth">
+              :label-width="amldLabelWidth"
+              label="备注">
               <el-input
                 v-model="addMonthList.remark"
                 auto-complete="off"
@@ -64,8 +65,8 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="水费"
-              :label-width="amldLabelWidth">
+              :label-width="amldLabelWidth"
+              label="水费">
               <div>
                 低消：{{ addMonthList.defaultCalWaterPrice.minPrice || 0 }}吨
               </div>
@@ -88,8 +89,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="电费"
-              :label-width="amldLabelWidth">
+              :label-width="amldLabelWidth"
+              label="电费">
               <div>
                 低消：{{ addMonthList.defaultCalElePrice.minPrice || 0 }}度
               </div>
@@ -113,17 +114,17 @@
         </el-row>
       </el-form>
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getAddMonthListDialog"
-          :loading="gettingAddMonthList">
+          :loading="gettingAddMonthList"
+          @click="getAddMonthListDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingAddMonthList"
           type="primary"
-          @click="getAddMonthList"
-          :loading="gettingAddMonthList">
+          @click="getAddMonthList">
           确定
         </el-button>
       </div>
@@ -131,11 +132,11 @@
 
     <!-- 月份数据表 -->
     <el-table
-      class="month-table"
+      v-loading.body="gettingListRefresh"
       ref="monthTable"
       :max-height="tableMaxHeight"
       :data="filterMonthListData"
-      v-loading.body="gettingListRefresh"
+      class="month-table"
       stripe
       border>
       <el-table-column
@@ -189,10 +190,10 @@
             修改
           </el-button>
           <el-popover
+            v-model="scope.row.dMonthPopFlag"
             placement="top"
             width="150"
-            trigger="click"
-            v-model="scope.row.dMonthPopFlag">
+            trigger="click">
             <p>确认删除月份周期信息吗？与之关联的数据将一并删除</p>
             <div class="pop-cont">
               <el-button
@@ -209,12 +210,12 @@
               </el-button>
             </div>
             <span
-              class="show-pop"
-              slot="reference">
+              slot="reference"
+              class="show-pop">
               <el-button
+                :loading="scope.row.gettingdelMonth"
                 size="small"
-                type="danger"
-                :loading="scope.row.gettingdelMonth">
+                type="danger">
                 删除
               </el-button>
             </span>
