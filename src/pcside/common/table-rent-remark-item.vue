@@ -6,8 +6,8 @@
       {{ rent.remark }}
     </div>
     <span
-      class="show-tag"
-      slot="reference">
+      slot="reference"
+      class="show-tag">
       <div class="remark-tag">
         {{ rent.remark }}
       </div>

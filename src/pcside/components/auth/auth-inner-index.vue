@@ -1,7 +1,7 @@
 <template>
   <div
-    class="auth-inner-index"
-    :class="{ 'in': !Navtg }">
+    :class="{ 'in': !Navtg }"
+    class="auth-inner-index">
     <div class="inner-header">
       <div class="header-left">
         <span>Rent Manager</span>
@@ -24,9 +24,9 @@
       </div>
     </div>
     <el-menu
-      class="inner-sidebar"
       :default-active="menuing"
-      :router="true">
+      :router="true"
+      class="inner-sidebar">
       <el-menu-item
         v-for="(menuItem, index) in config.menu"
         :key="index"
@@ -35,8 +35,8 @@
         <span slot="title">
           {{ menuItem.name }}
           <i
-            class="el-icon-loading"
-            v-show="menuCheck.includes(menuItem.check)" />
+            v-show="menuCheck.includes(menuItem.check)"
+            class="el-icon-loading" />
         </span>
       </el-menu-item>
     </el-menu>

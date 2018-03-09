@@ -1,5 +1,6 @@
 <template>
   <div class="water-history">
+
     <el-tabs
       v-model="activeName">
       <el-tab-pane
@@ -9,9 +10,9 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
+            :loading="gettingListRefresh"
             type="primary"
-            @click="getWaterList"
-            :loading="gettingListRefresh">
+            @click="getWaterList">
             刷新
           </el-button>
           <div class="table-btn-input">
@@ -23,11 +24,11 @@
 
         <!-- 水费数据表 -->
         <el-table
-          class="water-table"
+          v-loading.body="gettingListRefresh"
           ref="waterTable"
           :max-height="tableMaxHeight"
           :data="filterWaterData"
-          v-loading.body="gettingListRefresh"
+          class="water-table"
           stripe
           border>
           <el-table-column
@@ -54,10 +55,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dWaterPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dWaterPopFlag">
+                trigger="click">
                 <p>确认删除抄表记录吗？计费历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button
@@ -76,9 +77,9 @@
                 <div
                   slot="reference">
                   <el-button
+                    :loading="scope.row.gettingdelWater"
                     size="small"
-                    type="danger"
-                    :loading="scope.row.gettingdelWater">
+                    type="danger">
                     删除
                   </el-button>
                 </div>
@@ -95,9 +96,9 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
+            :loading="gettingListRefresh2"
             type="primary"
-            @click="getWaterCalList"
-            :loading="gettingListRefresh2">
+            @click="getWaterCalList">
             刷新
           </el-button>
           <div class="table-btn-input">
@@ -109,11 +110,11 @@
 
         <!-- 水费数据表 -->
         <el-table
-          class="water-table"
+          v-loading.body="gettingListRefresh2"
           ref="waterCalTable"
           :max-height="tableMaxHeight"
           :data="filterWaterCalData"
-          v-loading.body="gettingListRefresh2"
+          class="water-table"
           stripe
           border>
           <el-table-column
@@ -194,8 +195,8 @@
                     元/吨
                   </div>
                   <div
-                    class="history-step-p-wrap"
-                    v-if="scope.row.calWater.calType == 'step'">
+                    v-if="scope.row.calWater.calType == 'step'"
+                    class="history-step-p-wrap">
                     <div class="step-p-title">
                       阶梯：
                     </div>
@@ -216,8 +217,8 @@
                     本计费结果已被修正，计算方式仅供参考
                   </div>
                   <div
-                    class="show-tag"
-                    slot="reference">
+                    slot="reference"
+                    class="show-tag">
                     <el-tag>计费方式</el-tag>
                   </div>
                 </el-popover>
@@ -230,10 +231,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dCalWaterPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dCalWaterPopFlag">
+                trigger="click">
                 <p>确认删除计费记录吗？抄表历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button
@@ -252,9 +253,9 @@
                 <div
                   slot="reference">
                   <el-button
+                    :loading="scope.row.gettingdelCalWater"
                     size="small"
-                    type="danger"
-                    :loading="scope.row.gettingdelCalWater">
+                    type="danger">
                     删除
                   </el-button>
                 </div>

@@ -22,8 +22,8 @@
           </div>
           超出按最后阶梯计算。
           <div
-            class="show-tag"
-            slot="reference">
+            slot="reference"
+            class="show-tag">
             <el-tag>阶梯</el-tag>
           </div>
         </el-popover>

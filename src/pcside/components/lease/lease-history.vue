@@ -1,11 +1,12 @@
 <template>
   <div class="lease-history">
+
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
+        :loading="gettingListRefresh"
         type="primary"
-        @click="getListRefresh"
-        :loading="gettingListRefresh">
+        @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
@@ -17,11 +18,11 @@
 
     <!-- 租住数据表 -->
     <el-table
-      class="lease-table"
+      v-loading.body="gettingListRefresh"
       ref="leaseTable"
       :max-height="tableMaxHeight"
       :data="filterLeaseData"
-      v-loading.body="gettingListRefresh"
+      class="lease-table"
       stripe
       border>
       <el-table-column
@@ -125,11 +126,11 @@
         width="100">
         <template slot-scope="scope">
           <el-popover
+            v-if="scope.row._id"
+            v-model="scope.row.dLeasePopFlag"
             placement="top"
             width="150"
-            trigger="click"
-            v-if="scope.row._id"
-            v-model="scope.row.dLeasePopFlag">
+            trigger="click">
             <p>确认删除此租住历史？此行为不可撤销</p>
             <div class="pop-cont">
               <el-button
@@ -148,9 +149,9 @@
             <div
               slot="reference">
               <el-button
+                :loading="scope.row.gettingdelLease"
                 size="small"
-                type="danger"
-                :loading="scope.row.gettingdelLease">
+                type="danger">
                 删除
               </el-button>
             </div>

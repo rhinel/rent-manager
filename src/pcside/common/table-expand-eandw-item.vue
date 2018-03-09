@@ -17,8 +17,8 @@
         <div>表底时间：{{ getTime(rent[calType].old.addTime) }}</div>
 
         <el-tag
-          class="show-tag"
-          slot="reference">
+          slot="reference"
+          class="show-tag">
           计数
         </el-tag>
 

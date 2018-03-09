@@ -16,8 +16,8 @@
         <div>搬出时间：{{ getDate(lease.outTime) }}</div>
         <div>备注：{{ lease.remark || '--' }}</div>
         <el-tag
-          class="show-tag"
-          slot="reference">
+          slot="reference"
+          class="show-tag">
           {{ payTypeVal[lease.payType] }}
         </el-tag>
       </el-popover>

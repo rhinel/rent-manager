@@ -1,13 +1,13 @@
 <template>
   <div class="rent-count">
     <div
-      class="rent-count-title"
-      :key="`${fangi}Title`">
+      :key="`${fangi}Title`"
+      class="rent-count-title">
       <el-alert
+        :closable="false"
         class="table-btn"
         type="info"
-        title=""
-        :closable="false">
+        title="">
         {{ fangi }} 合计：￥{{ fang.count }}元
       </el-alert>
     </div>
@@ -25,9 +25,9 @@
           </span>
         </template>
         <div
-          class="landord-content content-bg"
           v-for="(hao, haoi) in floor.list"
-          :key="haoi">
+          :key="haoi"
+          class="landord-content content-bg">
           <router-link
             :to="{
               path: '/inner/rent/history',
