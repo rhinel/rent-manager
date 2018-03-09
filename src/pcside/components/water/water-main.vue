@@ -9,9 +9,9 @@
         抄表
       </el-button>
       <el-button
+        :loading="gettingListRefresh"
         type="primary"
-        @click="getListRefresh"
-        :loading="gettingListRefresh">
+        @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
@@ -23,24 +23,24 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-water-dialog small"
       :key="'addWater' + dialogId"
       :title="awdDialogTitle"
       :visible.sync="addWaterflag"
       :close-on-click-modal="false"
+      custom-class="add-water-dialog small"
       @close="onAddWaterDialogClose">
       <el-form
-        :model="addWater"
         ref="addWater"
+        :model="addWater"
         :rules="addWaterrules">
         <el-form-item
-          label="房屋"
           :label-width="awdLabelWidth"
+          label="房屋"
           prop="haoId">
           <el-select
             v-model="addWater.haoId"
-            placeholder="选择房屋"
-            :filterable="true">
+            :filterable="true"
+            placeholder="选择房屋">
             <el-option
               v-for="item in houseData"
               :label="item.fang + item.hao"
@@ -49,8 +49,8 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="水表数"
           :label-width="awdLabelWidth"
+          label="水表数"
           prop="water">
           <el-input
             v-model.number="addWater.water"
@@ -60,36 +60,36 @@
           </el-input>
         </el-form-item>
         <el-form-item
-          label="备注"
-          :label-width="awdLabelWidth">
+          :label-width="awdLabelWidth"
+          label="备注">
           <el-input
             v-model="addWater.remark"
             auto-complete="off"
             placeholder="备注" />
         </el-form-item>
         <el-form-item
-          label="抄表时间"
           :label-width="awdLabelWidth"
+          label="抄表时间"
           prop="addTime">
           <el-date-picker
             v-model="addWater.addTime"
+            :editable="false"
             type="datetime"
-            placeholder="输入抄表时间"
-            :editable="false" />
+            placeholder="输入抄表时间" />
         </el-form-item>
       </el-form>
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getAddWaterDialog"
-          :loading="gettingAddWater">
+          :loading="gettingAddWater"
+          @click="getAddWaterDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingAddWater"
           type="primary"
-          @click="getAddWater"
-          :loading="gettingAddWater">
+          @click="getAddWater">
           确定
         </el-button>
       </div>
@@ -97,16 +97,16 @@
 
     <!-- 计费弹窗 -->
     <el-dialog
-      custom-class="cal-water-dialog"
       :key="'calWater' + dialogId"
       :title="calWater.fanghao + cwdDialogTitle"
       :visible.sync="calWaterflag"
-      top="50px"
       :close-on-click-modal="false"
+      top="50px"
+      custom-class="cal-water-dialog"
       @close="onCalWaterDialogClose">
       <el-form
-        :model="calWater"
         ref="calWater"
+        :model="calWater"
         :rules="calWaterrules">
 
         <!-- 房屋信息 -->
@@ -117,8 +117,8 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="抄表数"
               :label-width="cwdLabelWidth"
+              label="抄表数"
               prop="tnew.water">
               <el-input
                 v-model.number="calWater.tnew.water"
@@ -130,21 +130,21 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="抄表时间"
               :label-width="cwdLabelWidth"
+              label="抄表时间"
               prop="tnew.addTime">
               <el-date-picker
                 v-model="calWater.tnew.addTime"
+                :editable="false"
                 type="datetime"
                 placeholder="输入抄表时间"
-                style="width: 100%;"
-                :editable="false" />
+                style="width: 100%;" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          label="抄表备注"
-          :label-width="cwdLabelWidth">
+          :label-width="cwdLabelWidth"
+          label="抄表备注">
           <el-input
             v-model="calWater.tnew.remark"
             auto-complete="off"
@@ -156,8 +156,8 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="底表数"
               :label-width="cwdLabelWidth"
+              label="底表数"
               prop="old.water">
               <el-input
                 v-model.number="calWater.old.water"
@@ -169,21 +169,21 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="底表时间"
               :label-width="cwdLabelWidth"
+              label="底表时间"
               prop="old.addTime">
               <el-date-picker
                 v-model="calWater.old.addTime"
+                :editable="false"
                 type="datetime"
                 placeholder="输入底表时间"
-                style="width: 100%;"
-                :editable="false" />
+                style="width: 100%;" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          label="底表备注"
-          :label-width="cwdLabelWidth">
+          :label-width="cwdLabelWidth"
+          label="底表备注">
           <el-input
             v-model="calWater.old.remark"
             auto-complete="off"
@@ -197,8 +197,8 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="低消"
               :label-width="cwdLabelWidth"
+              label="低消"
               prop="calWater.minPrice">
               <el-input
                 v-model.number="calWater.calWater.minPrice"
@@ -210,8 +210,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="计费方式"
-              :label-width="cwdLabelWidth">
+              :label-width="cwdLabelWidth"
+              label="计费方式">
               <el-radio
                 v-model="calWater.calWater.calType"
                 label="single">
@@ -227,12 +227,12 @@
         </el-row>
         <!-- 单价计费 -->
         <el-form-item
-          label="单价"
+          v-if="calWater.calWater.calType == 'single'"
           key="watSingle"
           :label-width="cwdLabelWidth"
-          v-if="calWater.calWater.calType == 'single'"
-          prop="calWater.singlePrice"
-          :rules="calWaterrules[`calWater.singlePrice`][0]">
+          :rules="calWaterrules[`calWater.singlePrice`][0]"
+          label="单价"
+          prop="calWater.singlePrice">
           <el-input
             v-model.number="calWater.calWater.singlePrice"
             auto-complete="off"
@@ -265,8 +265,8 @@
               </el-form-item>
             </el-col>
             <el-col
-              class="line"
-              :span="1" />
+              :span="1"
+              class="line" />
             <el-col :span="9">
               <el-form-item
                 :prop="'calWater.stepPrice.' + index + '.price'"
@@ -283,8 +283,8 @@
               </el-form-item>
             </el-col>
             <el-col
-              class="line"
-              :span="1" />
+              :span="1"
+              class="line" />
             <el-col
               :span="3"
               class="step-btn">
@@ -295,8 +295,8 @@
           </el-form-item>
         </div>
         <el-form-item
-          key="watStep"
           v-if="calWater.calWater.calType == 'step'"
+          key="watStep"
           :label-width="cwdLabelWidth">
           <el-button
             type="primary"
@@ -322,21 +322,21 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="计费时间"
               :label-width="cwdLabelWidth"
+              label="计费时间"
               prop="addTime">
               <el-date-picker
                 v-model="calWater.addTime"
+                :editable="false"
                 type="datetime"
                 placeholder="输入计费时间"
-                style="width: 100%;"
-                :editable="false" />
+                style="width: 100%;" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          label="计费备注"
-          :label-width="cwdLabelWidth">
+          :label-width="cwdLabelWidth"
+          label="计费备注">
           <el-input
             v-model="calWater.remark"
             auto-complete="off"
@@ -344,17 +344,17 @@
         </el-form-item>
       </el-form>
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getCalWaterDialog"
-          :loading="gettingCalWater">
+          :loading="gettingCalWater"
+          @click="getCalWaterDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingCalWater"
           type="primary"
-          @click="getCalWater"
-          :loading="gettingCalWater">
+          @click="getCalWater">
           确定
         </el-button>
       </div>
@@ -362,11 +362,11 @@
 
     <!-- 水费数据表 -->
     <el-table
-      class="water-table"
+      v-loading.body="gettingListRefresh"
       ref="waterTable"
       :max-height="tableMaxHeight"
       :data="filterWaterData"
-      v-loading.body="gettingListRefresh"
+      class="water-table"
       stripe
       border>
       <el-table-column
@@ -379,8 +379,8 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.waterId.water > 0">
+            v-if="scope.row.waterId.water > 0"
+            class="main-txt-highline">
             {{ scope.row.waterId.water }}
           </span>
           <span v-else>
@@ -402,8 +402,8 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.calWaterId.water > 0">
+            v-if="scope.row.calWaterId.water > 0"
+            class="main-txt-highline">
             {{ scope.row.calWaterId.water }}
           </span>
           <span
@@ -426,8 +426,8 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.gap > 0">
+            v-if="scope.row.gap > 0"
+            class="main-txt-highline">
             {{ scope.row.gap }}
           </span>
           <span

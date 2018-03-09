@@ -9,9 +9,9 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
+            :loading="gettingListRefresh"
             type="primary"
-            @click="getElectricList"
-            :loading="gettingListRefresh">
+            @click="getElectricList">
             刷新
           </el-button>
           <div class="table-btn-input">
@@ -23,11 +23,11 @@
 
         <!-- 电费数据表 -->
         <el-table
-          class="electric-table"
+          v-loading.body="gettingListRefresh"
           ref="electricTable"
           :max-height="tableMaxHeight"
           :data="filterElectricData"
-          v-loading.body="gettingListRefresh"
+          class="electric-table"
           stripe
           border>
           <el-table-column
@@ -54,10 +54,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dElectricPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dElectricPopFlag">
+                trigger="click">
                 <p>确认删除抄表记录吗？计费历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button
@@ -76,9 +76,9 @@
                 <div
                   slot="reference">
                   <el-button
+                    :loading="scope.row.gettingdelElectric"
                     size="small"
-                    type="danger"
-                    :loading="scope.row.gettingdelElectric">
+                    type="danger">
                     删除
                   </el-button>
                 </div>
@@ -95,9 +95,9 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
+            :loading="gettingListRefresh2"
             type="primary"
-            @click="getElectricCalList"
-            :loading="gettingListRefresh2">
+            @click="getElectricCalList">
             刷新
           </el-button>
           <div class="table-btn-input">
@@ -109,11 +109,11 @@
 
         <!-- 电费数据表 -->
         <el-table
-          class="electric-table"
+          v-loading.body="gettingListRefresh2"
           ref="electricCalTable"
           :max-height="tableMaxHeight"
           :data="filterElectricCalData"
-          v-loading.body="gettingListRefresh2"
+          class="electric-table"
           stripe
           border>
           <el-table-column
@@ -194,8 +194,8 @@
                     元/度
                   </div>
                   <div
-                    class="history-step-p-wrap"
-                    v-if="scope.row.calElectric.calType == 'step'">
+                    v-if="scope.row.calElectric.calType == 'step'"
+                    class="history-step-p-wrap">
                     <div class="step-p-title">
                       阶梯：
                     </div>
@@ -216,8 +216,8 @@
                     本计费结果已被修正，计算方式仅供参考
                   </div>
                   <div
-                    class="show-tag"
-                    slot="reference">
+                    slot="reference"
+                    class="show-tag">
                     <el-tag>计费方式</el-tag>
                   </div>
                 </el-popover>
@@ -230,10 +230,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dCalElectricPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dCalElectricPopFlag">
+                trigger="click">
                 <p>确认删除计费记录吗？抄表历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button
@@ -252,9 +252,9 @@
                 <div
                   slot="reference">
                   <el-button
+                    :loading="scope.row.gettingdelCalElectric"
                     size="small"
-                    type="danger"
-                    :loading="scope.row.gettingdelCalElectric">
+                    type="danger">
                     删除
                   </el-button>
                 </div>

@@ -1,5 +1,6 @@
 <template>
   <div class="house-list">
+
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
@@ -8,9 +9,9 @@
         新增
       </el-button>
       <el-button
+        :loading="gettingListRefresh"
         type="primary"
-        @click="getListRefresh"
-        :loading="gettingListRefresh">
+        @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
@@ -22,19 +23,19 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-house-dialog small"
       :key="dialogId"
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
       :close-on-click-modal="false"
+      custom-class="add-house-dialog small"
       @close="onAddHouseDialogClose">
       <el-form
-        :model="addHouse"
         ref="addHouse"
+        :model="addHouse"
         :rules="addHouserules">
         <el-form-item
-          label="坊号"
           :label-width="ahdLabelWidth"
+          label="坊号"
           prop="fang">
           <el-select
             v-model="addHouse.fang"
@@ -47,8 +48,8 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="房间号"
           :label-width="ahdLabelWidth"
+          label="房间号"
           prop="hao">
           <el-input
             v-model="addHouse.hao"
@@ -56,8 +57,8 @@
             placeholder="输入房间号" />
         </el-form-item>
         <el-form-item
-          label="说明"
-          :label-width="ahdLabelWidth">
+          :label-width="ahdLabelWidth"
+          label="说明">
           <el-input
             v-model="addHouse.detail"
             auto-complete="off"
@@ -65,17 +66,17 @@
         </el-form-item>
       </el-form>
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getAddHouseDialog"
-          :loading="gettingAddHouse">
+          :loading="gettingAddHouse"
+          @click="getAddHouseDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingAddHouse"
           type="primary"
-          @click="getAddHouse"
-          :loading="gettingAddHouse">
+          @click="getAddHouse">
           确定
         </el-button>
       </div>
@@ -83,11 +84,11 @@
 
     <!-- 房屋数据表 -->
     <el-table
-      class="house-table"
+      v-loading.body="gettingListRefresh"
       ref="houseTable"
       :max-height="tableMaxHeight"
       :data="filterHouseData"
-      v-loading.body="gettingListRefresh"
+      class="house-table"
       stripe
       border>
       <el-table-column
@@ -128,10 +129,10 @@
             修改
           </el-button>
           <el-popover
+            v-model="scope.row.dHousePopFlag"
             placement="top"
             width="150"
-            trigger="click"
-            v-model="scope.row.dHousePopFlag">
+            trigger="click">
             <p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
             <div class="pop-cont">
               <el-button
@@ -148,12 +149,12 @@
               </el-button>
             </div>
             <span
-              class="show-pop"
-              slot="reference">
+              slot="reference"
+              class="show-pop">
               <el-button
+                :loading="scope.row.gettingdelHouse"
                 size="small"
-                type="danger"
-                :loading="scope.row.gettingdelHouse">
+                type="danger">
                 删除
               </el-button>
             </span>

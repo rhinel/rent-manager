@@ -1,7 +1,7 @@
 <template>
   <div
-    class="auth-login"
     id="large-header"
+    class="auth-login"
     @keyup.enter="getLogin">
     <!--  :style="{backgroundImage:'url('+ bingBg +')'}" -->
     <canvas id="index-canvas" />
@@ -15,22 +15,22 @@
         :rules="loginrules">
         <el-form-item prop="name">
           <el-input
-            placeholder="Name"
-            icon="star-on"
             :maxlength="10"
-            v-model="logininfo.name" />
+            v-model="logininfo.name"
+            placeholder="Name"
+            icon="star-on" />
         </el-form-item>
         <el-form-item prop="pwd">
           <el-input
+            v-model="logininfo.pwd"
             type="password"
             placeholder="Pwd"
-            icon="star-on"
-            v-model="logininfo.pwd" />
+            icon="star-on" />
         </el-form-item>
         <el-button
+          :loading="logininfo.loading"
           class="login-go"
           type="primary"
-          :loading="logininfo.loading"
           @click="getLogin">
           登陆
         </el-button>

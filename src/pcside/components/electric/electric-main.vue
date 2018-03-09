@@ -9,9 +9,9 @@
         抄表
       </el-button>
       <el-button
+        :loading="gettingListRefresh"
         type="primary"
-        @click="getListRefresh"
-        :loading="gettingListRefresh">
+        @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
@@ -23,24 +23,24 @@
 
     <!-- 新增弹窗 -->
     <el-dialog
-      custom-class="add-electric-dialog small"
       :key="'addElectric' + dialogId"
       :title="aedDialogTitle"
       :visible.sync="addElectricflag"
       :close-on-click-modal="false"
+      custom-class="add-electric-dialog small"
       @close="onAddElectricDialogClose">
       <el-form
-        :model="addElectric"
         ref="addElectric"
+        :model="addElectric"
         :rules="addElectricrules">
         <el-form-item
-          label="房屋"
           :label-width="aedLabelWidth"
+          label="房屋"
           prop="haoId">
           <el-select
             v-model="addElectric.haoId"
-            placeholder="选择房屋"
-            :filterable="true">
+            filterable
+            placeholder="选择房屋">
             <el-option
               v-for="item in houseData"
               :label="item.fang + item.hao"
@@ -49,8 +49,8 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="电表数"
           :label-width="aedLabelWidth"
+          label="电表数"
           prop="electric">
           <el-input
             v-model.number="addElectric.electric"
@@ -60,36 +60,36 @@
           </el-input>
         </el-form-item>
         <el-form-item
-          label="备注"
-          :label-width="aedLabelWidth">
+          :label-width="aedLabelWidth"
+          label="备注">
           <el-input
             v-model="addElectric.remark"
             auto-complete="off"
             placeholder="备注" />
         </el-form-item>
         <el-form-item
-          label="抄表时间"
           :label-width="aedLabelWidth"
+          label="抄表时间"
           prop="addTime">
           <el-date-picker
             v-model="addElectric.addTime"
+            :editable="false"
             type="datetime"
-            placeholder="输入抄表时间"
-            :editable="false" />
+            placeholder="输入抄表时间" />
         </el-form-item>
       </el-form>
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getAddElectricDialog"
-          :loading="gettingAddElectric">
+          :loading="gettingAddElectric"
+          @click="getAddElectricDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingAddElectric"
           type="primary"
-          @click="getAddElectric"
-          :loading="gettingAddElectric">
+          @click="getAddElectric">
           确定
         </el-button>
       </div>
@@ -97,16 +97,16 @@
 
     <!-- 计费弹窗 -->
     <el-dialog
-      custom-class="cal-electric-dialog"
       :key="'calElectric' + dialogId"
       :title="calElectric.fanghao + cedDialogTitle"
       :visible.sync="calElectricflag"
-      top="50px"
       :close-on-click-modal="false"
+      custom-class="cal-electric-dialog"
+      top="50px"
       @close="onCalElectricDialogClose">
       <el-form
-        :model="calElectric"
         ref="calElectric"
+        :model="calElectric"
         :rules="calElectricrules">
 
         <!-- 房屋信息 -->
@@ -117,8 +117,8 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="抄表数"
               :label-width="cedLabelWidth"
+              label="抄表数"
               prop="tnew.electric">
               <el-input
                 v-model.number="calElectric.tnew.electric"
@@ -130,21 +130,21 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="抄表时间"
               :label-width="cedLabelWidth"
+              label="抄表时间"
               prop="tnew.addTime">
               <el-date-picker
                 v-model="calElectric.tnew.addTime"
+                :editable="false"
                 type="datetime"
                 placeholder="输入抄表时间"
-                style="width: 100%;"
-                :editable="false" />
+                style="width: 100%;" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          label="抄表备注"
-          :label-width="cedLabelWidth">
+          :label-width="cedLabelWidth"
+          label="抄表备注">
           <el-input
             v-model="calElectric.tnew.remark"
             auto-complete="off"
@@ -156,8 +156,8 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="底表数"
               :label-width="cedLabelWidth"
+              label="底表数"
               prop="old.electric">
               <el-input
                 v-model.number="calElectric.old.electric"
@@ -169,21 +169,21 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="底表时间"
               :label-width="cedLabelWidth"
+              label="底表时间"
               prop="old.addTime">
               <el-date-picker
                 v-model="calElectric.old.addTime"
+                :editable="false"
                 type="datetime"
                 placeholder="输入底表时间"
-                style="width: 100%;"
-                :editable="false" />
+                style="width: 100%;" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          label="底表备注"
-          :label-width="cedLabelWidth">
+          :label-width="cedLabelWidth"
+          label="底表备注">
           <el-input
             v-model="calElectric.old.remark"
             auto-complete="off"
@@ -197,8 +197,8 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              label="低消"
               :label-width="cedLabelWidth"
+              label="低消"
               prop="calElectric.minPrice">
               <el-input
                 v-model.number="calElectric.calElectric.minPrice"
@@ -210,8 +210,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="计费方式"
-              :label-width="cedLabelWidth">
+              :label-width="cedLabelWidth"
+              label="计费方式">
               <el-radio
                 v-model="calElectric.calElectric.calType"
                 label="single">
@@ -227,12 +227,12 @@
         </el-row>
         <!-- 单价计费 -->
         <el-form-item
-          label="单价"
-          key="eleSingle"
-          :label-width="cedLabelWidth"
           v-if="calElectric.calElectric.calType == 'single'"
-          prop="calElectric.singlePrice"
-          :rules="calElectricrules[`calElectric.singlePrice`][0]">
+          key="eleSingle"
+          :rules="calElectricrules[`calElectric.singlePrice`][0]"
+          :label-width="cedLabelWidth"
+          label="单价"
+          prop="calElectric.singlePrice">
           <el-input
             v-model.number="calElectric.calElectric.singlePrice"
             auto-complete="off"
@@ -265,8 +265,8 @@
               </el-form-item>
             </el-col>
             <el-col
-              class="line"
-              :span="1" />
+              :span="1"
+              class="line" />
             <el-col :span="9">
               <el-form-item
                 :prop="'calElectric.stepPrice.' + index + '.price'"
@@ -283,8 +283,8 @@
               </el-form-item>
             </el-col>
             <el-col
-              class="line"
-              :span="1" />
+              :span="1"
+              class="line" />
             <el-col
               :span="3"
               class="step-btn">
@@ -295,8 +295,8 @@
           </el-form-item>
         </div>
         <el-form-item
-          key="eleStep"
           v-if="calElectric.calElectric.calType == 'step'"
+          key="eleStep"
           :label-width="cedLabelWidth">
           <el-button
             type="primary"
@@ -322,21 +322,21 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="计费时间"
               :label-width="cedLabelWidth"
+              label="计费时间"
               prop="addTime">
               <el-date-picker
                 v-model="calElectric.addTime"
+                :editable="false"
                 type="datetime"
                 placeholder="输入计费时间"
-                style="width: 100%;"
-                :editable="false" />
+                style="width: 100%;" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          label="计费备注"
-          :label-width="cedLabelWidth">
+          :label-width="cedLabelWidth"
+          label="计费备注">
           <el-input
             v-model="calElectric.remark"
             auto-complete="off"
@@ -344,17 +344,17 @@
         </el-form-item>
       </el-form>
       <div
-        class="dialog-footer"
-        slot="footer">
+        slot="footer"
+        class="dialog-footer">
         <el-button
-          @click="getCalElectricDialog"
-          :loading="gettingCalElectric">
+          :loading="gettingCalElectric"
+          @click="getCalElectricDialog">
           取消
         </el-button>
         <el-button
+          :loading="gettingCalElectric"
           type="primary"
-          @click="getCalElectric"
-          :loading="gettingCalElectric">
+          @click="getCalElectric">
           确定
         </el-button>
       </div>
@@ -362,11 +362,11 @@
 
     <!-- 电费数据表 -->
     <el-table
-      class="electric-table"
+      v-loading.body="gettingListRefresh"
       ref="electricTable"
       :max-height="tableMaxHeight"
       :data="filterElectricData"
-      v-loading.body="gettingListRefresh"
+      class="electric-table"
       stripe
       border>
       <el-table-column
@@ -379,8 +379,8 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.electricId.electric > 0">
+            v-if="scope.row.electricId.electric > 0"
+            class="main-txt-highline">
             {{ scope.row.electricId.electric }}
           </span>
           <span
@@ -403,8 +403,8 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.calElectricId.electric > 0">
+            v-if="scope.row.calElectricId.electric > 0"
+            class="main-txt-highline">
             {{ scope.row.calElectricId.electric }}
           </span>
           <span
@@ -427,8 +427,8 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.gap > 0">
+            v-if="scope.row.gap > 0"
+            class="main-txt-highline">
             {{ scope.row.gap }}
           </span>
           <span v-else>
