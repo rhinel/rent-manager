@@ -602,9 +602,18 @@ module.exports = {
       list[time][rent.lease.payType] += rent.calRentResult
       list[time].all += rent.calRentResult
       // 非房租都认为是水电费
-      // (i.calWater ? i.calWater.calWaterResult : 0) +
-      // (i.calElectric ? i.calElectric.calElectricResult : 0)
+      // (rent.calWater ? rent.calWater.calWaterResult : 0) +
+      // (rent.calElectric ? rent.calElectric.calElectricResult : 0)
       rent.cost = rent.calRentResult - rent.lease.rent
+      // 修复不足整月时应收小于房租的问题，反推计算水电数和房租数
+      if (rent.cost < 0) {
+        const cost =
+        (rent.calWater ? rent.calWater.calWaterResult : 0) +
+        (rent.calElectric ? rent.calElectric.calElectricResult : 0)
+        rent.lease.rent = rent.calRentResult - cost
+        rent.cost = cost
+      }
+      rent.cost = Math.abs(rent.cost)
       // 默认字段提供
       if (!rent.checkBill) rent.checkBill = false
       rent.checkBilling = false
