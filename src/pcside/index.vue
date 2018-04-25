@@ -70,6 +70,13 @@ tr:hover
   font-weight: bold;
 }
 
+.el-table--enable-row-hover
+.el-table__body
+tr:hover
+> td {
+  background-color: #dcdfe6;
+}
+
 /* 表格=折页打开样式 */
 .table-expand {
   font-size: 0;
@@ -199,6 +206,10 @@ tr:hover
 .el-popover {
   font-size: 14px;
   line-height: 1.5;
+
+  p {
+    margin: 0;
+  }
 }
 
 .el-alert {
