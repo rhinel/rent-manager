@@ -108,10 +108,7 @@ const connect = callback => {
       reconnectInterval: 5000,
       autoReconnect: true,
     })
-    .catch(err => {
-      sysLog.error(err)
-      connect(callback)
-    })
+    .catch(() => setTimeout(() => connect(callback), 5000))
 }
 
 // model
