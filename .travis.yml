@@ -1,48 +1,34 @@
 language: node_js
-node_js:
-  - "9"
 
-cache:
-  yarn: true
+node_js:
+- '9'
 
 sudo: required
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_7c789783d536_key -iv $encrypted_7c789783d536_iv -in rsa.tar.enc -out ./rsa.tar -d
-  - tar -xvf rsa.tar
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    mv ./TXRsa ~/.ssh/id_rsa;
-    fi
-  - if [ "$TRAVIS_BRANCH" != "master" ]; then
-    mv ./VTRsa ~/.ssh/id_rsa;
-    fi
-  - chmod 600 ~/.ssh/id_rsa
-  - echo -e "Host 111.230.174.166\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-  - echo -e "Host 45.76.52.33\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- openssl aes-256-cbc -K $encrypted_7c789783d536_key -iv $encrypted_7c789783d536_iv
+  -in rsa.tar.enc -out ./rsa.tar -d
+- tar -xvf rsa.tar
+- if [ "$TRAVIS_BRANCH" == "master" ]; then mv ./TXRsa ~/.ssh/id_rsa; fi
+- chmod 600 ~/.ssh/id_rsa
+- echo -e "Host $txsl\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 script:
-  - npm run lint
-  - npm run lint:css
-  - npm run build
+- npm run lint
+- npm run lint:css
+- npm run build
 
 after_success:
-  - tar -jcf dist.tar.bz2 dist/*
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    scp dist.tar.bz2 root@111.230.174.166:~/;
-    ssh root@111.230.174.166 "sudo -i mv /root/dist.tar.bz2 ./gitcode/rent-manager/";
-    ssh root@111.230.174.166 "sudo -i ./gitcode/rent-manager/autoFetch.sh $TRAVIS_BRANCH";
-    fi
-  - if [ "$TRAVIS_BRANCH" != "master" ]; then
-    scp dist.tar.bz2 root@45.76.52.33:~/gitcode/rent-manager/;
-    ssh root@45.76.52.33 "./gitcode/rent-manager/autoFetch.sh $TRAVIS_BRANCH";
-    fi
-
-addons:
-  ssh_known_hosts:
-    - 111.230.174.166
-    - 45.76.52.33
+- tar -jcf dist.tar.bz2 dist/*
+- if [ "$TRAVIS_BRANCH" == "master" ]; then scp dist.tar.bz2 root@$txsl:~/;
+  ssh root@$txsl "sudo -i mv /root/dist.tar.bz2 ./gitcode/rent-manager/";
+  ssh root@$txsl "sudo -i ./gitcode/rent-manager/autoFetch.sh $TRAVIS_BRANCH";
+  fi
 
 branches:
   only:
-    - master
-    - test
+  - master
+
+env:
+  global:
+    secure: DIkNPSXwIZBmgYyQbEZkTRXW8KTozxac2wWT2zNSff7QgNOffz8TQRafCfzBNJgk0BVFmS2UNVGBQQ5TVSju8SJfqQe/Fog2oMrCDyuk+fDHWd8ByHcRZcrZ6rlmVjqf49gRHfJCJJQSVyHkvxrXBHrYJINnW+WIP4nf3Vpkdrnqe/U7zfYglqr5PuhcvRu9GzvQG9FogpAum3HBOe8dCzgr8pMkUfP4vFzHBP4vsodVt6K26FlzvfVIhF5C3hFeSus82TmQ1Ha7fETkeCYS+gLpbX0Il6Fj5ohJvxFy/5W82RmFqzIO1zKt02cQq/00n8M10HhSlwKUY4h1j5/J1BJ/kb+mLVXCczksTa8YrT59u8qGSlhAYvdYgVvz3XYcRWjKtgC6NR9Y0sg92L36r+3y/DwJNCEp2V9qXkW15Wt/o0NvZ/oBUEY1eMzjhtmHeHfGzo4EzkrCpESULd7pElHEegqZFxampXwPKgh182musTAEHApQpmHEnuM0dOX/2fLJbJJ9MVjymN2fIXf5wkpT/AJypNJFylaomMEDdEHdIo2SD23Yo80hy5hXafpteSM70RLxuGI+z4e8+tLUyhZ60QMmw0Qo+Oi+jFePMonWaJwdojKVcZJUh04rj74Hl6QKu/94cNAX9+9GTnk/C+wD4KsBWCxdcAmIaKyQ82U=
