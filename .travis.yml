@@ -9,7 +9,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_7c789783d536_key -iv $encrypted_7c789783d536_iv
   -in rsa.tar.enc -out ./rsa.tar -d
 - tar -xvf rsa.tar
-- if [ "$TRAVIS_BRANCH" == "master" ]; then mv ./TXRsa ~/.ssh/id_rsa; fi
+- mv ./TXRsa ~/.ssh/id_rsa
 - chmod 600 ~/.ssh/id_rsa
 - echo -e "Host $txsl\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
@@ -20,10 +20,8 @@ script:
 
 after_success:
 - tar -jcf dist.tar.bz2 dist/*
-- if [ "$TRAVIS_BRANCH" == "master" ]; then scp dist.tar.bz2 root@$txsl:~/;
-  ssh root@$txsl "sudo -i mv /root/dist.tar.bz2 ./gitcode/rent-manager/";
-  ssh root@$txsl "sudo -i ./gitcode/rent-manager/autoFetch.sh $TRAVIS_BRANCH";
-  fi
+- scp dist.tar.bz2 root@$txsl:~/gitcode/rent-manager/
+- ssh root@$txsl "sudo -i ~/gitcode/rent-manager/autoFetch.sh $TRAVIS_BRANCH"
 
 branches:
   only:
