@@ -4,6 +4,7 @@ docker rm -f rentmanager
 
 # 启动并自动重启
 docker run \
+ --restart always \
  --name rentmanager \
  --link myredis:myredis \
  --link mymongo:mymongo \
