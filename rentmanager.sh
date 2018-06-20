@@ -13,4 +13,4 @@ docker run \
  -v /etc/localtime:/etc/localtime \
  -v ~/gitcode/rent-manager:/webapp \
  -w /webapp/server-node \
- -d node node index
+ -d node node index server
