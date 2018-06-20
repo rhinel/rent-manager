@@ -6,10 +6,8 @@ node_js:
 sudo: required
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_7c789783d536_key -iv $encrypted_7c789783d536_iv
-  -in rsa.tar.enc -out ./rsa.tar -d
-- tar -xvf rsa.tar
-- mv ./TXRsa ~/.ssh/id_rsa
+- openssl aes-256-cbc -K $encrypted_41ef17e19db8_key -iv $encrypted_41ef17e19db8_iv
+  -in TXRsa.enc -out ~/.ssh/id_rsa -d
 - chmod 600 ~/.ssh/id_rsa
 - echo -e "Host $txsl\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
