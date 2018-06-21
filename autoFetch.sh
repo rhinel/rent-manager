@@ -1,42 +1,46 @@
 #! /bin/bash
 
-echo "--> 开始本地处理"
+start=`date +%s`
+
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> 开始本地处理"
 
 cd ~/gitcode/rent-manager/
 
-echo "--> fetch当前分支"
-echo "--> $1"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> fetch当前分支"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> $1"
 
 git status
 
-echo "--> git checkout $1"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> git checkout $1"
 git checkout $1
 
-echo "--> git pull --all"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> git pull --all"
 
 git pull --all
 git fetch -p
 
-echo "--> 更新生产版本依赖"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> 更新生产版本依赖"
 
 yarn install --production=true
 
 yarn git-init
 
-echo "--> 删除旧版本"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> 删除旧版本"
 
 rm -rf ./dist
 
-echo "--> 解压新版本"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> 解压新版本"
 
 tar -jxf dist.tar.bz2 -C ./
 
-echo "--> cache clear"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> cache clear"
 
 rm -rf dist.tar.bz2
 
-echo "--> docker restart"
+echo -e "\033[34m`date "+%T"`\033[0m"  "--> docker restart"
 
 sh ./rentmanager.sh
 
-echo "--> 全部完成"
+end=`date +%s`
+dif=$[ end - start ]
+echo -e "\033[42;37m done! \033[0m" $dif"s"
