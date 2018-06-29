@@ -112,12 +112,12 @@ const connect = callback => {
 }
 
 // model
-const dbModel = (dbName, dataType = {}) => {
+const dbModel = (dbName, dataType = {}, options = {}) => {
   if (!dbName || typeof dbName !== 'string') {
     return Promise.reject(new Error('without dbName'))
   }
   // 数据库模型骨架
-  const dataSchema = new mongoose.Schema(dataType)
+  const dataSchema = new mongoose.Schema(dataType, options)
 
   // 数据集合创建
   const dataModel = db.model(dbName, dataSchema, dbName)
