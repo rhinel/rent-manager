@@ -237,7 +237,7 @@ module.exports = {
         remark: String,
 
         updateTime: Number, // 更新时间
-      })
+      }, { typeKey: '$type' })
       .findOneAndUpdate({ _id: req.body.rentId }, {
         type: {
           checkAll: req.body.checkAll,
