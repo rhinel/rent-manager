@@ -514,10 +514,12 @@
 
             <collapse-landord-item
               type="six"
+              :newest="monthDet.newest"
               :landord="landordHistoryTemp" />
 
             <collapse-landord-item
               type="eight"
+              :newest="monthDet.newest"
               :landord="landordHistoryTemp" />
 
           </el-collapse-item>
@@ -576,14 +578,20 @@
                   </div>
                 </el-popover>
               </span>
+
+              <!-- <el-button
+                type="text"
+                size="medium">备注</el-button> -->
             </template>
 
             <collapse-landord-item
               type="six"
+              :newest="monthDet.newest"
               :landord="item" />
 
             <collapse-landord-item
               type="eight"
+              :newest="monthDet.newest"
               :landord="item" />
 
           </el-collapse-item>

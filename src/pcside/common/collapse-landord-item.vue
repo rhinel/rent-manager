@@ -42,7 +42,7 @@
       <div class="landord-check">
         <el-checkbox
           v-model="i.checkBill"
-          :disabled="i.checkBilling"
+          :disabled="i.checkBilling || !newest"
           @change="checkBillChange($event, i)">
           已对账
           <i
@@ -75,6 +75,10 @@
       type: {
         type: String,
         default: '',
+      },
+      newest: {
+        type: Boolean,
+        default: false,
       },
     },
     computed: {

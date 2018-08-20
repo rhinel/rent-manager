@@ -151,7 +151,7 @@ tr:hover
   display: inline-block;
   margin-right: 20px;
 
-  .el-button {
+  & + .el-button {
     font-size: 13px;
   }
 }
@@ -159,6 +159,9 @@ tr:hover
 /* 详情样式 */
 .landord-content {
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   .collapse-btn {
     width: auto;
