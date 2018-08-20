@@ -3,9 +3,9 @@
 </template>
 
 <script>
-export default {
-  name: 'Index',
-}
+  export default {
+    name: 'Index',
+  }
 </script>
 
 <style lang="scss">
@@ -15,12 +15,13 @@ body {
   padding: 0;
   margin: 0;
   font-family:
-    Helvetica Neue,
+    "Helvetica Neue",
     Helvetica,
-    PingFang SC,
-    Hiragino Sans GB,
-    Microsoft YaHei,
-    SimSun,
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "微软雅黑",
+    Arial,
     sans-serif;
   height: 100%;
   width: 100%;

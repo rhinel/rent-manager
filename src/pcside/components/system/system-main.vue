@@ -7,10 +7,10 @@
           title="坊号类型（不可修改）"
           name="houseFang">
           <el-tag
-            v-for="(fang, index) in houseFang"
-            :key="index"
             class="show-tag show-tag3"
-            type="success">
+            type="success"
+            v-for="(fang, index) in houseFang"
+            :key="index">
             {{ fang }}
           </el-tag>
         </el-collapse-item>
@@ -19,10 +19,10 @@
           title="收租类型（不可修改）"
           name="payTypeVal">
           <el-tag
-            v-for="(pay, index) in payTypeVal"
-            :key="index"
             class="show-tag show-tag3"
-            type="success">
+            type="success"
+            v-for="(pay, index) in payTypeVal"
+            :key="index">
             {{ pay }}
           </el-tag>
         </el-collapse-item>
@@ -31,11 +31,11 @@
           title="交租状态（不可修改）"
           name="typesVal">
           <el-tag
+            class="show-tag show-tag3"
+            type="success"
             v-for="(type, index) in typesVal"
             v-if="!!type"
-            :key="index"
-            class="show-tag show-tag3"
-            type="success">
+            :key="index">
             {{ type }}
           </el-tag>
         </el-collapse-item>
@@ -52,29 +52,29 @@
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item
-                  :label-width="labelWidth"
                   label="水费低消"
-                  prop="minPrice">
+                  prop="minPrice"
+                  :label-width="labelWidth">
                   <el-input
-                    v-model.number="calWaterPrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费">
+                    placeholder="输入最低消费"
+                    v-model.number="calWaterPrice.minPrice">
                     <template slot="append">吨</template>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="14">
                 <el-form-item
-                  :label-width="labelWidth"
-                  label="水费方式">
+                  label="水费方式"
+                  :label-width="labelWidth">
                   <el-radio
-                    v-model="calWaterPrice.calType"
-                    label="single">
+                    label="single"
+                    v-model="calWaterPrice.calType">
                     单一价格
                   </el-radio>
                   <el-radio
-                    v-model="calWaterPrice.calType"
-                    label="step">
+                    label="step"
+                    v-model="calWaterPrice.calType">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -83,17 +83,17 @@
 
             <!-- 单价水费计费 -->
             <el-form-item
+              label="水费单价"
+              prop="singlePrice"
               v-if="calWaterPrice.calType == 'single'"
               key="watSingle"
               :label-width="labelWidth"
-              :rules="calrules.singlePrice[0]"
-              label="水费单价"
-              prop="singlePrice">
+              :rules="calrules.singlePrice[0]">
               <el-col :span="13">
                 <el-input
-                  v-model.number="calWaterPrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价">
+                  placeholder="输入单价"
+                  v-model.number="calWaterPrice.singlePrice">
                   <template slot="prepend">￥</template>
                   <template slot="append">元/吨</template>
                 </el-input>
@@ -103,12 +103,12 @@
             <!-- 水费阶梯计费 -->
             <div v-if="calWaterPrice.calType == 'step'">
               <el-form-item
+                required
                 v-for="(step, index) in calWaterPrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="labelWidth"
                 :key="'calWaterPrice' + index"
-                :ref="'calWaterPrice' + index"
-                required>
+                :ref="'calWaterPrice' + index">
                 <el-col :span="5">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.step'"
@@ -116,16 +116,16 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值">
+                      placeholder="本阶梯最大值"
+                      v-model.number="step.step">
                       <template slot="append">吨</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col :span="7">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.price'"
@@ -133,17 +133,17 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价">
+                      placeholder="本阶梯单价"
+                      v-model.number="step.price">
                       <template slot="prepend">￥</template>
                       <template slot="append">元</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col :span="5">
                   <el-button
                     @click.prevent="removeStep(calWaterPrice, step)">
@@ -169,8 +169,8 @@
               key="watBtn"
               :label-width="labelWidth">
               <el-button
-                :loading="submitLoading"
                 type="danger"
+                :loading="submitLoading"
                 @click="submit">
                 提交修改
               </el-button>
@@ -195,29 +195,29 @@
             <el-row :gutter="20">
               <el-col :span="7">
                 <el-form-item
-                  :label-width="labelWidth"
                   label="低消"
-                  prop="minPrice">
+                  prop="minPrice"
+                  :label-width="labelWidth">
                   <el-input
-                    v-model.number="calElePrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费">
+                    placeholder="输入最低消费"
+                    v-model.number="calElePrice.minPrice">
                     <template slot="append">度</template>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="14">
                 <el-form-item
-                  :label-width="labelWidth"
-                  label="计费方式">
+                  label="计费方式"
+                  :label-width="labelWidth">
                   <el-radio
-                    v-model="calElePrice.calType"
-                    label="single">
+                    label="single"
+                    v-model="calElePrice.calType">
                     单一价格
                   </el-radio>
                   <el-radio
-                    v-model="calElePrice.calType"
-                    label="step">
+                    label="step"
+                    v-model="calElePrice.calType">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -225,17 +225,17 @@
             </el-row>
             <!-- 单价计费 -->
             <el-form-item
+              label="单价"
+              prop="singlePrice"
               v-if="calElePrice.calType == 'single'"
               key="eleSingle"
               :label-width="labelWidth"
-              :rules="calrules.singlePrice[0]"
-              label="单价"
-              prop="singlePrice">
+              :rules="calrules.singlePrice[0]">
               <el-col :span="13">
                 <el-input
-                  v-model.number="calElePrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价">
+                  placeholder="输入单价"
+                  v-model.number="calElePrice.singlePrice">
                   <template slot="prepend">￥</template>
                   <template slot="append">元/度</template>
                 </el-input>
@@ -244,12 +244,12 @@
             <!-- 阶梯计费 -->
             <div v-if="calElePrice.calType == 'step'">
               <el-form-item
+                required
                 v-for="(step, index) in calElePrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="labelWidth"
                 :key="'calElectric'+ index"
-                :ref="'calElectric' + index"
-                required>
+                :ref="'calElectric' + index">
                 <el-col :span="5">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.step'"
@@ -257,16 +257,16 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值">
+                      placeholder="本阶梯最大值"
+                      v-model.number="step.step">
                       <template slot="append">度</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col :span="7">
                   <el-form-item
                     :prop="'stepPrice.' + index + '.price'"
@@ -274,17 +274,17 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价">
+                      placeholder="本阶梯单价"
+                      v-model.number="step.price">
                       <template slot="prepend">￥</template>
                       <template slot="append">元</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col :span="5">
                   <el-button
                     @click.prevent="removeStep(calElePrice, step)">
@@ -310,8 +310,8 @@
               key="eleBtn"
               :label-width="labelWidth">
               <el-button
-                :loading="submitLoading"
                 type="danger"
+                :loading="submitLoading"
                 @click="submit">
                 提交修改
               </el-button>
@@ -329,140 +329,144 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
 
-export default {
-  name: 'SystemMain',
-  data() {
-    return {
-      activeNames: [],
-      submitLoading: false,
+  export default {
+    name: 'SystemMain',
+    data() {
+      return {
+        activeNames: [],
+        submitLoading: false,
 
-      labelWidth: '90px',
+        labelWidth: '90px',
 
-      // 水费编辑表单
-      calWaterPrice: {},
+        // 水费编辑表单
+        calWaterPrice: {},
 
-      // 电费编辑表单
-      calElePrice: {},
+        // 电费编辑表单
+        calElePrice: {},
 
-      // 表单校验
-      calrules: {
-        minPrice: [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
-        singlePrice: [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
+        // 表单校验
+        calrules: {
+          minPrice: [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          singlePrice: [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+        },
+      }
+    },
+    computed: {
+      ...mapState({
+        houseFang: state => state.config.houseFang,
+        payTypeVal: state => state.config.payTypeVal,
+        typesVal: state => state.config.typesVal,
+        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+        defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultStep: state => state.config.defaultStep,
+        defaultKeysHasSet: state => state.defaultKeysHasSet,
+      }),
+      calWaterEdit() {
+        const local = JSON.stringify(this.calWaterPrice)
+        const def = JSON.stringify(this.defaultCalWaterPrice)
+        return local !== def
       },
-    }
-  },
-  computed: {
-    ...mapState({
-      houseFang: state => state.config.houseFang,
-      payTypeVal: state => state.config.payTypeVal,
-      typesVal: state => state.config.typesVal,
-      defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
-      defaultCalElePrice: state => state.config.defaultCalElePrice,
-      defaultStep: state => state.config.defaultStep,
-      defaultKeysHasSet: state => state.defaultKeysHasSet,
-    }),
-    calWaterEdit() {
-      const local = JSON.stringify(this.calWaterPrice)
-      const def = JSON.stringify(this.defaultCalWaterPrice)
-      return local !== def
+      calEleEdit() {
+        const local = JSON.stringify(this.calElePrice)
+        const def = JSON.stringify(this.defaultCalElePrice)
+        return local !== def
+      },
     },
-    calEleEdit() {
-      const local = JSON.stringify(this.calElePrice)
-      const def = JSON.stringify(this.defaultCalElePrice)
-      return local !== def
+    watch: {
+      // 获取数据
+      defaultCalWaterPrice() {
+        this.cancel('water')
+      },
+      defaultCalElePrice() {
+        this.cancel('ele')
+      },
     },
-  },
-  watch: {
-    // 获取数据
-    defaultCalWaterPrice() {
+    beforeCreate() {
+      this.$store.dispatch('updateMenu', '/inner/system/index')
+    },
+    created() {
       this.cancel('water')
-    },
-    defaultCalElePrice() {
       this.cancel('ele')
     },
-  },
-  beforeCreate() {
-    this.$store.dispatch('updateMenu', '/inner/system/index')
-  },
-  created() {
-    this.cancel('water')
-    this.cancel('ele')
-  },
-  mounted() {
-    this.activeNames = Object.keys(this._computedWatchers)
-  },
-  methods: {
-    // 添加步骤
-    addStep(wrap) {
-      const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
-      wrap.stepPrice.push(step)
+    mounted() {
+      this.activeNames = Object.keys(this._computedWatchers)
     },
-    // 删除步骤
-    removeStep(wrap, step) {
-      const index = wrap.stepPrice.indexOf(step)
-      if (index !== -1) {
-        wrap.stepPrice.splice(index, 1)
-      }
-    },
-    // 取消修改
-    cancel(type) {
-      if (type === 'water') {
-        if (this.$refs.calWaterPrice) this.$refs.calWaterPrice.resetFields()
-        this.calWaterPrice =
-          Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalWaterPrice)))
-      } else {
-        if (this.$refs.calElePrice) this.$refs.calElePrice.resetFields()
-        this.calElePrice =
-          Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalElePrice)))
-      }
-    },
-    // 提交修改
-    async submit() {
-      if (this.submitLoading) return
+    methods: {
+      // 添加步骤
+      addStep(wrap) {
+        const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
+        wrap.stepPrice.push(step)
+      },
+      // 删除步骤
+      removeStep(wrap, step) {
+        const index = wrap.stepPrice.indexOf(step)
+        if (index !== -1) {
+          wrap.stepPrice.splice(index, 1)
+        }
+      },
+      // 取消修改
+      cancel(type) {
+        if (type === 'water') {
+          if (this.$refs.calWaterPrice) this.$refs.calWaterPrice.resetFields()
+          this.calWaterPrice = Object.assign(
+            {},
+            JSON.parse(JSON.stringify(this.defaultCalWaterPrice))
+          )
+        } else {
+          if (this.$refs.calElePrice) this.$refs.calElePrice.resetFields()
+          this.calElePrice = Object.assign(
+            {},
+            JSON.parse(JSON.stringify(this.defaultCalElePrice))
+          )
+        }
+      },
+      // 提交修改
+      async submit() {
+        if (this.submitLoading) return
 
-      try {
-        await this.$refs.calWaterPrice.validate()
-        await this.$refs.calElePrice.validate()
-      } catch (err) {
-        return
-      }
+        try {
+          await this.$refs.calWaterPrice.validate()
+          await this.$refs.calElePrice.validate()
+        } catch (err) {
+          return
+        }
 
-      // 请求接口
-      this.submitLoading = true
+        // 请求接口
+        this.submitLoading = true
 
-      const {
-        calWaterPrice,
-        calElePrice,
-      } = this
-      const postData = Object.assign({}, {
-        defaultCalWaterPrice: calWaterPrice,
-        defaultCalElePrice: calElePrice,
-      })
+        const {
+          calWaterPrice,
+          calElePrice,
+        } = this
+        const postData = Object.assign({}, {
+          defaultCalWaterPrice: calWaterPrice,
+          defaultCalElePrice: calElePrice,
+        })
 
-      try {
-        await this.Ajax('/inner/auth/updateSysInfo', postData)
-      } catch (err) {
+        try {
+          await this.Ajax('/inner/auth/updateSysInfo', postData)
+        } catch (err) {
+          this.submitLoading = false
+          return
+        }
+
+        await this.$store.dispatch('getDefaults')
+        this.$message({
+          type: 'success',
+          message: '更新 成功',
+          duration: 2000,
+        })
+
         this.submitLoading = false
-        return
-      }
-
-      await this.$store.dispatch('getDefaults')
-      this.$message({
-        type: 'success',
-        message: '更新 成功',
-        duration: 2000,
-      })
-
-      this.submitLoading = false
+      },
     },
-  },
-}
+  }
 </script>
 
 <style lang="scss">

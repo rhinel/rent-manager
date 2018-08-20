@@ -14,8 +14,8 @@ const getTimeFormat = (t) => {
   const hour = redo(date.getHours())
   const min = redo(date.getMinutes())
   const secs = redo(date.getSeconds())
-  const currentdate = year + seperator1 + month + seperator1 + day +
-    seperator3 + hour + seperator2 + min + seperator2 + secs
+  const currentdate = year + seperator1 + month + seperator1 + day
+    + seperator3 + hour + seperator2 + min + seperator2 + secs
   return currentdate
 }
 const getDateFormat = (t) => {

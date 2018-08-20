@@ -2,28 +2,28 @@
   <div class="dashboard-main">
     <!-- 记事本弹窗 -->
     <el-dialog
+      custom-class="note-dialog"
+      top="50px"
       :key="'note' + dialogId"
       :title="ndDialogTitle"
       :visible.sync="noteflag"
       :close-on-click-modal="false"
-      custom-class="note-dialog"
-      top="50px"
       @close="onNoteDialogClose">
       <el-form
+        label-position="top"
         ref="note"
         :model="note"
-        :rules="noteRules"
-        label-position="top">
+        :rules="noteRules">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              :label-width="ndLabelWidth"
               label="房屋"
-              prop="haoId">
+              prop="haoId"
+              :label-width="ndLabelWidth">
               <el-select
+                placeholder="选择房屋"
                 v-model="note.haoId"
-                :filterable="true"
-                placeholder="选择房屋">
+                :filterable="true">
                 <el-option
                   v-for="item in houseData"
                   :label="item.fang + item.hao"
@@ -36,60 +36,60 @@
           <el-col
             :span="12">
             <el-form-item
-              :label-width="ndLabelWidth"
               label="记事时间"
-              prop="addTime">
+              prop="addTime"
+              :label-width="ndLabelWidth">
               <el-date-picker
-                v-model="note.addTime"
-                :editable="false"
                 type="datetime"
-                placeholder="输入记事时间" />
+                placeholder="输入记事时间"
+                v-model="note.addTime"
+                :editable="false" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item
-          :label-width="ndLabelWidth"
-          label="内容">
+          label="内容"
+          :label-width="ndLabelWidth">
           <el-input
-            :rows="4"
-            v-model="note.content"
             type="textarea"
-            placeholder="请输入内容" />
+            placeholder="请输入内容"
+            :rows="4"
+            v-model="note.content" />
         </el-form-item>
       </el-form>
 
       <div
-        slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+        slot="footer">
         <el-button
           :loading="gettingAddNote"
           @click="getNoteAddDialog">
           取消
         </el-button>
         <el-button
-          :loading="gettingAddNote"
           type="primary"
+          :loading="gettingAddNote"
           @click="getAddNote">
           保存
         </el-button>
         <el-button
+          type="success"
           v-if="note._id && note.status === 1"
           :loading="gettingAddNote"
-          type="success"
           @click="getAddNote(2)">
           完成
         </el-button>
         <el-button
+          type="success"
           v-if="note._id && note.status === 2"
           :loading="gettingAddNote"
-          type="success"
           @click="getAddNote(1)">
           重做
         </el-button>
         <el-button
+          type="danger"
           v-if="note._id"
           :loading="gettingAddNote"
-          type="danger"
           @click="getAddNote(0)">
           删除
         </el-button>
@@ -97,8 +97,8 @@
     </el-dialog>
 
     <el-row
-      :gutter="20"
-      class="main-wrap">
+      class="main-wrap"
+      :gutter="20">
       <el-col
         :span="18"
         :md="16"
@@ -133,19 +133,19 @@
                 待收租金列表
               </span>
               <el-button
-                :loading="gettingRentList1"
                 class="card-btn"
                 type="primary"
+                :loading="gettingRentList1"
                 @click="getList(1)">
                 刷新
               </el-button>
             </div>
             <el-table
               v-loading.body="gettingRentList1"
-              :data="rentList1"
               class="rent-list-table"
               stripe
-              border>
+              border
+              :data="rentList1">
               <el-table-column
                 prop="monthId.month"
                 label="周期"
@@ -192,8 +192,8 @@
                 width="180">
                 <template slot-scope="scope">
                   <table-lease-view-item
-                    :lease="scope.row.lease"
-                    rent-inline />
+                    rent-inline
+                    :lease="scope.row.lease" />
                 </template>
               </el-table-column>
               <el-table-column
@@ -223,19 +223,19 @@
                 待交房东列表
               </span>
               <el-button
-                :loading="gettingRentList3"
                 class="card-btn"
                 type="primary"
+                :loading="gettingRentList3"
                 @click="getList(3)">
                 刷新
               </el-button>
             </div>
             <el-table
               v-loading.body="gettingRentList3"
-              :data="rentList3"
               stripe
               border
-              class="rent-list-table">
+              class="rent-list-table"
+              :data="rentList3">
               <el-table-column
                 prop="monthId.month"
                 label="周期"
@@ -282,8 +282,8 @@
                 width="180">
                 <template slot-scope="scope">
                   <table-lease-view-item
-                    :lease="scope.row.lease"
-                    rent-inline />
+                    rent-inline
+                    :lease="scope.row.lease" />
                 </template>
               </el-table-column>
               <el-table-column
@@ -328,8 +328,8 @@
               </el-button>
             </div>
             <ul
-              v-show="noteList.length"
-              class="card-list">
+              class="card-list"
+              v-show="noteList.length">
               <li
                 v-for="(item, index) in noteList"
                 :class="{ 'done': item.status == 2 }"
@@ -345,8 +345,8 @@
               </li>
             </ul>
             <div
-              v-show="!noteList.length"
-              class="card-nodata">
+              class="card-nodata"
+              v-show="!noteList.length">
               暂无数据
             </div>
           </el-card>
@@ -379,222 +379,222 @@
 </template>
 
 <script>
-import TWEEN from 'tween.js'
-import TableRentViewItem from 'pcside/common/table-rent-view-item'
-import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
-import TableRentTypeItem from 'pcside/common/table-rent-type-item'
-import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
+  import TWEEN from 'tween.js'
+  import TableRentViewItem from 'pcside/common/table-rent-view-item'
+  import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
+  import TableRentTypeItem from 'pcside/common/table-rent-type-item'
+  import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
-export default {
-  name: 'DashboardMain',
-  components: {
-    TableRentViewItem,
-    TableLeaseViewItem,
-    TableRentTypeItem,
-    TableRentRemarkItem,
-  },
-  data() {
-    return {
-      // 获取统计和数据列表
-      gettingRentList1: false,
-      gettingRentList3: false,
-      gettingCount: false,
-      count: {
-        houseCount: 0,
-        rentList1Count: 0,
-        rentList3Count: 0,
+  export default {
+    name: 'DashboardMain',
+    components: {
+      TableRentViewItem,
+      TableLeaseViewItem,
+      TableRentTypeItem,
+      TableRentRemarkItem,
+    },
+    data() {
+      return {
+        // 获取统计和数据列表
+        gettingRentList1: false,
+        gettingRentList3: false,
+        gettingCount: false,
+        count: {
+          houseCount: 0,
+          rentList1Count: 0,
+          rentList3Count: 0,
+        },
+        countDown: {
+          houseCount: 0,
+          rentList1Count: 0,
+          rentList3Count: 0,
+        },
+        rentList1: [],
+        rentList3: [],
+        // 添加记事
+        dialogId: Date.now(),
+        gettingAddNote: false,
+        houseData: [],
+        ndDialogTitle: '添加记事',
+        ndLabelWidth: '90px',
+        noteflag: false,
+        note: {},
+        noteClear: {
+          _id: '',
+          haoId: '',
+          content: '',
+          addTime: '',
+          status: 1,
+        },
+        noteRules: {
+          haoId: [
+            {
+              required: true, message: '请选择', trigger: 'change',
+            },
+          ],
+          addTime: [
+            {
+              required: true, type: 'date', message: '请填写', trigger: 'change',
+            },
+          ],
+        },
+        // 记事列表
+        gettingNotes: false,
+        noteList: [],
+      }
+    },
+    watch: {
+      /* eslint object-shorthand: 0 */
+      'count.houseCount'(n, o) {
+        this.onCount('houseCount', n, o)
       },
-      countDown: {
-        houseCount: 0,
-        rentList1Count: 0,
-        rentList3Count: 0,
+      'count.rentList1Count'(n, o) {
+        this.onCount('rentList1Count', n, o)
       },
-      rentList1: [],
-      rentList3: [],
-      // 添加记事
-      dialogId: Date.now(),
-      gettingAddNote: false,
-      houseData: [],
-      ndDialogTitle: '添加记事',
-      ndLabelWidth: '90px',
-      noteflag: false,
-      note: {},
-      noteClear: {
-        _id: '',
-        haoId: '',
-        content: '',
-        addTime: '',
-        status: 1,
+      'count.rentList3Count'(n, o) {
+        this.onCount('rentList3Count', n, o)
       },
-      noteRules: {
-        haoId: [
-          {
-            required: true, message: '请选择', trigger: 'change',
-          },
-        ],
-        addTime: [
-          {
-            required: true, type: 'date', message: '请填写', trigger: 'change',
-          },
-        ],
+    },
+    beforeCreate() {
+      this.$store.dispatch('updateMenu', '/inner/dashboard/index')
+    },
+    created() {
+      this.getCount()
+      this.getList(1)
+      this.getList(3)
+      this.getHouseList()
+      this.getNotes()
+      this.getNoteReset()
+    },
+    methods: {
+      // 获取计数
+      async getCount() {
+        if (this.gettingCount) return
+
+        // 接口提交
+        this.gettingCount = true
+
+        await this.Ajax('/inner/dash/count')
+          .then(res => {
+            this.count.houseCount = res.houseCount
+          })
+          .catch(() => {})
+
+        this.gettingCount = false
+      },
+      // 获取各种列表和计数
+      async getList(type) {
+        if (this[`gettingRentList${type}`]) return
+
+        // 接口提交
+        this[`gettingRentList${type}`] = true
+
+        await this.Ajax('/inner/dash/waitingList', {
+          type: type,
+        })
+          .then(res => {
+            this[`rentList${type}`] = res.data
+            this.count[`rentList${type}Count`] = this[`rentList${type}`].length
+          })
+          .catch(() => {})
+
+        this[`gettingRentList${type}`] = false
+      },
+      // 计数动画
+      onCount(type, n, o) {
+        const _this = this
+        function animate(time) {
+          requestAnimationFrame(animate)
+          TWEEN.update(time)
+        }
+        new TWEEN.Tween({ tweeningValue: o })
+          .to({ tweeningValue: n }, 200)
+          .onUpdate(function update() {
+            _this.countDown[type] = this.tweeningValue.toFixed(0)
+          })
+          .start()
+        animate()
+      },
+      // 弹窗状态和数据更新
+      getNoteAddDialog(index, row) {
+        this.noteflag = !this.noteflag
+        if (this.noteflag && row) {
+          this.note._id = row._id
+          this.note.haoId = row.haoId._id
+          this.note.content = row.content
+          this.note.addTime = new Date(row.addTime)
+          this.note.status = row.status
+        } else if (this.noteflag) {
+          this.note.addTime = new Date()
+        }
+      },
+      // 数据初始化
+      getNoteReset() {
+        this.note = Object.assign({}, this.note, this.noteClear)
+        this.dialogId = Date.now()
+      },
+      // 关闭弹窗和清空数据
+      onNoteDialogClose() {
+        setTimeout(() => {
+          this.$refs.note.resetFields()
+          this.getNoteReset()
+        }, 500)
+      },
+      // 房屋列表
+      async getHouseList() {
+        await this.Ajax('/inner/house/list')
+          .then(res => {
+            this.houseData = res
+          })
+          .catch(() => {})
       },
       // 记事列表
-      gettingNotes: false,
-      noteList: [],
-    }
-  },
-  watch: {
-    /* eslint object-shorthand: 0 */
-    'count.houseCount'(n, o) {
-      this.onCount('houseCount', n, o)
-    },
-    'count.rentList1Count'(n, o) {
-      this.onCount('rentList1Count', n, o)
-    },
-    'count.rentList3Count'(n, o) {
-      this.onCount('rentList3Count', n, o)
-    },
-  },
-  beforeCreate() {
-    this.$store.dispatch('updateMenu', '/inner/dashboard/index')
-  },
-  created() {
-    this.getCount()
-    this.getList(1)
-    this.getList(3)
-    this.getHouseList()
-    this.getNotes()
-    this.getNoteReset()
-  },
-  methods: {
-    // 获取计数
-    async getCount() {
-      if (this.gettingCount) return
+      async getNotes() {
+        if (this.gettingNotes) return
 
-      // 接口提交
-      this.gettingCount = true
+        // 接口提交
+        this.gettingNotes = true
 
-      await this.Ajax('/inner/dash/count')
-        .then(res => {
-          this.count.houseCount = res.houseCount
-        })
-        .catch(() => {})
-
-      this.gettingCount = false
-    },
-    // 获取各种列表和计数
-    async getList(type) {
-      if (this[`gettingRentList${type}`]) return
-
-      // 接口提交
-      this[`gettingRentList${type}`] = true
-
-      await this.Ajax('/inner/dash/waitingList', {
-        type: type,
-      })
-        .then(res => {
-          this[`rentList${type}`] = res.data
-          this.count[`rentList${type}Count`] = this[`rentList${type}`].length
-        })
-        .catch(() => {})
-
-      this[`gettingRentList${type}`] = false
-    },
-    // 计数动画
-    onCount(type, n, o) {
-      const _this = this
-      function animate(time) {
-        requestAnimationFrame(animate)
-        TWEEN.update(time)
-      }
-      new TWEEN.Tween({ tweeningValue: o })
-        .to({ tweeningValue: n }, 200)
-        .onUpdate(function update() {
-          _this.countDown[type] = this.tweeningValue.toFixed(0)
-        })
-        .start()
-      animate()
-    },
-    // 弹窗状态和数据更新
-    getNoteAddDialog(index, row) {
-      this.noteflag = !this.noteflag
-      if (this.noteflag && row) {
-        this.note._id = row._id
-        this.note.haoId = row.haoId._id
-        this.note.content = row.content
-        this.note.addTime = new Date(row.addTime)
-        this.note.status = row.status
-      } else if (this.noteflag) {
-        this.note.addTime = new Date()
-      }
-    },
-    // 数据初始化
-    getNoteReset() {
-      this.note = Object.assign({}, this.note, this.noteClear)
-      this.dialogId = Date.now()
-    },
-    // 关闭弹窗和清空数据
-    onNoteDialogClose() {
-      setTimeout(() => {
-        this.$refs.note.resetFields()
-        this.getNoteReset()
-      }, 500)
-    },
-    // 房屋列表
-    async getHouseList() {
-      await this.Ajax('/inner/house/list')
-        .then(res => {
-          this.houseData = res
-        })
-        .catch(() => {})
-    },
-    // 记事列表
-    async getNotes() {
-      if (this.gettingNotes) return
-
-      // 接口提交
-      this.gettingNotes = true
-
-      await this.Ajax('/inner/dash/notes')
-        .then(res => {
-          this.noteList = res
-        })
-        .catch(() => {})
-
-      this.gettingNotes = false
-    },
-    // 更新记事
-    async getAddNote(type) {
-      if (this.gettingAddNote) return
-
-      // 表单校验
-      try {
-        await this.$refs.note.validate()
-      } catch (err) {
-        return
-      }
-
-      // 接口提交
-      this.gettingAddNote = true
-
-      const _data = Object.assign({}, this.note)
-      if (type !== undefined) _data.status = type
-      await this.Ajax('/inner/dash/addNote', _data)
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: this.note._id ? '修改成功' : '添加成功',
-            duration: 2000,
+        await this.Ajax('/inner/dash/notes')
+          .then(res => {
+            this.noteList = res
           })
-          this.getNoteAddDialog()
-          this.getNotes()
-        })
-        .catch(() => {})
+          .catch(() => {})
 
-      this.gettingAddNote = false
+        this.gettingNotes = false
+      },
+      // 更新记事
+      async getAddNote(type) {
+        if (this.gettingAddNote) return
+
+        // 表单校验
+        try {
+          await this.$refs.note.validate()
+        } catch (err) {
+          return
+        }
+
+        // 接口提交
+        this.gettingAddNote = true
+
+        const _data = Object.assign({}, this.note)
+        if (type !== undefined) _data.status = type
+        await this.Ajax('/inner/dash/addNote', _data)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: this.note._id ? '修改成功' : '添加成功',
+              duration: 2000,
+            })
+            this.getNoteAddDialog()
+            this.getNotes()
+          })
+          .catch(() => {})
+
+        this.gettingAddNote = false
+      },
     },
-  },
-}
+  }
 </script>
 
 <style lang="scss">

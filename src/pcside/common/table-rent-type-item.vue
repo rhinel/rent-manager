@@ -2,15 +2,15 @@
   <div>
     <div v-if="rent.type">
       <el-popover
-        v-for="item in rent.type.type"
-        :key="item"
         placement="top"
-        trigger="hover">
+        trigger="hover"
+        v-for="item in rent.type.type"
+        :key="item">
         {{ getDate(rent.type.typeTime[item]) }}
         <el-tag
+          class="show-tag show-tag3"
           slot="reference"
-          :type="item != 2 ? 'success' : ''"
-          class="show-tag show-tag3">
+          :type="item != 2 ? 'success' : ''">
           {{ typesVal[item] }}
         </el-tag>
       </el-popover>
@@ -26,26 +26,26 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mixinDef } from 'pcside/js/mixins'
+  import { mapState } from 'vuex'
+  import { mixinDef } from 'pcside/js/mixins'
 
-export default {
-  name: 'TableRentTypeItem',
-  mixins: [mixinDef],
-  props: {
-    rent: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'TableRentTypeItem',
+    mixins: [mixinDef],
+    props: {
+      rent: {
+        type: Object,
+        default: () => ({}),
+      },
+      highline: {
+        type: Boolean,
+        default: false,
+      },
     },
-    highline: {
-      type: Boolean,
-      default: false,
+    computed: {
+      ...mapState({
+        typesVal: state => state.config.typesVal,
+      }),
     },
-  },
-  computed: {
-    ...mapState({
-      typesVal: state => state.config.typesVal,
-    }),
-  },
-}
+  }
 </script>

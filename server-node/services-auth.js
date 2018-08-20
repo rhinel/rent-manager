@@ -16,7 +16,9 @@ module.exports = {
 
     if (!req.body.name) {
       return Promise.reject(new FoundError('请输入用户名'))
-    } else if (!req.body.pwd) {
+    }
+
+    if (!req.body.pwd) {
       return Promise.reject(new FoundError('请输入密码'))
     }
 

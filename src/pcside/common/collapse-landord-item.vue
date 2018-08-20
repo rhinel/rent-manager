@@ -3,9 +3,9 @@
 
     <!-- 统计部分 -->
     <div
-      v-if="landord[`${type}List`].length"
       class="landord-content"
-      style="font-weight: bold;">
+      style="font-weight: bold;"
+      v-if="landord[`${type}List`].length">
 
       <span class="collapse-btn">
         {{ type === 'six' ? '6坊65栋' : '8坊68栋' }}
@@ -18,16 +18,16 @@
 
     <!-- 租单信息 -->
     <div
+      class="landord-content content-bg"
       v-for="i in landord[`${type}List`]"
-      :key="i._id"
-      class="landord-content content-bg">
+      :key="i._id">
 
       <router-link
+        class="collapse-btn"
         :to="{
           path: '/inner/rent/history',
           query: { id: i.haoId }
-        }"
-        class="collapse-btn">
+        }">
         <el-button
           type="text"
           size="medium">
@@ -46,8 +46,8 @@
           @change="checkBillChange($event, i)">
           已对账
           <i
-            v-if="i.checkBilling"
-            class="el-icon-loading" />
+            class="el-icon-loading"
+            v-if="i.checkBilling" />
         </el-checkbox>
       </div>
 
@@ -63,51 +63,51 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
 
-export default {
-  name: 'CollapseLandordItem',
-  props: {
-    landord: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'CollapseLandordItem',
+    props: {
+      landord: {
+        type: Object,
+        default: () => ({}),
+      },
+      type: {
+        type: String,
+        default: '',
+      },
     },
-    type: {
-      type: String,
-      default: '',
+    computed: {
+      ...mapState({
+        payTypeVal: state => state.config.payTypeVal,
+      }),
     },
-  },
-  computed: {
-    ...mapState({
-      payTypeVal: state => state.config.payTypeVal,
-    }),
-  },
-  methods: {
-    // 提交对账变化
-    async checkBillChange(newValue, i) {
-      if (i.checkBilling) return
+    methods: {
+      // 提交对账变化
+      async checkBillChange(newValue, i) {
+        if (i.checkBilling) return
 
-      // 提交接口
-      i.checkBilling = true
+        // 提交接口
+        i.checkBilling = true
 
-      await this.Ajax('/inner/rent/checkBill', {
-        rentId: i._id,
-        checkBill: i.checkBill,
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '更新成功',
-            duration: 2000,
+        await this.Ajax('/inner/rent/checkBill', {
+          rentId: i._id,
+          checkBill: i.checkBill,
+        })
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '更新成功',
+              duration: 2000,
+            })
+            i.checkBill = newValue
           })
-          i.checkBill = newValue
-        })
-        .catch(() => {
-          i.checkBill = !newValue
-        })
+          .catch(() => {
+            i.checkBill = !newValue
+          })
 
-      i.checkBilling = false
+        i.checkBilling = false
+      },
     },
-  },
-}
+  }
 </script>

@@ -10,26 +10,26 @@
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
-            :loading="gettingListRefresh"
             type="primary"
+            :loading="gettingListRefresh"
             @click="getListRefresh">
             刷新
           </el-button>
           <div class="table-btn-input">
             <el-input
-              v-model="leaseDataSearch"
-              placeholder="搜索" />
+              placeholder="搜索"
+              v-model="leaseDataSearch" />
           </div>
         </div>
 
         <!-- 入住弹窗 -->
         <el-dialog
+          custom-class="lease-in-dialog"
+          top="50px"
           :key="'leaseIn' + dialogId"
           :title="lease.fanghao + lidDialogTitle"
           :visible.sync="leaseInflag"
           :close-on-click-modal="false"
-          custom-class="lease-in-dialog"
-          top="50px"
           @close="onLeaseInDialogClose">
           <el-form
             ref="leaseIn"
@@ -42,66 +42,66 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="租户姓名"
-                  prop="name">
+                  prop="name"
+                  :label-width="lidLabelWidth">
                   <el-input
-                    v-model="lease.name"
                     auto-complete="off"
-                    placeholder="输入租户姓名" />
+                    placeholder="输入租户姓名"
+                    v-model="lease.name" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="联系方式"
-                  prop="call">
+                  prop="call"
+                  :label-width="lidLabelWidth">
                   <el-input
-                    v-model="lease.call"
                     auto-complete="off"
-                    placeholder="输入租户联系方式" />
+                    placeholder="输入租户联系方式"
+                    v-model="lease.call" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="入住时间"
-                  prop="addTime">
+                  prop="addTime"
+                  :label-width="lidLabelWidth">
                   <el-date-picker
-                    v-model="lease.addTime"
-                    :editable="false"
                     type="datetime"
                     placeholder="输入入住时间"
-                    style="width: 100%;" />
+                    style="width: 100%;"
+                    v-model="lease.addTime"
+                    :editable="false" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="租住周期"
-                  prop="leaserange">
+                  prop="leaserange"
+                  :label-width="lidLabelWidth">
                   <el-date-picker
-                    v-model="lease.leaserange"
-                    :picker-options="leasePickerOptions"
-                    :editable="false"
                     type="daterange"
                     placeholder="选择日期范围"
-                    align="right" />
+                    align="right"
+                    v-model="lease.leaserange"
+                    :picker-options="leasePickerOptions"
+                    :editable="false" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="交租时间"
-                  prop="payDay">
+                  prop="payDay"
+                  :label-width="lidLabelWidth">
                   <el-select
-                    v-model="lease.payDay"
                     placeholder="选择交租时间"
-                    prop="payDay">
+                    prop="payDay"
+                    v-model="lease.payDay">
                     <el-option
                       v-for="n in 31"
                       :label="n + '日'"
@@ -112,12 +112,12 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="交租方式"
-                  prop="payType">
+                  prop="payType"
+                  :label-width="lidLabelWidth">
                   <el-select
-                    v-model="lease.payType"
-                    placeholder="选择交租方式">
+                    placeholder="选择交租方式"
+                    v-model="lease.payType">
                     <el-option
                       v-for="(item, index) in payTypeVal"
                       :label="item"
@@ -130,12 +130,12 @@
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item
-                  :label-width="lidLabelWidth"
-                  label="备注">
+                  label="备注"
+                  :label-width="lidLabelWidth">
                   <el-input
-                    v-model="lease.remark"
                     auto-complete="off"
-                    placeholder="备注" />
+                    placeholder="备注"
+                    v-model="lease.remark" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -144,29 +144,29 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="水费低消"
-                  prop="calWaterPrice.minPrice">
+                  prop="calWaterPrice.minPrice"
+                  :label-width="lidLabelWidth">
                   <el-input
-                    v-model.number="lease.calWaterPrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费">
+                    placeholder="输入最低消费"
+                    v-model.number="lease.calWaterPrice.minPrice">
                     <template slot="append">吨</template>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
-                  label="水费方式">
+                  label="水费方式"
+                  :label-width="lidLabelWidth">
                   <el-radio
-                    v-model="lease.calWaterPrice.calType"
-                    label="single">
+                    label="single"
+                    v-model="lease.calWaterPrice.calType">
                     单一价格
                   </el-radio>
                   <el-radio
-                    v-model="lease.calWaterPrice.calType"
-                    label="step">
+                    label="step"
+                    v-model="lease.calWaterPrice.calType">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -175,17 +175,17 @@
 
             <!-- 单价水费计费 -->
             <el-form-item
+              label="水费单价"
+              prop="calWaterPrice.singlePrice"
               v-if="lease.calWaterPrice.calType == 'single'"
               key="watSingle"
               :label-width="lidLabelWidth"
-              :rules="leaserules[`calWaterPrice.singlePrice`][0]"
-              label="水费单价"
-              prop="calWaterPrice.singlePrice">
+              :rules="leaserules[`calWaterPrice.singlePrice`][0]">
               <el-col :span="24">
                 <el-input
-                  v-model.number="lease.calWaterPrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价">
+                  placeholder="输入单价"
+                  v-model.number="lease.calWaterPrice.singlePrice">
                   <template slot="prepend">￥</template>
                   <template slot="append">元/吨</template>
                 </el-input>
@@ -195,12 +195,12 @@
             <!-- 水费阶梯计费 -->
             <div v-if="lease.calWaterPrice.calType == 'step'">
               <el-form-item
+                required
                 v-for="(step, index) in lease.calWaterPrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="lidLabelWidth"
                 :key="'calWaterPrice' + index"
-                :ref="'calWaterPrice' + index"
-                required>
+                :ref="'calWaterPrice' + index">
                 <el-col :span="10">
                   <el-form-item
                     :prop="'calWaterPrice.stepPrice.' + index + '.step'"
@@ -208,16 +208,16 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值">
+                      placeholder="本阶梯最大值"
+                      v-model.number="step.step">
                       <template slot="append">吨</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col :span="9">
                   <el-form-item
                     :prop="'calWaterPrice.stepPrice.' + index + '.price'"
@@ -225,20 +225,20 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价">
+                      placeholder="本阶梯单价"
+                      v-model.number="step.price">
                       <template slot="prepend">￥</template>
                       <template slot="append">元</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col
-                  :span="3"
-                  class="step-btn">
+                  class="step-btn"
+                  :span="3">
                   <el-button
                     @click.prevent="removeStep(lease.calWaterPrice, step)">
                     删除
@@ -261,29 +261,29 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="电费低消"
-                  prop="calElePrice.minPrice">
+                  prop="calElePrice.minPrice"
+                  :label-width="lidLabelWidth">
                   <el-input
-                    v-model.number="lease.calElePrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费">
+                    placeholder="输入最低消费"
+                    v-model.number="lease.calElePrice.minPrice">
                     <template slot="append">度</template>
                   </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
-                  label="电费方式">
+                  label="电费方式"
+                  :label-width="lidLabelWidth">
                   <el-radio
-                    v-model="lease.calElePrice.calType"
-                    label="single">
+                    label="single"
+                    v-model="lease.calElePrice.calType">
                     单一价格
                   </el-radio>
                   <el-radio
-                    v-model="lease.calElePrice.calType"
-                    label="step">
+                    label="step"
+                    v-model="lease.calElePrice.calType">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -292,17 +292,17 @@
 
             <!-- 电费单价计费 -->
             <el-form-item
+              prop="calElePrice.singlePrice"
+              label="电费单价"
               v-if="lease.calElePrice.calType == 'single'"
               key="eleSingle"
               :rules="leaserules[`calElePrice.singlePrice`][0]"
-              :label-width="lidLabelWidth"
-              prop="calElePrice.singlePrice"
-              label="电费单价">
+              :label-width="lidLabelWidth">
               <el-col :span="24">
                 <el-input
-                  v-model.number="lease.calElePrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价">
+                  placeholder="输入单价"
+                  v-model.number="lease.calElePrice.singlePrice">
                   <template slot="prepend">￥</template>
                   <template slot="append">元/度</template>
                 </el-input>
@@ -312,12 +312,12 @@
             <!-- 电费阶梯计费 -->
             <div v-if="lease.calElePrice.calType == 'step'">
               <el-form-item
+                required
                 v-for="(step, index) in lease.calElePrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="lidLabelWidth"
                 :key="'calElePrice' + index"
-                :ref="'calElePrice' + index"
-                required>
+                :ref="'calElePrice' + index">
                 <el-col :span="10">
                   <el-form-item
                     :prop="'calElePrice.stepPrice.' + index + '.step'"
@@ -325,16 +325,16 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值">
+                      placeholder="本阶梯最大值"
+                      v-model.number="step.step">
                       <template slot="append">度</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col :span="9">
                   <el-form-item
                     :prop="'calElePrice.stepPrice.' + index + '.price'"
@@ -342,20 +342,20 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
-                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价">
+                      placeholder="本阶梯单价"
+                      v-model.number="step.price">
                       <template slot="prepend">￥</template>
                       <template slot="append">元</template>
                     </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col
-                  :span="1"
-                  class="line" />
+                  class="line"
+                  :span="1" />
                 <el-col
-                  :span="3"
-                  class="step-btn">
+                  class="step-btn"
+                  :span="3">
                   <el-button
                     @click.prevent="removeStep(lease.calElePrice, step)">
                     删除
@@ -378,13 +378,13 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="押金"
-                  prop="deposit">
+                  prop="deposit"
+                  :label-width="lidLabelWidth">
                   <el-input
-                    v-model.number="lease.deposit"
                     auto-complete="off"
-                    placeholder="输入押金">
+                    placeholder="输入押金"
+                    v-model.number="lease.deposit">
                     <template slot="prepend">￥</template>
                     <template slot="append">元</template>
                   </el-input>
@@ -393,13 +393,13 @@
 
               <el-col :span="12">
                 <el-form-item
-                  :label-width="lidLabelWidth"
                   label="租金(月)"
-                  prop="rent">
+                  prop="rent"
+                  :label-width="lidLabelWidth">
                   <el-input
-                    v-model.number="lease.rent"
                     auto-complete="off"
-                    placeholder="输入租金">
+                    placeholder="输入租金"
+                    v-model.number="lease.rent">
                     <template slot="prepend">￥</template>
                     <template slot="append">元/月</template>
                   </el-input>
@@ -408,16 +408,16 @@
             </el-row>
           </el-form>
           <div
-            slot="footer"
-            class="dialog-footer">
+            class="dialog-footer"
+            slot="footer">
             <el-button
               :loading="gettingLeaseIn"
               @click="getLeaseInDialog">
               取消
             </el-button>
             <el-button
-              :loading="gettingLeaseIn"
               type="primary"
+              :loading="gettingLeaseIn"
               @click="getLeaseIn">
               确定
             </el-button>
@@ -426,11 +426,11 @@
 
         <!-- 搬出弹窗 -->
         <el-dialog
+          custom-class="lease-out-dialog small"
           :key="'leaseOut' + dialogId"
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
           :close-on-click-modal="false"
-          custom-class="lease-out-dialog small"
           @close="onLeaseOutDialogClose">
           <el-form
             ref="leaseOut"
@@ -440,28 +440,28 @@
               title="确认已经结清所有费用？此行为不可撤销"
               type="info" />
             <el-form-item
-              :label-width="lodLabelWidth"
               label="搬出时间"
-              prop="outTime">
+              prop="outTime"
+              :label-width="lodLabelWidth">
               <el-date-picker
-                v-model="out.outTime"
-                :editable="false"
                 type="datetime"
                 placeholder="输入搬出时间"
-                style="width: 100%;" />
+                style="width: 100%;"
+                v-model="out.outTime"
+                :editable="false" />
             </el-form-item>
           </el-form>
           <div
-            slot="footer"
-            class="dialog-footer">
+            class="dialog-footer"
+            slot="footer">
             <el-button
               :loading="gettingLeaseOut"
               @click="getLeaseOutDialog">
               取消
             </el-button>
             <el-button
-              :loading="gettingLeaseOut"
               type="primary"
+              :loading="gettingLeaseOut"
               @click="getLeaseOut">
               确定
             </el-button>
@@ -471,12 +471,12 @@
         <!-- 租住数据表 -->
         <el-table
           v-loading.body="gettingListRefresh"
-          ref="leaseTable"
-          :max-height="tableMaxHeight"
-          :data="filterLeaseData"
           class="lease-table"
           stripe
-          border>
+          border
+          ref="leaseTable"
+          :max-height="tableMaxHeight"
+          :data="filterLeaseData">
           <el-table-column
             type="expand">
             <template slot-scope="props">
@@ -528,9 +528,9 @@
               <template slot-scope="scope">
 
                 <table-eandw-cal-price-view-item
-                  :lease="scope.row.leaseId"
                   type="calWaterPrice"
-                  unit="吨" />
+                  unit="吨"
+                  :lease="scope.row.leaseId" />
 
               </template>
             </el-table-column>
@@ -540,9 +540,9 @@
               <template slot-scope="scope">
 
                 <table-eandw-cal-price-view-item
-                  :lease="scope.row.leaseId"
                   type="calElePrice"
-                  unit="度" />
+                  unit="度"
+                  :lease="scope.row.leaseId" />
 
               </template>
             </el-table-column>
@@ -611,9 +611,9 @@
                 {{ scope.row.leaseId._id ? '修改' : '入住' }}
               </el-button>
               <el-button
-                v-if="scope.row.leaseId._id"
                 size="small"
                 type="danger"
+                v-if="scope.row.leaseId._id"
                 @click="getLeaseOutDialog(scope.$index, scope.row)">
                 搬出
               </el-button>
@@ -634,459 +634,463 @@
           :active-rent-count="activeLeaseCount" />
 
         <el-alert
-          v-if="!leaseData.length"
-          :closable="false"
           title="暂无数据！请先处理入住状态"
-          type="info" />
+          type="info"
+          v-if="!leaseData.length"
+          :closable="false" />
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mixinDef } from 'pcside/js/mixins'
-import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
-import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
-import CollapseRentCountItem from 'pcside/common/collapse-rent-count-item'
+  import { mapState } from 'vuex'
+  import { mixinDef } from 'pcside/js/mixins'
+  import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
+  import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
+  import CollapseRentCountItem from 'pcside/common/collapse-rent-count-item'
 
-export default {
-  name: 'LeaseMain',
-  components: {
-    TableEandwCalPriceViewItem,
-    TableRentRemarkItem,
-    CollapseRentCountItem,
-  },
-  mixins: [mixinDef],
-  data() {
-    // 校验周期时间选择器
-    const validatePass = (rule, value, callback) => {
-      if (value == null || value[0] == null || value[1] == null) {
-        callback(new Error('请选择'))
-      } else {
-        callback()
-      }
-    }
-
-    return {
-      // tab index
-      activeName: 'leaseList',
-
-      // 列表数据
-      gettingListRefresh: false,
-      tableMaxHeight: 200,
-      leaseData: [],
-      leaseDataSearch: '',
-
-      dialogId: Date.now(),
-      // 入住弹窗
-      lidDialogTitle: '入住',
-      lidLabelWidth: '90px',
-      leaseInflag: false,
-      // 入住数据对象
-      lease: {},
-      leaseClear: {
-        _id: '',
-        haoId: '',
-        fanghao: '',
-        name: '',
-        call: '',
-        leaserange: [],
-        payDay: new Date().getDate(),
-        payType: 3,
-        remark: '',
-
-        calWaterPrice: {
-          minPrice: 0,
-          calType: 'single',
-          singlePrice: 0,
-          stepPrice: [{
-            step: 0,
-            price: 0,
-          }],
-        },
-
-        calElePrice: {
-          minPrice: 0,
-          calType: 'single',
-          singlePrice: 0,
-          stepPrice: [{
-            step: 0,
-            price: 0,
-          }],
-        },
-
-        rent: 0,
-        deposit: 0,
-        addTime: '',
-      },
-      leaserules: {
-        name: [{ required: true, message: '请填写', trigger: 'blur' }],
-        call: [{ required: true, message: '请填写', trigger: 'blur' }],
-        leaserange: [{ required: true, validator: validatePass, trigger: 'change' }],
-        payDay: [{
-          required: true, message: '请选择', trigger: 'change', type: 'number',
-        }],
-        payType: [{
-          type: 'number', required: true, message: '请选择', trigger: 'change',
-        }],
-        'calWaterPrice.minPrice': [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
-        'calWaterPrice.singlePrice': [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
-        'calElePrice.minPrice': [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
-        'calElePrice.singlePrice': [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
-        rent: [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
-        deposit: [{
-          type: 'number', required: true, message: '请填写', trigger: 'blur',
-        }],
-        addTime: [{
-          type: 'date', required: true, message: '请填写', trigger: 'change',
-        }],
-      },
-
-      leasePickerOptions: {
-        shortcuts: [
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + (3600 * 1000 * 24 * 90))
-              picker.$emit('pick', [start, end])
-            },
-          },
-          {
-            text: '半年',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + (3600 * 1000 * 24 * 180))
-              picker.$emit('pick', [start, end])
-            },
-          },
-          {
-            text: '一年',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              end.setTime(end.getTime() + (3600 * 1000 * 24 * 365))
-              picker.$emit('pick', [start, end])
-            },
-          },
-        ],
-      },
-
-      gettingLeaseIn: false,
-
-      // 搬出弹窗
-      lodDialogTitle: '搬出',
-      lodLabelWidth: '90px',
-      leaseOutflag: false,
-      out: {
-        _id: '',
-        haoId: '',
-        fanghao: '',
-        outTime: '',
-      },
-      outrules: {
-        outTime: [{
-          type: 'date', required: true, message: '请填写', trigger: 'change',
-        }],
-      },
-      gettingLeaseOut: false,
-
-      leaseCount: {},
-      activeLeaseCount: {},
-    }
-  },
-  computed: {
-    filterLeaseData() {
-      if (!this.leaseDataSearch) {
-        return this.leaseData
-      }
-      const searchKeys = ['fanghao', 'remark']
-
-      const _leaseDataSearch = new RegExp(this.leaseDataSearch, 'i')
-      return this.leaseData.filter(item => {
-        const testObject = {}
-        searchKeys.forEach((key) => {
-          testObject[key] = item[key]
-        })
-        const testItem = Object.values(testObject).join(' ')
-        return _leaseDataSearch.test(testItem)
-      })
+  export default {
+    name: 'LeaseMain',
+    components: {
+      TableEandwCalPriceViewItem,
+      TableRentRemarkItem,
+      CollapseRentCountItem,
     },
-    ...mapState({
-      payTypeVal: state => state.config.payTypeVal,
-      typesVal: state => state.config.typesVal,
-      defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
-      defaultCalElePrice: state => state.config.defaultCalElePrice,
-      defaultStep: state => state.config.defaultStep,
-    }),
-  },
-  watch: {
-    activeName(n) {
-      if (n === 'leaseList') {
-        this.$nextTick(() => {
-          window.onresize()
-          this.leaseListActive()
-        })
-      }
-      if (n === 'leaseCount') this.leaseCountActive()
-    },
-  },
-  beforeCreate() {
-    this.$store.dispatch('updateMenu', '/inner/lease/index')
-  },
-  created() {
-    this.getLeaseInReset()
-    if (this.activeName === 'leaseList') this.leaseListActive()
-    if (this.activeName === 'leaseCount') this.leaseCountActive()
-  },
-  mounted() {
-    window.onresize = () => {
-      const height = window.innerHeight || document.body.clientHeight
-      const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
-      this.tableMaxHeight = height - offsetTop - 20 - 0.5
-    }
-    this.$nextTick(() => window.onresize())
-  },
-  beforeDestroy() {
-    window.onresize = null
-  },
-  methods: {
-    // 列表tab
-    leaseListActive() {
-      this.getListRefresh()
-    },
-    // 统计tab
-    leaseCountActive() {
-      this.getCalLeaseCount()
-    },
-    // 拉取入住信息列表
-    async getListRefresh() {
-      if (this.gettingListRefresh) return
-
-      // 请求数据
-      this.gettingListRefresh = true
-
-      await this.Ajax('/inner/lease/mainList')
-        .then(res => {
-          this.leaseData = res
-        })
-        .catch(() => {})
-
-      this.gettingListRefresh = false
-    },
-    // 去历史
-    getLeaseHistory(index, row) {
-      this.$router.push(`/inner/lease/history?haoid=${row._id}`)
-    },
-    // 入住弹窗
-    getLeaseInDialog(index, row) {
-      this.leaseInflag = !this.leaseInflag
-      if (this.leaseInflag && row) {
-        // 赋值信息字段
-        if (!row.leaseId || !row.leaseId._id) {
-          this.lidDialogTitle = '入住'
-          this.lease._id = ''
+    mixins: [mixinDef],
+    data() {
+      // 校验周期时间选择器
+      const validatePass = (rule, value, callback) => {
+        if (value == null || value[0] == null || value[1] == null) {
+          callback(new Error('请选择'))
         } else {
-          this.lidDialogTitle = '修改'
-          this.lease._id = row.leaseId._id
+          callback()
         }
-        this.lease.haoId = row._id
-        this.lease.fanghao = row.fanghao
+      }
 
-        // 赋值简单字段
-        const keys = [
-          'name', 'call', 'leaserange', 'payDay',
-          'payType', 'remark', 'rent', 'deposit',
-        ]
-        keys.forEach(key => {
-          if (this.lease[key].constructor === Array && row.leaseId[key]) {
-            this.lease[key] = JSON.parse(JSON.stringify(row.leaseId[key]))
-          } else if (row.leaseId[key]) {
-            this.lease[key] = row.leaseId[key]
-          }
+      return {
+        // tab index
+        activeName: 'leaseList',
+
+        // 列表数据
+        gettingListRefresh: false,
+        tableMaxHeight: 200,
+        leaseData: [],
+        leaseDataSearch: '',
+
+        dialogId: Date.now(),
+        // 入住弹窗
+        lidDialogTitle: '入住',
+        lidLabelWidth: '90px',
+        leaseInflag: false,
+        // 入住数据对象
+        lease: {},
+        leaseClear: {
+          _id: '',
+          haoId: '',
+          fanghao: '',
+          name: '',
+          call: '',
+          leaserange: [],
+          payDay: new Date().getDate(),
+          payType: 3,
+          remark: '',
+
+          calWaterPrice: {
+            minPrice: 0,
+            calType: 'single',
+            singlePrice: 0,
+            stepPrice: [{
+              step: 0,
+              price: 0,
+            }],
+          },
+
+          calElePrice: {
+            minPrice: 0,
+            calType: 'single',
+            singlePrice: 0,
+            stepPrice: [{
+              step: 0,
+              price: 0,
+            }],
+          },
+
+          rent: 0,
+          deposit: 0,
+          addTime: '',
+        },
+        leaserules: {
+          name: [{ required: true, message: '请填写', trigger: 'blur' }],
+          call: [{ required: true, message: '请填写', trigger: 'blur' }],
+          leaserange: [{ required: true, validator: validatePass, trigger: 'change' }],
+          payDay: [{
+            required: true, message: '请选择', trigger: 'change', type: 'number',
+          }],
+          payType: [{
+            type: 'number', required: true, message: '请选择', trigger: 'change',
+          }],
+          'calWaterPrice.minPrice': [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          'calWaterPrice.singlePrice': [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          'calElePrice.minPrice': [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          'calElePrice.singlePrice': [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          rent: [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          deposit: [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          addTime: [{
+            type: 'date', required: true, message: '请填写', trigger: 'change',
+          }],
+        },
+
+        leasePickerOptions: {
+          shortcuts: [
+            {
+              text: '三个月',
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                end.setTime(end.getTime() + (3600 * 1000 * 24 * 90))
+                picker.$emit('pick', [start, end])
+              },
+            },
+            {
+              text: '半年',
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                end.setTime(end.getTime() + (3600 * 1000 * 24 * 180))
+                picker.$emit('pick', [start, end])
+              },
+            },
+            {
+              text: '一年',
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                end.setTime(end.getTime() + (3600 * 1000 * 24 * 365))
+                picker.$emit('pick', [start, end])
+              },
+            },
+          ],
+        },
+
+        gettingLeaseIn: false,
+
+        // 搬出弹窗
+        lodDialogTitle: '搬出',
+        lodLabelWidth: '90px',
+        leaseOutflag: false,
+        out: {
+          _id: '',
+          haoId: '',
+          fanghao: '',
+          outTime: '',
+        },
+        outrules: {
+          outTime: [{
+            type: 'date', required: true, message: '请填写', trigger: 'change',
+          }],
+        },
+        gettingLeaseOut: false,
+
+        leaseCount: {},
+        activeLeaseCount: {},
+      }
+    },
+    computed: {
+      filterLeaseData() {
+        if (!this.leaseDataSearch) {
+          return this.leaseData
+        }
+        const searchKeys = ['fanghao', 'remark']
+
+        const _leaseDataSearch = new RegExp(this.leaseDataSearch, 'i')
+        return this.leaseData.filter(item => {
+          const testObject = {}
+          searchKeys.forEach((key) => {
+            testObject[key] = item[key]
+          })
+          const testItem = Object.values(testObject).join(' ')
+          return _leaseDataSearch.test(testItem)
         })
+      },
+      ...mapState({
+        payTypeVal: state => state.config.payTypeVal,
+        typesVal: state => state.config.typesVal,
+        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+        defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultStep: state => state.config.defaultStep,
+      }),
+    },
+    watch: {
+      activeName(n) {
+        if (n === 'leaseList') {
+          this.$nextTick(() => {
+            window.onresize()
+            this.leaseListActive()
+          })
+        }
+        if (n === 'leaseCount') this.leaseCountActive()
+      },
+    },
+    beforeCreate() {
+      this.$store.dispatch('updateMenu', '/inner/lease/index')
+    },
+    created() {
+      this.getLeaseInReset()
+      if (this.activeName === 'leaseList') this.leaseListActive()
+      if (this.activeName === 'leaseCount') this.leaseCountActive()
+    },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
+    methods: {
+      // 列表tab
+      leaseListActive() {
+        this.getListRefresh()
+      },
+      // 统计tab
+      leaseCountActive() {
+        this.getCalLeaseCount()
+      },
+      // 拉取入住信息列表
+      async getListRefresh() {
+        if (this.gettingListRefresh) return
 
-        // 时间
-        this.lease.addTime = (row.leaseId.addTime && new Date(row.leaseId.addTime)) || new Date()
+        // 请求数据
+        this.gettingListRefresh = true
 
-        // 水费电费初始化
-        if (!row.leaseId || !row.leaseId._id) {
-          this.lease.calWaterPrice =
-            Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalWaterPrice)))
-          this.lease.calElePrice =
-            Object.assign({}, JSON.parse(JSON.stringify(this.defaultCalElePrice)))
+        await this.Ajax('/inner/lease/mainList')
+          .then(res => {
+            this.leaseData = res
+          })
+          .catch(() => {})
+
+        this.gettingListRefresh = false
+      },
+      // 去历史
+      getLeaseHistory(index, row) {
+        this.$router.push(`/inner/lease/history?haoid=${row._id}`)
+      },
+      // 入住弹窗
+      getLeaseInDialog(index, row) {
+        this.leaseInflag = !this.leaseInflag
+        if (this.leaseInflag && row) {
+          // 赋值信息字段
+          if (!row.leaseId || !row.leaseId._id) {
+            this.lidDialogTitle = '入住'
+            this.lease._id = ''
+          } else {
+            this.lidDialogTitle = '修改'
+            this.lease._id = row.leaseId._id
+          }
+          this.lease.haoId = row._id
+          this.lease.fanghao = row.fanghao
+
+          // 赋值简单字段
+          const keys = [
+            'name', 'call', 'leaserange', 'payDay',
+            'payType', 'remark', 'rent', 'deposit',
+          ]
+          keys.forEach(key => {
+            if (this.lease[key].constructor === Array && row.leaseId[key]) {
+              this.lease[key] = JSON.parse(JSON.stringify(row.leaseId[key]))
+            } else if (row.leaseId[key]) {
+              this.lease[key] = row.leaseId[key]
+            }
+          })
+
+          // 时间
+          this.lease.addTime = (row.leaseId.addTime && new Date(row.leaseId.addTime)) || new Date()
+
+          // 水费电费初始化
+          if (!row.leaseId || !row.leaseId._id) {
+            this.lease.calWaterPrice = Object.assign(
+              {},
+              JSON.parse(JSON.stringify(this.defaultCalWaterPrice))
+            )
+            this.lease.calElePrice = Object.assign(
+              {},
+              JSON.parse(JSON.stringify(this.defaultCalElePrice))
+            )
+            return
+          }
+
+          // 水费
+          Object.keys(this.lease.calWaterPrice).forEach(key => {
+            if (
+              this.lease.calWaterPrice[key].constructor === Array
+              && row.leaseId.calWaterPrice[key]
+            ) {
+              this.lease.calWaterPrice[key] = JSON.parse(
+                JSON.stringify(row.leaseId.calWaterPrice[key])
+              )
+            } else if (row.leaseId.calWaterPrice[key]) {
+              this.lease.calWaterPrice[key] = row.leaseId.calWaterPrice[key]
+            }
+          })
+          if (!this.lease.calWaterPrice.stepPrice.length) this.addStep(this.lease.calWaterPrice)
+
+          // 电费
+          Object.keys(this.lease.calElePrice).forEach(key => {
+            if (
+              this.lease.calElePrice[key].constructor === Array
+              && row.leaseId.calElePrice[key]
+            ) {
+              this.lease.calElePrice[key] = JSON.parse(JSON.stringify(row.leaseId.calElePrice[key]))
+            } else if (row.leaseId.calElePrice[key]) {
+              this.lease.calElePrice[key] = row.leaseId.calElePrice[key]
+            }
+          })
+          if (!this.lease.calElePrice.stepPrice.length) this.addStep(this.lease.calElePrice)
+        }
+      },
+      // 数据初始化
+      getLeaseInReset() {
+        this.lease = Object.assign({}, JSON.parse(JSON.stringify(this.leaseClear)))
+        this.dialogId = Date.now()
+      },
+      // 关闭弹窗
+      onLeaseInDialogClose() {
+        setTimeout(() => {
+          this.$refs.leaseIn.resetFields()
+          this.getLeaseInReset()
+        }, 500)
+      },
+      // 添加步骤
+      addStep(wrap) {
+        const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
+        wrap.stepPrice.push(step)
+      },
+      // 删除步骤
+      removeStep(wrap, step) {
+        const index = wrap.stepPrice.indexOf(step)
+        if (index !== -1) {
+          wrap.stepPrice.splice(index, 1)
+        }
+      },
+      // 入住，修改
+      async getLeaseIn() {
+        if (this.gettingLeaseIn) return
+
+        // 表单校验
+        try {
+          await this.$refs.leaseIn.validate()
+        } catch (err) {
           return
         }
 
-        // 水费
-        Object.keys(this.lease.calWaterPrice).forEach(key => {
-          if (
-            this.lease.calWaterPrice[key].constructor === Array &&
-            row.leaseId.calWaterPrice[key]
-          ) {
-            this.lease.calWaterPrice[key] =
-              JSON.parse(JSON.stringify(row.leaseId.calWaterPrice[key]))
-          } else if (row.leaseId.calWaterPrice[key]) {
-            this.lease.calWaterPrice[key] = row.leaseId.calWaterPrice[key]
-          }
-        })
-        if (!this.lease.calWaterPrice.stepPrice.length) this.addStep(this.lease.calWaterPrice)
+        // 提交接口
+        this.gettingLeaseIn = true
 
-        // 电费
-        Object.keys(this.lease.calElePrice).forEach(key => {
-          if (
-            this.lease.calElePrice[key].constructor === Array &&
-            row.leaseId.calElePrice[key]
-          ) {
-            this.lease.calElePrice[key] =
-              JSON.parse(JSON.stringify(row.leaseId.calElePrice[key]))
-          } else if (row.leaseId.calElePrice[key]) {
-            this.lease.calElePrice[key] = row.leaseId.calElePrice[key]
-          }
-        })
-        if (!this.lease.calElePrice.stepPrice.length) this.addStep(this.lease.calElePrice)
-      }
-    },
-    // 数据初始化
-    getLeaseInReset() {
-      this.lease = Object.assign({}, JSON.parse(JSON.stringify(this.leaseClear)))
-      this.dialogId = Date.now()
-    },
-    // 关闭弹窗
-    onLeaseInDialogClose() {
-      setTimeout(() => {
-        this.$refs.leaseIn.resetFields()
-        this.getLeaseInReset()
-      }, 500)
-    },
-    // 添加步骤
-    addStep(wrap) {
-      const step = Object.assign({}, JSON.parse(JSON.stringify(this.defaultStep)))
-      wrap.stepPrice.push(step)
-    },
-    // 删除步骤
-    removeStep(wrap, step) {
-      const index = wrap.stepPrice.indexOf(step)
-      if (index !== -1) {
-        wrap.stepPrice.splice(index, 1)
-      }
-    },
-    // 入住，修改
-    async getLeaseIn() {
-      if (this.gettingLeaseIn) return
-
-      // 表单校验
-      try {
-        await this.$refs.leaseIn.validate()
-      } catch (err) {
-        return
-      }
-
-      // 提交接口
-      this.gettingLeaseIn = true
-
-      const _data = Object.assign({}, this.lease)
-      await this.Ajax('/inner/lease/in', _data)
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: this.lease._id ? '修改成功' : '添加成功',
-            duration: 2000,
+        const _data = Object.assign({}, this.lease)
+        await this.Ajax('/inner/lease/in', _data)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: this.lease._id ? '修改成功' : '添加成功',
+              duration: 2000,
+            })
+            this.getLeaseInDialog()
+            this.getListRefresh()
           })
-          this.getLeaseInDialog()
-          this.getListRefresh()
-        })
-        .catch(() => {})
+          .catch(() => {})
 
-      this.gettingLeaseIn = false
-    },
-    getLeaseOutDialog(index, row) {
-      this.leaseOutflag = !this.leaseOutflag
-      if (this.leaseOutflag && row) {
-        this.out.haoId = row._id
-        this.out.fanghao = row.fanghao
-        this.out._id = row.leaseId._id
-        this.out.outTime = new Date()
-      }
-    },
-    onLeaseOutDialogClose() {
-      setTimeout(() => {
-        this.$refs.leaseOut.resetFields()
-        this.dialogId = Date.now()
-      }, 500)
-    },
-    async getLeaseOut() {
-      if (this.gettingLeaseOut) return
+        this.gettingLeaseIn = false
+      },
+      getLeaseOutDialog(index, row) {
+        this.leaseOutflag = !this.leaseOutflag
+        if (this.leaseOutflag && row) {
+          this.out.haoId = row._id
+          this.out.fanghao = row.fanghao
+          this.out._id = row.leaseId._id
+          this.out.outTime = new Date()
+        }
+      },
+      onLeaseOutDialogClose() {
+        setTimeout(() => {
+          this.$refs.leaseOut.resetFields()
+          this.dialogId = Date.now()
+        }, 500)
+      },
+      async getLeaseOut() {
+        if (this.gettingLeaseOut) return
 
-      // 表单校验
-      try {
-        await this.$refs.leaseOut.validate()
-      } catch (err) {
-        return
-      }
-
-      // 提交接口
-      this.gettingLeaseOut = true
-
-      await this.Ajax('/inner/lease/out', this.out)
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '退租成功',
-            duration: 2000,
-          })
-          this.getLeaseOutDialog()
-          this.getListRefresh()
-        })
-
-      this.gettingLeaseOut = false
-    },
-    // 计算月租统计
-    getCalLeaseCount() {
-      this.leaseCount = {}
-      this.activeLeaseCount = {}
-      this.leaseData.forEach((lease) => {
-        const floor = lease.hao.substr(0, 1)
-        const rent = lease.leaseId.rent || 0
-        if (!this.leaseCount[lease.fang]) {
-          this.leaseCount[lease.fang] = {
-            count: 0,
-            list: {},
-          }
-          this.activeLeaseCount[lease.fang] = []
+        // 表单校验
+        try {
+          await this.$refs.leaseOut.validate()
+        } catch (err) {
+          return
         }
 
-        if (!this.leaseCount[lease.fang].list[floor]) {
-          this.leaseCount[lease.fang].list[floor] = {
-            count: 0,
-            list: [],
-          }
-        }
+        // 提交接口
+        this.gettingLeaseOut = true
 
-        this.leaseCount[lease.fang].count += rent
-        this.leaseCount[lease.fang].list[floor].count += rent
-        this.leaseCount[lease.fang].list[floor].list.push({
-          haoId: lease._id,
-          hao: lease.hao,
-          rent,
+        await this.Ajax('/inner/lease/out', this.out)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '退租成功',
+              duration: 2000,
+            })
+            this.getLeaseOutDialog()
+            this.getListRefresh()
+          })
+
+        this.gettingLeaseOut = false
+      },
+      // 计算月租统计
+      getCalLeaseCount() {
+        this.leaseCount = {}
+        this.activeLeaseCount = {}
+        this.leaseData.forEach((lease) => {
+          const floor = lease.hao.substr(0, 1)
+          const rent = lease.leaseId.rent || 0
+          if (!this.leaseCount[lease.fang]) {
+            this.leaseCount[lease.fang] = {
+              count: 0,
+              list: {},
+            }
+            this.activeLeaseCount[lease.fang] = []
+          }
+
+          if (!this.leaseCount[lease.fang].list[floor]) {
+            this.leaseCount[lease.fang].list[floor] = {
+              count: 0,
+              list: [],
+            }
+          }
+
+          this.leaseCount[lease.fang].count += rent
+          this.leaseCount[lease.fang].list[floor].count += rent
+          this.leaseCount[lease.fang].list[floor].list.push({
+            haoId: lease._id,
+            hao: lease.hao,
+            rent,
+          })
         })
-      })
+      },
     },
-  },
-}
+  }
 </script>
 
 <style lang="scss">

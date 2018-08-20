@@ -4,27 +4,27 @@
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
-        :loading="gettingListRefresh"
         type="primary"
+        :loading="gettingListRefresh"
         @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
         <el-input
-          v-model="leaseDataSearch"
-          placeholder="搜索" />
+          placeholder="搜索"
+          v-model="leaseDataSearch" />
       </div>
     </div>
 
     <!-- 租住数据表 -->
     <el-table
       v-loading.body="gettingListRefresh"
-      ref="leaseTable"
-      :max-height="tableMaxHeight"
-      :data="filterLeaseData"
       class="lease-table"
       stripe
-      border>
+      border
+      ref="leaseTable"
+      :max-height="tableMaxHeight"
+      :data="filterLeaseData">
       <el-table-column
         prop="fanghao"
         label="房屋"
@@ -86,9 +86,9 @@
           <template slot-scope="scope">
 
             <table-eandw-cal-price-view-item
-              :lease="scope.row"
               type="calWaterPrice"
-              unit="吨" />
+              unit="吨"
+              :lease="scope.row" />
 
           </template>
         </el-table-column>
@@ -98,9 +98,9 @@
           <template slot-scope="scope">
 
             <table-eandw-cal-price-view-item
-              :lease="scope.row"
               type="calElePrice"
-              unit="度" />
+              unit="度"
+              :lease="scope.row" />
 
           </template>
         </el-table-column>
@@ -126,11 +126,11 @@
         width="100">
         <template slot-scope="scope">
           <el-popover
-            v-if="scope.row._id"
-            v-model="scope.row.dLeasePopFlag"
             placement="top"
             width="150"
-            trigger="click">
+            trigger="click"
+            v-if="scope.row._id"
+            v-model="scope.row.dLeasePopFlag">
             <p>确认删除此租住历史？此行为不可撤销</p>
             <div class="pop-cont">
               <el-button
@@ -149,9 +149,9 @@
             <div
               slot="reference">
               <el-button
-                :loading="scope.row.gettingdelLease"
                 size="small"
-                type="danger">
+                type="danger"
+                :loading="scope.row.gettingdelLease">
                 删除
               </el-button>
             </div>
@@ -163,106 +163,106 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mixinDef } from 'pcside/js/mixins'
-import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
-import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
+  import { mapState } from 'vuex'
+  import { mixinDef } from 'pcside/js/mixins'
+  import TableEandwCalPriceViewItem from 'pcside/common/table-eandw-cal-price-view-item'
+  import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
-export default {
-  name: 'LeaseHistory',
-  components: {
-    TableEandwCalPriceViewItem,
-    TableRentRemarkItem,
-  },
-  mixins: [mixinDef],
-  data() {
-    return {
-      gettingListRefresh: false,
-      tableMaxHeight: 200,
-      leaseList: [],
-      leaseDataSearch: '',
-    }
-  },
-  computed: {
-    filterLeaseData() {
-      if (!this.leaseDataSearch) {
-        return this.leaseList
+  export default {
+    name: 'LeaseHistory',
+    components: {
+      TableEandwCalPriceViewItem,
+      TableRentRemarkItem,
+    },
+    mixins: [mixinDef],
+    data() {
+      return {
+        gettingListRefresh: false,
+        tableMaxHeight: 200,
+        leaseList: [],
+        leaseDataSearch: '',
       }
-      const searchKeys = ['fanghao', 'name', 'call', 'remark']
-
-      const _leaseDataSearch = new RegExp(this.leaseDataSearch, 'i')
-      return this.leaseData.filter(item => {
-        const testObject = {}
-        searchKeys.forEach((key) => {
-          testObject[key] = item[key]
-        })
-        const testItem = Object.values(testObject).join(' ')
-        return _leaseDataSearch.test(testItem)
-      })
     },
-    ...mapState({
-      payTypeVal: state => state.config.payTypeVal,
-      typesVal: state => state.config.typesVal,
-    }),
-  },
-  beforeCreate() {
-    this.$store.dispatch('updateMenu', '/inner/lease/index')
-  },
-  created() {
-    this.getListRefresh()
-  },
-  mounted() {
-    window.onresize = () => {
-      const height = window.innerHeight || document.body.clientHeight
-      const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
-      this.tableMaxHeight = height - offsetTop - 20 - 0.5
-    }
-    this.$nextTick(() => window.onresize())
-  },
-  beforeDestroy() {
-    window.onresize = null
-  },
-  methods: {
-    // 拉取入住信息列表
-    async getListRefresh() {
-      if (this.gettingListRefresh) return
+    computed: {
+      filterLeaseData() {
+        if (!this.leaseDataSearch) {
+          return this.leaseList
+        }
+        const searchKeys = ['fanghao', 'name', 'call', 'remark']
 
-      // 拉取接口
-      this.gettingListRefresh = true
-
-      await this.Ajax('/inner/lease/list', {
-        haoId: this.$route.query.haoid,
-      })
-        .then(res => {
-          this.leaseList = res
-        })
-        .catch(() => {})
-
-      this.gettingListRefresh = false
-    },
-    // 删除入职信息
-    async delLease(index, row) {
-      row.dLeasePopFlag = false
-      if (row.gettingdelLease) return
-
-      // 拉取接口
-      row.gettingdelLease = true
-
-      await this.Ajax('/inner/lease/del', {
-        _id: row._id,
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功',
-            duration: 2000,
+        const _leaseDataSearch = new RegExp(this.leaseDataSearch, 'i')
+        return this.leaseData.filter(item => {
+          const testObject = {}
+          searchKeys.forEach((key) => {
+            testObject[key] = item[key]
           })
-          this.getListRefresh()
+          const testItem = Object.values(testObject).join(' ')
+          return _leaseDataSearch.test(testItem)
         })
-        .catch(() => {})
-
-      row.gettingdelLease = false
+      },
+      ...mapState({
+        payTypeVal: state => state.config.payTypeVal,
+        typesVal: state => state.config.typesVal,
+      }),
     },
-  },
-}
+    beforeCreate() {
+      this.$store.dispatch('updateMenu', '/inner/lease/index')
+    },
+    created() {
+      this.getListRefresh()
+    },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.leaseTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
+    },
+    methods: {
+      // 拉取入住信息列表
+      async getListRefresh() {
+        if (this.gettingListRefresh) return
+
+        // 拉取接口
+        this.gettingListRefresh = true
+
+        await this.Ajax('/inner/lease/list', {
+          haoId: this.$route.query.haoid,
+        })
+          .then(res => {
+            this.leaseList = res
+          })
+          .catch(() => {})
+
+        this.gettingListRefresh = false
+      },
+      // 删除入职信息
+      async delLease(index, row) {
+        row.dLeasePopFlag = false
+        if (row.gettingdelLease) return
+
+        // 拉取接口
+        row.gettingdelLease = true
+
+        await this.Ajax('/inner/lease/del', {
+          _id: row._id,
+        })
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功',
+              duration: 2000,
+            })
+            this.getListRefresh()
+          })
+          .catch(() => {})
+
+        row.gettingdelLease = false
+      },
+    },
+  }
 </script>

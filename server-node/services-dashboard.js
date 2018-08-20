@@ -213,21 +213,21 @@ module.exports = {
 
     rentInfo.forEach(rent => {
       if (
-        req.body.type === 1 &&
-        (
+        req.body.type === 1
+        && (
           // 这个月交租是今天前
           (
-            rent.lease.payDay <= today &&
-            new Date(rent.monthId.month).getMonth() === month &&
-            new Date(rent.monthId.month).getFullYear() === year
-          ) ||
-          // 这个月之前的
-          (
-            new Date(rent.monthId.month).getMonth() < month &&
-            new Date(rent.monthId.month).getFullYear() === year
-          ) ||
-          // 今年前的
-          new Date(rent.monthId.month).getFullYear() < year
+            rent.lease.payDay <= today
+        && new Date(rent.monthId.month).getMonth() === month
+        && new Date(rent.monthId.month).getFullYear() === year
+          )
+        // 这个月之前的
+        || (
+          new Date(rent.monthId.month).getMonth() < month
+        && new Date(rent.monthId.month).getFullYear() === year
+        )
+        // 今年前的
+        || new Date(rent.monthId.month).getFullYear() < year
         )
       ) {
         isTodayCount += rent.calRentResult
@@ -322,15 +322,15 @@ module.exports = {
     rentInfo.forEach(rent => {
       if (
         (
-          rent.lease.payDay <= today &&
-          new Date(rent.monthId.month).getMonth() === month &&
-          new Date(rent.monthId.month).getFullYear() === year
-        ) ||
-        (
-          new Date(rent.monthId.month).getMonth() < month &&
-          new Date(rent.monthId.month).getFullYear() === year
-        ) ||
-        new Date(rent.monthId.month).getFullYear() < year
+          rent.lease.payDay <= today
+        && new Date(rent.monthId.month).getMonth() === month
+        && new Date(rent.monthId.month).getFullYear() === year
+        )
+        || (
+          new Date(rent.monthId.month).getMonth() < month
+        && new Date(rent.monthId.month).getFullYear() === year
+        )
+        || new Date(rent.monthId.month).getFullYear() < year
       ) {
         countMoney += rent.calRentResult
         isToday.push(rent)

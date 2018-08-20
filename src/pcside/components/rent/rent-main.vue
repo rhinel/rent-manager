@@ -9,25 +9,25 @@
         新增
       </el-button>
       <el-button
-        :loading="gettingListRefresh"
         type="primary"
+        :loading="gettingListRefresh"
         @click="getListRefresh">
         刷新
       </el-button>
       <div class="table-btn-input">
         <el-input
-          v-model="monthListDataSearch"
-          placeholder="搜索" />
+          placeholder="搜索"
+          v-model="monthListDataSearch" />
       </div>
     </div>
 
     <!-- 新增弹窗 -->
     <el-dialog
+      custom-class="add-month-list-dialog"
       :key="dialogId"
       :title="amldDialogTitle"
       :visible.sync="addMonthListflag"
       :close-on-click-modal="false"
-      custom-class="add-month-list-dialog"
       @close="onAddMonthListDialogClose">
       <el-form
         ref="addMonthList"
@@ -36,37 +36,37 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              :label-width="amldLabelWidth"
               label="收租周期"
-              prop="month">
+              prop="month"
+              :label-width="amldLabelWidth">
               <el-date-picker
+                type="month"
+                placeholder="选择月份"
                 v-model="addMonthList.month"
                 :disabled="!amldInput"
-                :editable="false"
-                type="month"
-                placeholder="选择月份" />
+                :editable="false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item
-              :label-width="amldLabelWidth"
-              label="备注">
+              label="备注"
+              :label-width="amldLabelWidth">
               <el-input
-                v-model="addMonthList.remark"
                 auto-complete="off"
-                placeholder="备注" />
+                placeholder="备注"
+                v-model="addMonthList.remark" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-alert
+          type="info"
           :title="(addMonthList._id ? '已' : '将') +
-          '记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算'"
-          type="info" />
+          '记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
-              :label-width="amldLabelWidth"
-              label="水费">
+              label="水费"
+              :label-width="amldLabelWidth">
               <div>
                 低消：{{ addMonthList.defaultCalWaterPrice.minPrice || 0 }}吨
               </div>
@@ -89,8 +89,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              :label-width="amldLabelWidth"
-              label="电费">
+              label="电费"
+              :label-width="amldLabelWidth">
               <div>
                 低消：{{ addMonthList.defaultCalElePrice.minPrice || 0 }}度
               </div>
@@ -114,16 +114,16 @@
         </el-row>
       </el-form>
       <div
-        slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+        slot="footer">
         <el-button
           :loading="gettingAddMonthList"
           @click="getAddMonthListDialog">
           取消
         </el-button>
         <el-button
-          :loading="gettingAddMonthList"
           type="primary"
+          :loading="gettingAddMonthList"
           @click="getAddMonthList">
           确定
         </el-button>
@@ -133,12 +133,12 @@
     <!-- 月份数据表 -->
     <el-table
       v-loading.body="gettingListRefresh"
-      ref="monthTable"
-      :max-height="tableMaxHeight"
-      :data="filterMonthListData"
       class="month-table"
       stripe
-      border>
+      border
+      ref="monthTable"
+      :max-height="tableMaxHeight"
+      :data="filterMonthListData">
       <el-table-column
         prop="month"
         label="月份"
@@ -190,10 +190,10 @@
             修改
           </el-button>
           <el-popover
-            v-model="scope.row.dMonthPopFlag"
             placement="top"
             width="150"
-            trigger="click">
+            trigger="click"
+            v-model="scope.row.dMonthPopFlag">
             <p>确认删除月份周期信息吗？与之关联的数据将一并删除</p>
             <div class="pop-cont">
               <el-button
@@ -210,12 +210,12 @@
               </el-button>
             </div>
             <span
-              slot="reference"
-              class="show-pop">
+              class="show-pop"
+              slot="reference">
               <el-button
-                :loading="scope.row.gettingdelMonth"
                 size="small"
-                type="danger">
+                type="danger"
+                :loading="scope.row.gettingdelMonth">
                 删除
               </el-button>
             </span>
@@ -227,194 +227,189 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mixinDef } from 'pcside/js/mixins'
-import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
+  import { mapState } from 'vuex'
+  import { mixinDef } from 'pcside/js/mixins'
+  import TableRentRemarkItem from 'pcside/common/table-rent-remark-item'
 
-export default {
-  name: 'RentMain',
-  components: {
-    TableRentRemarkItem,
-  },
-  mixins: [mixinDef],
-  data() {
-    return {
-      addMonthListflag: false,
-      gettingAddMonthList: false,
-      gettingListRefresh: false,
+  export default {
+    name: 'RentMain',
+    components: {
+      TableRentRemarkItem,
+    },
+    mixins: [mixinDef],
+    data() {
+      return {
+        addMonthListflag: false,
+        gettingAddMonthList: false,
+        gettingListRefresh: false,
 
-      dialogId: Date.now(),
-      amldDialogTitle: '新增收租周期',
-      amldInput: true,
-      amldLabelWidth: '90px',
-      addMonthList: {},
-      addMonthListClear: {
-        _id: '',
-        month: '',
-        remark: '',
-        defaultCalWaterPrice: {},
-        defaultCalElePrice: {},
-      },
-      addMonthListrules: {
-        month: [{
-          type: 'date', required: true, message: '请选择', trigger: 'change',
-        }],
-      },
-      tableMaxHeight: 200,
-      monthListData: [],
-      monthListDataSearch: '',
-    }
-  },
-  computed: {
-    filterMonthListData() {
-      if (!this.monthListDataSearch) {
-        return this.monthListData
+        dialogId: Date.now(),
+        amldDialogTitle: '新增收租周期',
+        amldInput: true,
+        amldLabelWidth: '90px',
+        addMonthList: {},
+        addMonthListClear: {
+          _id: '',
+          month: '',
+          remark: '',
+          defaultCalWaterPrice: {},
+          defaultCalElePrice: {},
+        },
+        addMonthListrules: {
+          month: [{
+            type: 'date', required: true, message: '请选择', trigger: 'change',
+          }],
+        },
+        tableMaxHeight: 200,
+        monthListData: [],
+        monthListDataSearch: '',
       }
-      const searchKeys = ['fanghao', 'remark']
+    },
+    computed: {
+      filterMonthListData() {
+        if (!this.monthListDataSearch) {
+          return this.monthListData
+        }
+        const searchKeys = ['fanghao', 'remark']
 
-      const _monthListDataSearch = new RegExp(this.monthListDataSearch, 'i')
-      return this.monthListData.filter(item => {
-        const testObject = {}
-        searchKeys.forEach((key) => {
-          testObject[key] = item[key]
+        const _monthListDataSearch = new RegExp(this.monthListDataSearch, 'i')
+        return this.monthListData.filter(item => {
+          const testObject = {}
+          searchKeys.forEach((key) => {
+            testObject[key] = item[key]
+          })
+          const testItem = Object.values(testObject).join(' ')
+          return _monthListDataSearch.test(testItem)
         })
-        const testItem = Object.values(testObject).join(' ')
-        return _monthListDataSearch.test(testItem)
-      })
+      },
+      ...mapState({
+        defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
+        defaultCalElePrice: state => state.config.defaultCalElePrice,
+      }),
     },
-    ...mapState({
-      defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
-      defaultCalElePrice: state => state.config.defaultCalElePrice,
-    }),
-  },
-  beforeCreate() {
-    this.$store.dispatch('updateMenu', '/inner/rent/index')
-  },
-  created() {
-    this.getListRefresh()
-    this.getResetAddMonthList()
-  },
-  mounted() {
-    window.onresize = () => {
-      const height = window.innerHeight || document.body.clientHeight
-      const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
-      this.tableMaxHeight = height - offsetTop - 20 - 0.5
-    }
-    this.$nextTick(() => window.onresize())
-  },
-  beforeDestroy() {
-    window.onresize = null
-  },
-  methods: {
-    getAddMonthListDialog(index, row) {
-      this.addMonthListflag = !this.addMonthListflag
-      if (this.addMonthListflag && row) {
-        const _date = new Date()
-        _date.setFullYear(row.month.slice(0, 4))
-        _date.setMonth(row.month.slice(5, 7) - 1)
-        this.addMonthList._id = row._id
-        this.addMonthList.month = _date
-        this.addMonthList.remark = row.remark
-        this.addMonthList.defaultCalWaterPrice =
-          row.defaultCalWaterPrice || {}
-        this.addMonthList.defaultCalElePrice =
-          row.defaultCalElePrice || {}
-        this.amldInput = false
-        this.amldDialogTitle = '修改收租周期'
-      } else if (this.addMonthListflag) {
-        this.amldInput = true
-        this.amldDialogTitle = '新增收租周期'
-        this.addMonthList.month = new Date()
+    beforeCreate() {
+      this.$store.dispatch('updateMenu', '/inner/rent/index')
+    },
+    created() {
+      this.getListRefresh()
+      this.getResetAddMonthList()
+    },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.monthTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
       }
+      this.$nextTick(() => window.onresize())
     },
-    getResetAddMonthList() {
-      let {
-        defaultCalWaterPrice,
-        defaultCalElePrice,
-      } = this
-      defaultCalWaterPrice =
-        JSON.parse(JSON.stringify(defaultCalWaterPrice))
-      defaultCalElePrice =
-        JSON.parse(JSON.stringify(defaultCalElePrice))
-      this.addMonthList =
-        Object.assign({}, this.addMonthList, this.addMonthListClear, {
+    beforeDestroy() {
+      window.onresize = null
+    },
+    methods: {
+      getAddMonthListDialog(index, row) {
+        this.addMonthListflag = !this.addMonthListflag
+        if (this.addMonthListflag && row) {
+          const _date = new Date()
+          _date.setFullYear(row.month.slice(0, 4))
+          _date.setMonth(row.month.slice(5, 7) - 1)
+          this.addMonthList._id = row._id
+          this.addMonthList.month = _date
+          this.addMonthList.remark = row.remark
+          this.addMonthList.defaultCalWaterPrice = row.defaultCalWaterPrice || {}
+          this.addMonthList.defaultCalElePrice = row.defaultCalElePrice || {}
+          this.amldInput = false
+          this.amldDialogTitle = '修改收租周期'
+        } else if (this.addMonthListflag) {
+          this.amldInput = true
+          this.amldDialogTitle = '新增收租周期'
+          this.addMonthList.month = new Date()
+        }
+      },
+      getResetAddMonthList() {
+        let {
+          defaultCalWaterPrice,
+          defaultCalElePrice,
+        } = this
+        defaultCalWaterPrice = JSON.parse(JSON.stringify(defaultCalWaterPrice))
+        defaultCalElePrice = JSON.parse(JSON.stringify(defaultCalElePrice))
+        this.addMonthList = Object.assign({}, this.addMonthList, this.addMonthListClear, {
           defaultCalWaterPrice,
           defaultCalElePrice,
         })
-      this.dialogId = Date.now()
-    },
-    async getListRefresh() {
-      if (this.gettingListRefresh) return
+        this.dialogId = Date.now()
+      },
+      async getListRefresh() {
+        if (this.gettingListRefresh) return
 
-      // 请求接口
-      this.gettingListRefresh = true
+        // 请求接口
+        this.gettingListRefresh = true
 
-      await this.Ajax('/inner/month/list')
-        .then(res => {
-          this.monthListData = res
-        })
-        .catch(() => {})
-
-      this.gettingListRefresh = false
-    },
-    onAddMonthListDialogClose() {
-      this.$refs.addMonthList.resetFields()
-      this.getResetAddMonthList()
-    },
-    async getAddMonthList() {
-      if (this.gettingAddMonthList) return
-
-      // 表单校验
-      try {
-        await this.$refs.addMonthList.validate()
-      } catch (err) {
-        return
-      }
-
-      // 请求接口
-      this.gettingAddMonthList = true
-
-      const _data = Object.assign({}, this.addMonthList)
-      const y = _data.month.getFullYear()
-      const m = _data.month.getMonth() + 1 > 9 ?
-        _data.month.getMonth() + 1 : `0${_data.month.getMonth() + 1}`
-      _data.month = `${y}-${m}`
-
-      await this.Ajax('/inner/month/add', _data)
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: _data._id ? '修改成功' : '添加成功',
-            duration: 2000,
+        await this.Ajax('/inner/month/list')
+          .then(res => {
+            this.monthListData = res
           })
-          this.getAddMonthListDialog()
-          this.getListRefresh()
-        })
-        .catch(() => {})
+          .catch(() => {})
 
-      this.gettingAddMonthList = false
-    },
-    // 删除月度周期
-    async getDelMonth(index, row) {
-      row.dMonthPopFlag = false
-      if (row.gettingdelMonth) return
+        this.gettingListRefresh = false
+      },
+      onAddMonthListDialogClose() {
+        this.$refs.addMonthList.resetFields()
+        this.getResetAddMonthList()
+      },
+      async getAddMonthList() {
+        if (this.gettingAddMonthList) return
 
-      // 请求接口
-      row.gettingdelMonth = true
+        // 表单校验
+        try {
+          await this.$refs.addMonthList.validate()
+        } catch (err) {
+          return
+        }
 
-      await this.Ajax('/inner/month/del', { _id: row._id })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功',
-            duration: 2000,
+        // 请求接口
+        this.gettingAddMonthList = true
+
+        const _data = Object.assign({}, this.addMonthList)
+        const y = _data.month.getFullYear()
+        const m = _data.month.getMonth() + 1 > 9
+          ? _data.month.getMonth() + 1 : `0${_data.month.getMonth() + 1}`
+        _data.month = `${y}-${m}`
+
+        await this.Ajax('/inner/month/add', _data)
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: _data._id ? '修改成功' : '添加成功',
+              duration: 2000,
+            })
+            this.getAddMonthListDialog()
+            this.getListRefresh()
           })
-          this.getListRefresh()
-        })
-        .catch(() => {})
+          .catch(() => {})
 
-      row.gettingdelMonth = false
+        this.gettingAddMonthList = false
+      },
+      // 删除月度周期
+      async getDelMonth(index, row) {
+        row.dMonthPopFlag = false
+        if (row.gettingdelMonth) return
+
+        // 请求接口
+        row.gettingdelMonth = true
+
+        await this.Ajax('/inner/month/del', { _id: row._id })
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功',
+              duration: 2000,
+            })
+            this.getListRefresh()
+          })
+          .catch(() => {})
+
+        row.gettingdelMonth = false
+      },
     },
-  },
-}
+  }
 </script>

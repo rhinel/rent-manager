@@ -107,6 +107,7 @@ const connect = callback => {
       reconnectTries: Number.MAX_VALUE,
       reconnectInterval: 5000,
       autoReconnect: true,
+      useNewUrlParser: true,
     })
     .catch(() => setTimeout(() => connect(callback), 5000))
 }
