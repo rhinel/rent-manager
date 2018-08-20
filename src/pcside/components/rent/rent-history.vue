@@ -184,6 +184,14 @@
         </template>
       </el-table-column>
       <el-table-column label="计租信息">
+        <el-table-column
+          label="房租信息"
+          width="150">
+          <template slot-scope="scope">
+            <table-lease-view-item
+              :lease="getRent(scope).lease" />
+          </template>
+        </el-table-column>
         <el-table-column label="水费信息">
           <el-table-column
             label="本次计费/时间"
@@ -215,14 +223,6 @@
 
             </template>
           </el-table-column>
-        </el-table-column>
-        <el-table-column
-          label="房租信息"
-          width="150">
-          <template slot-scope="scope">
-            <table-lease-view-item
-              :lease="getRent(scope).lease" />
-          </template>
         </el-table-column>
         <el-table-column
           label="合计/计费时间"

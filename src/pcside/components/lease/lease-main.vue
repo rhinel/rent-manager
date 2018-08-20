@@ -523,6 +523,24 @@
           <el-table-column
             label="计费信息">
             <el-table-column
+              label="当前租金/押金"
+              width="170">
+              <template slot-scope="scope">
+                <div>
+                  租金：￥
+                  <span class="main-txt-highline">
+                    {{ (scope.row.leaseId.rent || 0) }}
+                  </span>
+                  元/月
+                </div>
+                <div>
+                  押金：￥
+                  {{ scope.row.leaseId.deposit || 0 }}
+                  元
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="水费"
               width="150">
               <template slot-scope="scope">
@@ -544,24 +562,6 @@
                   unit="度"
                   :lease="scope.row.leaseId" />
 
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="当前租金/押金"
-              width="170">
-              <template slot-scope="scope">
-                <div>
-                  租金：￥
-                  <span class="main-txt-highline">
-                    {{ (scope.row.leaseId.rent || 0) }}
-                  </span>
-                  元/月
-                </div>
-                <div>
-                  押金：￥
-                  {{ scope.row.leaseId.deposit || 0 }}
-                  元
-                </div>
               </template>
             </el-table-column>
           </el-table-column>
