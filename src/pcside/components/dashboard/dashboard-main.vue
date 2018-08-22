@@ -379,7 +379,7 @@
 </template>
 
 <script>
-  import TWEEN from 'tween.js'
+  import TWEEN from '@tweenjs/tween.js'
   import TableRentViewItem from 'pcside/common/table-rent-view-item'
   import TableLeaseViewItem from 'pcside/common/table-lease-view-item'
   import TableRentTypeItem from 'pcside/common/table-rent-type-item'
