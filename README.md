@@ -5,7 +5,9 @@
 | [![Build Status](https://travis-ci.org/rhinel/rent-manager.svg?branch=master)](https://travis-ci.org/rhinel/rent-manager)|[![Build Status](https://travis-ci.org/rhinel/rent-manager.svg?branch=test)](https://travis-ci.org/rhinel/rent-manager) |
 
 > rent-manager for ying
+>
 > 项目后端：nodejs mongodb redis
+>
 > 项目前端：webpack vue2.0 ElementUI superagent
 
 ## Build Setup
@@ -22,6 +24,7 @@ yarn serve
 
 # build for production with minification
 yarn git-init
+
 yarn build
 
 ```
