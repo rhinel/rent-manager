@@ -1,6 +1,7 @@
 // 启动服务
 const http = require('http')
 const express = require('express')
+const compress = require('compression')
 const bodyParser = require('body-parser')
 const log4js = require('log4js')
 
@@ -29,15 +30,15 @@ app.use(log4js.connectLogger(
   { level: 'auto' },
 ))
 
-// 路由
-app.use(express.static(`${__dirname}/`))
+// 使用gzip
+app.use(compress)
 
 // 使用post&json
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // 处理路由
-require('./routes')(app, express)
+require('./routes')(app)
 
 // 启动监听
 httpServer.listen(
