@@ -1,4 +1,5 @@
 const fs = require('fs')
+const express = require('express')
 const path = require('path')
 const log4js = require('log4js')
 
@@ -6,7 +7,7 @@ const controller = require('./controllers')
 
 const sysLog = log4js.getLogger('sys')
 
-module.exports = (app, express) => {
+module.exports = app => {
   // 接口，不做接口校验
   // 非权限接口
   app.route('/api/outer/:class/:function?').post(controller.outer)
@@ -23,7 +24,7 @@ module.exports = (app, express) => {
     sysLog.error('system route error: ', err)
     res.status(err.status || 500).send({
       code: 1000,
-      msg: err.message,
+      msg: err.message || err,
     })
   })
 
@@ -31,14 +32,13 @@ module.exports = (app, express) => {
   app.use('/static', express.static(path.resolve(__dirname, '../dist/static')))
   app.use('/404', express.static(path.resolve(__dirname, '../404')))
   app.get('*', (req, res) => {
-    // wechat
     if (req.hostname && (
       req.hostname === 'wechat.rhinel.xyz'
       || req.hostname === 'wechat.rent-manager.online'
       || req.hostname === 'wechat.rent-manager.cn'
     )) {
-      res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
-      // SaaS
+      // wechat
+      res.send(fs.readFileSync(path.resolve(__dirname, '../dist/mobileside/index.html'), 'utf-8'))
     } else if (req.hostname && (
       req.hostname === 'www.rhinel.xyz'
       || req.hostname === 'www.rent-manager.online'
@@ -46,8 +46,10 @@ module.exports = (app, express) => {
       || req.hostname === 'rent-manager.online'
       || req.hostname === 'rent-manager.cn'
     )) {
-      res.send(fs.readFileSync(path.resolve('../dist/pcside/index.html'), 'utf-8'))
+      // SaaS
+      res.send(fs.readFileSync(path.resolve(__dirname, '../dist/pcside/index.html'), 'utf-8'))
     } else {
+      // 404
       res.send(fs.readFileSync(path.resolve(__dirname, '../404/404.html'), 'utf-8'))
     }
   })
