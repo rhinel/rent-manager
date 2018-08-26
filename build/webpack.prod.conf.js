@@ -74,7 +74,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       version: packageConfig.version,
       gitPath: checkGit,
       template: './src/pcside/html/index.html',
-      chunks: ['chunk-vendors', 'chunk-common', 'pcside'],
+      chunks: ['chunk-vendors-pc', 'chunk-common-pc', 'pcside'],
       inject: true,
       minify: {
         removeComments: true,
@@ -91,7 +91,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       version: packageConfig.version,
       gitPath: checkGit,
       template: './src/mobileside/html/index.html',
-      chunks: ['chunk-vendors', 'chunk-common', 'mobileside'],
+      chunks: ['chunk-vendors-mb', 'chunk-common-mb', 'mobileside'],
       inject: true,
       minify: {
         removeComments: true,
@@ -118,17 +118,38 @@ const webpackConfig = merge(baseWebpackConfig, {
   optimization: {
     splitChunks: {
       cacheGroups: {
-        vendors: {
-          name: `chunk-vendors`,
+        vendorsPC: {
+          name: `chunk-vendors-pc`,
           test: /[\\/]node_modules[\\/]/,
           priority: -10,
-          chunks: 'initial'
+          chunks(chunk) {
+            return chunk.name === 'pcside'
+          }
         },
-        common: {
-          name: `chunk-common`,
+        commonPC: {
+          name: `chunk-common-pc`,
           minChunks: 2,
           priority: -20,
-          chunks: 'initial',
+          chunks(chunk) {
+            return chunk.name === 'pcside'
+          },
+          reuseExistingChunk: true
+        },
+        vendorsMB: {
+          name: `chunk-vendors-mb`,
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks(chunk) {
+            return chunk.name === 'mobileside'
+          }
+        },
+        commonMB: {
+          name: `chunk-common-mb`,
+          minChunks: 2,
+          priority: -20,
+          chunks(chunk) {
+            return chunk.name === 'mobileside'
+          },
           reuseExistingChunk: true
         }
       }
