@@ -503,14 +503,15 @@
       // 计数动画
       onCount(type, n, o) {
         const _this = this
+        const _tweeningValue = { tweeningValue: o }
         function animate(time) {
           requestAnimationFrame(animate)
           TWEEN.update(time)
         }
-        new TWEEN.Tween({ tweeningValue: o })
-          .to({ tweeningValue: n }, 200)
-          .onUpdate(function update() {
-            _this.countDown[type] = this.tweeningValue.toFixed(0)
+        new TWEEN.Tween(_tweeningValue)
+          .to({ tweeningValue: n }, 500)
+          .onUpdate(() => {
+            _this.countDown[type] = _tweeningValue.tweeningValue.toFixed(0)
           })
           .start()
         animate()
