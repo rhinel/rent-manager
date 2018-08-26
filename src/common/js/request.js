@@ -7,10 +7,10 @@ import app from '@/pcside/js/main'
 const rootPath = '/api'
 
 // 方法封装
-const request = (path, body) => {
+const request = (_path, _body) => {
   const token = localStorage.getItem('token')
-  path = rootPath + path
-  body = Object.assign({}, body)
+  const path = rootPath + _path
+  const body = Object.assign({}, _body)
   if (token) body.token = token
 
   return Superagent
@@ -29,8 +29,8 @@ const request = (path, body) => {
       const { code, msg, data } = res.body
 
       // 非正常情况，返回错误
+      // 非auth接口，登陆失效或者未登陆，先报错后，清除旧登陆信息，跳转
       if (code === 2001 && !path.includes('/auth')) {
-        // 非auth接口，登陆失效或者未登陆，先报错后，清除旧登陆信息，跳转
         Message({
           type: 'error',
           message: `编号：${code}，${msg}`,
@@ -42,11 +42,15 @@ const request = (path, body) => {
           query: { backurl: app.$router.currentRoute.fullPath },
         })
         return Promise.reject(new Error(msg))
-      } else if (code === 2001) {
-        // auth接口，返回msg
+      }
+
+      // auth接口，返回msg
+      if (code === 2001) {
         return Promise.reject(new Error(msg))
-      } else if (code) {
-        // 其他接口返回错误代码
+      }
+
+      // 其他接口返回错误代码
+      if (code) {
         Message({
           type: 'error',
           message: `编号：${code}，${msg}`,

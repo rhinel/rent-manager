@@ -37,18 +37,20 @@ export default {
         minPrice: 30,
         calType: 'step',
         singlePrice: 1,
-        stepPrice: [{
-          step: 100,
-          price: 1,
-        },
-        {
-          step: 200,
-          price: 1.2,
-        },
-        {
-          step: 201,
-          price: 1.4,
-        }],
+        stepPrice: [
+          {
+            step: 100,
+            price: 1,
+          },
+          {
+            step: 200,
+            price: 1.2,
+          },
+          {
+            step: 201,
+            price: 1.4,
+          },
+        ],
       },
       // 默认阶梯步长
       defaultStep: {

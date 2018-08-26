@@ -3,7 +3,7 @@
 </template>
 
 <script>
-export default {
-  name: 'WaterIndex',
-}
+  export default {
+    name: 'WaterIndex',
+  }
 </script>

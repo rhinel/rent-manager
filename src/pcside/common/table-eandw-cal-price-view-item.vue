@@ -22,8 +22,8 @@
           </div>
           超出按最后阶梯计算。
           <div
-            slot="reference"
-            class="show-tag">
+            class="show-tag"
+            slot="reference">
             <el-tag>阶梯</el-tag>
           </div>
         </el-popover>
@@ -34,21 +34,21 @@
 </template>
 
 <script>
-export default {
-  name: 'TableEandwCalPriceViewItem',
-  props: {
-    lease: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'TableEandwCalPriceViewItem',
+    props: {
+      lease: {
+        type: Object,
+        default: () => ({}),
+      },
+      type: {
+        type: String,
+        default: '',
+      },
+      unit: {
+        type: String,
+        default: '',
+      },
     },
-    type: {
-      type: String,
-      default: '',
-    },
-    unit: {
-      type: String,
-      default: '',
-    },
-  },
-}
+  }
 </script>

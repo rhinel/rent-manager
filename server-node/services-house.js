@@ -13,7 +13,9 @@ module.exports = {
 
     if (!req.body.fang) {
       return Promise.reject(new FoundError('请选择坊号'))
-    } else if (!req.body.hao) {
+    }
+
+    if (!req.body.hao) {
       return Promise.reject(new FoundError('请填写房间号'))
     }
 

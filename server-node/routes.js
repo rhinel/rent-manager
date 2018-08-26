@@ -33,18 +33,18 @@ module.exports = (app, express) => {
   app.get('*', (req, res) => {
     // wechat
     if (req.hostname && (
-      req.hostname === 'wechat.rhinel.xyz' ||
-      req.hostname === 'wechat.rent-manager.online' ||
-      req.hostname === 'wechat.rent-manager.cn'
+      req.hostname === 'wechat.rhinel.xyz'
+      || req.hostname === 'wechat.rent-manager.online'
+      || req.hostname === 'wechat.rent-manager.cn'
     )) {
       res.send(fs.readFileSync(path.resolve('../dist/mobileside/index.html'), 'utf-8'))
       // SaaS
     } else if (req.hostname && (
-      req.hostname === 'www.rhinel.xyz' ||
-      req.hostname === 'www.rent-manager.online' ||
-      req.hostname === 'www.rent-manager.cn' ||
-      req.hostname === 'rent-manager.online' ||
-      req.hostname === 'rent-manager.cn'
+      req.hostname === 'www.rhinel.xyz'
+      || req.hostname === 'www.rent-manager.online'
+      || req.hostname === 'www.rent-manager.cn'
+      || req.hostname === 'rent-manager.online'
+      || req.hostname === 'rent-manager.cn'
     )) {
       res.send(fs.readFileSync(path.resolve('../dist/pcside/index.html'), 'utf-8'))
     } else {

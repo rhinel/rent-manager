@@ -6,8 +6,8 @@
       {{ rent.remark }}
     </div>
     <span
-      slot="reference"
-      class="show-tag">
+      class="show-tag"
+      slot="reference">
       <div class="remark-tag">
         {{ rent.remark }}
       </div>
@@ -16,15 +16,15 @@
 </template>
 
 <script>
-export default {
-  name: 'TableRentRemarkItem',
-  props: {
-    rent: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'TableRentRemarkItem',
+    props: {
+      rent: {
+        type: Object,
+        default: () => ({}),
+      },
     },
-  },
-}
+  }
 </script>
 
 <style lang="scss">

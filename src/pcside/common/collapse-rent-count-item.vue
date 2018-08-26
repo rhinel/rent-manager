@@ -1,13 +1,13 @@
 <template>
   <div class="rent-count">
     <div
-      :key="`${fangi}Title`"
-      class="rent-count-title">
+      class="rent-count-title"
+      :key="`${fangi}Title`">
       <el-alert
-        :closable="false"
         class="table-btn"
         type="info"
-        title="">
+        title=""
+        :closable="false">
         {{ fangi }} 合计：￥{{ fang.count }}元
       </el-alert>
     </div>
@@ -25,9 +25,9 @@
           </span>
         </template>
         <div
+          class="landord-content content-bg"
           v-for="(hao, haoi) in floor.list"
-          :key="haoi"
-          class="landord-content content-bg">
+          :key="haoi">
           <router-link
             :to="{
               path: '/inner/rent/history',
@@ -49,23 +49,23 @@
 </template>
 
 <script>
-export default {
-  name: 'CollapseRentCountItem',
-  props: {
-    fang: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'CollapseRentCountItem',
+    props: {
+      fang: {
+        type: Object,
+        default: () => ({}),
+      },
+      fangi: {
+        type: String,
+        default: '',
+      },
+      activeRentCount: {
+        type: Object,
+        default: () => ({}),
+      },
     },
-    fangi: {
-      type: String,
-      default: '',
-    },
-    activeRentCount: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-}
+  }
 </script>
 
 <style lang="scss">
