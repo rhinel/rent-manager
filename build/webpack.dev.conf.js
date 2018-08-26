@@ -31,18 +31,18 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: 'dist/pcside.html',
+      filename: 'pcside.html',
       version: packageConfig.version,
       gitPath: checkGit,
-      template: 'pcside.html',
+      template: './src/pcside/html/index.html',
       chunks: ['pcside'],
       inject: true
     }),
     new HtmlWebpackPlugin({
-      filename: 'dist/mobileside.html',
+      filename: 'mobileside.html',
       version: packageConfig.version,
       gitPath: checkGit,
-      template: 'mobileside.html',
+      template: './src/mobileside/html/index.html',
       chunks: ['mobileside'],
       inject: true
     }),

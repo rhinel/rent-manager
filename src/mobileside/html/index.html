@@ -5,7 +5,7 @@
     <meta name="version" content="<%= htmlWebpackPlugin.options.version %>">
     <meta name="gitPath" content="<%= htmlWebpackPlugin.options.gitPath %>">
     <meta name="publishTime" content="<%= new Date() %>">
-    <title>rent-manager-mobile</title>
+    <title>rent-manager-mobile<%= process.env.NODE_ENV === 'development' ? '(开发环境)' : '' %></title>
     <link rel="shortcut icon" sizes="48x48" href="/static/icon-rn.png">
   </head>
   <body>

@@ -9,6 +9,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const safeParser = require('postcss-safe-parser');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const os = require('os')
 var packageConfig = require('../package.json')
 var checkGit = require('./check-git')
 
@@ -29,27 +32,38 @@ const webpackConfig = merge(baseWebpackConfig, {
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
+
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
+    // replace officially maintained compression tools
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        ie8: false,
+        ecma: 8,
+        mangle: true,
+        output: { comments: false },
+        compress: { warnings: false }
       },
       sourceMap: true,
-      parallel: true
+      cache: true,
+      parallel: os.cpus().length * 2
     }),
     // extract css into its own file
     new ExtractTextPlugin({
-      filename: utils.assetsPath('css/[name].[contenthash].css')
+      filename: utils.assetsPath('css/[name].[hash].css'),
+      allChunks: true
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
       cssProcessorOptions: {
-        safe: true
+        parser: safeParser,
+        discardComments: {
+          removeAll: true
+        }
       }
     }),
     // generate dist index.html with correct asset hash for caching.
@@ -60,76 +74,34 @@ const webpackConfig = merge(baseWebpackConfig, {
       version: packageConfig.version,
       gitPath: checkGit,
       template: './src/pcside/html/index.html',
-      chunks: ['manifestPc', 'vendorPc', 'pcside'],
+      chunks: ['chunk-vendors', 'chunk-common', 'pcside'],
       inject: true,
       minify: {
         removeComments: true,
         collapseWhitespace: true,
-        removeAttributeQuotes: true
+        removeAttributeQuotes: true,
+        collapseBooleanAttributes: true,
+        removeScriptTypeAttributes: true
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
+      }
     }),
     new HtmlWebpackPlugin({
       filename: 'mobileside/index.html',
       version: packageConfig.version,
       gitPath: checkGit,
       template: './src/mobileside/html/index.html',
-      chunks: ['manifestMs', 'vendorMs', 'mobileside'],
+      chunks: ['chunk-vendors', 'chunk-common', 'mobileside'],
       inject: true,
       minify: {
         removeComments: true,
         collapseWhitespace: true,
-        removeAttributeQuotes: true
+        removeAttributeQuotes: true,
+        collapseBooleanAttributes: true,
+        removeScriptTypeAttributes: true
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
-    }),
-    // split vendor js into its own file
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendorPc',
-      chunks: ['pcside'],
-      minChunks: function (module, count) {
-        // any required modules inside node_modules are extracted to vendor
-        return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
-          ) === 0
-        )
       }
-    }),
-    // extract webpack runtime and module manifest to its own file in order to
-    // prevent vendor hash from being updated whenever app bundle is updated
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifestPc',
-      chunks: ['vendorPc']
-    }),
-    // split vendor js into its own file
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendorMs',
-      chunks: ['mobileside'],
-      minChunks: function (module, count) {
-        // any required modules inside node_modules are extracted to vendor
-        return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
-          ) === 0
-        )
-      }
-    }),
-    // extract webpack runtime and module manifest to its own file in order to
-    // prevent vendor hash from being updated whenever app bundle is updated
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifestMs',
-      chunks: ['vendorMs']
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
@@ -138,8 +110,30 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
-  ]
+    ]),
+    // https://webpack.js.org/plugins/module-concatenation-plugin/
+    new webpack.optimize.ModuleConcatenationPlugin()
+  ],
+  // code splitting
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          name: `chunk-vendors`,
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks: 'initial'
+        },
+        common: {
+          name: `chunk-common`,
+          minChunks: 2,
+          priority: -20,
+          chunks: 'initial',
+          reuseExistingChunk: true
+        }
+      }
+    }
+  }
 })
 
 if (config.build.productionGzip) {
