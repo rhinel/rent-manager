@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="{ 'in': !Navtg }"
-    class="auth-inner-index">
+    class="auth-inner-index"
+    :class="{ 'in': !Navtg }">
     <div class="inner-header">
       <div class="header-left">
         <span>Rent Manager</span>
@@ -24,9 +24,9 @@
       </div>
     </div>
     <el-menu
+      class="inner-sidebar"
       :default-active="menuing"
-      :router="true"
-      class="inner-sidebar">
+      :router="true">
       <el-menu-item
         v-for="(menuItem, index) in config.menu"
         :key="index"
@@ -35,8 +35,8 @@
         <span slot="title">
           {{ menuItem.name }}
           <i
-            v-show="menuCheck.includes(menuItem.check)"
-            class="el-icon-loading" />
+            class="el-icon-loading"
+            v-show="menuCheck.includes(menuItem.check)" />
         </span>
       </el-menu-item>
     </el-menu>
@@ -45,55 +45,55 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import packageConfig from '../../../../package.json'
+  import { mapState } from 'vuex'
+  import packageConfig from '../../../../package.json'
 
-export default {
-  name: 'AuthInnerIndex',
-  data() {
-    return {
-      version: packageConfig.version,
-      logouting: false,
-      Navtg: true,
-    }
-  },
-  computed: {
-    ...mapState([
-      'menuing',
-      'menuCheck',
-      'titleAdd',
-      'config',
-    ]),
-  },
-  methods: {
-    // 伸缩菜单
-    getNavtg() {
-      this.Navtg = !this.Navtg
+  export default {
+    name: 'AuthInnerIndex',
+    data() {
+      return {
+        version: packageConfig.version,
+        logouting: false,
+        Navtg: true,
+      }
     },
-    // 登出
-    async logout() {
-      if (this.logouting) return
+    computed: {
+      ...mapState([
+        'menuing',
+        'menuCheck',
+        'titleAdd',
+        'config',
+      ]),
+    },
+    methods: {
+      // 伸缩菜单
+      getNavtg() {
+        this.Navtg = !this.Navtg
+      },
+      // 登出
+      async logout() {
+        if (this.logouting) return
 
-      // 接口提交
-      this.logouting = true
+        // 接口提交
+        this.logouting = true
 
-      await this.Ajax('/outer/log/logout')
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '退出成功',
-            duration: 2000,
+        await this.Ajax('/outer/log/logout')
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '退出成功',
+              duration: 2000,
+            })
+            localStorage.removeItem('token')
+            this.$store.dispatch('clearDefaults')
+            this.$router.push('/login')
           })
-          localStorage.removeItem('token')
-          this.$store.dispatch('clearDefaults')
-          this.$router.push('/login')
-        })
-        .catch(() => {})
+          .catch(() => {})
 
-      this.logouting = false
+        this.logouting = false
+      },
     },
-  },
-}
+  }
 </script>
 
 <style lang="scss">

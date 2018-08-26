@@ -98,7 +98,9 @@ module.exports = {
 
     if (!req.body.haoId) {
       return Promise.reject(new FoundError('请选择房屋'))
-    } else if (!req.body.monthId) {
+    }
+
+    if (!req.body.monthId) {
       return Promise.reject(new FoundError('请选择月份'))
     }
 
@@ -489,7 +491,9 @@ module.exports = {
 
     if (!req.body.monthId) {
       return Promise.reject(new FoundError('缺少rentId'))
-    } else if (!req.body.haoId) {
+    }
+
+    if (!req.body.haoId) {
       return Promise.reject(new FoundError('缺少参数'))
     }
 
@@ -607,9 +611,8 @@ module.exports = {
       rent.cost = rent.calRentResult - rent.lease.rent
       // 修复不足整月时应收小于房租的问题，反推计算水电数和房租数
       if (rent.cost < 0) {
-        const cost =
-        (rent.calWater ? rent.calWater.calWaterResult : 0) +
-        (rent.calElectric ? rent.calElectric.calElectricResult : 0)
+        const cost = (rent.calWater ? rent.calWater.calWaterResult : 0)
+          + (rent.calElectric ? rent.calElectric.calElectricResult : 0)
         rent.lease.rent = rent.calRentResult - cost
         rent.cost = cost
       }

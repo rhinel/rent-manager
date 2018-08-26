@@ -15,6 +15,8 @@ var checkGit = require('./check-git')
 const env = config.build.env
 
 const webpackConfig = merge(baseWebpackConfig, {
+  mode: 'production',
+  performance: false,
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,

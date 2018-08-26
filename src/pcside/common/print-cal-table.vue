@@ -88,80 +88,79 @@
 </template>
 
 <script>
-export default {
-  name: 'PrintCalTable',
-  props: {
-    monthDet: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'PrintCalTable',
+    props: {
+      monthDet: {
+        type: Object,
+        default: () => ({}),
+      },
+      monthDetData: {
+        type: Array,
+        default: () => [],
+      },
+      typeString: {
+        type: String,
+        default: '',
+      },
     },
-    monthDetData: {
-      type: Array,
-      default: () => [],
-    },
-    typeString: {
-      type: String,
-      default: '',
-    },
-  },
-  methods: {
-    // 获取月份计算
-    getCalMonth(monthStr) {
-      if (!monthStr) return ''
-      const date = new Date(monthStr)
-      date.setMonth(date.getMonth() - 1)
-      let month = date.getMonth() + 1
-      month = month > 9 ? month : `0${month}`
-      return `${date.getFullYear()}-${month}`
-    },
-    // 获取抄表日期，计租数据中第一条可用数据的时间
-    getTnewTime() {
-      const takeTime = this.monthDetData.find(item => item.rents[0] && item.rents[0].calWater)
-      if (!takeTime) return ''
-      return this.GetDateFormat(takeTime.rents[0].calWater.tnew.addTime)
-    },
-    // 计算张贴的价格
-    getCal(rent, type) {
-      // 用于张贴展示，不做真实计费，所有计费按月度周期来计算
-      const {
-        calType,
-        minPrice,
-        singlePrice,
-        stepPrice,
-      } =
-        type === 'water' ? (
-          this.monthDet.defaultCalWaterPrice ||
-          this.defaultCalWaterPrice
+    methods: {
+      // 获取月份计算
+      getCalMonth(monthStr) {
+        if (!monthStr) return ''
+        const date = new Date(monthStr)
+        date.setMonth(date.getMonth() - 1)
+        let month = date.getMonth() + 1
+        month = month > 9 ? month : `0${month}`
+        return `${date.getFullYear()}-${month}`
+      },
+      // 获取抄表日期，计租数据中第一条可用数据的时间
+      getTnewTime() {
+        const takeTime = this.monthDetData.find(item => item.rents[0] && item.rents[0].calWater)
+        if (!takeTime) return ''
+        return this.GetDateFormat(takeTime.rents[0].calWater.tnew.addTime)
+      },
+      // 计算张贴的价格
+      getCal(rent, type) {
+        // 用于张贴展示，不做真实计费，所有计费按月度周期来计算
+        const {
+          calType,
+          minPrice,
+          singlePrice,
+          stepPrice,
+        } = type === 'water' ? (
+          this.monthDet.defaultCalWaterPrice
+          || this.defaultCalWaterPrice
         ) : (
-          this.monthDet.defaultCalElePrice ||
-          this.defaultCalElePrice
+          this.monthDet.defaultCalElePrice
+          || this.defaultCalElePrice
         )
 
-      let gap = type === 'water' ?
-        (rent.tnew.water - rent.old.water) :
-        (rent.tnew.electric - rent.old.electric)
-      gap = Math.max(0, gap, minPrice)
+        let gap = type === 'water'
+          ? (rent.tnew.water - rent.old.water)
+          : (rent.tnew.electric - rent.old.electric)
+        gap = Math.max(0, gap, minPrice)
 
-      let result = 0
-      if (calType === 'single') {
-        result = gap * singlePrice
-      } else if (calType === 'step') {
-        result = stepPrice.reduce((cal, price, index) => {
-          if (!price.price) return cal
-          const prevPrices = stepPrice[index - 1] || {}
-          if (
-            (gap > (prevPrices.step || 0) && gap <= price.step) ||
-            (index === (stepPrice.length - 1) && gap >= price.step)
-          ) {
-            return gap * price.price
-          }
-          return cal
-        }, result)
-      }
-      return Math.floor(Math.round(result * 100) / 100)
+        let result = 0
+        if (calType === 'single') {
+          result = gap * singlePrice
+        } else if (calType === 'step') {
+          result = stepPrice.reduce((cal, price, index) => {
+            if (!price.price) return cal
+            const prevPrices = stepPrice[index - 1] || {}
+            if (
+              (gap > (prevPrices.step || 0) && gap <= price.step)
+              || (index === (stepPrice.length - 1) && gap >= price.step)
+            ) {
+              return gap * price.price
+            }
+            return cal
+          }, result)
+        }
+        return Math.floor(Math.round(result * 100) / 100)
+      },
     },
-  },
-}
+  }
 </script>
 
 <style lang="scss">
@@ -215,4 +214,3 @@ export default {
   }
 }
 </style>
-

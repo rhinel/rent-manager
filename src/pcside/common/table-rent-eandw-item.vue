@@ -33,33 +33,32 @@
 </template>
 
 <script>
-import { mixinDef, eandwCalGetPrice } from 'pcside/js/mixins'
+  import { mixinDef, eandwCalGetPrice } from 'pcside/js/mixins'
 
-export default {
-  name: 'TableRentEandwItem',
-  mixins: [mixinDef, eandwCalGetPrice],
-  props: {
-    rent: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'TableRentEandwItem',
+    mixins: [mixinDef, eandwCalGetPrice],
+    props: {
+      rent: {
+        type: Object,
+        default: () => ({}),
+      },
+      type: {
+        type: String,
+        default: '',
+      },
+      calType: {
+        type: String,
+        default: '',
+      },
+      resultType: {
+        type: String,
+        default: '',
+      },
+      unit: {
+        type: String,
+        default: '',
+      },
     },
-    type: {
-      type: String,
-      default: '',
-    },
-    calType: {
-      type: String,
-      default: '',
-    },
-    resultType: {
-      type: String,
-      default: '',
-    },
-    unit: {
-      type: String,
-      default: '',
-    },
-  },
-}
+  }
 </script>
-

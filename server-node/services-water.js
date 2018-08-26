@@ -13,9 +13,13 @@ module.exports = {
 
     if (!req.body.haoId) {
       return Promise.reject(new FoundError('请选择房屋'))
-    } else if (!req.body.water) {
+    }
+
+    if (!req.body.water) {
       return Promise.reject(new FoundError('请填写水表数'))
-    } else if (!req.body.addTime) {
+    }
+
+    if (!req.body.addTime) {
       return Promise.reject(new FoundError('请填写抄表时间'))
     }
 
@@ -155,8 +159,8 @@ module.exports = {
           if (!stepPrice.price) return
           const prevPrices = stepPrices[i - 1] || {}
           if (
-            (calGap > (prevPrices.step || 0) && calGap <= stepPrice.step) ||
-            (i === (stepPrices.length - 1) && calGap >= stepPrice.step)
+            (calGap > (prevPrices.step || 0) && calGap <= stepPrice.step)
+            || (i === (stepPrices.length - 1) && calGap >= stepPrice.step)
           ) {
             calResult = calGap * stepPrice.price
           }

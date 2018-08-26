@@ -21,20 +21,20 @@
 </template>
 
 <script>
-import { mixinDef } from 'pcside/js/mixins'
+  import { mixinDef } from 'pcside/js/mixins'
 
-export default {
-  name: 'TableRentViewItem',
-  mixins: [mixinDef],
-  props: {
-    rent: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'TableRentViewItem',
+    mixins: [mixinDef],
+    props: {
+      rent: {
+        type: Object,
+        default: () => ({}),
+      },
+      highline: {
+        type: Boolean,
+        default: false,
+      },
     },
-    highline: {
-      type: Boolean,
-      default: false,
-    },
-  },
-}
+  }
 </script>

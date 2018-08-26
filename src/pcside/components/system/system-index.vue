@@ -3,7 +3,7 @@
 </template>
 
 <script>
-export default {
-  name: 'SystemIndex',
-}
+  export default {
+    name: 'SystemIndex',
+  }
 </script>

@@ -17,8 +17,8 @@
         <div>表底时间：{{ getTime(rent[calType].old.addTime) }}</div>
 
         <el-tag
-          slot="reference"
-          class="show-tag">
+          class="show-tag"
+          slot="reference">
           计数
         </el-tag>
 
@@ -34,29 +34,28 @@
 </template>
 
 <script>
-import { mixinDef, eandwCalGetPrice } from 'pcside/js/mixins'
+  import { mixinDef, eandwCalGetPrice } from 'pcside/js/mixins'
 
-export default {
-  name: 'TableExpandEandwItem',
-  mixins: [mixinDef, eandwCalGetPrice],
-  props: {
-    rent: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'TableExpandEandwItem',
+    mixins: [mixinDef, eandwCalGetPrice],
+    props: {
+      rent: {
+        type: Object,
+        default: () => ({}),
+      },
+      type: {
+        type: String,
+        default: '',
+      },
+      calType: {
+        type: String,
+        default: '',
+      },
+      unit: {
+        type: String,
+        default: '',
+      },
     },
-    type: {
-      type: String,
-      default: '',
-    },
-    calType: {
-      type: String,
-      default: '',
-    },
-    unit: {
-      type: String,
-      default: '',
-    },
-  },
-}
+  }
 </script>
-

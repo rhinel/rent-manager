@@ -16,8 +16,8 @@
         <div>搬出时间：{{ getDate(lease.outTime) }}</div>
         <div>备注：{{ lease.remark || '--' }}</div>
         <el-tag
-          slot="reference"
-          class="show-tag">
+          class="show-tag"
+          slot="reference">
           {{ payTypeVal[lease.payType] }}
         </el-tag>
       </el-popover>
@@ -36,27 +36,26 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mixinDef } from 'pcside/js/mixins'
+  import { mapState } from 'vuex'
+  import { mixinDef } from 'pcside/js/mixins'
 
-export default {
-  name: 'TableLeaseViewItem',
-  mixins: [mixinDef],
-  props: {
-    lease: {
-      type: Object,
-      default: () => ({}),
+  export default {
+    name: 'TableLeaseViewItem',
+    mixins: [mixinDef],
+    props: {
+      lease: {
+        type: Object,
+        default: () => ({}),
+      },
+      rentInline: {
+        type: Boolean,
+        default: false,
+      },
     },
-    rentInline: {
-      type: Boolean,
-      default: false,
+    computed: {
+      ...mapState({
+        payTypeVal: state => state.config.payTypeVal,
+      }),
     },
-  },
-  computed: {
-    ...mapState({
-      payTypeVal: state => state.config.payTypeVal,
-    }),
-  },
-}
+  }
 </script>
-
