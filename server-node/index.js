@@ -31,7 +31,7 @@ app.use(log4js.connectLogger(
 ))
 
 // 使用gzip
-app.use(compress)
+app.use(compress())
 
 // 使用post&json
 app.use(bodyParser.urlencoded({ extended: true }))
