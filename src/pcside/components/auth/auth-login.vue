@@ -54,13 +54,13 @@
   import '../../js/indexCanvas/tweenLite.min'
   /* eslint-enable no-unused-vars */
   import indexCanvas from '../../js/indexCanvas/indexCanvas'
-  import packageConfig from '../../../../package.json'
+  import { version } from '../../../../package.json'
 
   export default {
     name: 'AuthLogin',
     data() {
       return {
-        version: packageConfig.version,
+        version,
         bingBg: '',
         logininfo: {
           name: '',
