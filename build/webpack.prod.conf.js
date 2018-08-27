@@ -12,8 +12,8 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const safeParser = require('postcss-safe-parser')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const os = require('os')
-var packageConfig = require('../package.json')
-var checkGit = require('./check-git')
+const packageConfig = require('../package.json')
+const checkGit = require('./check-git')
 
 const env = config.build.env
 

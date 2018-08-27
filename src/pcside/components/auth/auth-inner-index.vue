@@ -46,13 +46,13 @@
 
 <script>
   import { mapState } from 'vuex'
-  import packageConfig from '../../../../package.json'
+  import { version } from '../../../../package.json'
 
   export default {
     name: 'AuthInnerIndex',
     data() {
       return {
-        version: packageConfig.version,
+        version,
         logouting: false,
         Navtg: true,
       }
