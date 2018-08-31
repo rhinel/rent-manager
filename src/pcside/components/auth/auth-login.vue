@@ -3,7 +3,7 @@
     class="auth-login"
     id="large-header"
     @keyup.enter="getLogin">
-    <!--  :style="{backgroundImage:'url('+ bingBg +')'}" -->
+    <!--  :style="{ backgroundImage:'url('+ bingBg +')' }" -->
     <canvas id="index-canvas" />
     <el-card class="login-wrap">
       <div class="login-hello">

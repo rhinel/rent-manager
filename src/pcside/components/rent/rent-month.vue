@@ -467,16 +467,14 @@
                     确定
                   </el-button>
                 </div>
-                <span
+                <el-button
+                  size="small"
+                  type="danger"
                   class="show-pop"
-                  slot="reference">
-                  <el-button
-                    size="small"
-                    type="danger"
-                    :loading="scope.row.gettingdelRent">
-                    删除
-                  </el-button>
-                </span>
+                  slot="reference"
+                  :loading="scope.row.gettingdelRent">
+                  删除
+                </el-button>
               </el-popover>
             </template>
           </el-table-column>
@@ -495,6 +493,7 @@
             刷新
           </el-button>
         </div>
+
         <el-collapse
           v-loading.body="gettingLandordRentTemp"
           v-if="checkObjectTemp(landordHistoryTemp)"
@@ -524,6 +523,7 @@
 
           </el-collapse-item>
         </el-collapse>
+
         <el-alert
           title="暂无数据！请先处理单据状态"
           type="info"
@@ -551,6 +551,37 @@
               @change="getfilterLandordData" />
           </div>
         </div>
+
+        <!-- 备注修改表单 -->
+        <el-dialog
+          custom-class="daily-remark-dialog"
+          :key="'dailyRemark' + dialogId"
+          :title="dailyRemark.day + drdDialogTitle"
+          :visible.sync="dailyRemarkflag"
+          :close-on-click-modal="false"
+          @close="onDailyRemarkDialogClose">
+          <el-input
+            type="textarea"
+            placeholder="请输入备注内容，注意拍照留底"
+            :rows="4"
+            v-model="dailyRemark.content" />
+          <div
+            class="dialog-footer"
+            slot="footer">
+            <el-button
+              :loading="gettingDailyRemark"
+              @click="getDailyRemarkDialog">
+              取消
+            </el-button>
+            <el-button
+              type="primary"
+              :loading="gettingDailyRemark"
+              @click="getDailyRemark">
+              确定
+            </el-button>
+          </div>
+        </el-dialog>
+
         <el-collapse
           v-loading.body="gettingLandordRent"
           v-if="checkObject(landordData)"
@@ -571,17 +602,39 @@
                     :key="indexj">
                     {{ j }}：{{ item[indexj] }}元
                   </div>
-                  <div slot="reference">
-                    <el-button type="text">
-                      合计：￥{{ item.all }}元
-                    </el-button>
-                  </div>
+                  <el-button
+                    type="text"
+                    slot="reference">
+                    合计：￥{{ item.all }}元
+                  </el-button>
                 </el-popover>
               </span>
 
-              <!-- <el-button
-                type="text"
-                size="medium">备注</el-button> -->
+              <el-popover
+                placement="right"
+                trigger="hover">
+                <div class="landord-title">
+                  {{
+                    dailyRemarkList[index] && dailyRemarkList[index].content
+                      ? dailyRemarkList[index].content
+                      : '暂无备注，注意拍照留底'
+                  }}
+                </div>
+                <span slot="reference">
+                  <el-button
+                    type="text"
+                    size="medium"
+                    :disabled="!monthDet.newest"
+                    @click.stop="getDailyRemarkDialog(
+                      $event,
+                      index
+                    )">{{
+                      dailyRemarkList[index] && dailyRemarkList[index].content
+                        ? '备注'
+                        : '无备注'
+                    }}</el-button>
+                </span>
+              </el-popover>
             </template>
 
             <collapse-landord-item
@@ -596,6 +649,7 @@
 
           </el-collapse-item>
         </el-collapse>
+
         <el-alert
           title="暂无数据！请先处理单据状态"
           type="info"
@@ -769,6 +823,21 @@
         landordData: {},
         activeDate: [],
 
+        // 增加备注
+        drdDialogTitle: '交租备注',
+        dailyRemarkflag: false,
+        gettingDailyRemark: false,
+        gettingDailyRemarkList: false,
+        dailyRemarkList: {},
+        dailyRemark: {},
+        dailyRemarkClear: {
+          monthId: this.$route.query.id,
+          _id: '',
+          day: '',
+          daytime: '',
+          content: '',
+        },
+
         // rentCount列表
         rentCount: {},
         activeRentCount: {},
@@ -854,12 +923,14 @@
         this.getListRefresh()
         this.getResetAddRent()
         this.getResetChangeType()
+        this.getResetDailyRemark()
       },
       landordHistoryTempActive() {
         this.getLandordRentTemp()
       },
       landordHistoryActive() {
         this.getLandordRent()
+        this.getDailyRemarkList()
       },
       rentCountActive() {
         this.getCalRentCount()
@@ -1108,6 +1179,68 @@
       getfilterLandordData(v) {
         if (!v) return
         this.activeDate = [new Date(v).toLocaleDateString()]
+      },
+      async getDailyRemarkList() {
+        if (this.gettingDailyRemarkList) return
+
+        // 请求接口
+        this.gettingDailyRemarkList = true
+        await this.Ajax('/inner/rent/dailyRemarkList', {
+          monthId: this.$route.query.id,
+        })
+          .then(res => {
+            this.dailyRemarkList = res
+          })
+          .catch(() => {})
+
+        this.gettingDailyRemarkList = false
+      },
+      getDailyRemarkDialog(event, daytime) {
+        this.dailyRemarkflag = !this.dailyRemarkflag
+        if (daytime) {
+          const dayDate = new Date(Number(daytime)).toLocaleDateString()
+          this.dailyRemark.day = dayDate
+          this.dailyRemark.daytime = daytime
+          const det = this.dailyRemarkList[daytime]
+          if (det) {
+            this.dailyRemark._id = det._id
+            this.dailyRemark.content = det.content
+          }
+        }
+      },
+      getResetDailyRemark() {
+        this.dailyRemark = Object.assign(
+          {},
+          this.dailyRemark,
+          JSON.parse(JSON.stringify(this.dailyRemarkClear)),
+        )
+        this.dialogId = Date.now()
+      },
+      onDailyRemarkDialogClose() {
+        setTimeout(() => {
+          this.getResetDailyRemark()
+        }, 500)
+      },
+      async getDailyRemark() {
+        if (this.gettingDailyRemark) return
+        // 提交接口
+        this.gettingChangeType = true
+
+        const _data = Object.assign({}, this.dailyRemark)
+        await this.Ajax('/inner/rent/dailyRemark', _data)
+          .then((res) => {
+            this.$message({
+              type: 'success',
+              message: _data._id ? '备注更新成功' : '备注添加成功',
+              duration: 2000,
+            })
+            this.getDailyRemarkDialog()
+            _data._id = res._id
+            this.dailyRemarkList[_data.daytime] = _data
+          })
+          .catch(() => {})
+
+        this.gettingChangeType = false
       },
       // 获取待交房东统计
       async getLandordRentTemp() {
