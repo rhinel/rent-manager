@@ -311,6 +311,16 @@ const inner = (req, res, next) => {
         .rentCheckBill(req, res)
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 30611, err)))
+    } else if (req.params.function === 'dailyRemark') {
+      serviceRent
+        .dailyRemark(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 30612, err)))
+    } else if (req.params.function === 'dailyRemarkList') {
+      serviceRent
+        .dailyRemarkList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 30613, err)))
     } else {
       next()
     }

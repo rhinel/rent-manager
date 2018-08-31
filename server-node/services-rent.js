@@ -740,4 +740,115 @@ module.exports = {
     // 2返回数据
     return list
   },
+
+  dailyRemark: async req => {
+    // 此接口月度日期名称唯一
+    // 校验字段，错误退出
+    // 1ID存在修改数据，错误退出
+    // 2ID不存在查询数据是否存在，存在->错误退出
+    // 3插入数据，错误退出
+    // 4返回add对象
+
+    if (!req.body.monthId) {
+      return Promise.reject(new FoundError('缺少参数月度'))
+    }
+
+    // 1如果有ID，根据ID修改内容
+    if (req.body._id) {
+      const daily = await db
+        .dbModel('monthdaily', {//* //标记，初始月度备注数据类，修改类型
+          content: String, // 备注内容
+          updateTime: Number, // 更新时间
+        })
+        .findOneAndUpdate({ _id: req.body._id }, {
+          $set: {
+            content: req.body.content,
+            updateTime: Date.now(),
+          },
+        })
+        .exec()
+
+      if (!daily) {
+        return Promise.reject(new FoundError('修改失败，数据不存在'))
+      }
+
+      return { _id: req.body._id }
+    }
+
+    // 2数据库查询是否已存在
+    const dailys = await db
+      .dbModel('monthdaily')
+      .find({
+        userId: db.db.Types.ObjectId(req.userId), // 用户ID
+        monthId: db.db.Types.ObjectId(req.body.monthId), // 月度ID
+        daytime: Number(req.body.daytime), // 时间戳
+        status: 1,
+      })
+      .exec()
+
+    if (dailys.length) {
+      return Promise.reject(new FoundError('备注已存在，添加失败'))
+    }
+
+    // 3插入数据
+    const daily = await db
+      .dbModel('monthdaily', { //* //标记，初始房屋数据类，创建类型
+        userId: db.db.Schema.Types.ObjectId, // 用户ID
+        monthId: db.db.Schema.Types.ObjectId, // 月度ID
+        day: String, // 日期
+        daytime: Number, // 时间戳
+        content: String, // 说明
+        status: Number, // 状态
+        createTime: Number, // 创建时间
+      })
+      .create({
+        userId: req.userId,
+        monthId: req.body.monthId,
+        day: req.body.day,
+        daytime: req.body.daytime,
+        content: req.body.content,
+        status: 1,
+        createTime: Date.now(),
+      })
+
+    // 4返回数据
+    return { _id: daily._id }
+  },
+
+  dailyRemarkList: async req => {
+    // 校验字段，错误退出
+    // 1查询数据
+    // 2返回list对象
+
+    if (!req.body.monthId) {
+      return Promise.reject(new FoundError('缺少参数月度'))
+    }
+
+    // 1数据库查询
+    const dailyList = await db
+      .dbModel('monthdaily')
+      .find({}, {
+        day: 1,
+        daytime: 1,
+        content: 1,
+        createTime: 1,
+        updateTime: 1,
+      })
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('status')
+      .equals(1)
+      .sort('daytime')
+      .lean()
+      .exec()
+
+    // 字段初始化
+    const dailyListObj = {}
+    dailyList.forEach(daily => {
+      dailyListObj[daily.daytime] = daily
+    })
+
+    // 2返回数据
+    return dailyListObj
+  },
 }

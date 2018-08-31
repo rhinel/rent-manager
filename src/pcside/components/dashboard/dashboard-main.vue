@@ -145,6 +145,7 @@
               class="rent-list-table"
               stripe
               border
+              :max-height="500"
               :data="rentList1">
               <el-table-column
                 prop="monthId.month"
@@ -235,6 +236,7 @@
               stripe
               border
               class="rent-list-table"
+              :max-height="500"
               :data="rentList3">
               <el-table-column
                 prop="monthId.month"
@@ -476,7 +478,9 @@
 
         await this.Ajax('/inner/dash/count')
           .then(res => {
-            this.count.houseCount = res.houseCount
+            requestAnimationFrame(() => {
+              this.count.houseCount = res.houseCount
+            })
           })
           .catch(() => {})
 
@@ -494,7 +498,9 @@
         })
           .then(res => {
             this[`rentList${type}`] = res.data
-            this.count[`rentList${type}Count`] = this[`rentList${type}`].length
+            requestAnimationFrame(() => {
+              this.count[`rentList${type}Count`] = res.data.length
+            })
           })
           .catch(() => {})
 
@@ -509,7 +515,7 @@
           TWEEN.update(time)
         }
         new TWEEN.Tween(_tweeningValue)
-          .to({ tweeningValue: n }, 500)
+          .to({ tweeningValue: n }, 1000)
           .onUpdate(() => {
             _this.countDown[type] = _tweeningValue.tweeningValue.toFixed(0)
           })
