@@ -60,7 +60,6 @@ module.exports = {
       return Promise.reject(new FoundError('房间已存在'))
     }
 
-
     // 3插入数据
     const house = await db
       .dbModel('house', { //* //标记，初始房屋数据类，创建类型
