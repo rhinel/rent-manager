@@ -613,13 +613,14 @@
               <el-popover
                 placement="right"
                 trigger="hover">
-                <div class="landord-title">
-                  {{
+                <div
+                  class="landord-title"
+                  style="white-space: pre-wrap;"
+                  v-text="
                     dailyRemarkList[index] && dailyRemarkList[index].content
                       ? dailyRemarkList[index].content
                       : '暂无备注，注意拍照留底'
-                  }}
-                </div>
+                  " />
                 <span slot="reference">
                   <el-button
                     type="text"
