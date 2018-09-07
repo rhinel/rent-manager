@@ -6,7 +6,7 @@
 
 > rent-manager for ying
 >
-> 项目后端：nodejs express ws log4js mongodb4 redis
+> 项目后端：nodejs express ws log4js mongodb3 redis
 >
 > 项目前端：webpack4 vue2.0 ElementUI superagent
 
@@ -47,4 +47,4 @@ yarn build
 
 时区问题，前端添加为+0800时区，服务器时间为0时区，要注意修改服务器时区为+0800
 
-mongodb没有事务的问题，目前解决方式是判断可能出错的读取后执行，但高并发可能会有问题
+mongodb3（mongodb4支持，待升级）没有事务的问题，目前解决方式是判断可能出错的读取后执行，但高并发可能会有问题
