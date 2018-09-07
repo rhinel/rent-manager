@@ -1,3 +1,5 @@
+// 封装自定义错误类型
+// 继承基础错误类型
 function FoundError(message) {
   this.name = 'FoundError'
   this.message = message || ''

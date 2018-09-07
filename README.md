@@ -6,9 +6,23 @@
 
 > rent-manager for ying
 >
-> 项目后端：nodejs mongodb redis
+> 项目后端：nodejs express ws log4js mongodb4 redis
 >
-> 项目前端：webpack vue2.0 ElementUI superagent
+> 项目前端：webpack4 vue2.0 ElementUI superagent
+
+## 架构
+
+项目前端
+
+1. vue vuex vue-router 结合
+2. router懒加载，并在before中鉴权
+3. vuex存储用户config信息
+
+项目后端
+
+1. route - controller - service - model 架构
+2. express 结合 websocket
+3. 具备接口权限校验，控制器处理、错误处理、日志打印、code管理
 
 ## Build Setup
 
