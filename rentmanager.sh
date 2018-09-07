@@ -12,5 +12,5 @@ docker run \
  --expose 443 \
  -v /etc/localtime:/etc/localtime \
  -v ~/gitcode/rent-manager:/webapp \
- -w /webapp/server-node \
+ -w /webapp/server \
  -d node node index server

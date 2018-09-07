@@ -2,6 +2,14 @@ const path = require('path')
 
 module.exports = {
   appenders: {
+    // WS日志，请求日志
+    ws: {
+      type: 'dateFile',
+      filename: `${path.resolve(__dirname, '../logs/wsLogs/logs')}Ws.log`,
+      maxLogSize: 102400,
+      backups: 1024,
+    },
+
     // HTTP日志，请求日志
     http: {
       type: 'dateFile',
@@ -51,6 +59,7 @@ module.exports = {
   },
   categories: {
     default: { appenders: ['console'], level: 'info' },
+    ws: { appenders: ['ws', 'errors'], level: 'info' },
     http: { appenders: ['http', 'errors'], level: 'info' },
     sys: { appenders: ['sys', 'console', 'errors'], level: 'info' },
 
