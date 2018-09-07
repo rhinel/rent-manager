@@ -33,10 +33,10 @@ app.ws('*', (ws, req, next) => {
     req.method,
     req.url,
     `HTTP/${req.httpVersion}`,
-    req.headers.referrer,
+    req.headers.origin,
     `"${req.headers['user-agent']}"`,
   )
-  next()
+  return next()
 })
 
 // 中间件，初始化http记录
