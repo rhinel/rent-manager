@@ -1,5 +1,4 @@
 const serviceAuth = require('./services-auth')
-// const service = require('./services')
 const serviceDashb = require('./services-dashboard')
 const serviceRent = require('./services-rent')
 const serviceMonth = require('./services-month')
@@ -50,7 +49,7 @@ const auth = (req, res, next) => {
   } else {
     serviceAuth
       .auth(req, res)
-      .then(() => next())
+      .then(next)
       .catch(err => res.json(code(req, 2001, err)))
   }
 }

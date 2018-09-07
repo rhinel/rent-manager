@@ -1,6 +1,7 @@
 // 启动服务
 const http = require('http')
 const express = require('express')
+const expressWs = require('express-ws')
 const compress = require('compression')
 const bodyParser = require('body-parser')
 const log4js = require('log4js')
@@ -23,17 +24,32 @@ db.connect()
 const app = express()
 const httpServer = http.createServer(app)
 const httpPORT = process.env.npm_config_port || 80
+expressWs(app, httpServer)
 
-// 初始化http记录
+// 中间件，初始化ws记录
+app.ws('*', (ws, req, next) => {
+  log4js.getLogger('ws').info(
+    req.ip,
+    req.method,
+    req.url,
+    `HTTP/${req.httpVersion}`,
+    req.headers.referrer,
+    `"${req.headers['user-agent']}"`,
+  )
+  next()
+})
+
+// 中间件，初始化http记录
+// log4js有内置http记录中间件
 app.use(log4js.connectLogger(
   log4js.getLogger('http'),
   { level: 'auto' },
 ))
 
-// 使用gzip
+// 中间件，使用gzip
 app.use(compress())
 
-// 使用post&json
+// 中间件，处理使用post&json
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 

@@ -8,5 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 debug.log
 
-server-node/auth.js
+server/auth.js
 dist.tar.bz2
+
+tmp/
