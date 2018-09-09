@@ -14,6 +14,11 @@
         @click="getListRefresh">
         刷新
       </el-button>
+      <el-button
+        type="primary"
+        @click="gotoRemoteReadPage">
+        远程抄表
+      </el-button>
       <div class="table-btn-input">
         <el-input
           placeholder="搜索"
@@ -834,6 +839,10 @@
       // 进入历史
       getElectricHistory(index, row) {
         this.$router.push(`/inner/electric/history?haoid=${row._id}`)
+      },
+      // gotoRemoteReadPage
+      gotoRemoteReadPage() {
+        this.$router.push('/inner/electric/remote-read')
       },
     },
   }

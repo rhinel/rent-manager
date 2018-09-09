@@ -49,6 +49,10 @@ textarea {
   vertical-align: top;
   max-width: 300px;
   display: inline-block;
+}
+
+.el-button + .table-btn-input,
+.table-btn-input + .el-button {
   margin-left: 10px;
 }
 

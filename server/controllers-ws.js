@@ -1,4 +1,5 @@
 const serviceAuth = require('./services-auth')
+const serviceRemoteRead = require('./services-electric-remote-read')
 const code = require('./config-codes')
 const wsCallback = require('./config-wscallback')
 
@@ -7,8 +8,6 @@ const wsCallback = require('./config-wscallback')
 
 // outer类，失败则跳过
 const outer = (ws, req, next) => {
-  // console.log(req.params)
-  ws.send('欢迎访问非鉴权接口...没有匹配路由处理')
   next()
 }
 
@@ -28,9 +27,20 @@ const auth = (ws, req, next) => {
 
 // inner类，失败则跳过
 const inner = (ws, req, next) => {
-  // console.log(req.params)
-  ws.send('欢迎访问鉴权接口...没有匹配路由处理')
-  next()
+  // 登陆类
+  if (req.params.class === 'electric') {
+    // 登录接口
+    if (req.params.function === 'remoteRead') {
+      serviceRemoteRead
+        .remoteRead(req, ws)
+        .then(data => wsCallback(ws, 'close', code(req, 0, data)))
+        .catch(err => wsCallback(ws, code(req, 3049, err)))
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 }
 
 // default类，最后返回

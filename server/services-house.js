@@ -26,6 +26,8 @@ module.exports = {
           fang: String, // 坊号，全拼
           hao: String, // 房间号，全拼
           detail: String, // 说明
+          glyhbh: String, // 电表用户编号
+          dbjb: String, // 电表电表局编号
           updateTime: Number, // 更新时间
         })
         .findOneAndUpdate({ _id: req.body._id }, {
@@ -33,6 +35,8 @@ module.exports = {
             fang: req.body.fang,
             hao: req.body.hao,
             detail: req.body.detail,
+            glyhbh: req.body.glyhbh,
+            dbjb: req.body.dbjb,
             updateTime: Date.now(),
           },
         })
@@ -67,6 +71,8 @@ module.exports = {
         fang: String, // 坊号，全拼
         hao: String, // 房间号，全拼
         detail: String, // 说明
+        glyhbh: String, // 电表用户编号
+        dbjb: String, // 电表电表局编号
         status: Number, // 状态
         createTime: Number, // 创建时间
       })
@@ -75,6 +81,8 @@ module.exports = {
         fang: req.body.fang,
         hao: req.body.hao,
         detail: req.body.detail,
+        glyhbh: req.body.glyhbh,
+        dbjb: req.body.dbjb,
         status: 1,
         createTime: Date.now(),
       })
@@ -122,6 +130,8 @@ module.exports = {
         fang: 1,
         hao: 1,
         detail: 1,
+        glyhbh: 1,
+        dbjb: 1,
         createTime: 1,
         updateTime: 1,
       })
