@@ -29,7 +29,7 @@ expressWs(app, httpServer)
 // 中间件，初始化ws记录
 app.ws('*', (ws, req, next) => {
   log4js.getLogger('ws').info(
-    req.ip,
+    req.headers['x-real-ip'],
     req.method,
     req.url,
     `HTTP/${req.httpVersion}`,
