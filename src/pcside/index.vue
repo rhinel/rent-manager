@@ -196,6 +196,20 @@ tr:hover
   }
 }
 
+/* 日志块 */
+.log-wrap {
+  background-color: #282b2e;
+  color: #a9b7c6;
+  border-radius: 4px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+
+  .green {
+    color: #a5da2d;
+  }
+}
+
 /* 重写组件样式 */
 .el-dialog {
   max-width: 800px;

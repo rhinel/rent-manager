@@ -131,6 +131,7 @@ module.exports = {
       })
       .where('status')
       .equals(1)
+      .lean()
       .exec()
 
     return dbInfo

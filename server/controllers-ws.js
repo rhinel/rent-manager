@@ -1,10 +1,12 @@
 const serviceAuth = require('./services-auth')
 const serviceRemoteRead = require('./services-electric-remote-read')
 const code = require('./config-codes')
-const wsCallback = require('./config-wscallback')
+const { WsSend } = require('./config-wscallback')
 
 // res.json([req.params, req.query, req.body])
 // res.json([req.params==url, req.query==get, req.body==post])
+// websocket 不需要统一处理返回，由各个接口单独处理
+// 仅统一处理最高级别错误
 
 // outer类，失败则跳过
 const outer = (ws, req, next) => {
@@ -16,12 +18,12 @@ const auth = (ws, req, next) => {
   // 接口校验
   const token = req.body.token || req.query.token || ''
   if (!token) {
-    wsCallback(ws, code(req, 2001))
+    WsSend(ws, code(req, 2001))
   } else {
     serviceAuth
       .auth(req, ws)
       .then(next)
-      .catch(err => wsCallback(ws, code(req, 2001, err)))
+      .catch(err => WsSend(ws, code(req, 2001, err)))
   }
 }
 
@@ -33,8 +35,7 @@ const inner = (ws, req, next) => {
     if (req.params.function === 'remoteRead') {
       serviceRemoteRead
         .remoteRead(req, ws)
-        .then(data => wsCallback(ws, 'close', code(req, 0, data)))
-        .catch(err => wsCallback(ws, code(req, 3049, err)))
+        .catch(err => WsSend(ws, code(req, 3049, err)))
     } else {
       next()
     }
@@ -44,7 +45,7 @@ const inner = (ws, req, next) => {
 }
 
 // default类，最后返回
-const def = (ws, req) => wsCallback(ws, code(req, 9999))
+const def = (ws, req) => WsSend(ws, code(req, 9999))
 
 module.exports = {
   outer,
