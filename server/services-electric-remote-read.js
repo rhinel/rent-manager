@@ -1,3 +1,6 @@
+const got = require('got')
+const { URLSearchParams } = require('url')
+
 const FoundError = require('./config-error')
 const code = require('./config-codes')
 const { WsSend, WsOnMessage, WsOnClose } = require('./config-wscallback')
@@ -36,7 +39,7 @@ const DefuserData = class {
     if (
       this.missioning
       || !this.mission.length
-    ) return
+    ) return ''
 
     // 执行
     this.missioning = 1
@@ -45,27 +48,78 @@ const DefuserData = class {
     this.missioning = 0
 
     // 下一个
-    this.missionNextJob()
+    return this.missionNextJob()
   }
 
   // 获取验证码Cookie / 发送code
   async getElectricIdentifyCode() {
     // 校验
     if (!this.mobile) {
-      await WsSend(this.ws, 'getCode', code(
+      return WsSend(this.ws, 'getCode', code(
         this.req,
         30491,
         new FoundError('手机号码不存在，请在系统设置处维护。')
       ))
-
-      return
     }
 
-    // sleep 2s
-    await new Promise((r) => setTimeout(r, 2000))
+    // 发送请求用户验证码标识cookie
+    const preGet = await got('/kh/yhzc.do', {
+      baseUrl: 'https://95598.sz.csg.cn',
+      method: 'POST',
+      rejectUnauthorized: false,
+      headers: {
+        'Content-Type': `${
+          'application/x-www-form-urlencoded;'
+        } ${
+          'charset=UTF-8'
+        }`,
+      },
+      body: new URLSearchParams({
+        action: 'hqyzm',
+        sjh: this.mobile,
+        yzmYwlb: '02',
+      }).toString(),
+    })
+
+    // 检验结果
+    const { sfcz } = JSON.parse(preGet.body)
+
+    if (sfcz) {
+      const errMsg = {
+        YES: '该手机号码已经发送过动态密码！',
+        NOTALLOW: '动态密码发送超限，请30分钟后再试！',
+      }
+      return WsSend(this.ws, 'getCode', code(this.req, 0, {
+        type: 'ERR',
+        message: errMsg[sfcz],
+      }))
+    }
+
+    // 处理cookie
+    const setCookie = preGet
+      .headers['set-cookie'].join(',')
+
+    // 发送验证码
+    await got('/kh/yhzc.do', {
+      baseUrl: 'https://95598.sz.csg.cn',
+      method: 'POST',
+      rejectUnauthorized: false,
+      headers: {
+        'Content-Type': `${
+          'application/x-www-form-urlencoded;'
+        } ${
+          'charset=UTF-8'
+        }`,
+        cookie: setCookie,
+      },
+      body: new URLSearchParams({
+        action: 'fsyzm',
+        yzmYwlb: '02',
+      }).toString(),
+    })
 
     // 返回数据
-    await WsSend(this.ws, 'getCode', code(this.req, 0, {
+    return WsSend(this.ws, 'getCode', code(this.req, 0, {
       message: '验证码已发送，请查收并填写。',
     }))
   }
@@ -74,24 +128,58 @@ const DefuserData = class {
   async getElectricIdentifyLogin(loginCode) {
     // 校验
     if (!loginCode) {
-      await WsSend(this.ws, 'getLogin', code(this.req, 0, {
+      return WsSend(this.ws, 'getLogin', code(this.req, 0, {
         type: 'ERR',
         message: '请输入验证码。',
       }))
-
-      return
     }
 
-    // sleep 2s
-    await new Promise((r) => setTimeout(r, 2000))
+    //  执行登陆
+    const theGet = await got('yhdl.do', {
+      baseUrl: 'https://95598.sz.csg.cn',
+      method: 'POST',
+      rejectUnauthorized: false,
+      headers: {
+        'Content-Type': `${
+          'application/x-www-form-urlencoded;'
+        } ${
+          'charset=UTF-8'
+        }`,
+      },
+      body: `${
+        'action=yhdl&checkOnline=false&rurl=&dlxx.zhlx='
+      }${
+        '&dlxx.dllx=2&wxSwitch=ON&dlmjy=&mmjy=&tempFlag1=N'
+      }${
+        '&zcdl=&jmdlm=&jmmm=&verifyCode2=&dlxx.sjh='
+      }${
+      this.mobile}${'&dlxx.sjyzm='
+      }${
+      loginCode}${'&verifyCode='
+      }`,
+    })
+
+    // 处理cookie
+    const setCookie = theGet
+      .headers['set-cookie'].join(',')
+
+    const isRightPage = /window.parent._rulTz()/
+      .test(theGet.body)
+
+    if (!isRightPage) {
+      return WsSend(this.ws, 'getLogin', code(this.req, 0, {
+        type: 'ERR',
+        message: '登陆失败，可能验证码错误，请重试！',
+      }))
+    }
 
     // 缓存数据
     this.code = loginCode
-    this.cookie = 'cookie'
+    this.cookie = setCookie
     this.status = 1
 
     // 返回数据
-    await WsSend(this.ws, 'getLogin', code(this.req, 0, {
+    return WsSend(this.ws, 'getLogin', code(this.req, 0, {
       message: '登陆成功。',
     }))
   }
@@ -100,28 +188,28 @@ const DefuserData = class {
   async getElectricNumber(day, selectID) {
     // 校验
     if (!day) {
-      await WsSend(this.ws, 'getNumber', code(this.req, 0, {
+      return WsSend(this.ws, 'getNumber', code(this.req, 0, {
         type: 'ERR',
         message: '请选择抄表日期。',
       }))
-
-      return
     }
 
     // sleep 2s
     await new Promise((r) => setTimeout(r, 2000))
 
-    // 缓存数据
-    this.day = day
+    // 数据
     this.cacheData[selectID] = {
       selectID,
       doneNumber: 123,
       timestamp: Date.now(),
     }
+
+    // 缓存数据
+    this.day = day
     this.status = 2
 
     // 返回数据
-    await WsSend(this.ws, 'getNumber', code(this.req, 0, {
+    return WsSend(this.ws, 'getNumber', code(this.req, 0, {
       type: 'DATA',
       data: this.cacheData[selectID],
       message: `${selectID} 抄表成功。`,
@@ -133,13 +221,20 @@ const DefuserData = class {
     // sleep 2s
     await new Promise((r) => setTimeout(r, 2000))
 
+    // 数据
+    const dataInbase = {
+      selectID,
+      doneNumber: 123,
+      timestamp: Date.now(),
+    }
+
     // 完成任务
     this.done = 1
 
     // 返回数据
-    await WsSend(this.ws, 'getInbase', code(this.req, 0, {
+    return WsSend(this.ws, 'getInbase', code(this.req, 0, {
       type: 'DATA',
-      data: { selectID, doneNumber: 123 },
+      data: dataInbase,
       message: `${selectID} 写入数据成功。`,
     }))
   }
@@ -224,7 +319,7 @@ module.exports = {
     }))
 
     // 4 处理用户关闭的情况
-    WsOnClose(ws, () => {
+    WsOnClose(ws, async () => {
       // 如果任务已经完成删除
       // 否则继续执行（等待自动关闭 / 或用户重新打开）
       if (userData.done) {
@@ -238,48 +333,52 @@ module.exports = {
     })
 
     // 5 等待用户输入 / 方法处理
-    WsOnMessage(ws, (message) => {
+    WsOnMessage(ws, async (message) => {
       const { type, data } = JSON.parse(message)
       // 根据请求type转发用户对象方法
       switch (type) {
       case 'getCode':
-        userData.mission.push(() => {
-          userData.getElectricIdentifyCode.call(
-            userData,
-          )
-        })
+        userData.mission.push(() => (
+          userData.getElectricIdentifyCode
+            .call(
+              userData,
+            )
+        ))
         break
       case 'getLogin':
-        userData.mission.push(() => {
-          userData.getElectricIdentifyLogin.call(
-            userData,
-            data.code,
-          )
-        })
+        userData.mission.push(() => (
+          userData.getElectricIdentifyLogin
+            .call(
+              userData,
+              data.code,
+            )
+        ))
         break
       case 'getNumber':
-        userData.mission.push(() => {
-          userData.getElectricNumber.call(
-            userData,
-            data.day,
-            data.selectID,
-          )
-        })
+        userData.mission.push(() => (
+          userData.getElectricNumber
+            .call(
+              userData,
+              data.day,
+              data.selectID,
+            )
+        ))
         break
       case 'getInbase':
-        userData.mission.push(() => {
-          userData.getElectricInbase.call(
-            userData,
-            data.selectID,
-          )
-        })
+        userData.mission.push(() => (
+          userData.getElectricInbase
+            .call(
+              userData,
+              data.selectID,
+            )
+        ))
         break
       default:
         break
       }
 
       // 执行队列
-      userData.missionNextJob()
+      return userData.missionNextJob()
     }, err => {
       WsSend(ws, code(req, 3049, err))
     })

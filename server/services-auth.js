@@ -1,4 +1,4 @@
-const superagent = require('superagent')
+const got = require('got')
 const md5 = require('md5')
 
 const FoundError = require('./config-error')
@@ -95,9 +95,9 @@ module.exports = {
     // 1查询并返回
     const url = 'http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&nc='
     const search = '&pid=hp&video=1&fav=1&setmkt=en-us&setlang=en-us'
-    return superagent
-      .get(`${url}${Date.now()}${search}`)
-      .then(res => res.body)
+    const response = await got(`${url}${Date.now()}${search}`)
+
+    return JSON.parse(response.body)
   },
 
   auth: async req => {

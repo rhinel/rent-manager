@@ -69,9 +69,10 @@
       return {
         // status
         canGetCode: true,
-        canGetLogin: false,
+        canGetLogin: true,
         canGetAllStart: false,
         canGetAllInbase: false,
+        isClose: false,
 
         // 操作字段
         code: '',
@@ -117,6 +118,7 @@
         }
 
         ws.onclose = (evt) => {
+          this.isClose = true
           this.logFormat('client-INFO', `后台系统已关闭！关闭码${evt.code}。请刷新页面重试。`)
         }
 
