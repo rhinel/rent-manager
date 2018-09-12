@@ -5,6 +5,19 @@ const FoundError = require('./config-error')
 const loginLog = log4js.getLogger('login')
 const apiErrorLog = log4js.getLogger('apiError')
 
+// 封装的返回数据
+// 此处进行统一的错误处理
+// API日志打印 / service级别
+
+// APIbackdata = {
+//   code: '请求代码',
+//   data: '返回的数据',
+//   msg: '错误消息',
+// }
+
+// code为0时，返回data
+// code不为0时，返回msg
+
 // 提供默认错误提示
 const codeList = {
   // outer类

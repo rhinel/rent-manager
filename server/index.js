@@ -27,6 +27,7 @@ const httpPORT = process.env.npm_config_port || 80
 expressWs(app, httpServer)
 
 // 中间件，初始化ws记录
+// 请求级别的日志
 app.ws('*', (ws, req, next) => {
   log4js.getLogger('ws').info(
     req.headers['x-real-ip'],
@@ -40,6 +41,7 @@ app.ws('*', (ws, req, next) => {
 })
 
 // 中间件，初始化http记录
+// 请求级别的日志
 // log4js有内置http记录中间件
 app.use(log4js.connectLogger(
   log4js.getLogger('http'),

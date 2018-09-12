@@ -5,8 +5,9 @@ const { WsSend } = require('./config-wscallback')
 
 // res.json([req.params, req.query, req.body])
 // res.json([req.params==url, req.query==get, req.body==post])
-// websocket 不需要统一处理返回，由各个接口单独处理
-// 仅统一处理最高级别错误
+// websocket 由于需要保持连接
+// 不需要统一处理返回，由各个接口单独处理
+// 仅统一处理最高级别错误并关闭连接
 
 // outer类，失败则跳过
 const outer = (ws, req, next) => {

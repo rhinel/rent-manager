@@ -1,5 +1,24 @@
 // 封装socket接口的返回code
-// 并结束链接
+// 在原有code对象上增加
+
+// APIbackdata = {
+//   code: '请求代码',
+//   type: 'socket事件类型',
+//   data: 'socket返回的数据',
+//   msg: '错误消息',
+// }
+
+// code为0时，增加type返回
+// 而data对象为socket返回数据的封装
+// data = {
+//   type: '事件代码', INFO、ERR、DATA等
+//   message: '用于显示的message信息 / 错误消息',
+//   data: '返回的数据'.
+// }
+
+// type为DATA时，返回data数据，应指定
+
+// 包含结束链接
 // 封装成异步方法
 async function WsSend(ws, type, codeJson) {
   // 增加数据类型字段

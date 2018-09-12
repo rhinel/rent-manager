@@ -2,7 +2,6 @@ const log4js = require('log4js')
 const mongoose = require('mongoose')
 const redis = require('redis')
 
-// eslint-disable-next-line import/no-unresolved
 const auth = require('./auth')
 
 let rds
