@@ -108,7 +108,8 @@ module.exports = (req = {}, code = 0, data = '') => {
         typeof data.code === 'number' ? data.code : ''
       }`),
       msg: `${
-        data.code && typeof data.code !== 'number' ? `${data.code} ` : ''
+        data.code && typeof data.code !== 'number'
+          ? `${data.code} ` : ''
       }${
         data.message || codeList[code] || '未定义错误'
       }`,
