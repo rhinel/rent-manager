@@ -55,7 +55,9 @@
     </div>
 
     <!-- 日志显示容器 -->
-    <div class="log-wrap">
+    <div
+      class="log-wrap"
+      ref="logWrap">
       <div
         v-for="(line, index) in infoLine"
         :key="index"
@@ -64,6 +66,58 @@
     </div>
 
     <!-- 列表数据处理 -->
+    <el-table
+      v-loading.body="gettingListRefresh"
+      class="electric-table"
+      stripe
+      border
+      ref="electricTable"
+      :max-height="tableMaxHeight"
+      :data="filterElectricData">
+      <el-table-column
+        prop="fanghao"
+        label="房屋"
+        width="120" />
+      <el-table-column
+        prop="electricId.electric"
+        label="最新抄表数(度)"
+        width="160">
+        <template slot-scope="scope">
+          <span
+            :class="
+              scope.row.electricId.electric > 0
+                ? 'main-txt-highline' : ''
+            ">
+            {{ scope.row.electricId.electric }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="electricId.addTime"
+        label="最新抄表时间"
+        min-width="180">
+        <template slot-scope="scope">
+          {{ getTime(scope.row.electricId
+          && scope.row.electricId.addTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        width="180">
+        <template slot-scope="scope">
+          <el-button
+            size="small"
+            type="primary">
+            抄数
+          </el-button>
+          <el-button
+            size="small"
+            type="danger">
+            写入
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -90,13 +144,33 @@
         code: '',
         day: '',
         // 房屋信息列表字段
-        houseList: [],
+        gettingListRefresh: false,
+        tableMaxHeight: 200,
+        electricData: [],
+        electricDataSearch: '',
 
         // 日志字段
         infoLine: [],
       }
     },
     computed: {
+      filterElectricData() {
+        if (!this.electricDataSearch) {
+          return this.electricData
+        }
+
+        const searchKeys = ['fanghao']
+
+        const _electricDataSearch = new RegExp(this.electricDataSearch, 'i')
+        return this.electricData.filter(item => {
+          const testObject = {}
+          searchKeys.forEach((key) => {
+            testObject[key] = item[key]
+          })
+          const testItem = Object.values(testObject).join(' ')
+          return _electricDataSearch.test(testItem)
+        })
+      },
       ...mapState({
         sysInfo: state => state.config.defaultElseInfo,
       }),
@@ -107,6 +181,17 @@
     },
     created() {
       this.initWebSocket()
+    },
+    mounted() {
+      window.onresize = () => {
+        const height = window.innerHeight || document.body.clientHeight
+        const offsetTop = this.$refs.electricTable.$el.getBoundingClientRect().top
+        this.tableMaxHeight = height - offsetTop - 20 - 0.5
+      }
+      this.$nextTick(() => window.onresize())
+    },
+    beforeDestroy() {
+      window.onresize = null
     },
     methods: {
       logFormat(type, msg) {
@@ -119,6 +204,13 @@
             msg
           }`
         )
+
+        this.$nextTick(() => {
+          const el = this.$refs.logWrap
+          if (el) {
+            el.scrollTop = el.scrollHeight
+          }
+        })
       },
       initWebSocket() {
         ws = this.Ws('/inner/electric/remoteRead', () => {
@@ -166,8 +258,8 @@
         // 方式处理，而是统一写在判断里面
         // 做统一回调处理
         // 应根据type类型做返回回调、任务队列处理
-        if (type === 'houseList' && data.type === 'DATA') {
-          this.houseList = data.data
+        if (type === 'electricData' && data.type === 'DATA') {
+          this.electricData = data.data
         } else if (type === 'sys' && data.type === 'DATA') {
           // status 1
           // 已经发送验证码

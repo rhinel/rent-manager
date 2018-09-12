@@ -7,7 +7,7 @@ const { WsSend, WsOnMessage, WsOnClose } = require('./config-wscallback')
 // const db = require('./models')
 
 const serviceAuth = require('./services-auth')
-const servicesHouse = require('./services-house')
+const serviceElect = require('./services-electric')
 
 // 用户原型
 // socket原型
@@ -217,6 +217,8 @@ const DefuserData = class {
     const setCookie = theGet
       .headers['set-cookie'].join(',')
 
+    console.log(setCookie)
+
     // 缓存数据
     // 已经登陆系统的状态
     // 后面根据cookie处理
@@ -311,12 +313,12 @@ module.exports = {
     // 错误重试规则
 
     // 1 获取全部可处理房屋数据
-    const houseList = await servicesHouse
-      .houseList(req)
+    const electricData = await serviceElect
+      .electricNewestList(req)
 
-    await WsSend(ws, 'houseList', code(req, 0, {
+    await WsSend(ws, 'electricData', code(req, 0, {
       type: 'DATA',
-      data: houseList,
+      data: electricData,
       message: '房屋数据已获取。',
     }))
 

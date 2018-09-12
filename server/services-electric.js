@@ -538,4 +538,49 @@ module.exports = {
     return electricByDate
   },
 
+  electricNewestList: async req => {
+    // 查询房屋数据，抄表记录
+    // 2返回list对象
+
+    // 初始化该库
+    db.dbModel('electric')
+
+    // 1数据库查询
+    const dbInfo = await db
+      .dbModel('house')
+      .find({}, {
+        fang: 1,
+        hao: 1,
+        glyhbh: 1,
+        dbjb: 1,
+        electricId: 1,
+      })
+      .populate({
+        path: 'electricId',
+        model: 'electric',
+        select: 'electric remark addTime',
+        match: { status: 1 },
+      })
+      .where('userId')
+      .equals(db.db.Types.ObjectId(req.userId))
+      .where('status')
+      .equals(1)
+      .sort('fang hao')
+      .lean()
+      .exec()
+
+    // 2数据计算
+    dbInfo.forEach((item) => {
+      // 字段提供
+      if (!item.fanghao) {
+        item.fanghao = item.fang + item.hao
+      }
+      // 抄电ID初始化
+      if (!item.electricId) item.electricId = {}
+    })
+
+    // 3返回数据
+    return dbInfo
+  },
+
 }

@@ -204,6 +204,8 @@ tr:hover
   padding: 15px 20px;
   margin-bottom: 15px;
   line-height: 1.5;
+  height: 120px;
+  overflow-y: auto;
 
   .green {
     color: #a5da2d;
