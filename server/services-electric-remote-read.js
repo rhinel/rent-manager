@@ -12,7 +12,7 @@ const serviceElect = require('./services-electric')
 // 用户原型
 // socket原型
 const DefuserData = class {
-  constructor({ userId, mobile, ws, req }) {
+  constructor({ userId, mobile, ws, req, electricData }) {
     // 用户参数
     this.userId = userId
     this.mobile = mobile
@@ -27,6 +27,7 @@ const DefuserData = class {
     this.done = 0 // 是否全部完成 / 主动关闭
 
     // 数据缓存信息
+    this.electricData = electricData // 表数
     this.codeTime = '' // 验证码发送时间，用于计算间隔
     this.code = '' // 验证码缓存
     this.cookie = '' // 登陆后cookie缓存
@@ -59,9 +60,14 @@ const DefuserData = class {
     ) return ''
 
     // 执行
+    // 做队列等待
+    // 并重新抛出异常
     this.missioning = 1
     const next = this.mission.shift()
-    await next()
+    await next().catch(err => {
+      this.missioning = 0
+      throw err
+    })
     this.missioning = 0
 
     // 下一个
@@ -75,15 +81,13 @@ const DefuserData = class {
       funName.startsWith('_')
       || !Object.getPrototypeOf(this)[funName]
     ) {
-      return this._send(
-        'sys',
-        '方法不存在，请检查。',
-        30491
-      )
+      return this
+        ._send('sys', '方法不存在，请检查。', 30491)
     }
 
     // 加入队列
-    this.mission.push(() => this[funName](data))
+    this.mission
+      .push(() => this[funName](data))
 
     // 触发任务
     return this._missionNextJob()
@@ -107,7 +111,6 @@ const DefuserData = class {
 
     if (body) options.body = body
     if (cookie) options.headers.cookie = cookie
-
     return options
   }
 
@@ -164,7 +167,7 @@ const DefuserData = class {
           action: 'fsyzm',
           yzmYwlb: '02',
         }).toString(),
-      })
+      }),
     )
 
     // 缓存数据
@@ -199,7 +202,7 @@ const DefuserData = class {
         }${this.mobile}${'&dlxx.sjyzm='
         }${loginCode}${'&verifyCode='
         }`,
-      })
+      }),
     )
 
     // 检验结果
@@ -217,8 +220,6 @@ const DefuserData = class {
     const setCookie = theGet
       .headers['set-cookie'].join(',')
 
-    console.log(setCookie)
-
     // 缓存数据
     // 已经登陆系统的状态
     // 后面根据cookie处理
@@ -233,7 +234,7 @@ const DefuserData = class {
   }
 
   // 抄表方法
-  async getNumber({ day, selectID }) {
+  async getNumber({ day, haoId }) {
     // 校验
     if (!day) {
       return this._send('getNumber', {
@@ -242,45 +243,97 @@ const DefuserData = class {
       })
     }
 
-    // sleep 2s
-    await new Promise((r) => setTimeout(r, 2000))
+    // 获取需要处理的电表
+    const dealData = this.electricData
+      .filter(item => (
+        (haoId && item._id.toString() === haoId)
+        || !haoId
+      )
+        && item.dbjb
+        && item.glyhbh)
 
-    // 数据
-    this.cacheData[selectID] = {
-      selectID,
-      doneNumber: 123,
-      timestamp: Date.now(),
+    if (!dealData.length) {
+      return this._send('getNumber', {
+        type: 'ERR',
+        message: '电表不存在或暂无可抄电表。',
+      })
     }
 
     // 缓存数据
     this.day = day
     this.status = 3
 
+    // 组装请求队列
+    let dealList = Promise.resolve()
+    for (let i = 0; i < dealData.length; i += 1) {
+      dealList = dealList.then(async () => {
+        // 执行请求
+        const theGet = await got(
+          '/dbzx/dbzx.do',
+          await this._defaultPostOptions({
+            cookie: this.cookie,
+            body: new URLSearchParams({
+              action: 'query',
+              glyhbh: dealData[i].glyhbh,
+              dbjb: dealData[i].dbjb,
+              qssj: day,
+              jzsj: day,
+            }).toString(),
+          }),
+        )
+
+        // 处理结果
+        const regStr = `(${day} 00:00:00.0</td>\\r\\n\\s*${
+        '<td style="width: 15%">)(\\d+\\.+\\d*)(</td>)'}`
+        const exp = new RegExp(regStr)
+        const electric = theGet.body.match(exp)[2]
+
+        // 数据
+        const Id = dealData[i]._id
+        this.cacheData[Id] = {
+          haoId: Id,
+          electric,
+          addTime: day,
+        }
+
+        // 返回数据
+        await this._send('getNumber', {
+          type: 'DATA',
+          data: this.cacheData[Id],
+          message: `${dealData[i].fanghao
+          } ${electric}度 抄数数据成功。`,
+        })
+
+        return new Promise(r => setTimeout(r, 1000))
+      })
+    }
+
+    // 请求队列
+    await dealList
+
     // 返回数据
     return this._send('getNumber', {
-      type: 'DATA',
-      data: this.cacheData[selectID],
-      message: `${selectID} 抄表成功。`,
+      message: '全部抄表成功。',
     })
   }
 
   // 写入数据库方法
-  async getInbase({ selectID }) {
+  async getInbase({ haoId }) {
     // sleep 2s
     await new Promise((r) => setTimeout(r, 2000))
 
     // 数据
     const dataInbase = {
-      selectID,
-      doneNumber: 123,
-      timestamp: Date.now(),
+      haoId,
+      electric: 123,
+      addTime: Date.now(),
     }
 
     // 返回数据
     return this._send('getInbase', {
       type: 'DATA',
       data: dataInbase,
-      message: `${selectID} 写入数据成功。`,
+      message: `${haoId} 写入数据成功。`,
     })
   }
 
@@ -340,6 +393,7 @@ module.exports = {
         mobile,
         ws,
         req,
+        electricData,
       })
       userList[userId] = userData
 
@@ -352,6 +406,7 @@ module.exports = {
       userData = userList[userId]
       userData.ws = ws
       userData.req = req
+      userData.electricData = electricData
       userData.close = 0
 
       await WsSend(ws, 'sys', code(req, 0, {

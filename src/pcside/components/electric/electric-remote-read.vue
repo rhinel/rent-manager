@@ -32,7 +32,10 @@
           placeholder="选择抄表日期"
           v-model="day"
           :disabled="!canGetAllStart"
-          :editable="false" />
+          :editable="false"
+          :picker-options="{disabledDate(time) {
+            return time.getTime() > Date.now()
+          }}" />
       </div>
       <el-button
         type="primary"
@@ -102,17 +105,44 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="addElectric.electric"
+        label="电力局读数(度)"
+        width="160">
+        <template slot-scope="scope">
+          <span
+            :class="
+              scope.row.addElectric.electric > 0
+                ? 'main-txt-highline' : ''
+            ">
+            {{ scope.row.addElectric.electric || '--' }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="addElectric.addTime"
+        label="电力局读数时间"
+        min-width="180">
+        <template slot-scope="scope">
+          {{ getTime(scope.row.addElectric
+          && scope.row.addElectric.addTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column
         label="操作"
         width="180">
         <template slot-scope="scope">
           <el-button
             size="small"
-            type="primary">
+            type="primary"
+            v-if="scope.row.dbjb && scope.row.glyhbh"
+            @click="getAllStart(scope.row._id)">
             抄数
           </el-button>
           <el-button
             size="small"
-            type="danger">
+            type="danger"
+            v-if="scope.row.dbjb && scope.row.glyhbh"
+            @click="checkIsBase(scope.row._id)">
             写入
           </el-button>
         </template>
@@ -134,6 +164,7 @@
     data() {
       return {
         // status
+        // 没有处理等待响应状态
         codeTime: 0,
         canGetLogin: false,
         canGetAllStart: false,
@@ -344,30 +375,40 @@
           data: { loginCode: this.code },
         }))
       },
-      getAllStart(selectID = '') {
+      getAllStart(haoId = '') {
         if (ws.readyState === 3) return
         this.logFormat('client-INFO', '系统抄表中 ...')
         ws.send(JSON.stringify({
           type: 'getNumber',
           data: {
             day: this.day ? this.GetDateFormat(this.day) : '',
-            selectID,
+            haoId,
           },
         }))
       },
       checkIsGet(data) {
-        console.log('checkIsGet', data)
+        const electricItem = this.electricData
+          .find(item => item._id === data.haoId)
+
+        if (electricItem) {
+          electricItem.addElectric = data
+        }
       },
-      getAllInbase(selectID = '') {
+      getAllInbase(haoId = '') {
         if (ws.readyState === 3) return
         this.logFormat('client-INFO', '系统写入数据中 ...')
         ws.send(JSON.stringify({
           type: 'getInbase',
-          data: { selectID },
+          data: { haoId },
         }))
       },
       checkIsBase(data) {
-        console.log('checkIsBase', data)
+        const electricItem = this.electricData
+          .find(item => item._id === data.haoId)
+
+        if (electricItem) {
+          electricItem.electricId = data
+        }
       },
       getClose() {
         if (ws.readyState === 3) return

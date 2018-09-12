@@ -577,6 +577,8 @@ module.exports = {
       }
       // 抄电ID初始化
       if (!item.electricId) item.electricId = {}
+      // 电力读数初始化
+      if (!item.addElectric) item.addElectric = {}
     })
 
     // 3返回数据
