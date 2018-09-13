@@ -175,6 +175,8 @@
       return {
         // status
         // 没有处理等待响应状态
+        // 应基于业务习惯及服务可用性、最大自由度来考虑
+        // 应该如何设计本页面的loading及阻止处理
         codeTime: 0,
         canGetLogin: false,
         canGetAllStart: false,
