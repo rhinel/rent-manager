@@ -148,7 +148,7 @@
                 || !canGetAllInbase
                 || !scope.row.addElectric.addTime
             "
-            @click="checkIsBase(scope.row._id)">
+            @click="getAllInbase(scope.row._id)">
             写入
           </el-button>
         </template>

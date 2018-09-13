@@ -27,7 +27,7 @@ const DefuserData = class {
     this.done = 0 // 是否全部完成 / 主动关闭
 
     // 数据缓存信息
-    this.electricData = electricData // 表数
+    this.electricData = electricData // 房屋表数
     this.codeTime = '' // 验证码发送时间，用于计算间隔
     this.code = '' // 验证码缓存
     this.cookie = '' // 登陆后cookie缓存
@@ -284,7 +284,7 @@ const DefuserData = class {
 
         // 处理结果
         const regStr = `(${day} 00:00:00.0</td>\\r\\n\\s*${
-        '<td style="width: 15%">)(\\d+\\.+\\d*)(</td>)'}`
+        '<td style="width: 15%">)(\\d+)(\\.+\\d*</td>)'}`
         const exp = new RegExp(regStr)
         const electric = theGet.body.match(exp)[2]
 
@@ -319,21 +319,58 @@ const DefuserData = class {
 
   // 写入数据库方法
   async getInbase({ haoId }) {
-    // sleep 2s
-    await new Promise((r) => setTimeout(r, 2000))
+    // 获取需要处理的电表
+    const dealData = haoId && this.cacheData[haoId]
+      ? { [haoId]: this.cacheData[haoId] }
+      : this.cacheData
 
-    // 数据
-    const dataInbase = {
-      haoId,
-      electric: 123,
-      addTime: Date.now(),
+    if (
+      (haoId && !dealData[haoId])
+      || !Object.keys(dealData).length
+    ) {
+      return this._send('getNumber', {
+        type: 'ERR',
+        message: '没有读数或暂无可写度数。',
+      })
     }
+
+    // 组装请求队列
+    let dealList = Promise.resolve()
+    for (let i = 0; i < this.electricData.length; i += 1) {
+      const item = dealData[this.electricData[i]._id.toString()]
+      const oldItem = this.electricData[i].electricId
+
+      if (item && oldItem.addTime !== item.addTime) {
+        dealList = dealList.then(async () => {
+          // 执行请求
+          await serviceElect
+            .electricAdd({
+              userId: this.req.userId,
+              body: item,
+            })
+
+          // 数据
+          this.electricData[i].electricId = item
+
+          // 返回数据
+          await this._send('getInbase', {
+            type: 'DATA',
+            data: item,
+            message: `${this.electricData[i].fanghao
+            } ${item.electric}度 写入数据成功。`,
+          })
+
+          return new Promise(r => setTimeout(r, 1000))
+        })
+      }
+    }
+
+    // 请求队列
+    await dealList
 
     // 返回数据
     return this._send('getInbase', {
-      type: 'DATA',
-      data: dataInbase,
-      message: `${haoId} 写入数据成功。`,
+      message: '全部写入成功。',
     })
   }
 
@@ -366,6 +403,7 @@ module.exports = {
     // 错误重试规则
 
     // 1 获取全部可处理房屋数据
+    // 每次拉取最新数据
     const electricData = await serviceElect
       .electricNewestList(req)
 
