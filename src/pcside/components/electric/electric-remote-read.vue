@@ -44,7 +44,7 @@
         全部开始抄表
       </el-button>
       <el-button
-        type="primary"
+        type="warning"
         :disabled="!canGetAllStart || !canGetAllInbase"
         @click="getAllInbase()">
         全部开始写入系统
@@ -52,8 +52,8 @@
 
       <el-button
         type="danger"
-        @click="getClose">
-        关闭连接
+        @click="getTakeClose">
+        {{ isClose ? '重新连接' : '关闭连接' }}
       </el-button>
     </div>
 
@@ -135,13 +135,19 @@
             size="small"
             type="primary"
             v-if="scope.row.dbjb && scope.row.glyhbh"
+            :disabled="!canGetAllStart"
             @click="getAllStart(scope.row._id)">
             抄数
           </el-button>
           <el-button
             size="small"
-            type="danger"
+            type="warning"
             v-if="scope.row.dbjb && scope.row.glyhbh"
+            :disabled="
+              !canGetAllStart
+                || !canGetAllInbase
+                || !scope.row.addElectric.addTime
+            "
             @click="checkIsBase(scope.row._id)">
             写入
           </el-button>
@@ -225,6 +231,7 @@
       window.onresize = null
     },
     methods: {
+      // log
       logFormat(type, msg) {
         this.infoLine.push(
           `<span class="green">${
@@ -243,12 +250,15 @@
           }
         })
       },
+
+      // socket
       initWebSocket() {
         ws = this.Ws('/inner/electric/remoteRead', () => {
           this.logFormat('client-INFO', '后台系统连接中 ...')
         })
 
         ws.onopen = () => {
+          this.isClose = false
           this.logFormat('client-INFO', '后台系统已连接！')
         }
 
@@ -256,7 +266,7 @@
           this.isClose = true
           this.logFormat(
             'client-INFO',
-            `后台系统已关闭！关闭码${evt.code}。请刷新页面重试。`
+            `后台系统已关闭！关闭码${evt.code}。请重新连接。`
           )
         }
 
@@ -350,6 +360,14 @@
           this.checkIsBase(data.data)
         }
       },
+      closeWebSocket() {
+        this.logFormat('client-INFO', '关闭连接中 ...')
+        ws.send(JSON.stringify({
+          type: 'getClose',
+        }))
+      },
+
+      // 方法
       getCode() {
         if (ws.readyState === 3) return
         this.logFormat('client-INFO', '请求验证码中 ...')
@@ -410,12 +428,12 @@
           electricItem.electricId = data
         }
       },
-      getClose() {
-        if (ws.readyState === 3) return
-        this.logFormat('client-INFO', '关闭连接中 ...')
-        ws.send(JSON.stringify({
-          type: 'getClose',
-        }))
+      getTakeClose() {
+        if (this.isClose) {
+          this.initWebSocket()
+          return
+        }
+        this.closeWebSocket()
       },
     },
   }
