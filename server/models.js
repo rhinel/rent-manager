@@ -92,6 +92,9 @@ const redisIncr = key => new Promise((resolve, reject) => {
 
 // 链接数据库
 const connect = callback => {
+  // mongodb nodejs driver: findAndModify is deprecated.
+  // https://github.com/Automattic/mongoose/issues/5616
+  mongoose.set('useFindAndModify', false)
   mongoose.Promise = global.Promise
   db = mongoose.connection
   db.once('open', () => {
@@ -102,6 +105,7 @@ const connect = callback => {
   db.on('connected', sysLog.info.bind(sysLog, 'mongoose connected !'))
   db.on('reconnected', sysLog.info.bind(sysLog, 'mongoose reconnected !'))
   db.on('error', sysLog.error.bind(sysLog, 'mongoose connection error: '))
+
   mongoose
     .connect(auth.mongodbPs, {
       reconnectTries: Number.MAX_VALUE,

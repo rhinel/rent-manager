@@ -147,9 +147,13 @@
               !canGetAllStart
                 || !canGetAllInbase
                 || !scope.row.addElectric.addTime
+                || scope.row.electricId.addTime === scope.row.addElectric.addTime
             "
             @click="getAllInbase(scope.row._id)">
             写入
+            <i
+              class="el-icon-success"
+              v-if="scope.row.electricId.addTime === scope.row.addElectric.addTime" />
           </el-button>
         </template>
       </el-table-column>
@@ -249,6 +253,15 @@
             el.scrollTop = el.scrollHeight
           }
         })
+      },
+      // resetStatus
+      resetStatus() {
+        this.codeTime = 0
+        this.canGetLogin = false
+        this.canGetAllStart = false
+        this.canGetAllInbase = false
+        this.code = ''
+        this.day = ''
       },
 
       // socket
@@ -434,6 +447,7 @@
           return
         }
         this.closeWebSocket()
+        this.resetStatus()
       },
     },
   }

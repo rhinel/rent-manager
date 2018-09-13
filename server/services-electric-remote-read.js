@@ -4,7 +4,6 @@ const { URLSearchParams } = require('url')
 const FoundError = require('./config-error')
 const code = require('./config-codes')
 const { WsSend, WsOnMessage, WsOnClose } = require('./config-wscallback')
-// const db = require('./models')
 
 const serviceAuth = require('./services-auth')
 const serviceElect = require('./services-electric')
@@ -289,7 +288,7 @@ const DefuserData = class {
         const electric = theGet.body.match(exp)[2]
 
         // 数据
-        const Id = dealData[i]._id
+        const Id = dealData[i]._id.toString()
         this.cacheData[Id] = {
           haoId: Id,
           electric,
@@ -345,7 +344,7 @@ const DefuserData = class {
           // 执行请求
           await serviceElect
             .electricAdd({
-              userId: this.req.userId,
+              userId: this.userId,
               body: item,
             })
 
