@@ -41,13 +41,20 @@
         type="primary"
         :disabled="!canGetAllStart"
         @click="getAllStart()">
-        全部开始抄表
+        全部开始抄数
       </el-button>
       <el-button
         type="warning"
         :disabled="!canGetAllStart || !canGetAllInbase"
         @click="getAllInbase()">
-        全部开始写入系统
+        全部开始写入
+      </el-button>
+
+      <el-button
+        type="primary"
+        :disabled="isClose"
+        @click="refreshWebSocket">
+        刷新连接
       </el-button>
 
       <el-button
@@ -268,6 +275,7 @@
 
       // socket
       initWebSocket() {
+        // init onopen onclose onmessage
         ws = this.Ws('/inner/electric/remoteRead', () => {
           this.logFormat('client-INFO', '后台系统连接中 ...')
         })
@@ -306,6 +314,8 @@
           // 处理事件
           return this.dealWebSocket(type, data)
         }
+
+        console.log(ws)
       },
       dealWebSocket(type, data) {
         // 方法注册的回调处理
@@ -343,7 +353,7 @@
           }
 
           // status 3
-          // 已经有抄表数据，可继续处理
+          // 已经有抄数数据，可继续处理
           if (data.data.status === 3) {
             this.day = new Date(data.data.day)
 
@@ -371,11 +381,19 @@
           this.checkIsGet(data.data)
         } else if (type === 'getInbase' && data.type === 'DATA') {
           // 需处理数据
-          // 更新本地houseList，而不重新获取
+          // 更新本地electricData，而不重新获取
+          // 服务端也会更新
           this.checkIsBase(data.data)
         }
       },
+      refreshWebSocket() {
+        // 因为时序搞不好
+        // setTimeout延时一下
+        ws.close()
+        setTimeout(this.initWebSocket, 500)
+      },
       closeWebSocket() {
+        // ws.close() will call by server
         this.logFormat('client-INFO', '关闭连接中 ...')
         ws.send(JSON.stringify({
           type: 'getClose',
@@ -410,7 +428,7 @@
       },
       getAllStart(haoId = '') {
         if (ws.readyState === 3) return
-        this.logFormat('client-INFO', '系统抄表中 ...')
+        this.logFormat('client-INFO', '系统抄数中 ...')
         ws.send(JSON.stringify({
           type: 'getNumber',
           data: {

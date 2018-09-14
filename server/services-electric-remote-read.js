@@ -8,6 +8,9 @@ const { WsSend, WsOnMessage, WsOnClose } = require('./config-wscallback')
 const serviceAuth = require('./services-auth')
 const serviceElect = require('./services-electric')
 
+// 缓存列表
+const userList = {}
+
 // 用户原型
 // socket原型
 const DefuserData = class {
@@ -19,11 +22,14 @@ const DefuserData = class {
     // 连接信息
     this.ws = ws
     this.req = req
+    this.connectTimeout = 1 // 连接有效期 min
+    this.serveClose = '' // serveClose Timer
+    this.done = 0 // 是否主动关闭
+    this.reOpen = 0 // 本次连接是否重新连接
 
     // 任务信息
     this.mission = []
     this.missioning = 0
-    this.done = 0 // 是否全部完成 / 主动关闭
 
     // 数据缓存信息
     this.electricData = electricData // 房屋表数
@@ -37,7 +43,19 @@ const DefuserData = class {
 
   // 私有方法
 
-  // send 方法
+  // 更新数据 方法
+  // 重新连接时更新
+  async _updateData({ ws, req, electricData }) {
+    // 连接信息
+    this.ws = ws
+    this.req = req
+    this.reOpen = Date.now()
+
+    // 数据缓存信息
+    this.electricData = electricData
+  }
+
+  // send二次封装 方法
   // 需要外部的WsSend，code
   // 没有使用对象参数，因为简便调用
   async _send(type, data, sysERRCode) {
@@ -49,21 +67,29 @@ const DefuserData = class {
     ))
   }
 
-  // 执行任务队列回调
-  // 这是一个先进先出的栈
+  // 执行任务队列回调 方法
+  // 这是一个先进先出的队列
+  // 除非抛出异常
+  // 队列中运行的任务无法被阻止
+  // 主动终止连接仅能阻止下一个任务
   async _missionNextJob() {
-    // 阈值
+    // 阈值，如果
+    // 正在执行任务
+    // 没有后续任务
+    // 连接已主动关闭
+    // 取消
     if (
       this.missioning
       || !this.mission.length
+      || this.done
     ) return ''
 
-    // 执行
-    // 做队列等待
-    // 并重新抛出异常
+    // 取出队列，执行
+    // 出现异常时清除后续队列
     this.missioning = 1
     const next = this.mission.shift()
     await next().catch(err => {
+      this.mission.length = 0
       this.missioning = 0
       throw err
     })
@@ -73,9 +99,10 @@ const DefuserData = class {
     return this._missionNextJob()
   }
 
-  // 创建一个任务，并加入任务队列
+  // 创建一个任务，并加入任务队列 方法
   // 设定为执行时对象
   async _missionCreate({ type: funName, data }) {
+    // 检测任务是否有效
     if (
       funName.startsWith('_')
       || !Object.getPrototypeOf(this)[funName]
@@ -85,14 +112,21 @@ const DefuserData = class {
     }
 
     // 加入队列
+    // 并标识加入队列时间戳
+    // 可用于判断连接流程和任务流程相对关系
+    // 没有对队列做其他控制
+    const _timestamp = Date.now()
     this.mission
-      .push(() => this[funName](data))
+      .push(() => this[funName]({
+        ...data,
+        _timestamp,
+      }))
 
-    // 触发任务
+    // 触发队列
     return this._missionNextJob()
   }
 
-  // 请求对象的默认载荷
+  // 请求对象的默认载荷 方法
   // eslint-disable-next-line class-methods-use-this
   async _defaultPostOptions({ body, cookie }) {
     const options = {
@@ -115,7 +149,7 @@ const DefuserData = class {
 
   // 公有方法
 
-  // 获取验证码Cookie / 发送code
+  // 获取验证码Cookie / 发送code 方法
   async getCode() {
     // 校验
     if (!this.mobile) {
@@ -139,6 +173,7 @@ const DefuserData = class {
     )
 
     // 检验结果
+    // 没有取对方系统的countDownTime
     const { sfcz } = JSON.parse(preGet.body)
 
     if (sfcz) {
@@ -373,10 +408,17 @@ const DefuserData = class {
     })
   }
 
-  // 关闭连接请求
-  async getClose() {
+  // 关闭连接请求 方法
+  async getClose({ _timestamp }) {
+    // 如果提交的close之后reOpen了
+    // 则不处理
+    if (_timestamp < this.reOpen) return ''
+
+    // 清除reOpen时间，执行close
+    this.reOpen = 0
+
     // 完成任务
-    this.done = 1
+    this.done = Date.now()
 
     // 返回数据
     return this._send('close', {
@@ -385,21 +427,17 @@ const DefuserData = class {
   }
 }
 
-// 缓存列表
-const userList = {}
-
 module.exports = {
 
   remoteRead: async (req, ws) => {
     // 获取全部可处理房屋数据
     // 本用户Data缓存
-    // 30分钟连接过期需要重新刷新连接
     // 用户关闭后保持状态，但不发送数据
-    // 连接时立即执行的方法不认为无法接收报错
+    // 30分钟连接过期需要重新刷新连接
     // 等待用户链接电力系统
     // 根据用户参数请求数据 并返回
     // 根据用户参数执行 写入数据
-    // 错误重试规则
+    // 错误重试规则=>异常后需要重新连接重新提交任务
 
     // 1 获取全部可处理房屋数据
     // 每次拉取最新数据
@@ -415,6 +453,7 @@ module.exports = {
     // 2 本用户Data缓存
     // 根据用户ID来缓存会话
     // 重新登陆后仍可继续会话
+    // 关闭连接执行前重新登陆也可继续会话
     const { userId } = req
     let userData
 
@@ -441,10 +480,11 @@ module.exports = {
       // 更新存在数据 / 并返回缓存数据
       // 登陆后则无需处理mobile，因为是和会话绑定
       userData = userList[userId]
-      userData.ws = ws
-      userData.req = req
-      userData.electricData = electricData
-      userData.close = 0
+      userData._updateData({
+        ws,
+        req,
+        electricData,
+      })
 
       await WsSend(ws, 'sys', code(req, 0, {
         type: 'DATA',
@@ -459,33 +499,40 @@ module.exports = {
       }))
     }
 
-    // 3 生成主动关闭情况
-    // 30min后主动关闭 / 删除缓存
-    if (userData.serveClose) {
-      clearTimeout(userData.serveClose)
-    }
-
-    userData.serveClose = setTimeout(() => {
-      delete userList[userId]
-    }, 30 * 60 * 1000)
-
-    await WsSend(ws, 'sys', code(req, 0, {
-      message: '本次连接将在30分钟之后过期。',
-    }))
-
-    // 4 处理用户关闭的情况
-    // 如果任务已经完成删除
+    // 3 关闭的情况
+    // 如果任务主动关闭 则删除
+    // 删除时要保证其中的事件队列clean
+    // 否则可能造成内存泄漏
     // 否则继续执行（等待自动关闭 / 或用户重新打开）
     WsOnClose(ws, async () => {
       if (userData.done) {
-        if (userData.serveClose) {
-          clearTimeout(userData.serveClose)
-        }
+        clearTimeout(userData.serveClose)
         delete userList[userId]
       }
     }, err => {
       WsSend(ws, code(req, 3049, err))
     })
+
+    // 4 生成主动关闭情况
+    // connectTimeout min后主动关闭 / 删除缓存
+    // 直接关闭，关闭之前的任务会继续执行
+    if (userData.serveClose) {
+      clearTimeout(userData.serveClose)
+    }
+
+    userData.serveClose = setTimeout(() => {
+      userData
+        ._missionCreate({ type: 'getClose' })
+        .catch(err => {
+          WsSend(ws, code(req, 3049, err))
+        })
+    }, userData.connectTimeout * 60 * 1000)
+
+    await WsSend(ws, 'sys', code(req, 0, {
+      message: `本次连接及临时数据将在${
+        userData.connectTimeout
+      }分钟之后过期。`,
+    }))
 
     // 5 等待用户输入 / 方法处理
     // 根据请求type转发用户对象方法

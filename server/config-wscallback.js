@@ -28,8 +28,9 @@ async function WsSend(ws, type, codeJson) {
   // 此错误类型下断开连接
   // 如果是接口内部级别错误，由接口自行控制
 
-  // 接口已经关闭则不执行
-  if (ws.readyState === 3) return
+  // 接口未连接则不执行
+  // 一般不会，路由过来一般都已连接
+  if (ws.readyState === 0) return
 
   // 处理数据
   let data
@@ -41,22 +42,34 @@ async function WsSend(ws, type, codeJson) {
   }
 
   // 发送数据
-  await new Promise((resolve, reject) => {
-    ws.send(JSON.stringify(data), err => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve()
-      }
+  // 如果连接有效
+  if (ws.readyState === 1) {
+    await new Promise((resolve, reject) => {
+      ws.send(JSON.stringify(data), err => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve()
+        }
+      })
     })
-  })
+  }
 
   // 如果类型是close或者存在错误码
   // 服务端主动关闭
   if (
-    data.type === 'close'
-    || data.code
-  ) ws.close()
+    data.type !== 'close'
+    && !data.code
+  ) return
+
+  // 连接有效则触发close
+  // 否则手动触发，自定义4999
+  // 框架封装的方法
+  if (ws.readyState === 1) {
+    ws.close()
+  } else {
+    ws.emit('close', 4999)
+  }
 }
 
 function WsOnMessage(ws, callback, onErr) {
@@ -72,9 +85,9 @@ function WsOnMessage(ws, callback, onErr) {
 
 function WsOnClose(ws, callback, onErr) {
   // 封装每一个事件监听，用于错误处理
-  ws.on('close', async () => {
+  ws.on('close', async (evtCode) => {
     try {
-      await callback()
+      await callback(evtCode)
     } catch (err) {
       if (onErr) onErr(err)
     }
