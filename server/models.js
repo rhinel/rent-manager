@@ -2,6 +2,14 @@ const log4js = require('log4js')
 const mongoose = require('mongoose')
 const redis = require('redis')
 
+// the auth file like this:
+// const isLocal = process.argv[2] === 'server'
+// module.exports = {
+//   redisPo: 'user',
+//   redisIp: isLocal ? 'mongo' : 'IP',
+//   redisPa: 'pwd',
+//   mongodbPs: `mongodb://user:pwd@${isLocal ? 'mongo' : 'IP'}:27017/database`,
+// }
 // eslint-disable-next-line import/no-unresolved
 const auth = require('./auth')
 
