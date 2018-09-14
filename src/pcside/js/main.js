@@ -7,6 +7,7 @@ import 'normalize.css'
 
 // 加载组件
 import ajax from 'common/js/request'
+import ws from 'common/js/websocket'
 import plugin from 'common/js/plugin'
 
 // 应用配置加载
@@ -20,6 +21,7 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.prototype.Ajax = ajax
+Vue.prototype.Ws = ws
 Vue.prototype.GetTimeFormat = plugin.getTimeFormat
 Vue.prototype.GetDateFormat = plugin.getDateFormat
 

@@ -1,5 +1,7 @@
 const path = require('path')
 
+// 日志类型配置
+
 module.exports = {
   appenders: {
     // WS日志，请求日志

@@ -64,6 +64,24 @@
             placeholder="选填"
             v-model="addHouse.detail" />
         </el-form-item>
+        <el-form-item
+          label="电表户编号"
+          prop="glyhbh"
+          :label-width="ahdLabelWidth">
+          <el-input
+            auto-complete="off"
+            placeholder="输入电表用户编号"
+            v-model="addHouse.glyhbh" />
+        </el-form-item>
+        <el-form-item
+          label="电表局编号"
+          prop="dbjb"
+          :label-width="ahdLabelWidth">
+          <el-input
+            auto-complete="off"
+            placeholder="输入电表电表局编号"
+            v-model="addHouse.dbjb" />
+        </el-form-item>
       </el-form>
       <div
         class="dialog-footer"
@@ -98,6 +116,10 @@
       <el-table-column
         prop="hao"
         label="房间号"
+        width="180" />
+      <el-table-column
+        prop="glyhbh"
+        label="电表用户编号"
         width="180" />
       <el-table-column
         prop="detail"
@@ -188,6 +210,8 @@
           fang: '',
           hao: '',
           detail: '',
+          glyhbh: '',
+          dbjb: '',
         },
         addHouserules: {
           hao: [
@@ -253,6 +277,8 @@
           this.addHouse.fang = row.fang
           this.addHouse.hao = row.hao
           this.addHouse.detail = row.detail
+          this.addHouse.glyhbh = row.glyhbh
+          this.addHouse.dbjb = row.dbjb
         } else if (this.addHouseFlag) {
           this.ahdDialogTitle = '新增房间'
           this.addHouse.fang = this.houseFang[0]

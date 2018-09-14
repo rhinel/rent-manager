@@ -57,6 +57,11 @@ export default {
         step: 0,
         price: 0,
       },
+      // 默认其他信息字段
+      defaultElseInfo: {},
+      defaultElseInfoClear: {
+        mobile: '',
+      },
       // 菜单
       menu: [
         {
@@ -107,10 +112,15 @@ export default {
     // 可修改字段
     defaultGot: false,
     defaultGetting: false,
-    defaultKeys: ['defaultCalWaterPrice', 'defaultCalElePrice'],
+    defaultKeys: [
+      'defaultCalWaterPrice',
+      'defaultCalElePrice',
+      'defaultElseInfo',
+    ],
     defaultKeysHasSet: {
       defaultCalWaterPrice: false,
       defaultCalElePrice: false,
+      defaultElseInfo: false,
     },
   },
   // 处理

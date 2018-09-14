@@ -309,7 +309,7 @@
         if (!this.electricCalDataSearch) {
           return this.electricCalList
         }
-        const searchKeys = ['fanghao', 'remark']
+        const searchKeys = ['fanghao']
 
         const _electricCalDataSearch = new RegExp(this.electricCalDataSearch, 'i')
         return this.electricCalList.filter(item => {

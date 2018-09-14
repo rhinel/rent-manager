@@ -14,6 +14,7 @@ const WaterHistory = () => import('../components/water/water-history')
 const Electric = () => import('../components/electric/electric-index')
 const ElectricIndex = () => import('../components/electric/electric-main')
 const ElectricHistory = () => import('../components/electric/electric-history')
+const ElectricRemoteRead = () => import('../components/electric/electric-remote-read')
 
 const Lease = () => import('../components/lease/lease-index')
 const LeaseIndex = () => import('../components/lease/lease-main')
@@ -95,6 +96,11 @@ export default {
               path: 'history',
               meta: { name: '电费历史' },
               component: ElectricHistory,
+            },
+            {
+              path: 'remote-read',
+              meta: { name: '电费远程抄表' },
+              component: ElectricRemoteRead,
             },
           ],
         },

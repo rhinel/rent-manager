@@ -1,4 +1,4 @@
-const superagent = require('superagent')
+const got = require('got')
 const md5 = require('md5')
 
 const FoundError = require('./config-error')
@@ -95,9 +95,9 @@ module.exports = {
     // 1查询并返回
     const url = 'http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&nc='
     const search = '&pid=hp&video=1&fav=1&setmkt=en-us&setlang=en-us'
-    return superagent
-      .get(`${url}${Date.now()}${search}`)
-      .then(res => res.body)
+    const response = await got(`${url}${Date.now()}${search}`)
+
+    return JSON.parse(response.body)
   },
 
   auth: async req => {
@@ -131,6 +131,7 @@ module.exports = {
       })
       .where('status')
       .equals(1)
+      .lean()
       .exec()
 
     return dbInfo
@@ -142,12 +143,14 @@ module.exports = {
     const {
       defaultCalWaterPrice,
       defaultCalElePrice,
+      defaultElseInfo,
     } = req.body
 
     const dbInfo = await db
       .dbModel('admin', {//* //标记，更新默认计费方式，修改类型
         defaultCalWaterPrice: Object, // 默认水费计费，全拼
         defaultCalElePrice: Object, // 默认电费计费，全拼
+        defaultElseInfo: Object, // 默认用户信息，全拼
       })
       .findOneAndUpdate({
         _id: req.userId,
@@ -155,6 +158,7 @@ module.exports = {
         $set: {
           defaultCalWaterPrice,
           defaultCalElePrice,
+          defaultElseInfo,
         },
       })
       .exec()
@@ -165,4 +169,5 @@ module.exports = {
 
     return ''
   },
+
 }

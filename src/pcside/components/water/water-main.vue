@@ -379,11 +379,10 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.waterId.water > 0">
-            {{ scope.row.waterId.water }}
-          </span>
-          <span v-else>
+            :class="
+              scope.row.waterId.water > 0
+                ? 'main-txt-highline' : ''
+            ">
             {{ scope.row.waterId.water }}
           </span>
         </template>
@@ -393,7 +392,8 @@
         label="最新抄表时间"
         width="180">
         <template slot-scope="scope">
-          {{ getTime(scope.row.waterId && scope.row.waterId.addTime) }}
+          {{ getTime(scope.row.waterId
+          && scope.row.waterId.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -402,12 +402,10 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.calWaterId.water > 0">
-            {{ scope.row.calWaterId.water }}
-          </span>
-          <span
-            v-else>
+            :class="
+              scope.row.calWaterId.water > 0
+                ? 'main-txt-highline' : ''
+            ">
             {{ scope.row.calWaterId.water }}
           </span>
         </template>
@@ -417,7 +415,8 @@
         label="上次计费/初始时间"
         width="180">
         <template slot-scope="scope">
-          {{ getTime(scope.row.calWaterId && scope.row.calWaterId.addTime) }}
+          {{ getTime(scope.row.calWaterId
+          && scope.row.calWaterId.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -511,7 +510,9 @@
           addTime: '',
         },
         addWaterrules: {
-          haoId: [{ required: true, message: '请选择', trigger: 'change' }],
+          haoId: [{
+            required: true, message: '请选择', trigger: 'change',
+          }],
           water: [{
             type: 'number', required: true, message: '请填写', trigger: 'blur',
           }],
@@ -589,7 +590,7 @@
         if (!this.waterDataSearch) {
           return this.waterData
         }
-        const searchKeys = ['fanghao', 'remark']
+        const searchKeys = ['fanghao']
 
         const _waterDataSearch = new RegExp(this.waterDataSearch, 'i')
         return this.waterData.filter(item => {

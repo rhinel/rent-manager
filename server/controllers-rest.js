@@ -10,6 +10,7 @@ const code = require('./config-codes')
 
 // res.json([req.params, req.query, req.body])
 // res.json([req.params==url, req.query==get, req.body==post])
+// 统一处理所有返回
 
 // outer类，失败则跳过
 const outer = (req, res, next) => {

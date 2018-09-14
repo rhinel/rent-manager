@@ -14,6 +14,11 @@
         @click="getListRefresh">
         刷新
       </el-button>
+      <el-button
+        type="primary"
+        @click="gotoRemoteReadPage">
+        远程抄表
+      </el-button>
       <div class="table-btn-input">
         <el-input
           placeholder="搜索"
@@ -379,12 +384,10 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.electricId.electric > 0">
-            {{ scope.row.electricId.electric }}
-          </span>
-          <span
-            v-else>
+            :class="
+              scope.row.electricId.electric > 0
+                ? 'main-txt-highline' : ''
+            ">
             {{ scope.row.electricId.electric }}
           </span>
         </template>
@@ -394,7 +397,8 @@
         label="最新抄表时间"
         width="180">
         <template slot-scope="scope">
-          {{ getTime(scope.row.electricId && scope.row.electricId.addTime) }}
+          {{ getTime(scope.row.electricId
+          && scope.row.electricId.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -403,12 +407,10 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.calElectricId.electric > 0">
-            {{ scope.row.calElectricId.electric }}
-          </span>
-          <span
-            v-else>
+            :class="
+              scope.row.calElectricId.electric > 0
+                ? 'main-txt-highline' : ''
+            ">
             {{ scope.row.calElectricId.electric }}
           </span>
         </template>
@@ -418,7 +420,8 @@
         label="上次计费/初始时间"
         width="180">
         <template slot-scope="scope">
-          {{ getTime(scope.row.calElectricId && scope.row.calElectricId.addTime) }}
+          {{ getTime(scope.row.calElectricId
+          && scope.row.calElectricId.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -427,11 +430,10 @@
         width="160">
         <template slot-scope="scope">
           <span
-            class="main-txt-highline"
-            v-if="scope.row.gap > 0">
-            {{ scope.row.gap }}
-          </span>
-          <span v-else>
+            :class="
+              scope.row.gap > 0
+                ? 'main-txt-highline' : ''
+            ">
             {{ scope.row.gap }}
           </span>
         </template>
@@ -511,7 +513,9 @@
           addTime: '',
         },
         addElectricrules: {
-          haoId: [{ required: true, message: '请选择', trigger: 'change' }],
+          haoId: [{
+            required: true, message: '请选择', trigger: 'change',
+          }],
           electric: [{
             type: 'number', required: true, message: '请填写', trigger: 'blur',
           }],
@@ -590,7 +594,7 @@
           return this.electricData
         }
 
-        const searchKeys = ['fanghao', 'remark']
+        const searchKeys = ['fanghao']
 
         const _electricDataSearch = new RegExp(this.electricDataSearch, 'i')
         return this.electricData.filter(item => {
@@ -834,6 +838,10 @@
       // 进入历史
       getElectricHistory(index, row) {
         this.$router.push(`/inner/electric/history?haoid=${row._id}`)
+      },
+      // gotoRemoteReadPage
+      gotoRemoteReadPage() {
+        this.$router.push('/inner/electric/remote-read')
       },
     },
   }
