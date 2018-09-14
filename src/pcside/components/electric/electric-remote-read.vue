@@ -41,13 +41,13 @@
         type="primary"
         :disabled="!canGetAllStart"
         @click="getAllStart()">
-        全部开始抄数
+        全部抄数
       </el-button>
       <el-button
         type="warning"
         :disabled="!canGetAllStart || !canGetAllInbase"
         @click="getAllInbase()">
-        全部开始写入
+        全部写入
       </el-button>
 
       <el-button
@@ -314,8 +314,6 @@
           // 处理事件
           return this.dealWebSocket(type, data)
         }
-
-        console.log(ws)
       },
       dealWebSocket(type, data) {
         // 方法注册的回调处理
