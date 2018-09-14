@@ -85,9 +85,9 @@ function WsOnMessage(ws, callback, onErr) {
 
 function WsOnClose(ws, callback, onErr) {
   // 封装每一个事件监听，用于错误处理
-  ws.on('close', async (evtCode) => {
+  ws.on('close', async (evtCode, evtMsg) => {
     try {
-      await callback(evtCode)
+      await callback(evtCode, evtMsg)
     } catch (err) {
       if (onErr) onErr(err)
     }
