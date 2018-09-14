@@ -10,6 +10,8 @@ docker run \
  --link mymongo:mymongo \
  --expose 80 \
  --expose 443 \
+ # 添加服务器不能解析的IP
+ --add-host 95598.sz.csg.cn:202.104.143.21 \
  -v /etc/localtime:/etc/localtime \
  -v ~/gitcode/rent-manager:/webapp \
  -w /webapp/server \
