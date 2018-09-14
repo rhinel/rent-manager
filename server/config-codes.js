@@ -5,6 +5,19 @@ const FoundError = require('./config-error')
 const loginLog = log4js.getLogger('login')
 const apiErrorLog = log4js.getLogger('apiError')
 
+// 封装的返回数据
+// 此处进行统一的错误处理
+// API日志打印 / service级别
+
+// APIbackdata = {
+//   code: '请求代码',
+//   data: '返回的数据',
+//   msg: '错误消息',
+// }
+
+// code为0时，返回data
+// code不为0时，返回msg
+
 // 提供默认错误提示
 const codeList = {
   // outer类
@@ -52,6 +65,7 @@ const codeList = {
   3046: '抄表记录删除失败',
   3047: '计费历史删除失败',
   3048: '查询失败',
+  3049: '远程抄表失败',
   // 收租管理
   3051: '添加月份失败',
   3052: '获取月份周期列表失败',
@@ -101,8 +115,17 @@ module.exports = (req = {}, code = 0, data = '') => {
 
   if (data instanceof Error) {
     return {
-      code: Number(`${code}${data.code || ''}`),
-      msg: data.message || codeList[code] || '未定义错误',
+      code: Number(`${
+        code
+      }${
+        typeof data.code === 'number' ? data.code : ''
+      }`),
+      msg: `${
+        data.code && typeof data.code !== 'number'
+          ? `${data.code} ` : ''
+      }${
+        data.message || codeList[code] || '未定义错误'
+      }`,
     }
   }
 

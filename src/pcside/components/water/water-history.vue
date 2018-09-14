@@ -309,7 +309,7 @@
         if (!this.waterCalDataSearch) {
           return this.waterCalList
         }
-        const searchKeys = ['fanghao', 'remark']
+        const searchKeys = ['fanghao']
 
         const _waterCalDataSearch = new RegExp(this.waterCalDataSearch, 'i')
         return this.waterCalList.filter(item => {

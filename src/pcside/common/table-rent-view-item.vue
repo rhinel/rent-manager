@@ -2,13 +2,14 @@
   <div>
     <div>
       <el-tag>{{ rent.fix ? '修' : '计' }}</el-tag>
-      <span v-if="!highline">
-        ￥{{ rent.calRentResult || 0 }}元
-      </span>
-      <span v-else>
+      <span>
         ￥
-        <span class="main-txt-highline">
-          {{ rent.calRentResult }}
+        <span
+          :class="
+            highline
+              ? 'main-txt-highline' : ''
+          ">
+          {{ rent.calRentResult || 0 }}
         </span>
         元
       </span>

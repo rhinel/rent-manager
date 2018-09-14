@@ -49,6 +49,10 @@ textarea {
   vertical-align: top;
   max-width: 300px;
   display: inline-block;
+}
+
+.el-button + .table-btn-input,
+.table-btn-input + .el-button {
   margin-left: 10px;
 }
 
@@ -189,6 +193,22 @@ tr:hover
 
   .landord-content-type {
     padding: 2px 0;
+  }
+}
+
+/* 日志块 */
+.log-wrap {
+  background-color: #282b2e;
+  color: #a9b7c6;
+  border-radius: 4px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+  height: 120px;
+  overflow-y: auto;
+
+  .green {
+    color: #a5da2d;
   }
 }
 

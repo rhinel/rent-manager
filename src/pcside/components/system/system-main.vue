@@ -223,6 +223,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+
             <!-- 单价计费 -->
             <el-form-item
               label="单价"
@@ -241,6 +242,7 @@
                 </el-input>
               </el-col>
             </el-form-item>
+
             <!-- 阶梯计费 -->
             <div v-if="calElePrice.calType == 'step'">
               <el-form-item
@@ -323,6 +325,46 @@
             </el-form-item>
           </el-form>
         </el-collapse-item>
+
+        <el-collapse-item
+          title="系统用户信息"
+          name="defaultElseInfo">
+          <el-form
+            ref="elseInfo"
+            :model="elseInfo"
+            :rules="elserules">
+            <el-form-item
+              label="手机号码"
+              prop="mobile"
+              key="elseMobile"
+              :label-width="labelWidth">
+              <el-col :span="13">
+                <el-input
+                  auto-complete="off"
+                  placeholder="输入手机号码"
+                  v-model.number="elseInfo.mobile" />
+              </el-col>
+            </el-form-item>
+
+            <!-- 提交按钮 -->
+            <el-form-item
+              v-if="elseEdit || !defaultKeysHasSet.defaultElseInfo"
+              key="elseBtn"
+              :label-width="labelWidth">
+              <el-button
+                type="danger"
+                :loading="submitLoading"
+                @click="submit">
+                提交修改
+              </el-button>
+              <el-button
+                :loading="submitLoading"
+                @click="cancel('else')">
+                取消
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </el-collapse-item>
       </el-collapse>
     </el-card>
   </div>
@@ -346,12 +388,20 @@
         // 电费编辑表单
         calElePrice: {},
 
+        // 其他信息表单
+        elseInfo: {},
+
         // 表单校验
         calrules: {
           minPrice: [{
             type: 'number', required: true, message: '请填写', trigger: 'blur',
           }],
           singlePrice: [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+        },
+        elserules: {
+          mobile: [{
             type: 'number', required: true, message: '请填写', trigger: 'blur',
           }],
         },
@@ -364,6 +414,7 @@
         typesVal: state => state.config.typesVal,
         defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
         defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultElseInfo: state => state.config.defaultElseInfo,
         defaultStep: state => state.config.defaultStep,
         defaultKeysHasSet: state => state.defaultKeysHasSet,
       }),
@@ -377,6 +428,11 @@
         const def = JSON.stringify(this.defaultCalElePrice)
         return local !== def
       },
+      elseEdit() {
+        const local = JSON.stringify(this.elseInfo)
+        const def = JSON.stringify(this.defaultElseInfo)
+        return local !== def
+      },
     },
     watch: {
       // 获取数据
@@ -386,6 +442,9 @@
       defaultCalElePrice() {
         this.cancel('ele')
       },
+      defaultElseInfo() {
+        this.cancel('else')
+      },
     },
     beforeCreate() {
       this.$store.dispatch('updateMenu', '/inner/system/index')
@@ -393,6 +452,7 @@
     created() {
       this.cancel('water')
       this.cancel('ele')
+      this.cancel('else')
     },
     mounted() {
       this.activeNames = Object.keys(this._computedWatchers)
@@ -418,11 +478,17 @@
             {},
             JSON.parse(JSON.stringify(this.defaultCalWaterPrice))
           )
-        } else {
+        } else if (type === 'ele') {
           if (this.$refs.calElePrice) this.$refs.calElePrice.resetFields()
           this.calElePrice = Object.assign(
             {},
             JSON.parse(JSON.stringify(this.defaultCalElePrice))
+          )
+        } else if (type === 'else') {
+          if (this.$refs.elseInfo) this.$refs.elseInfo.resetFields()
+          this.elseInfo = Object.assign(
+            {},
+            JSON.parse(JSON.stringify(this.defaultElseInfo))
           )
         }
       },
@@ -433,6 +499,7 @@
         try {
           await this.$refs.calWaterPrice.validate()
           await this.$refs.calElePrice.validate()
+          await this.$refs.elseInfo.validate()
         } catch (err) {
           return
         }
@@ -443,10 +510,12 @@
         const {
           calWaterPrice,
           calElePrice,
+          elseInfo,
         } = this
         const postData = Object.assign({}, {
           defaultCalWaterPrice: calWaterPrice,
           defaultCalElePrice: calElePrice,
+          defaultElseInfo: elseInfo,
         })
 
         try {
