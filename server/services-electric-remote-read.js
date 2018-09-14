@@ -22,7 +22,7 @@ const DefuserData = class {
     // 连接信息
     this.ws = ws
     this.req = req
-    this.connectTimeout = 1 // 连接有效期 min
+    this.connectTimeout = 30 // 连接有效期 min
     this.serveClose = '' // serveClose Timer
     this.done = 0 // 是否主动关闭
     this.reOpen = 0 // 本次连接是否重新连接
