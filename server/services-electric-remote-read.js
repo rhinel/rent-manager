@@ -8,6 +8,11 @@ const { WsSend, WsOnMessage, WsOnClose } = require('./config-wscallback')
 const serviceAuth = require('./services-auth')
 const serviceElect = require('./services-electric')
 
+// 本服务方案采用服务器缓存用户状态和临时数据，占用内存
+// 不限制用户的链接状态及请求情况，通过闭包的方式为连接保存用户数据，占用堆
+// 通过主动清除方法，或者最后一次连接超时的方法，清除缓存
+// 必须保证整个过程中没有额外的内存泄漏、未catch错误、流程停止响应
+
 // 缓存列表
 const userList = {}
 
@@ -347,7 +352,7 @@ const DefuserData = class {
 
     // 返回数据
     return this._send('getNumber', {
-      message: '全部抄表成功。',
+      message: '任务完成，全部抄数成功。',
     })
   }
 
@@ -404,7 +409,7 @@ const DefuserData = class {
 
     // 返回数据
     return this._send('getInbase', {
-      message: '全部写入成功。',
+      message: '任务完成，全部写入成功。',
     })
   }
 
