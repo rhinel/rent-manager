@@ -58,6 +58,21 @@ app.use(bodyParser.json())
 // 处理路由
 require('./routes')(app)
 
+// 全局错误
+// 架构没有统一处理全局错误
+// uncaughtException用于处理优雅退出
+// https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
+// unhandledRejection也将处理为non-zero code exit
+// (node:6856) DeprecationWarning: Unhandled promise rejections are deprecated.
+// In the future, promise rejections that are not handled will
+// terminate the Node.js process with a non-zero exit code.
+// 因此全局错误应当作为程序退出，并且由外部守护进程处理
+// 否则你根本不可能及时发现它
+
+// 更好的异常处理方式：
+// index - route - controller - model分别有各自的错误拦截
+// service中也应该具有自己的错误传递方式，尤其是异步错误
+
 // 启动监听
 httpServer.listen(
   httpPORT,
