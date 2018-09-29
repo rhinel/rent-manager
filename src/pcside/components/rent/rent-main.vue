@@ -28,7 +28,7 @@
       :title="amldDialogTitle"
       :visible.sync="addMonthListflag"
       :close-on-click-modal="false"
-      @close="onAddMonthListDialogClose">
+      @closed="onAddMonthListDialogClose">
       <el-form
         ref="addMonthList"
         :model="addMonthList"
@@ -61,7 +61,8 @@
         <el-alert
           type="info"
           :title="(addMonthList._id ? '已' : '将') +
-          '记录以下（已配置）计费方式作为本月默认计费方式（存副本），作用于水电张贴计算'" />
+            '记录以下（已配置）计费方式作为本月' +
+          '默认计费方式（存副本），作用于水电张贴计算'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -306,7 +307,7 @@
       window.onresize = null
     },
     methods: {
-      getAddMonthListDialog(index, row) {
+      async getAddMonthListDialog(index, row) {
         this.addMonthListflag = !this.addMonthListflag
         if (this.addMonthListflag && row) {
           const _date = new Date()
@@ -324,6 +325,7 @@
           this.amldDialogTitle = '新增收租周期'
           this.addMonthList.month = new Date()
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       getResetAddMonthList() {
         let {
@@ -382,9 +384,9 @@
               message: _data._id ? '修改成功' : '添加成功',
               duration: 2000,
             })
-            this.getAddMonthListDialog()
-            this.getListRefresh()
           })
+          .then(this.getAddMonthListDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingAddMonthList = false
@@ -404,8 +406,8 @@
               message: '删除成功',
               duration: 2000,
             })
-            this.getListRefresh()
           })
+          .then(this.getListRefresh)
           .catch(() => {})
 
         row.gettingdelMonth = false

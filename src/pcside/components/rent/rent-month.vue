@@ -28,7 +28,7 @@
           :title="addRent.fanghao + ardDialogTitle"
           :visible.sync="addRentflag"
           :close-on-click-modal="false"
-          @close="onAddRentDialogClose">
+          @closed="onAddRentDialogClose">
           <el-form
             ref="addRent"
             :model="addRent"
@@ -184,7 +184,7 @@
           :title="changeType.fanghao + ctdDialogTitle"
           :visible.sync="changeTypeflag"
           :close-on-click-modal="false"
-          @close="onChangeTypeDialogClose">
+          @closed="onChangeTypeDialogClose">
           <el-form
             ref="changeType"
             :model="changeType"
@@ -963,7 +963,7 @@
 
         this.gettingListRefresh = false
       },
-      getAddRentDialog(index, row) {
+      async getAddRentDialog(index, row) {
         this.addRentflag = !this.addRentflag
         if (this.addRentflag && row) {
           // 用于展示
@@ -977,6 +977,7 @@
           this.addRent.remark = row.leaseId.remark || ''
           this.addRent.addTime = new Date()
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       getResetAddRent() {
         this.addRent = Object.assign(
@@ -987,10 +988,8 @@
         this.dialogId = Date.now()
       },
       onAddRentDialogClose() {
-        setTimeout(() => {
-          this.$refs.addRent.resetFields()
-          this.getResetAddRent()
-        }, 500)
+        this.$refs.addRent.resetFields()
+        this.getResetAddRent()
       },
       // 获取最新租单
       getRent(scope) {
@@ -1010,18 +1009,17 @@
         // 请求接口
         this.gettingAddRent = true
 
-        // const _data = Object.assign({}, this.addRent)
-        // await this.Ajax('/inner/rent/add', _data)
-        await new Promise(r => setTimeout(r))
+        const _data = Object.assign({}, this.addRent)
+        await this.Ajax('/inner/rent/add', _data)
           .then(() => {
             this.$message({
               type: 'success',
               message: '计租成功',
               duration: 2000,
             })
-            this.getAddRentDialog()
-            // this.getListRefresh()
           })
+          .then(this.getAddRentDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingAddRent = false
@@ -1045,13 +1043,13 @@
               message: '删除成功',
               duration: 2000,
             })
-            this.getListRefresh()
           })
+          .then(this.getListRefresh)
           .catch(() => {})
 
         row.gettingdelRent = false
       },
-      getChangeTypeDialog(index, row) {
+      async getChangeTypeDialog(index, row) {
         this.changeTypeflag = !this.changeTypeflag
         if (this.changeTypeflag && row) {
           const rent = row.rents[row.rents.length - 1]
@@ -1084,6 +1082,7 @@
           this.changeType.remark = rent.remark
             || this.changeType.remark
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       getResetChangeType() {
         this.changeType = Object.assign(
@@ -1094,10 +1093,8 @@
         this.dialogId = Date.now()
       },
       onChangeTypeDialogClose() {
-        setTimeout(() => {
-          this.$refs.changeType.resetFields()
-          this.getResetChangeType()
-        }, 500)
+        this.$refs.changeType.resetFields()
+        this.getResetChangeType()
       },
       // 处理修改状态
       onChangeType(value) {
@@ -1152,9 +1149,9 @@
               message: '状态更新成功',
               duration: 2000,
             })
-            this.getChangeTypeDialog()
-            this.getListRefresh()
           })
+          .then(this.getChangeTypeDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingChangeType = false

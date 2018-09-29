@@ -257,8 +257,8 @@
               message: '删除成功',
               duration: 2000,
             })
-            this.getListRefresh()
           })
+          .then(this.getListRefresh)
           .catch(() => {})
 
         row.gettingdelLease = false
