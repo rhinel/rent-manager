@@ -981,7 +981,8 @@
       getResetAddRent() {
         this.addRent = Object.assign(
           {},
-          this.addRent, JSON.parse(JSON.stringify(this.addRentClear))
+          this.addRent,
+          JSON.parse(JSON.stringify(this.addRentClear))
         )
         this.dialogId = Date.now()
       },
@@ -1110,7 +1111,8 @@
           if (value.indexOf(i.value) === -1) this.changeType.typeTime[i.value] = ''
         })
         this.changeType.checkAll = checkedCount === this.types.length
-        this.changeType.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
+        this.changeType.isIndeterminate = checkedCount > 0
+          && checkedCount < this.types.length
       },
       // 处理全选状态
       onCheckAllChange(event) {

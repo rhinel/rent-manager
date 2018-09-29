@@ -69,7 +69,6 @@
 </script>
 
 <style lang="scss">
-
 /* 月租统计小标题 */
 .rent-count:not(:first-child) {
   padding-top: 20px;
