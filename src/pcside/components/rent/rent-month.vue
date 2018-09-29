@@ -1010,8 +1010,9 @@
         // 请求接口
         this.gettingAddRent = true
 
-        const _data = Object.assign({}, this.addRent)
-        await this.Ajax('/inner/rent/add', _data)
+        // const _data = Object.assign({}, this.addRent)
+        // await this.Ajax('/inner/rent/add', _data)
+        await new Promise(r => setTimeout(r))
           .then(() => {
             this.$message({
               type: 'success',
@@ -1019,7 +1020,7 @@
               duration: 2000,
             })
             this.getAddRentDialog()
-            this.getListRefresh()
+            // this.getListRefresh()
           })
           .catch(() => {})
 
