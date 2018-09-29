@@ -30,14 +30,16 @@
           :title="lease.fanghao + lidDialogTitle"
           :visible.sync="leaseInflag"
           :close-on-click-modal="false"
-          @close="onLeaseInDialogClose">
+          @closed="onLeaseInDialogClose">
           <el-form
             ref="leaseIn"
             :model="lease"
             :rules="leaserules">
             <el-alert
-              title="搬出入住/修改：计费信息初始化，必须为上次收租结束/空置处理结束/本次计费之前，用户自行确认"
-              type="info" />
+              type="info"
+              :title="'搬出入住/修改：' +
+                '计费信息初始化，必须为上次收租结束' +
+              '/空置处理结束/本次计费之前，用户自行确认'" />
             <!-- 基本信息 -->
             <el-row :gutter="20">
               <el-col :span="12">
@@ -431,7 +433,7 @@
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
           :close-on-click-modal="false"
-          @close="onLeaseOutDialogClose">
+          @closed="onLeaseOutDialogClose">
           <el-form
             ref="leaseOut"
             :model="out"
@@ -892,7 +894,7 @@
         this.$router.push(`/inner/lease/history?haoid=${row._id}`)
       },
       // 入住弹窗
-      getLeaseInDialog(index, row) {
+      async getLeaseInDialog(index, row) {
         this.leaseInflag = !this.leaseInflag
         if (this.leaseInflag && row) {
           // 赋值信息字段
@@ -963,6 +965,7 @@
           })
           if (!this.lease.calElePrice.stepPrice.length) this.addStep(this.lease.calElePrice)
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       // 数据初始化
       getLeaseInReset() {
@@ -971,10 +974,8 @@
       },
       // 关闭弹窗
       onLeaseInDialogClose() {
-        setTimeout(() => {
-          this.$refs.leaseIn.resetFields()
-          this.getLeaseInReset()
-        }, 500)
+        this.$refs.leaseIn.resetFields()
+        this.getLeaseInReset()
       },
       // 添加步骤
       addStep(wrap) {
@@ -1010,14 +1011,14 @@
               message: this.lease._id ? '修改成功' : '添加成功',
               duration: 2000,
             })
-            this.getLeaseInDialog()
-            this.getListRefresh()
           })
+          .then(this.getLeaseInDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingLeaseIn = false
       },
-      getLeaseOutDialog(index, row) {
+      async getLeaseOutDialog(index, row) {
         this.leaseOutflag = !this.leaseOutflag
         if (this.leaseOutflag && row) {
           this.out.haoId = row._id
@@ -1025,12 +1026,11 @@
           this.out._id = row.leaseId._id
           this.out.outTime = new Date()
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       onLeaseOutDialogClose() {
-        setTimeout(() => {
-          this.$refs.leaseOut.resetFields()
-          this.dialogId = Date.now()
-        }, 500)
+        this.$refs.leaseOut.resetFields()
+        this.dialogId = Date.now()
       },
       async getLeaseOut() {
         if (this.gettingLeaseOut) return
@@ -1052,9 +1052,10 @@
               message: '退租成功',
               duration: 2000,
             })
-            this.getLeaseOutDialog()
-            this.getListRefresh()
           })
+          .then(this.getLeaseOutDialog)
+          .then(this.getListRefresh)
+          .catch(() => {})
 
         this.gettingLeaseOut = false
       },

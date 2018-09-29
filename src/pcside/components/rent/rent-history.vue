@@ -23,7 +23,7 @@
       :title="changeType.fanghao + ctdDialogTitle"
       :visible.sync="changeTypeflag"
       :close-on-click-modal="false"
-      @close="onChangeTypeDialogClose">
+      @closed="onChangeTypeDialogClose">
       <el-form
         ref="changeType"
         :model="changeType"
@@ -400,7 +400,7 @@
       getRent(scope) {
         return scope.row
       },
-      getChangeTypeDialog(index, row) {
+      async getChangeTypeDialog(index, row) {
         this.changeTypeflag = !this.changeTypeflag
         if (this.changeTypeflag && row) {
           const rent = row
@@ -433,6 +433,7 @@
           this.changeType.remark = rent.remark
             || this.changeType.remark
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       getResetChangeType() {
         this.changeType = Object.assign(
@@ -443,10 +444,8 @@
         this.dialogId = Date.now()
       },
       onChangeTypeDialogClose() {
-        setTimeout(() => {
-          this.$refs.changeType.resetFields()
-          this.getResetChangeType()
-        }, 500)
+        this.$refs.changeType.resetFields()
+        this.getResetChangeType()
       },
       // 处理修改状态
       onChangeType(value) {
@@ -501,9 +500,9 @@
               message: '状态更新成功',
               duration: 2000,
             })
-            this.getChangeTypeDialog()
-            this.getListRefresh()
           })
+          .then(this.getChangeTypeDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingChangeType = false

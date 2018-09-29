@@ -8,7 +8,7 @@
       :title="ndDialogTitle"
       :visible.sync="noteflag"
       :close-on-click-modal="false"
-      @close="onNoteDialogClose">
+      @closed="onNoteDialogClose">
       <el-form
         label-position="top"
         ref="note"
@@ -523,7 +523,7 @@
         animate()
       },
       // 弹窗状态和数据更新
-      getNoteAddDialog(index, row) {
+      async getNoteAddDialog(index, row) {
         this.noteflag = !this.noteflag
         if (this.noteflag && row) {
           this.note._id = row._id
@@ -534,6 +534,7 @@
         } else if (this.noteflag) {
           this.note.addTime = new Date()
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       // 数据初始化
       getNoteReset() {
@@ -542,10 +543,8 @@
       },
       // 关闭弹窗和清空数据
       onNoteDialogClose() {
-        setTimeout(() => {
-          this.$refs.note.resetFields()
-          this.getNoteReset()
-        }, 500)
+        this.$refs.note.resetFields()
+        this.getNoteReset()
       },
       // 房屋列表
       async getHouseList() {
@@ -593,9 +592,9 @@
               message: this.note._id ? '修改成功' : '添加成功',
               duration: 2000,
             })
-            this.getNoteAddDialog()
-            this.getNotes()
           })
+          .then(this.getNoteAddDialog)
+          .then(this.getNotes)
           .catch(() => {})
 
         this.gettingAddNote = false
