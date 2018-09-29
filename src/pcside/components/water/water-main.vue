@@ -28,7 +28,7 @@
       :title="awdDialogTitle"
       :visible.sync="addWaterflag"
       :close-on-click-modal="false"
-      @close="onAddWaterDialogClose">
+      @closed="onAddWaterDialogClose">
       <el-form
         ref="addWater"
         :model="addWater"
@@ -103,7 +103,7 @@
       :title="calWater.fanghao + cwdDialogTitle"
       :visible.sync="calWaterflag"
       :close-on-click-modal="false"
-      @close="onCalWaterDialogClose">
+      @closed="onCalWaterDialogClose">
       <el-form
         ref="calWater"
         :model="calWater"
@@ -112,8 +112,10 @@
         <!-- 房屋信息 -->
         <!-- 水底信息 -->
         <el-alert
-          title="本抄表数据来源于最新一次抄表，可修改作为本次副本保存（不增加抄表数据），但建议按照逻辑操作，先抄表再计费"
-          type="info" />
+          type="info"
+          :title="'本抄表数据来源于最新一次抄表，' +
+            '可修改作为本次副本保存（不增加抄表数据），' +
+          '但建议按照逻辑操作，先抄表再计费'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -151,8 +153,10 @@
             v-model="calWater.tnew.remark" />
         </el-form-item>
         <el-alert
-          title="本底表数来源于上一次计费数据，可修改作为本次副本保存（不创建底表计费信息），但建议按照逻辑操作，分次计费"
-          type="info" />
+          type="info"
+          :title="'本底表数来源于上一次计费数据，' +
+            '可修改作为本次副本保存（不创建底表计费信息），' +
+          '但建议按照逻辑操作，分次计费'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -192,8 +196,10 @@
 
         <!-- 计费方式 -->
         <el-alert
-          title="本计费方式及结果来源于租户信息，临时调整可修改作为本次副本保存（不更新租户信息），但建议按照逻辑操作，修改租住管理的租户信息"
-          type="info" />
+          type="info"
+          :title="'本计费方式及结果来源于租户信息，' +
+            '临时调整可修改作为本次副本保存（不更新租户信息），' +
+          '但建议按照逻辑操作，修改租住管理的租户信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -669,9 +675,10 @@
           .catch(() => {})
       },
       // 打开关闭添加弹窗
-      getAddWaterDialog() {
+      async getAddWaterDialog() {
         this.addWaterflag = !this.addWaterflag
         if (this.leaseInflag) this.addWater.addTime = new Date()
+        await new Promise(r => setTimeout(r, 300))
       },
       // 弹窗数据初始化
       getResetAddWater() {
@@ -681,10 +688,8 @@
       },
       // 关闭弹窗回调
       onAddWaterDialogClose() {
-        setTimeout(() => {
-          this.$refs.addWater.resetFields()
-          this.getResetAddWater()
-        }, 500)
+        this.$refs.addWater.resetFields()
+        this.getResetAddWater()
       },
       // 抄表
       async getAddWater() {
@@ -708,9 +713,9 @@
               message: '抄表成功',
               duration: 2000,
             })
-            this.getAddWaterDialog()
-            this.getListRefresh()
           })
+          .then(this.getAddWaterDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingAddWater = false
@@ -731,7 +736,7 @@
         this.gettingListRefresh = false
       },
       // 打开关闭计费弹窗
-      getCalWaterDialog(index, row) {
+      async getCalWaterDialog(index, row) {
         this.calWaterflag = !this.calWaterflag
         if (this.calWaterflag && row) {
           // 基本信息
@@ -777,6 +782,7 @@
           })
           if (!this.calWater.calWater.stepPrice.length) this.addStep()
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       // 计费弹窗数据初始化
       getResetCalWater() {
@@ -785,10 +791,8 @@
       },
       // 关闭计费弹窗回调
       onCalWaterDialogClose() {
-        setTimeout(() => {
-          this.$refs.calWater.resetFields()
-          this.getResetCalWater()
-        }, 500)
+        this.$refs.calWater.resetFields()
+        this.getResetCalWater()
       },
       // 添加步骤
       addStep() {
@@ -823,9 +827,9 @@
               message: '计费成功',
               duration: 2000,
             })
-            this.getCalWaterDialog()
-            this.getListRefresh()
           })
+          .then(this.getCalWaterDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingCalWater = false

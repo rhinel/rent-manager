@@ -33,7 +33,7 @@
       :title="aedDialogTitle"
       :visible.sync="addElectricflag"
       :close-on-click-modal="false"
-      @close="onAddElectricDialogClose">
+      @closed="onAddElectricDialogClose">
       <el-form
         ref="addElectric"
         :model="addElectric"
@@ -108,7 +108,7 @@
       :title="calElectric.fanghao + cedDialogTitle"
       :visible.sync="calElectricflag"
       :close-on-click-modal="false"
-      @close="onCalElectricDialogClose">
+      @closed="onCalElectricDialogClose">
       <el-form
         ref="calElectric"
         :model="calElectric"
@@ -117,8 +117,10 @@
         <!-- 房屋信息 -->
         <!-- 电底信息 -->
         <el-alert
-          title="本抄表数据来源于最新一次抄表，可修改作为本次副本保存（不增加抄表数据），但建议按照逻辑操作，先抄表再计费"
-          type="info" />
+          type="info"
+          :title="'本抄表数据来源于最新一次抄表，' +
+            '可修改作为本次副本保存（不增加抄表数据），' +
+          '但建议按照逻辑操作，先抄表再计费'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -156,8 +158,10 @@
             v-model="calElectric.tnew.remark" />
         </el-form-item>
         <el-alert
-          title="本底表数来源于上一次计费数据，可修改作为本次副本保存（不创建底表计费信息），但建议按照逻辑操作，分次计费"
-          type="info" />
+          type="info"
+          :title="'本底表数来源于上一次计费数据，' +
+            '可修改作为本次副本保存（不创建底表计费信息），' +
+          '但建议按照逻辑操作，分次计费'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -197,8 +201,10 @@
 
         <!-- 计费方式 -->
         <el-alert
-          title="本计费方式及结果来源于租户信息，临时调整可修改作为本次副本保存（不更新租户信息），但建议按照逻辑操作，修改租住管理的租户信息"
-          type="info" />
+          type="info"
+          :title="'本计费方式及结果来源于租户信息，' +
+            '临时调整可修改作为本次副本保存（不更新租户信息），' +
+          '但建议按照逻辑操作，修改租住管理的租户信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -674,9 +680,10 @@
           .catch(() => {})
       },
       // 打开关闭添加弹窗
-      getAddElectricDialog() {
+      async getAddElectricDialog() {
         this.addElectricflag = !this.addElectricflag
         if (this.addElectricflag) this.addElectric.addTime = new Date()
+        await new Promise(r => setTimeout(r, 300))
       },
       // 弹窗数据初始化
       getResetAddElectric() {
@@ -686,10 +693,8 @@
       },
       // 关闭弹窗回调
       onAddElectricDialogClose() {
-        setTimeout(() => {
-          this.$refs.addElectric.resetFields()
-          this.getResetAddElectric()
-        }, 500)
+        this.$refs.addElectric.resetFields()
+        this.getResetAddElectric()
       },
       // 抄表
       async getAddElectric() {
@@ -713,9 +718,9 @@
               message: '抄表成功',
               duration: 2000,
             })
-            this.getAddElectricDialog()
-            this.getListRefresh()
           })
+          .then(this.getAddElectricDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingAddElectric = false
@@ -735,7 +740,7 @@
         this.gettingListRefresh = false
       },
       // 打开关闭计费弹窗
-      getCalElectricDialog(index, row) {
+      async getCalElectricDialog(index, row) {
         this.calElectricflag = !this.calElectricflag
         if (this.calElectricflag && row) {
           // 基本信息
@@ -781,6 +786,7 @@
           })
           if (!this.calElectric.calElectric.stepPrice.length) this.addStep()
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       // 计费弹窗数据初始化
       getResetCalElectric() {
@@ -789,10 +795,8 @@
       },
       // 关闭计费弹窗回调
       onCalElectricDialogClose() {
-        setTimeout(() => {
-          this.$refs.calElectric.resetFields()
-          this.getResetCalElectric()
-        }, 500)
+        this.$refs.calElectric.resetFields()
+        this.getResetCalElectric()
       },
       // 添加步骤
       addStep() {
@@ -828,9 +832,9 @@
               message: '计费成功',
               duration: 2000,
             })
-            this.getCalElectricDialog()
-            this.getListRefresh()
           })
+          .then(this.getCalElectricDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingCalElectric = false

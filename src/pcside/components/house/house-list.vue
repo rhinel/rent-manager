@@ -28,7 +28,7 @@
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
       :close-on-click-modal="false"
-      @close="onAddHouseDialogClose">
+      @closed="onAddHouseDialogClose">
       <el-form
         ref="addHouse"
         :model="addHouse"
@@ -269,7 +269,7 @@
     },
     methods: {
       // 打开关闭添加/修改弹窗
-      getAddHouseDialog(index, row) {
+      async getAddHouseDialog(index, row) {
         this.addHouseFlag = !this.addHouseFlag
         if (this.addHouseFlag && row) {
           this.ahdDialogTitle = '修改房间'
@@ -283,6 +283,7 @@
           this.ahdDialogTitle = '新增房间'
           this.addHouse.fang = this.houseFang[0]
         }
+        await new Promise(r => setTimeout(r, 300))
       },
       // 弹窗数据初始化
       getResetHouse() {
@@ -291,10 +292,8 @@
       },
       // 关闭弹窗回调
       onAddHouseDialogClose() {
-        setTimeout(() => {
-          this.$refs.addHouse.resetFields()
-          this.getResetHouse()
-        }, 500)
+        this.$refs.addHouse.resetFields()
+        this.getResetHouse()
       },
       // 添加/修改房屋
       async getAddHouse() {
@@ -318,9 +317,9 @@
               message: this.addHouse._id ? '修改成功' : '添加成功',
               duration: 2000,
             })
-            this.getAddHouseDialog()
-            this.getListRefresh()
           })
+          .then(this.getAddHouseDialog)
+          .then(this.getListRefresh)
           .catch(() => {})
 
         this.gettingAddHouse = false

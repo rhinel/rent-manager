@@ -393,8 +393,8 @@
               message: '删除成功',
               duration: 2000,
             })
-            this.getElectricList()
           })
+          .then(this.getElectricList)
           .catch(() => {})
 
         row.gettingdelElectric = false
@@ -416,8 +416,8 @@
               message: '删除成功',
               duration: 2000,
             })
-            this.getElectricCalList()
           })
+          .then(this.getElectricCalList)
           .catch(() => {})
 
         row.gettingdelCalElectric = false
