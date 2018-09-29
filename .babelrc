@@ -1,26 +1,34 @@
 {
   "presets": [
-    ["env", { "modules": false }],
-    "stage-2"
+    ["@babel/env", {
+        "modules": false,
+        "targets": { "uglify": true }
+    }]
   ],
   "plugins": [
-    "transform-runtime",
-    [
-      "component",
-      [{
-        "libraryName": "element-ui",
-        "styleLibraryName": "theme-chalk"
-      },
-      {
-        "libraryName": "mint-ui",
-        "style": true
-      }]
-    ]
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "@babel/plugin-proposal-function-sent",
+    "@babel/plugin-proposal-export-namespace-from",
+    "@babel/plugin-proposal-numeric-separator",
+    "@babel/plugin-proposal-throw-expressions",
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-syntax-import-meta",
+    ["@babel/plugin-proposal-class-properties", { "loose": false }],
+    "@babel/plugin-proposal-json-strings",
+    "@babel/transform-runtime",
+    ["component", {
+      "libraryName": "element-ui",
+      "styleLibraryName": "theme-chalk"
+    }, "element-ui"],
+    ["component", {
+      "libraryName": "mint-ui",
+      "style": true
+    }, "mint-ui"]
   ],
   "comments": false,
   "env": {
     "test": {
-      "presets": ["env", "stage-2"],
+      "presets": ["@babel/env"],
       "plugins": ["istanbul"]
     }
   }

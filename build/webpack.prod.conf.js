@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const safeParser = require('postcss-safe-parser')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const os = require('os')
 const packageConfig = require('../package.json')
 const checkGit = require('./check-git')
@@ -39,8 +39,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       'process.env': env
     }),
     // replace officially maintained compression tools
-    new UglifyJsPlugin({
-      uglifyOptions: {
+    new TerserPlugin({
+      terserOptions: {
         ie8: false,
         ecma: 8,
         mangle: true,
@@ -48,7 +48,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         compress: { warnings: false }
       },
       sourceMap: true,
-      cache: true,
+      cache: false,
       parallel: os.cpus().length * 2
     }),
     // extract css into its own file
