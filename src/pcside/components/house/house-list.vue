@@ -1,6 +1,5 @@
 <template>
   <div class="house-list">
-
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
@@ -16,34 +15,34 @@
       </el-button>
       <div class="table-btn-input">
         <el-input
-          placeholder="搜索"
-          v-model="houseDataSearch" />
+          v-model="houseDataSearch"
+          placeholder="搜索" />
       </div>
     </div>
 
     <!-- 新增弹窗 -->
     <el-dialog
       custom-class="add-house-dialog small"
-      :key="dialogId"
       :title="ahdDialogTitle"
       :visible.sync="addHouseFlag"
       :close-on-click-modal="false"
+      :key="dialogId"
       @closed="onAddHouseDialogClose">
       <el-form
-        ref="addHouse"
         :model="addHouse"
-        :rules="addHouserules">
+        :rules="addHouserules"
+        ref="addHouse">
         <el-form-item
           label="坊号"
           prop="fang"
           :label-width="ahdLabelWidth">
           <el-select
-            placeholder="选择坊号"
-            v-model="addHouse.fang">
+            v-model="addHouse.fang"
+            placeholder="选择坊号">
             <el-option
-              v-for="item in houseFang"
               :label="item"
               :value="item"
+              v-for="item in houseFang"
               :key="item" />
           </el-select>
         </el-form-item>
@@ -52,35 +51,35 @@
           prop="hao"
           :label-width="ahdLabelWidth">
           <el-input
+            v-model="addHouse.hao"
             auto-complete="off"
-            placeholder="输入房间号"
-            v-model="addHouse.hao" />
+            placeholder="输入房间号" />
         </el-form-item>
         <el-form-item
           label="说明"
           :label-width="ahdLabelWidth">
           <el-input
+            v-model="addHouse.detail"
             auto-complete="off"
-            placeholder="选填"
-            v-model="addHouse.detail" />
+            placeholder="选填" />
         </el-form-item>
         <el-form-item
           label="电表户编号"
           prop="glyhbh"
           :label-width="ahdLabelWidth">
           <el-input
+            v-model="addHouse.glyhbh"
             auto-complete="off"
-            placeholder="输入电表用户编号"
-            v-model="addHouse.glyhbh" />
+            placeholder="输入电表用户编号" />
         </el-form-item>
         <el-form-item
           label="电表局编号"
           prop="dbjb"
           :label-width="ahdLabelWidth">
           <el-input
+            v-model="addHouse.dbjb"
             auto-complete="off"
-            placeholder="输入电表电表局编号"
-            v-model="addHouse.dbjb" />
+            placeholder="输入电表电表局编号" />
         </el-form-item>
       </el-form>
       <div
@@ -106,9 +105,9 @@
       class="house-table"
       stripe
       border
-      ref="houseTable"
       :max-height="tableMaxHeight"
-      :data="filterHouseData">
+      :data="filterHouseData"
+      ref="houseTable">
       <el-table-column
         prop="fang"
         label="坊号"
@@ -151,10 +150,10 @@
             修改
           </el-button>
           <el-popover
+            v-model="scope.row.dHousePopFlag"
             placement="top"
             width="150"
-            trigger="click"
-            v-model="scope.row.dHousePopFlag">
+            trigger="click">
             <p>确认删除房屋信息吗？与之关联的数据将一并删除</p>
             <div class="pop-cont">
               <el-button

@@ -1,12 +1,10 @@
 <template>
   <div class="electric-history">
-
     <el-tabs
       v-model="activeName">
       <el-tab-pane
         label="抄表历史"
         name="electric">
-
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
@@ -17,8 +15,8 @@
           </el-button>
           <div class="table-btn-input">
             <el-input
-              placeholder="搜索"
-              v-model="electricDataSearch" />
+              v-model="electricDataSearch"
+              placeholder="搜索" />
           </div>
         </div>
 
@@ -28,9 +26,9 @@
           class="electric-table"
           stripe
           border
-          ref="electricTable"
           :max-height="tableMaxHeight"
-          :data="filterElectricData">
+          :data="filterElectricData"
+          ref="electricTable">
           <el-table-column
             prop="fanghao"
             label="房屋"
@@ -55,10 +53,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dElectricPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dElectricPopFlag">
+                trigger="click">
                 <p>确认删除抄表记录吗？计费历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button
@@ -92,7 +90,6 @@
       <el-tab-pane
         label="计费历史"
         name="electricCal">
-
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
@@ -103,8 +100,8 @@
           </el-button>
           <div class="table-btn-input">
             <el-input
-              placeholder="搜索"
-              v-model="electricCalDataSearch" />
+              v-model="electricCalDataSearch"
+              placeholder="搜索" />
           </div>
         </div>
 
@@ -114,9 +111,9 @@
           class="electric-table"
           stripe
           border
-          ref="electricCalTable"
           :max-height="tableMaxHeight"
-          :data="filterElectricCalData">
+          :data="filterElectricCalData"
+          ref="electricCalTable">
           <el-table-column
             prop="fanghao"
             label="房屋"
@@ -231,10 +228,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dCalElectricPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dCalElectricPopFlag">
+                trigger="click">
                 <p>确认删除计费记录吗？抄表历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button

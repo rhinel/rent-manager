@@ -61,6 +61,10 @@ module.exports = {
       'alignAttributesVertically': true,
       'ignores': []
     }],
+    'vue/html-closing-bracket-newline': ['error', {
+      'singleline': 'never',
+      'multiline': 'never'
+    }],
     // vue indent
     'vue/script-indent': ['error', 2, {
       'baseIndent': 1

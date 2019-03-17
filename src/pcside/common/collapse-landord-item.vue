@@ -1,19 +1,16 @@
 <template>
   <div v-if="landord[`${type}List`]">
-
     <!-- 统计部分 -->
     <div
       class="landord-content"
       style="font-weight: bold;"
       v-if="landord[`${type}List`].length">
-
       <span class="collapse-btn">
         {{ type === 'six' ? '6坊65栋' : '8坊68栋' }}
       </span>
       <span>[房租合计￥{{ landord[type] }}元]</span>
       <span>[租金合计￥{{ landord[`${type}Rent`] }}元]</span>
       <span>[水电合计￥{{ landord[`${type}Cost`] }}元]</span>
-
     </div>
 
     <!-- 租单信息 -->
@@ -21,7 +18,6 @@
       class="landord-content content-bg"
       v-for="i in landord[`${type}List`]"
       :key="i._id">
-
       <router-link
         class="collapse-btn"
         :to="{
@@ -56,9 +52,7 @@
       </span>
 
       <span>备注：{{ i.remark }}</span>
-
     </div>
-
   </div>
 </template>
 

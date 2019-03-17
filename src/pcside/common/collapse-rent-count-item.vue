@@ -15,8 +15,8 @@
       v-model="activeRentCount[fangi]"
       :key="`${fangi}Collapse`">
       <el-collapse-item
-        v-for="(floor, floori) in fang.list"
         :name="floori"
+        v-for="(floor, floori) in fang.list"
         :key="floori">
         <template slot="title">
           {{ floori }}楼

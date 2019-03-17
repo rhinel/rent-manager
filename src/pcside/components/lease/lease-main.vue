@@ -1,12 +1,9 @@
 <template>
   <div class="lease-main">
-
-    <el-tabs
-      v-model="activeName">
+    <el-tabs v-model="activeName">
       <el-tab-pane
         label="租住列表"
         name="leaseList">
-
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
@@ -17,8 +14,8 @@
           </el-button>
           <div class="table-btn-input">
             <el-input
-              placeholder="搜索"
-              v-model="leaseDataSearch" />
+              v-model="leaseDataSearch"
+              placeholder="搜索" />
           </div>
         </div>
 
@@ -26,20 +23,20 @@
         <el-dialog
           custom-class="lease-in-dialog"
           top="50px"
-          :key="'leaseIn' + dialogId"
           :title="lease.fanghao + lidDialogTitle"
           :visible.sync="leaseInflag"
           :close-on-click-modal="false"
+          :key="'leaseIn' + dialogId"
           @closed="onLeaseInDialogClose">
           <el-form
-            ref="leaseIn"
             :model="lease"
-            :rules="leaserules">
+            :rules="leaserules"
+            ref="leaseIn">
             <el-alert
               type="info"
               :title="'搬出入住/修改：' +
                 '计费信息初始化，必须为上次收租结束' +
-              '/空置处理结束/本次计费之前，用户自行确认'" />
+                '/空置处理结束/本次计费之前，用户自行确认'" />
             <!-- 基本信息 -->
             <el-row :gutter="20">
               <el-col :span="12">
@@ -48,9 +45,9 @@
                   prop="name"
                   :label-width="lidLabelWidth">
                   <el-input
+                    v-model="lease.name"
                     auto-complete="off"
-                    placeholder="输入租户姓名"
-                    v-model="lease.name" />
+                    placeholder="输入租户姓名" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -59,9 +56,9 @@
                   prop="call"
                   :label-width="lidLabelWidth">
                   <el-input
+                    v-model="lease.call"
                     auto-complete="off"
-                    placeholder="输入租户联系方式"
-                    v-model="lease.call" />
+                    placeholder="输入租户联系方式" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -72,10 +69,10 @@
                   prop="addTime"
                   :label-width="lidLabelWidth">
                   <el-date-picker
+                    v-model="lease.addTime"
                     type="datetime"
                     placeholder="输入入住时间"
                     style="width: 100%;"
-                    v-model="lease.addTime"
                     :editable="false" />
                 </el-form-item>
               </el-col>
@@ -85,10 +82,10 @@
                   prop="leaserange"
                   :label-width="lidLabelWidth">
                   <el-date-picker
+                    v-model="lease.leaserange"
                     type="daterange"
                     placeholder="选择日期范围"
                     align="right"
-                    v-model="lease.leaserange"
                     :picker-options="leasePickerOptions"
                     :editable="false" />
                 </el-form-item>
@@ -101,13 +98,13 @@
                   prop="payDay"
                   :label-width="lidLabelWidth">
                   <el-select
+                    v-model="lease.payDay"
                     placeholder="选择交租时间"
-                    prop="payDay"
-                    v-model="lease.payDay">
+                    prop="payDay">
                     <el-option
-                      v-for="n in 31"
                       :label="n + '日'"
                       :value="n"
+                      v-for="n in 31"
                       :key="n" />
                   </el-select>
                 </el-form-item>
@@ -118,12 +115,12 @@
                   prop="payType"
                   :label-width="lidLabelWidth">
                   <el-select
-                    placeholder="选择交租方式"
-                    v-model="lease.payType">
+                    v-model="lease.payType"
+                    placeholder="选择交租方式">
                     <el-option
-                      v-for="(item, index) in payTypeVal"
                       :label="item"
                       :value="index"
+                      v-for="(item, index) in payTypeVal"
                       :key="index" />
                   </el-select>
                 </el-form-item>
@@ -135,9 +132,9 @@
                   label="备注"
                   :label-width="lidLabelWidth">
                   <el-input
+                    v-model="lease.remark"
                     auto-complete="off"
-                    placeholder="备注"
-                    v-model="lease.remark" />
+                    placeholder="备注" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -150,10 +147,12 @@
                   prop="calWaterPrice.minPrice"
                   :label-width="lidLabelWidth">
                   <el-input
+                    v-model.number="lease.calWaterPrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费"
-                    v-model.number="lease.calWaterPrice.minPrice">
-                    <template slot="append">吨</template>
+                    placeholder="输入最低消费">
+                    <template slot="append">
+                      吨
+                    </template>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -162,13 +161,13 @@
                   label="水费方式"
                   :label-width="lidLabelWidth">
                   <el-radio
-                    label="single"
-                    v-model="lease.calWaterPrice.calType">
+                    v-model="lease.calWaterPrice.calType"
+                    label="single">
                     单一价格
                   </el-radio>
                   <el-radio
-                    label="step"
-                    v-model="lease.calWaterPrice.calType">
+                    v-model="lease.calWaterPrice.calType"
+                    label="step">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -179,17 +178,21 @@
             <el-form-item
               label="水费单价"
               prop="calWaterPrice.singlePrice"
-              v-if="lease.calWaterPrice.calType == 'single'"
-              key="watSingle"
               :label-width="lidLabelWidth"
-              :rules="leaserules[`calWaterPrice.singlePrice`][0]">
+              :rules="leaserules[`calWaterPrice.singlePrice`][0]"
+              v-if="lease.calWaterPrice.calType == 'single'"
+              key="watSingle">
               <el-col :span="24">
                 <el-input
+                  v-model.number="lease.calWaterPrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价"
-                  v-model.number="lease.calWaterPrice.singlePrice">
-                  <template slot="prepend">￥</template>
-                  <template slot="append">元/吨</template>
+                  placeholder="输入单价">
+                  <template slot="prepend">
+                    ￥
+                  </template>
+                  <template slot="append">
+                    元/吨
+                  </template>
                 </el-input>
               </el-col>
             </el-form-item>
@@ -198,9 +201,9 @@
             <div v-if="lease.calWaterPrice.calType == 'step'">
               <el-form-item
                 required
-                v-for="(step, index) in lease.calWaterPrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="lidLabelWidth"
+                v-for="(step, index) in lease.calWaterPrice.stepPrice"
                 :key="'calWaterPrice' + index"
                 :ref="'calWaterPrice' + index">
                 <el-col :span="10">
@@ -210,10 +213,12 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值"
-                      v-model.number="step.step">
-                      <template slot="append">吨</template>
+                      placeholder="本阶梯最大值">
+                      <template slot="append">
+                        吨
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -227,11 +232,15 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价"
-                      v-model.number="step.price">
-                      <template slot="prepend">￥</template>
-                      <template slot="append">元</template>
+                      placeholder="本阶梯单价">
+                      <template slot="prepend">
+                        ￥
+                      </template>
+                      <template slot="append">
+                        元
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -249,9 +258,9 @@
               </el-form-item>
             </div>
             <el-form-item
+              :label-width="lidLabelWidth"
               v-if="lease.calWaterPrice.calType == 'step'"
-              key="watStep"
-              :label-width="lidLabelWidth">
+              key="watStep">
               <el-button
                 type="primary"
                 @click="addStep(lease.calWaterPrice)">
@@ -267,10 +276,12 @@
                   prop="calElePrice.minPrice"
                   :label-width="lidLabelWidth">
                   <el-input
+                    v-model.number="lease.calElePrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费"
-                    v-model.number="lease.calElePrice.minPrice">
-                    <template slot="append">度</template>
+                    placeholder="输入最低消费">
+                    <template slot="append">
+                      度
+                    </template>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -279,13 +290,13 @@
                   label="电费方式"
                   :label-width="lidLabelWidth">
                   <el-radio
-                    label="single"
-                    v-model="lease.calElePrice.calType">
+                    v-model="lease.calElePrice.calType"
+                    label="single">
                     单一价格
                   </el-radio>
                   <el-radio
-                    label="step"
-                    v-model="lease.calElePrice.calType">
+                    v-model="lease.calElePrice.calType"
+                    label="step">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -296,17 +307,21 @@
             <el-form-item
               prop="calElePrice.singlePrice"
               label="电费单价"
-              v-if="lease.calElePrice.calType == 'single'"
-              key="eleSingle"
               :rules="leaserules[`calElePrice.singlePrice`][0]"
-              :label-width="lidLabelWidth">
+              :label-width="lidLabelWidth"
+              v-if="lease.calElePrice.calType == 'single'"
+              key="eleSingle">
               <el-col :span="24">
                 <el-input
+                  v-model.number="lease.calElePrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价"
-                  v-model.number="lease.calElePrice.singlePrice">
-                  <template slot="prepend">￥</template>
-                  <template slot="append">元/度</template>
+                  placeholder="输入单价">
+                  <template slot="prepend">
+                    ￥
+                  </template>
+                  <template slot="append">
+                    元/度
+                  </template>
                 </el-input>
               </el-col>
             </el-form-item>
@@ -315,9 +330,9 @@
             <div v-if="lease.calElePrice.calType == 'step'">
               <el-form-item
                 required
-                v-for="(step, index) in lease.calElePrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="lidLabelWidth"
+                v-for="(step, index) in lease.calElePrice.stepPrice"
                 :key="'calElePrice' + index"
                 :ref="'calElePrice' + index">
                 <el-col :span="10">
@@ -327,10 +342,12 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值"
-                      v-model.number="step.step">
-                      <template slot="append">度</template>
+                      placeholder="本阶梯最大值">
+                      <template slot="append">
+                        度
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -344,11 +361,15 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价"
-                      v-model.number="step.price">
-                      <template slot="prepend">￥</template>
-                      <template slot="append">元</template>
+                      placeholder="本阶梯单价">
+                      <template slot="prepend">
+                        ￥
+                      </template>
+                      <template slot="append">
+                        元
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -358,17 +379,16 @@
                 <el-col
                   class="step-btn"
                   :span="3">
-                  <el-button
-                    @click.prevent="removeStep(lease.calElePrice, step)">
+                  <el-button @click.prevent="removeStep(lease.calElePrice, step)">
                     删除
                   </el-button>
                 </el-col>
               </el-form-item>
             </div>
             <el-form-item
+              :label-width="lidLabelWidth"
               v-if="lease.calElePrice.calType == 'step'"
-              key="eleStep"
-              :label-width="lidLabelWidth">
+              key="eleStep">
               <el-button
                 type="primary"
                 @click="addStep(lease.calElePrice)">
@@ -384,11 +404,15 @@
                   prop="deposit"
                   :label-width="lidLabelWidth">
                   <el-input
+                    v-model.number="lease.deposit"
                     auto-complete="off"
-                    placeholder="输入押金"
-                    v-model.number="lease.deposit">
-                    <template slot="prepend">￥</template>
-                    <template slot="append">元</template>
+                    placeholder="输入押金">
+                    <template slot="prepend">
+                      ￥
+                    </template>
+                    <template slot="append">
+                      元
+                    </template>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -399,11 +423,15 @@
                   prop="rent"
                   :label-width="lidLabelWidth">
                   <el-input
+                    v-model.number="lease.rent"
                     auto-complete="off"
-                    placeholder="输入租金"
-                    v-model.number="lease.rent">
-                    <template slot="prepend">￥</template>
-                    <template slot="append">元/月</template>
+                    placeholder="输入租金">
+                    <template slot="prepend">
+                      ￥
+                    </template>
+                    <template slot="append">
+                      元/月
+                    </template>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -429,15 +457,15 @@
         <!-- 搬出弹窗 -->
         <el-dialog
           custom-class="lease-out-dialog small"
-          :key="'leaseOut' + dialogId"
           :title="out.fanghao + lodDialogTitle"
           :visible.sync="leaseOutflag"
           :close-on-click-modal="false"
+          :key="'leaseOut' + dialogId"
           @closed="onLeaseOutDialogClose">
           <el-form
-            ref="leaseOut"
             :model="out"
-            :rules="outrules">
+            :rules="outrules"
+            ref="leaseOut">
             <el-alert
               title="确认已经结清所有费用？此行为不可撤销"
               type="info" />
@@ -446,10 +474,10 @@
               prop="outTime"
               :label-width="lodLabelWidth">
               <el-date-picker
+                v-model="out.outTime"
                 type="datetime"
                 placeholder="输入搬出时间"
                 style="width: 100%;"
-                v-model="out.outTime"
                 :editable="false" />
             </el-form-item>
           </el-form>
@@ -476,9 +504,9 @@
           class="lease-table"
           stripe
           border
-          ref="leaseTable"
           :max-height="tableMaxHeight"
-          :data="filterLeaseData">
+          :data="filterLeaseData"
+          ref="leaseTable">
           <el-table-column
             type="expand">
             <template slot-scope="props">
@@ -546,24 +574,20 @@
               label="水费"
               width="150">
               <template slot-scope="scope">
-
                 <table-eandw-cal-price-view-item
                   type="calWaterPrice"
                   unit="吨"
                   :lease="scope.row.leaseId" />
-
               </template>
             </el-table-column>
             <el-table-column
               label="电费"
               width="150">
               <template slot-scope="scope">
-
                 <table-eandw-cal-price-view-item
                   type="calElePrice"
                   unit="度"
                   :lease="scope.row.leaseId" />
-
               </template>
             </el-table-column>
           </el-table-column>
@@ -589,10 +613,8 @@
               prop="leaseId.remark"
               label="备注">
               <template slot-scope="scope">
-
                 <table-rent-remark-item
                   :rent="scope.row.leaseId" />
-
               </template>
             </el-table-column>
           </el-table-column>
@@ -627,19 +649,18 @@
       <el-tab-pane
         label="当前租金统计"
         name="leaseCount">
-
         <collapse-rent-count-item
-          v-for="(fang, fangi) in leaseCount"
-          :key="fangi"
           :fang="fang"
           :fangi="fangi"
-          :active-rent-count="activeLeaseCount" />
+          :active-rent-count="activeLeaseCount"
+          v-for="(fang, fangi) in leaseCount"
+          :key="fangi" />
 
         <el-alert
           title="暂无数据！请先处理入住状态"
           type="info"
-          v-if="!leaseData.length"
-          :closable="false" />
+          :closable="false"
+          v-if="!leaseData.length" />
       </el-tab-pane>
     </el-tabs>
   </div>
