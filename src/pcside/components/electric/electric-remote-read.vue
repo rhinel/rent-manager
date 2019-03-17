@@ -1,13 +1,12 @@
 <template>
   <div class="electric-remote-read">
-
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <div class="table-btn-input">
         <el-input
+          v-model="code"
           placeholder="请输入电力局验证码"
-          :disabled="!canGetLogin"
-          v-model="code" />
+          :disabled="!canGetLogin" />
       </div>
       <el-button
         type="primary"
@@ -28,9 +27,9 @@
 
       <div class="table-btn-input">
         <el-date-picker
+          v-model="day"
           type="date"
           placeholder="选择抄表日期"
-          v-model="day"
           :disabled="!canGetAllStart"
           :editable="false"
           :picker-options="{disabledDate(time) {
@@ -68,11 +67,15 @@
     <div
       class="log-wrap"
       ref="logWrap">
+      <!-- eslint-disable vue/no-v-html -->
       <div
         v-for="(line, index) in infoLine"
         :key="index"
         v-html="line" />
-      <div v-if="!isClose">等待指令 ...</div>
+      <!-- eslint-enable vue/no-v-html -->
+      <div v-if="!isClose">
+        等待指令 ...
+      </div>
     </div>
 
     <!-- 列表数据处理 -->
@@ -81,9 +84,9 @@
       class="electric-table"
       stripe
       border
-      ref="electricTable"
       :max-height="tableMaxHeight"
-      :data="filterElectricData">
+      :data="filterElectricData"
+      ref="electricTable">
       <el-table-column
         prop="fanghao"
         label="房屋"
@@ -108,7 +111,7 @@
         min-width="180">
         <template slot-scope="scope">
           {{ getTime(scope.row.electricId
-          && scope.row.electricId.addTime) }}
+            && scope.row.electricId.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -131,7 +134,7 @@
         min-width="180">
         <template slot-scope="scope">
           {{ getTime(scope.row.addElectric
-          && scope.row.addElectric.addTime) }}
+            && scope.row.addElectric.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -141,21 +144,21 @@
           <el-button
             size="small"
             type="primary"
-            v-if="scope.row.dbjb && scope.row.glyhbh"
             :disabled="!canGetAllStart"
+            v-if="scope.row.dbjb && scope.row.glyhbh"
             @click="getAllStart(scope.row._id)">
             抄数
           </el-button>
           <el-button
             size="small"
             type="warning"
-            v-if="scope.row.dbjb && scope.row.glyhbh"
             :disabled="
               !canGetAllStart
                 || !canGetAllInbase
                 || !scope.row.addElectric.addTime
                 || scope.row.electricId.addTime === scope.row.addElectric.addTime
             "
+            v-if="scope.row.dbjb && scope.row.glyhbh"
             @click="getAllInbase(scope.row._id)">
             写入
             <i

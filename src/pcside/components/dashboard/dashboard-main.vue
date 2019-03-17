@@ -4,16 +4,16 @@
     <el-dialog
       custom-class="note-dialog"
       top="50px"
-      :key="'note' + dialogId"
       :title="ndDialogTitle"
       :visible.sync="noteflag"
       :close-on-click-modal="false"
+      :key="'note' + dialogId"
       @closed="onNoteDialogClose">
       <el-form
         label-position="top"
-        ref="note"
         :model="note"
-        :rules="noteRules">
+        :rules="noteRules"
+        ref="note">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -21,13 +21,13 @@
               prop="haoId"
               :label-width="ndLabelWidth">
               <el-select
-                placeholder="选择房屋"
                 v-model="note.haoId"
+                placeholder="选择房屋"
                 :filterable="true">
                 <el-option
-                  v-for="item in houseData"
                   :label="item.fang + item.hao"
                   :value="item._id"
+                  v-for="item in houseData"
                   :key="item._id" />
               </el-select>
             </el-form-item>
@@ -40,9 +40,9 @@
               prop="addTime"
               :label-width="ndLabelWidth">
               <el-date-picker
+                v-model="note.addTime"
                 type="datetime"
                 placeholder="输入记事时间"
-                v-model="note.addTime"
                 :editable="false" />
             </el-form-item>
           </el-col>
@@ -51,10 +51,10 @@
           label="内容"
           :label-width="ndLabelWidth">
           <el-input
+            v-model="note.content"
             type="textarea"
             placeholder="请输入内容"
-            :rows="4"
-            v-model="note.content" />
+            :rows="4" />
         </el-form-item>
       </el-form>
 
@@ -74,22 +74,22 @@
         </el-button>
         <el-button
           type="success"
-          v-if="note._id && note.status === 1"
           :loading="gettingAddNote"
+          v-if="note._id && note.status === 1"
           @click="getAddNote(2)">
           完成
         </el-button>
         <el-button
           type="success"
-          v-if="note._id && note.status === 2"
           :loading="gettingAddNote"
+          v-if="note._id && note.status === 2"
           @click="getAddNote(1)">
           重做
         </el-button>
         <el-button
           type="danger"
-          v-if="note._id"
           :loading="gettingAddNote"
+          v-if="note._id"
           @click="getAddNote(0)">
           删除
         </el-button>
@@ -185,7 +185,7 @@
                 width="180">
                 <template slot-scope="scope">
                   <table-rent-view-item
-                    :rent="scope.row"/>
+                    :rent="scope.row" />
                 </template>
               </el-table-column>
               <el-table-column
@@ -276,7 +276,7 @@
                 width="180">
                 <template slot-scope="scope">
                   <table-rent-view-item
-                    :rent="scope.row"/>
+                    :rent="scope.row" />
                 </template>
               </el-table-column>
               <el-table-column
@@ -333,8 +333,8 @@
               class="card-list"
               v-show="noteList.length">
               <li
-                v-for="(item, index) in noteList"
                 :class="{ 'done': item.status == 2 }"
+                v-for="(item, index) in noteList"
                 :key="item._id">
                 <span>[{{ item.haoId.fang + item.haoId.hao }}]</span>
                 <el-button

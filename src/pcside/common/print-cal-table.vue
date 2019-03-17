@@ -19,8 +19,7 @@
         <th>小计</th>
       </tr>
       <tr
-        v-for="item in monthDetData"
-        v-if="item.rents[0] && item.fang === typeString"
+        v-for="item in monthDetData.filter(_ => _.rents[0] && _.fang === typeString)"
         :key="item._id">
         <th>{{ item.hao }}</th>
         <th>

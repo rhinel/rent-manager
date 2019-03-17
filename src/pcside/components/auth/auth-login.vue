@@ -10,22 +10,22 @@
         Hello {{ logininfo.name }} <i />
       </div>
       <el-form
-        ref="logininfo"
         :model="logininfo"
-        :rules="loginrules">
+        :rules="loginrules"
+        ref="logininfo">
         <el-form-item prop="name">
           <el-input
+            v-model="logininfo.name"
             placeholder="Name"
             icon="star-on"
-            :maxlength="10"
-            v-model="logininfo.name" />
+            :maxlength="10" />
         </el-form-item>
         <el-form-item prop="pwd">
           <el-input
+            v-model="logininfo.pwd"
             type="password"
             placeholder="Pwd"
-            icon="star-on"
-            v-model="logininfo.pwd" />
+            icon="star-on" />
         </el-form-item>
         <el-button
           class="login-go"

@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="rent[calType]">
-
       {{
         rent[calType].tnew[type]
           - rent[calType].old[type]
@@ -10,7 +9,6 @@
       <el-popover
         placement="top"
         trigger="hover">
-
         <div>本次抄表数：{{ rent[calType].tnew[type] }}{{ unit }}</div>
         <div>抄表时间：{{ getTime(rent[calType].tnew.addTime) }}</div>
         <div>上次表底数：{{ rent[calType].old[type] }}{{ unit }}</div>
@@ -21,11 +19,9 @@
           slot="reference">
           计数
         </el-tag>
-
       </el-popover>
 
       ￥{{ eandwCalGetPrice(rent) }}元/{{ unit }}
-
     </div>
     <div v-if="!rent[calType]">
       暂无

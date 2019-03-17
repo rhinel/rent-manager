@@ -1,6 +1,5 @@
 <template>
   <div class="rent-main">
-
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
@@ -16,23 +15,23 @@
       </el-button>
       <div class="table-btn-input">
         <el-input
-          placeholder="搜索"
-          v-model="monthListDataSearch" />
+          v-model="monthListDataSearch"
+          placeholder="搜索" />
       </div>
     </div>
 
     <!-- 新增弹窗 -->
     <el-dialog
       custom-class="add-month-list-dialog"
-      :key="dialogId"
       :title="amldDialogTitle"
       :visible.sync="addMonthListflag"
       :close-on-click-modal="false"
+      :key="dialogId"
       @closed="onAddMonthListDialogClose">
       <el-form
-        ref="addMonthList"
         :model="addMonthList"
-        :rules="addMonthListrules">
+        :rules="addMonthListrules"
+        ref="addMonthList">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -40,9 +39,9 @@
               prop="month"
               :label-width="amldLabelWidth">
               <el-date-picker
+                v-model="addMonthList.month"
                 type="month"
                 placeholder="选择月份"
-                v-model="addMonthList.month"
                 :disabled="!amldInput"
                 :editable="false" />
             </el-form-item>
@@ -52,9 +51,9 @@
               label="备注"
               :label-width="amldLabelWidth">
               <el-input
+                v-model="addMonthList.remark"
                 auto-complete="off"
-                placeholder="备注"
-                v-model="addMonthList.remark" />
+                placeholder="备注" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -62,7 +61,7 @@
           type="info"
           :title="(addMonthList._id ? '已' : '将') +
             '记录以下（已配置）计费方式作为本月' +
-          '默认计费方式（存副本），作用于水电张贴计算'" />
+            '默认计费方式（存副本），作用于水电张贴计算'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -137,9 +136,9 @@
       class="month-table"
       stripe
       border
-      ref="monthTable"
       :max-height="tableMaxHeight"
-      :data="filterMonthListData">
+      :data="filterMonthListData"
+      ref="monthTable">
       <el-table-column
         prop="month"
         label="月份"
@@ -191,10 +190,10 @@
             修改
           </el-button>
           <el-popover
+            v-model="scope.row.dMonthPopFlag"
             placement="top"
             width="150"
-            trigger="click"
-            v-model="scope.row.dMonthPopFlag">
+            trigger="click">
             <p>确认删除月份周期信息吗？与之关联的数据将一并删除</p>
             <div class="pop-cont">
               <el-button

@@ -1,6 +1,5 @@
 <template>
   <div class="lease-history">
-
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
@@ -11,8 +10,8 @@
       </el-button>
       <div class="table-btn-input">
         <el-input
-          placeholder="搜索"
-          v-model="leaseDataSearch" />
+          v-model="leaseDataSearch"
+          placeholder="搜索" />
       </div>
     </div>
 
@@ -22,9 +21,9 @@
       class="lease-table"
       stripe
       border
-      ref="leaseTable"
       :max-height="tableMaxHeight"
-      :data="filterLeaseData">
+      :data="filterLeaseData"
+      ref="leaseTable">
       <el-table-column
         prop="fanghao"
         label="房屋"
@@ -62,10 +61,8 @@
           prop="leaseId.remark"
           label="备注">
           <template slot-scope="scope">
-
             <table-rent-remark-item
               :rent="scope.row" />
-
           </template>
         </el-table-column>
         <el-table-column
@@ -100,24 +97,20 @@
           label="水费"
           width="150">
           <template slot-scope="scope">
-
             <table-eandw-cal-price-view-item
               type="calWaterPrice"
               unit="吨"
               :lease="scope.row" />
-
           </template>
         </el-table-column>
         <el-table-column
           label="电费"
           width="150">
           <template slot-scope="scope">
-
             <table-eandw-cal-price-view-item
               type="calElePrice"
               unit="度"
               :lease="scope.row" />
-
           </template>
         </el-table-column>
       </el-table-column>
@@ -126,11 +119,11 @@
         width="100">
         <template slot-scope="scope">
           <el-popover
+            v-model="scope.row.dLeasePopFlag"
             placement="top"
             width="150"
             trigger="click"
-            v-if="scope.row._id"
-            v-model="scope.row.dLeasePopFlag">
+            v-if="scope.row._id">
             <p>确认删除此租住历史？此行为不可撤销</p>
             <div class="pop-cont">
               <el-button

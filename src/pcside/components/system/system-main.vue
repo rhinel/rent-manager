@@ -1,6 +1,5 @@
 <template>
   <div class="system-main">
-
     <el-card>
       <el-collapse v-model="activeNames">
         <el-collapse-item
@@ -33,8 +32,7 @@
           <el-tag
             class="show-tag show-tag3"
             type="success"
-            v-for="(type, index) in typesVal"
-            v-if="!!type"
+            v-for="(type, index) in typesVal.filter(_ => _)"
             :key="index">
             {{ type }}
           </el-tag>
@@ -43,12 +41,11 @@
         <el-collapse-item
           name="defaultCalWaterPrice"
           :title="'默认水费计费方式'
-          + '（修改后将在下次新建月度/入住时生效）'">
+            + '（修改后将在下次新建月度/入住时生效）'">
           <el-form
-            ref="calWaterPrice"
             :model="calWaterPrice"
-            :rules="calrules">
-
+            :rules="calrules"
+            ref="calWaterPrice">
             <!-- 水费 -->
             <el-row :gutter="20">
               <el-col :span="7">
@@ -57,10 +54,12 @@
                   prop="minPrice"
                   :label-width="labelWidth">
                   <el-input
+                    v-model.number="calWaterPrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费"
-                    v-model.number="calWaterPrice.minPrice">
-                    <template slot="append">吨</template>
+                    placeholder="输入最低消费">
+                    <template slot="append">
+                      吨
+                    </template>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -69,13 +68,13 @@
                   label="水费方式"
                   :label-width="labelWidth">
                   <el-radio
-                    label="single"
-                    v-model="calWaterPrice.calType">
+                    v-model="calWaterPrice.calType"
+                    label="single">
                     单一价格
                   </el-radio>
                   <el-radio
-                    label="step"
-                    v-model="calWaterPrice.calType">
+                    v-model="calWaterPrice.calType"
+                    label="step">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -86,17 +85,21 @@
             <el-form-item
               label="水费单价"
               prop="singlePrice"
-              v-if="calWaterPrice.calType == 'single'"
-              key="watSingle"
               :label-width="labelWidth"
-              :rules="calrules.singlePrice[0]">
+              :rules="calrules.singlePrice[0]"
+              v-if="calWaterPrice.calType == 'single'"
+              key="watSingle">
               <el-col :span="13">
                 <el-input
+                  v-model.number="calWaterPrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价"
-                  v-model.number="calWaterPrice.singlePrice">
-                  <template slot="prepend">￥</template>
-                  <template slot="append">元/吨</template>
+                  placeholder="输入单价">
+                  <template slot="prepend">
+                    ￥
+                  </template>
+                  <template slot="append">
+                    元/吨
+                  </template>
                 </el-input>
               </el-col>
             </el-form-item>
@@ -105,9 +108,9 @@
             <div v-if="calWaterPrice.calType == 'step'">
               <el-form-item
                 required
-                v-for="(step, index) in calWaterPrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="labelWidth"
+                v-for="(step, index) in calWaterPrice.stepPrice"
                 :key="'calWaterPrice' + index"
                 :ref="'calWaterPrice' + index">
                 <el-col :span="5">
@@ -117,10 +120,12 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值"
-                      v-model.number="step.step">
-                      <template slot="append">吨</template>
+                      placeholder="本阶梯最大值">
+                      <template slot="append">
+                        吨
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -134,11 +139,15 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价"
-                      v-model.number="step.price">
-                      <template slot="prepend">￥</template>
-                      <template slot="append">元</template>
+                      placeholder="本阶梯单价">
+                      <template slot="prepend">
+                        ￥
+                      </template>
+                      <template slot="append">
+                        元
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -154,9 +163,9 @@
               </el-form-item>
             </div>
             <el-form-item
+              :label-width="labelWidth"
               v-if="calWaterPrice.calType == 'step'"
-              key="watStep"
-              :label-width="labelWidth">
+              key="watStep">
               <el-button
                 type="primary"
                 @click="addStep(calWaterPrice)">
@@ -166,9 +175,9 @@
 
             <!-- 提交按钮 -->
             <el-form-item
+              :label-width="labelWidth"
               v-if="calWaterEdit || !defaultKeysHasSet.defaultCalWaterPrice"
-              key="watBtn"
-              :label-width="labelWidth">
+              key="watBtn">
               <el-button
                 type="danger"
                 :loading="submitLoading"
@@ -187,12 +196,11 @@
         <el-collapse-item
           name="defaultCalElePrice"
           :title="'默认电费计费方式'
-          + '（修改后将在下次新建月度/入住时生效）'">
+            + '（修改后将在下次新建月度/入住时生效）'">
           <el-form
-            ref="calElePrice"
             :model="calElePrice"
-            :rules="calrules">
-
+            :rules="calrules"
+            ref="calElePrice">
             <!-- 电费 -->
             <el-row :gutter="20">
               <el-col :span="7">
@@ -201,10 +209,12 @@
                   prop="minPrice"
                   :label-width="labelWidth">
                   <el-input
+                    v-model.number="calElePrice.minPrice"
                     auto-complete="off"
-                    placeholder="输入最低消费"
-                    v-model.number="calElePrice.minPrice">
-                    <template slot="append">度</template>
+                    placeholder="输入最低消费">
+                    <template slot="append">
+                      度
+                    </template>
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -213,13 +223,13 @@
                   label="计费方式"
                   :label-width="labelWidth">
                   <el-radio
-                    label="single"
-                    v-model="calElePrice.calType">
+                    v-model="calElePrice.calType"
+                    label="single">
                     单一价格
                   </el-radio>
                   <el-radio
-                    label="step"
-                    v-model="calElePrice.calType">
+                    v-model="calElePrice.calType"
+                    label="step">
                     阶梯价格
                   </el-radio>
                 </el-form-item>
@@ -230,17 +240,21 @@
             <el-form-item
               label="单价"
               prop="singlePrice"
-              v-if="calElePrice.calType == 'single'"
-              key="eleSingle"
               :label-width="labelWidth"
-              :rules="calrules.singlePrice[0]">
+              :rules="calrules.singlePrice[0]"
+              v-if="calElePrice.calType == 'single'"
+              key="eleSingle">
               <el-col :span="13">
                 <el-input
+                  v-model.number="calElePrice.singlePrice"
                   auto-complete="off"
-                  placeholder="输入单价"
-                  v-model.number="calElePrice.singlePrice">
-                  <template slot="prepend">￥</template>
-                  <template slot="append">元/度</template>
+                  placeholder="输入单价">
+                  <template slot="prepend">
+                    ￥
+                  </template>
+                  <template slot="append">
+                    元/度
+                  </template>
                 </el-input>
               </el-col>
             </el-form-item>
@@ -249,9 +263,9 @@
             <div v-if="calElePrice.calType == 'step'">
               <el-form-item
                 required
-                v-for="(step, index) in calElePrice.stepPrice"
                 :label="'阶梯' + (index + 1)"
                 :label-width="labelWidth"
+                v-for="(step, index) in calElePrice.stepPrice"
                 :key="'calElectric'+ index"
                 :ref="'calElectric' + index">
                 <el-col :span="5">
@@ -261,10 +275,12 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.step"
                       auto-complete="off"
-                      placeholder="本阶梯最大值"
-                      v-model.number="step.step">
-                      <template slot="append">度</template>
+                      placeholder="本阶梯最大值">
+                      <template slot="append">
+                        度
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -278,11 +294,15 @@
                       type: 'number', required: true, message: '请填写', trigger: 'blur'
                     }">
                     <el-input
+                      v-model.number="step.price"
                       auto-complete="off"
-                      placeholder="本阶梯单价"
-                      v-model.number="step.price">
-                      <template slot="prepend">￥</template>
-                      <template slot="append">元</template>
+                      placeholder="本阶梯单价">
+                      <template slot="prepend">
+                        ￥
+                      </template>
+                      <template slot="append">
+                        元
+                      </template>
                     </el-input>
                   </el-form-item>
                 </el-col>
@@ -298,9 +318,9 @@
               </el-form-item>
             </div>
             <el-form-item
+              :label-width="labelWidth"
               v-if="calElePrice.calType == 'step'"
-              key="eleStep"
-              :label-width="labelWidth">
+              key="eleStep">
               <el-button
                 type="primary"
                 @click="addStep(calElePrice)">
@@ -310,9 +330,9 @@
 
             <!-- 提交按钮 -->
             <el-form-item
+              :label-width="labelWidth"
               v-if="calEleEdit || !defaultKeysHasSet.defaultCalElePrice"
-              key="eleBtn"
-              :label-width="labelWidth">
+              key="eleBtn">
               <el-button
                 type="danger"
                 :loading="submitLoading"
@@ -332,27 +352,27 @@
           title="系统用户信息"
           name="defaultElseInfo">
           <el-form
-            ref="elseInfo"
             :model="elseInfo"
-            :rules="elserules">
+            :rules="elserules"
+            ref="elseInfo">
             <el-form-item
               label="手机号码"
               prop="mobile"
-              key="elseMobile"
-              :label-width="labelWidth">
+              :label-width="labelWidth"
+              key="elseMobile">
               <el-col :span="13">
                 <el-input
+                  v-model.number="elseInfo.mobile"
                   auto-complete="off"
-                  placeholder="输入手机号码"
-                  v-model.number="elseInfo.mobile" />
+                  placeholder="输入手机号码" />
               </el-col>
             </el-form-item>
 
             <!-- 提交按钮 -->
             <el-form-item
+              :label-width="labelWidth"
               v-if="elseEdit || !defaultKeysHasSet.defaultElseInfo"
-              key="elseBtn"
-              :label-width="labelWidth">
+              key="elseBtn">
               <el-button
                 type="danger"
                 :loading="submitLoading"

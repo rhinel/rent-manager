@@ -1,6 +1,5 @@
 <template>
   <div class="water-main">
-
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
@@ -16,35 +15,35 @@
       </el-button>
       <div class="table-btn-input">
         <el-input
-          placeholder="搜索"
-          v-model="waterDataSearch" />
+          v-model="waterDataSearch"
+          placeholder="搜索" />
       </div>
     </div>
 
     <!-- 新增弹窗 -->
     <el-dialog
       custom-class="add-water-dialog small"
-      :key="'addWater' + dialogId"
       :title="awdDialogTitle"
       :visible.sync="addWaterflag"
       :close-on-click-modal="false"
+      :key="'addWater' + dialogId"
       @closed="onAddWaterDialogClose">
       <el-form
-        ref="addWater"
         :model="addWater"
-        :rules="addWaterrules">
+        :rules="addWaterrules"
+        ref="addWater">
         <el-form-item
           label="房屋"
           prop="haoId"
           :label-width="awdLabelWidth">
           <el-select
-            placeholder="选择房屋"
             v-model="addWater.haoId"
+            placeholder="选择房屋"
             :filterable="true">
             <el-option
-              v-for="item in houseData"
               :label="item.fang + item.hao"
               :value="item._id"
+              v-for="item in houseData"
               :key="item._id" />
           </el-select>
         </el-form-item>
@@ -53,28 +52,30 @@
           prop="water"
           :label-width="awdLabelWidth">
           <el-input
+            v-model.number="addWater.water"
             auto-complete="off"
-            placeholder="输入水表数"
-            v-model.number="addWater.water">
-            <template slot="append">吨</template>
+            placeholder="输入水表数">
+            <template slot="append">
+              吨
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item
           label="备注"
           :label-width="awdLabelWidth">
           <el-input
+            v-model="addWater.remark"
             auto-complete="off"
-            placeholder="备注"
-            v-model="addWater.remark" />
+            placeholder="备注" />
         </el-form-item>
         <el-form-item
           label="抄表时间"
           prop="addTime"
           :label-width="awdLabelWidth">
           <el-date-picker
+            v-model="addWater.addTime"
             type="datetime"
             placeholder="输入抄表时间"
-            v-model="addWater.addTime"
             :editable="false" />
         </el-form-item>
       </el-form>
@@ -99,23 +100,22 @@
     <el-dialog
       top="50px"
       custom-class="cal-water-dialog"
-      :key="'calWater' + dialogId"
       :title="calWater.fanghao + cwdDialogTitle"
       :visible.sync="calWaterflag"
       :close-on-click-modal="false"
+      :key="'calWater' + dialogId"
       @closed="onCalWaterDialogClose">
       <el-form
-        ref="calWater"
         :model="calWater"
-        :rules="calWaterrules">
-
+        :rules="calWaterrules"
+        ref="calWater">
         <!-- 房屋信息 -->
         <!-- 水底信息 -->
         <el-alert
           type="info"
           :title="'本抄表数据来源于最新一次抄表，' +
             '可修改作为本次副本保存（不增加抄表数据），' +
-          '但建议按照逻辑操作，先抄表再计费'" />
+            '但建议按照逻辑操作，先抄表再计费'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -123,10 +123,12 @@
               prop="tnew.water"
               :label-width="cwdLabelWidth">
               <el-input
+                v-model.number="calWater.tnew.water"
                 auto-complete="off"
-                placeholder="输入抄表数"
-                v-model.number="calWater.tnew.water">
-                <template slot="append">吨</template>
+                placeholder="输入抄表数">
+                <template slot="append">
+                  吨
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -136,10 +138,10 @@
               prop="tnew.addTime"
               :label-width="cwdLabelWidth">
               <el-date-picker
+                v-model="calWater.tnew.addTime"
                 type="datetime"
                 placeholder="输入抄表时间"
                 style="width: 100%;"
-                v-model="calWater.tnew.addTime"
                 :editable="false" />
             </el-form-item>
           </el-col>
@@ -148,15 +150,15 @@
           label="抄表备注"
           :label-width="cwdLabelWidth">
           <el-input
+            v-model="calWater.tnew.remark"
             auto-complete="off"
-            placeholder="抄表备注"
-            v-model="calWater.tnew.remark" />
+            placeholder="抄表备注" />
         </el-form-item>
         <el-alert
           type="info"
           :title="'本底表数来源于上一次计费数据，' +
             '可修改作为本次副本保存（不创建底表计费信息），' +
-          '但建议按照逻辑操作，分次计费'" />
+            '但建议按照逻辑操作，分次计费'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -164,10 +166,12 @@
               prop="old.water"
               :label-width="cwdLabelWidth">
               <el-input
+                v-model.number="calWater.old.water"
                 auto-complete="off"
-                placeholder="输入底表数"
-                v-model.number="calWater.old.water">
-                <template slot="append">吨</template>
+                placeholder="输入底表数">
+                <template slot="append">
+                  吨
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -177,10 +181,10 @@
               prop="old.addTime"
               :label-width="cwdLabelWidth">
               <el-date-picker
+                v-model="calWater.old.addTime"
                 type="datetime"
                 placeholder="输入底表时间"
                 style="width: 100%;"
-                v-model="calWater.old.addTime"
                 :editable="false" />
             </el-form-item>
           </el-col>
@@ -189,9 +193,9 @@
           label="底表备注"
           :label-width="cwdLabelWidth">
           <el-input
+            v-model="calWater.old.remark"
             auto-complete="off"
-            placeholder="底表备注"
-            v-model="calWater.old.remark" />
+            placeholder="底表备注" />
         </el-form-item>
 
         <!-- 计费方式 -->
@@ -199,7 +203,7 @@
           type="info"
           :title="'本计费方式及结果来源于租户信息，' +
             '临时调整可修改作为本次副本保存（不更新租户信息），' +
-          '但建议按照逻辑操作，修改租住管理的租户信息'" />
+            '但建议按照逻辑操作，修改租住管理的租户信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -207,10 +211,12 @@
               prop="calWater.minPrice"
               :label-width="cwdLabelWidth">
               <el-input
+                v-model.number="calWater.calWater.minPrice"
                 auto-complete="off"
-                placeholder="输入最低消费"
-                v-model.number="calWater.calWater.minPrice">
-                <template slot="append">吨</template>
+                placeholder="输入最低消费">
+                <template slot="append">
+                  吨
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -219,13 +225,13 @@
               label="计费方式"
               :label-width="cwdLabelWidth">
               <el-radio
-                label="single"
-                v-model="calWater.calWater.calType">
+                v-model="calWater.calWater.calType"
+                label="single">
                 单一价格
               </el-radio>
               <el-radio
-                label="step"
-                v-model="calWater.calWater.calType">
+                v-model="calWater.calWater.calType"
+                label="step">
                 阶梯价格
               </el-radio>
             </el-form-item>
@@ -235,25 +241,29 @@
         <el-form-item
           label="单价"
           prop="calWater.singlePrice"
-          v-if="calWater.calWater.calType == 'single'"
-          key="watSingle"
           :label-width="cwdLabelWidth"
-          :rules="calWaterrules[`calWater.singlePrice`][0]">
+          :rules="calWaterrules[`calWater.singlePrice`][0]"
+          v-if="calWater.calWater.calType == 'single'"
+          key="watSingle">
           <el-input
+            v-model.number="calWater.calWater.singlePrice"
             auto-complete="off"
-            placeholder="输入单价"
-            v-model.number="calWater.calWater.singlePrice">
-            <template slot="prepend">￥</template>
-            <template slot="append">元/吨</template>
+            placeholder="输入单价">
+            <template slot="prepend">
+              ￥
+            </template>
+            <template slot="append">
+              元/吨
+            </template>
           </el-input>
         </el-form-item>
         <!-- 阶梯计费 -->
         <div v-if="calWater.calWater.calType == 'step'">
           <el-form-item
             required
-            v-for="(step, index) in calWater.calWater.stepPrice"
             :label="'阶梯' + (index + 1)"
             :label-width="cwdLabelWidth"
+            v-for="(step, index) in calWater.calWater.stepPrice"
             :key="'calWater'+ index"
             :ref="'calWater' + index">
             <el-col :span="10">
@@ -263,10 +273,12 @@
                   type: 'number', required: true, message: '请填写', trigger: 'blur'
                 }">
                 <el-input
+                  v-model.number="step.step"
                   auto-complete="off"
-                  placeholder="本阶梯最大值"
-                  v-model.number="step.step">
-                  <template slot="append">吨</template>
+                  placeholder="本阶梯最大值">
+                  <template slot="append">
+                    吨
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -280,11 +292,15 @@
                   type: 'number', required: true, message: '请填写', trigger: 'blur'
                 }">
                 <el-input
+                  v-model.number="step.price"
                   auto-complete="off"
-                  placeholder="本阶梯单价"
-                  v-model.number="step.price">
-                  <template slot="prepend">￥</template>
-                  <template slot="append">元</template>
+                  placeholder="本阶梯单价">
+                  <template slot="prepend">
+                    ￥
+                  </template>
+                  <template slot="append">
+                    元
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -301,9 +317,9 @@
           </el-form-item>
         </div>
         <el-form-item
+          :label-width="cwdLabelWidth"
           v-if="calWater.calWater.calType == 'step'"
-          key="watStep"
-          :label-width="cwdLabelWidth">
+          key="watStep">
           <el-button
             type="primary"
             @click="addStep">
@@ -318,11 +334,15 @@
               :label="calWater.fix ? '修正结果' : '计算结果'"
               :label-width="cwdLabelWidth">
               <el-input
+                v-model.number="calWater.calWaterResult"
                 auto-complete="off"
-                placeholder="输入金额"
-                v-model.number="calWater.calWaterResult">
-                <template slot="prepend">￥</template>
-                <template slot="append">元</template>
+                placeholder="输入金额">
+                <template slot="prepend">
+                  ￥
+                </template>
+                <template slot="append">
+                  元
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -332,10 +352,10 @@
               prop="addTime"
               :label-width="cwdLabelWidth">
               <el-date-picker
+                v-model="calWater.addTime"
                 type="datetime"
                 placeholder="输入计费时间"
                 style="width: 100%;"
-                v-model="calWater.addTime"
                 :editable="false" />
             </el-form-item>
           </el-col>
@@ -344,9 +364,9 @@
           label="计费备注"
           :label-width="cwdLabelWidth">
           <el-input
+            v-model="calWater.remark"
             auto-complete="off"
-            placeholder="计费备注"
-            v-model="calWater.remark" />
+            placeholder="计费备注" />
         </el-form-item>
       </el-form>
       <div
@@ -372,9 +392,9 @@
       class="water-table"
       stripe
       border
-      ref="waterTable"
       :max-height="tableMaxHeight"
-      :data="filterWaterData">
+      :data="filterWaterData"
+      ref="waterTable">
       <el-table-column
         prop="fanghao"
         label="房屋"
@@ -398,8 +418,7 @@
         label="最新抄表时间"
         width="180">
         <template slot-scope="scope">
-          {{ getTime(scope.row.waterId
-          && scope.row.waterId.addTime) }}
+          {{ getTime(scope.row.waterId && scope.row.waterId.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -421,8 +440,7 @@
         label="上次计费/初始时间"
         width="180">
         <template slot-scope="scope">
-          {{ getTime(scope.row.calWaterId
-          && scope.row.calWaterId.addTime) }}
+          {{ getTime(scope.row.calWaterId && scope.row.calWaterId.addTime) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -453,12 +471,10 @@
         label="当前计费方式"
         min-width="180">
         <template slot-scope="scope">
-
           <table-eandw-cal-price-view-item
             type="leaseId"
             unit="吨"
             :lease="scope.row" />
-
         </template>
       </el-table-column>
       <el-table-column
@@ -624,8 +640,8 @@
             if (
               (theGap > (prevPrices.step || 0) && theGap <= item.step)
               || (i === (arr.length - 1) && theGap >= item.step)) {
-                result = theGap * item.price
-              }
+              result = theGap * item.price
+            }
           })
         }
         result = Math.round(result * 100) / 100

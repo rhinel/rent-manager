@@ -1,12 +1,10 @@
 <template>
   <div class="water-history">
-
-    <el-tabs
-      v-model="activeName">
+    <el-tabs v-model="activeName">
+      <!-- 抄表历史 -->
       <el-tab-pane
         label="抄表历史"
         name="water">
-
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
@@ -17,8 +15,8 @@
           </el-button>
           <div class="table-btn-input">
             <el-input
-              placeholder="搜索"
-              v-model="waterDataSearch" />
+              v-model="waterDataSearch"
+              placeholder="搜索" />
           </div>
         </div>
 
@@ -28,9 +26,9 @@
           class="water-table"
           stripe
           border
-          ref="waterTable"
           :max-height="tableMaxHeight"
-          :data="filterWaterData">
+          :data="filterWaterData"
+          ref="waterTable">
           <el-table-column
             prop="fanghao"
             label="房屋"
@@ -55,10 +53,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dWaterPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dWaterPopFlag">
+                trigger="click">
                 <p>确认删除抄表记录吗？计费历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button
@@ -89,10 +87,10 @@
         </el-table>
       </el-tab-pane>
 
+      <!-- 计费历史 -->
       <el-tab-pane
         label="计费历史"
         name="waterCal">
-
         <!-- 顶部按钮组 -->
         <div class="table-btn">
           <el-button
@@ -103,8 +101,8 @@
           </el-button>
           <div class="table-btn-input">
             <el-input
-              placeholder="搜索"
-              v-model="waterCalDataSearch" />
+              v-model="waterCalDataSearch"
+              placeholder="搜索" />
           </div>
         </div>
 
@@ -114,9 +112,9 @@
           class="water-table"
           stripe
           border
-          ref="waterCalTable"
           :max-height="tableMaxHeight"
-          :data="filterWaterCalData">
+          :data="filterWaterCalData"
+          ref="waterCalTable">
           <el-table-column
             prop="fanghao"
             label="房屋"
@@ -208,12 +206,10 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    v-if="scope.row.calWater.calType == 'step'">
+                  <div v-if="scope.row.calWater.calType == 'step'">
                     超过最后一个阶梯的部分将按照最后一个阶梯计费
                   </div>
-                  <div
-                    v-if="scope.row.fix">
+                  <div v-if="scope.row.fix">
                     本计费结果已被修正，计算方式仅供参考
                   </div>
                   <div
@@ -231,10 +227,10 @@
             width="100">
             <template slot-scope="scope">
               <el-popover
+                v-model="scope.row.dCalWaterPopFlag"
                 placement="top"
                 width="150"
-                trigger="click"
-                v-model="scope.row.dCalWaterPopFlag">
+                trigger="click">
                 <p>确认删除计费记录吗？抄表历史收费历史等将不受影响，仅影响当前数据</p>
                 <div class="pop-cont">
                   <el-button
@@ -250,8 +246,7 @@
                     确定
                   </el-button>
                 </div>
-                <div
-                  slot="reference">
+                <div slot="reference">
                   <el-button
                     size="small"
                     type="danger"

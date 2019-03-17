@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="rent[calType]">
-
       <el-tag>
         {{ rent[calType].fix ? '修' : '计' }}
       </el-tag>
@@ -23,7 +22,6 @@
       <div class="unimportant">
         {{ getTime(rent[calType].addTime) }}
       </div>
-
     </div>
 
     <div v-if="!rent[calType]">
