@@ -14,8 +14,12 @@
       <div class="header-name">
         {{ `${$route.meta.name} ${titleAdd}` }}
       </div>
-      <div class="username">{{ config.username }}</div>
-      <div class="version">v{{ version }}</div>
+      <div class="username">
+        {{ config.username }}
+      </div>
+      <div class="version">
+        v{{ version }}
+      </div>
       <div
         class="header-right"
         @click="logout">
@@ -28,9 +32,9 @@
       :default-active="menuing"
       :router="true">
       <el-menu-item
+        :index="menuItem.index"
         v-for="(menuItem, index) in config.menu"
-        :key="index"
-        :index="menuItem.index">
+        :key="index">
         <i :class="menuItem.icon" />
         <span slot="title">
           {{ menuItem.name }}

@@ -29,7 +29,9 @@
         </el-popover>
       </div>
     </div>
-    <div v-else>暂无</div>
+    <div v-else>
+      暂无
+    </div>
   </div>
 </template>
 

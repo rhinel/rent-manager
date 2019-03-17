@@ -9,8 +9,8 @@
         {{ getDate(rent.type.typeTime[item]) }}
         <el-tag
           class="show-tag show-tag3"
-          slot="reference"
-          :type="item != 2 ? 'success' : ''">
+          :type="item != 2 ? 'success' : ''"
+          slot="reference">
           {{ typesVal[item] }}
         </el-tag>
       </el-popover>

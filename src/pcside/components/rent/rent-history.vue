@@ -1,6 +1,5 @@
 <template>
   <div class="rent-history">
-
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <el-button
@@ -11,23 +10,23 @@
       </el-button>
       <div class="table-btn-input">
         <el-input
-          placeholder="搜索"
-          v-model="rentHistorySearch" />
+          v-model="rentHistorySearch"
+          placeholder="搜索" />
       </div>
     </div>
 
     <!-- 状态修改表单 -->
     <el-dialog
       custom-class="change-type-dialog"
-      :key="'changeType' + dialogId"
       :title="changeType.fanghao + ctdDialogTitle"
       :visible.sync="changeTypeflag"
       :close-on-click-modal="false"
+      :key="'changeType' + dialogId"
       @closed="onChangeTypeDialogClose">
       <el-form
-        ref="changeType"
         :model="changeType"
-        :rules="changeTyperules">
+        :rules="changeTyperules"
+        ref="changeType">
         <el-alert
           title="多选状态信息"
           type="info" />
@@ -42,12 +41,12 @@
                 :span="4" />
               <el-col :span="20">
                 <el-select
-                  placeholder="选择交租方式"
-                  v-model="changeType.payType">
+                  v-model="changeType.payType"
+                  placeholder="选择交租方式">
                   <el-option
-                    v-for="(item, index) in payTypeVal"
                     :label="item"
                     :value="index"
+                    v-for="(item, index) in payTypeVal"
                     :key="index" />
                 </el-select>
               </el-col>
@@ -64,9 +63,9 @@
                 :span="4" />
               <el-col :span="20">
                 <el-input
+                  v-model="changeType.remark"
                   auto-complete="off"
-                  placeholder="备注"
-                  v-model="changeType.remark" />
+                  placeholder="备注" />
               </el-col>
             </el-row>
           </div>
@@ -80,9 +79,9 @@
               @change="onChangeType">
               <el-row
                 class="el-row-margin"
+                :gutter="20"
                 v-for="(type, index) in types"
-                :key="index"
-                :gutter="20">
+                :key="index">
                 <el-col :span="4">
                   <el-checkbox :label="type.value">
                     {{ type.label }}
@@ -90,13 +89,13 @@
                 </el-col>
                 <el-col :span="20">
                   <el-form-item
-                    v-if="changeType.type.indexOf(type.value) > -1"
                     :prop="`typeTime.${type.value}`"
-                    :rules="changeTyperules.typeTime[0]">
+                    :rules="changeTyperules.typeTime[0]"
+                    v-if="changeType.type.indexOf(type.value) > -1">
                     <el-date-picker
+                      v-model="changeType.typeTime[type.value]"
                       type="datetime"
                       placeholder="输入状态时间"
-                      v-model="changeType.typeTime[type.value]"
                       :editable="false" />
                   </el-form-item>
                 </el-col>
@@ -105,8 +104,8 @@
           </div>
           <div>
             <el-checkbox
-              :indeterminate="changeType.isIndeterminate"
               v-model="changeType.checkAll"
+              :indeterminate="changeType.isIndeterminate"
               @change="onCheckAllChange">
               全选
             </el-checkbox>
@@ -136,9 +135,9 @@
       class="month-table"
       stripe
       border
-      ref="monthTable"
       :max-height="tableMaxHeight"
-      :data="filterRentHistoryData">
+      :data="filterRentHistoryData"
+      ref="monthTable">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form
@@ -149,26 +148,22 @@
               label="水表本次用数/单价"
               min-width="150">
               <template>
-
                 <table-expand-eandw-item
                   type="water"
                   cal-type="calWater"
                   unit="吨"
                   :rent="getRent(props)" />
-
               </template>
             </el-form-item>
             <el-form-item
               label="电表本次用数/单价"
               min-width="150">
               <template>
-
                 <table-expand-eandw-item
                   type="electric"
                   cal-type="calElectric"
                   unit="度"
                   :rent="getRent(props)" />
-
               </template>
             </el-form-item>
           </el-form>
@@ -197,14 +192,12 @@
             label="本次计费/时间"
             width="200">
             <template slot-scope="scope">
-
               <table-rent-eandw-item
                 type="water"
                 cal-type="calWater"
                 result-type="calWaterResult"
                 unit="吨"
                 :rent="getRent(scope)" />
-
             </template>
           </el-table-column>
         </el-table-column>
@@ -213,14 +206,12 @@
             label="本次计费/时间"
             width="200">
             <template slot-scope="scope">
-
               <table-rent-eandw-item
                 type="electric"
                 cal-type="calElectric"
                 result-type="calElectricResult"
                 unit="度"
                 :rent="getRent(scope)" />
-
             </template>
           </el-table-column>
         </el-table-column>
