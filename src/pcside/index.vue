@@ -169,7 +169,7 @@ tr:hover
 
   .collapse-btn {
     width: auto;
-    min-width: 90px;
+    min-width: 120px;
     display: inline-block;
   }
 
