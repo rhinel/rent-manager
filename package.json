@@ -10,7 +10,34 @@
     "build": "node build/build.js",
     "serve": "cd ./server && supervisor --inspect index.js",
     "lint": "eslint --ext .js,.vue src server",
-    "lint:css": "stylelint src/**/*.scss src/**/*.vue --syntax scss"
+    "lint:css": "stylelint src/**/*.scss src/**/*.vue --syntax scss",
+    "commit": "git-cz"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "node scripts/verify-commit-msg.js"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.vue": [
+      "eslint --fix",
+      "stylelint --syntax scss",
+      "git add"
+    ],
+    "*.scss": [
+      "stylelint --syntax scss",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -46,10 +73,12 @@
     "babel-plugin-component": "^1.1.1",
     "babel-register": "^6.26.0",
     "chalk": "^2.4.2",
+    "commitizen": "^3.0.7",
     "compression-webpack-plugin": "^2.0.0",
     "connect-history-api-fallback": "^1.6.0",
     "copy-webpack-plugin": "^5.0.1",
     "css-loader": "^2.1.1",
+    "cz-conventional-changelog": "^2.1.0",
     "element-ui": "^2.6.1",
     "eslint": "^5.15.2",
     "eslint-config-airbnb-base": "^13.1.0",
@@ -69,6 +98,8 @@
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-webpack-plugin": "^3.2.0",
     "http-proxy-middleware": "^0.19.1",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
     "mint-ui": "^2.2.13",
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
