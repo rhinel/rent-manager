@@ -26,11 +26,11 @@
     ],
     "*.vue": [
       "eslint --fix",
-      "stylelint --syntax scss",
+      "stylelint --config ./.stylelintrc-feat.js",
       "git add"
     ],
     "*.scss": [
-      "stylelint --syntax scss",
+      "stylelint --config ./.stylelintrc-feat.js",
       "git add"
     ]
   },
