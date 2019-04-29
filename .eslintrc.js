@@ -88,7 +88,5 @@ module.exports = {
     'prefer-destructuring': ['error', { 'object': true, 'array': false }],
     // 可用变量前下划线
     'no-underscore-dangle': 0,
-    // 暂时不禁止循环调用
-    'import/no-cycle': 0,
   }
 }
