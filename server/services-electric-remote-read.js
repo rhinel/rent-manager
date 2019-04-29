@@ -39,6 +39,7 @@ const DefuserData = class {
     // 数据缓存信息
     this.electricData = electricData // 房屋表数
     this.codeTime = '' // 验证码发送时间，用于计算间隔
+    this.secureString = '' // secureString
     this.code = '' // 验证码缓存
     this.cookie = '' // 登陆后cookie缓存
     this.day = '' // 当前请求的日期
@@ -154,6 +155,24 @@ const DefuserData = class {
 
   // 公有方法
 
+  // 设置 secureString 方法
+  async setSecureString({ secureString }) {
+    // 校验
+    if (!secureString) {
+      return this._send('setSecureString', {
+        type: 'ERR',
+        message: '请输入secureString。',
+      })
+    }
+
+    this.secureString = `?${secureString}`
+
+    // 返回数据
+    return this._send('setSecureString', {
+      message: '设置 secureString 成功。',
+    })
+  }
+
   // 获取验证码Cookie / 发送code 方法
   async getCode() {
     // 校验
@@ -167,7 +186,7 @@ const DefuserData = class {
 
     // 发送请求用户验证码标识cookie
     const preGet = await got(
-      '/kh/yhzc.do',
+      `/kh/yhzc.do${this.secureString}`,
       await this._defaultPostOptions({
         body: new URLSearchParams({
           action: 'hqyzm',
@@ -199,7 +218,7 @@ const DefuserData = class {
 
     // 发送验证码
     await got(
-      '/kh/yhzc.do',
+      `/kh/yhzc.do${this.secureString}`,
       await this._defaultPostOptions({
         cookie: setCookie,
         body: new URLSearchParams({
@@ -232,7 +251,7 @@ const DefuserData = class {
 
     //  执行登陆
     const theGet = await got(
-      '/yhdl.do',
+      `/yhdl.do${this.secureString}`,
       await this._defaultPostOptions({
         body: `${'action=yhdl&checkOnline=false'
         }${'&rurl=&dlxx.zhlx=&dlxx.dllx=2&wxSwitch=ON'
@@ -308,7 +327,7 @@ const DefuserData = class {
       dealList = dealList.then(async () => {
         // 执行请求
         const theGet = await got(
-          '/dbzx/dbzx.do',
+          `/dbzx/dbzx.do${this.secureString}`,
           await this._defaultPostOptions({
             cookie: this.cookie,
             body: new URLSearchParams({

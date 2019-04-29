@@ -1,5 +1,19 @@
 <template>
   <div class="electric-remote-read">
+    <!-- 输入框 -->
+    <div class="table-btn table-btn-flex">
+      <div class="table-btn-flex1">
+        <el-input
+          v-model="secureString"
+          placeholder="请输入电力局secureString，每分钟更新" />
+      </div>
+      <el-button
+        type="primary"
+        @click="setSecureString">
+        设置
+      </el-button>
+    </div>
+
     <!-- 顶部按钮组 -->
     <div class="table-btn">
       <div class="table-btn-input">
@@ -194,6 +208,7 @@
         isClose: false,
 
         // 操作字段
+        secureString: '',
         code: '',
         day: '',
         // 房屋信息列表字段
@@ -402,6 +417,14 @@
       },
 
       // 方法
+      setSecureString() {
+        if (ws.readyState === 3) return
+        this.logFormat('client-INFO', '设置 secureString 中 ...')
+        ws.send(JSON.stringify({
+          type: 'setSecureString',
+          data: { secureString: this.secureString },
+        }))
+      },
       getCode() {
         if (ws.readyState === 3) return
         this.logFormat('client-INFO', '请求验证码中 ...')
