@@ -37,7 +37,7 @@
           <div style="overflow: hidden;">
             <el-row :gutter="20">
               <el-col
-                style="height:1px;"
+                style="height: 1px;"
                 :span="4" />
               <el-col :span="20">
                 <el-select
@@ -59,7 +59,7 @@
           <div style="overflow: hidden;">
             <el-row :gutter="20">
               <el-col
-                style="height:1px;"
+                style="height: 1px;"
                 :span="4" />
               <el-col :span="20">
                 <el-input

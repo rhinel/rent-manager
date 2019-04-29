@@ -51,6 +51,18 @@ textarea {
   display: inline-block;
 }
 
+.table-btn-flex {
+  display: flex;
+}
+
+.table-btn-flex1 {
+  flex: 1;
+}
+
+.table-btn-flex1 + .el-button {
+  margin-left: 12px;
+}
+
 .el-button + .table-btn-input,
 .table-btn-input + .el-button {
   margin-left: 10px;
