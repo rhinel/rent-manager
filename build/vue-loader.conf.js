@@ -4,6 +4,9 @@ const config = require('../config')
 const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
+  compilerOptions: {
+    preserveWhitespace: false
+  },
   loaders: utils.cssLoaders({
     sourceMap: isProduction
       ? config.build.productionSourceMap

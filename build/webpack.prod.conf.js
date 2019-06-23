@@ -15,8 +15,6 @@ const os = require('os')
 const packageConfig = require('../package.json')
 const checkGit = require('./check-git')
 
-const env = config.build.env
-
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   performance: false,
@@ -32,11 +30,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
-
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': env
+      'process.env': config.build.env
     }),
     // replace officially maintained compression tools
     new TerserPlugin({
