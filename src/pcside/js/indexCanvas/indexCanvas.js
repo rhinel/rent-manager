@@ -1,4 +1,4 @@
-module.exports = function() {
+export default function() {
 
     var width, height, largeHeader, canvas, ctx, points, target, animateHeader = true;
 
