@@ -15,6 +15,7 @@ import App from '../index'
 import stores from './stores'
 import routes from './routes'
 import routerEach from './routerEach'
+import '@/common/js/registerServiceWorker'
 
 // 载入应用层
 Vue.use(Vuex)

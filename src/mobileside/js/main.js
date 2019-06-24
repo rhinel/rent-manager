@@ -13,6 +13,7 @@ import plugin from 'common/js/plugin'
 
 // 应用配置加载
 import App from '../index'
+import '@/common/js/registerServiceWorker'
 
 // 载入应用层
 // Vue.use(Vuex)
