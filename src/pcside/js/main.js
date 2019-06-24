@@ -1,3 +1,6 @@
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+
 // 加载应用层
 import Vue from 'vue'
 import Vuex from 'vuex'
