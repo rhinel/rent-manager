@@ -7,15 +7,17 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const StylelintPlugin = require('stylelint-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const portfinder = require('portfinder')
 const packageConfig = require('../package.json')
 const checkGit = require('./check-git')
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
-  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
+  baseWebpackConfig.entry[name] = ['./build/dev-client']
+    .concat(baseWebpackConfig.entry[name])
 })
 
-module.exports = merge(baseWebpackConfig, {
+const devWebpackConfig = merge(baseWebpackConfig, {
   mode: 'development',
   devServer: {
     hot: true
@@ -26,6 +28,7 @@ module.exports = merge(baseWebpackConfig, {
   // cheap-module-eval-source-map is faster for development
   devtool: '#cheap-module-eval-source-map',
   plugins: [
+    new webpack.ProgressPlugin(),
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
@@ -52,13 +55,37 @@ module.exports = merge(baseWebpackConfig, {
     new StylelintPlugin({
       files: ['**/*.{vue,htm,html,css,sss,less,scss,sass}'],
       syntax: 'scss'
-    }),
-    new FriendlyErrorsPlugin({
-      clearConsole: false
     })
   ],
   optimization: {
     removeAvailableModules: false,
     removeEmptyChunks: false,
   }
+})
+
+module.exports = new Promise((resolve, reject) => {
+  portfinder.basePort = process.env.PORT || config.dev.port
+  portfinder.getPort((err, port) => {
+    if (err) {
+      reject(err)
+    } else {
+      // publish the new Port, necessary for e2e tests
+      process.env.PORT = port;
+
+      // Add FriendlyErrorsPlugin
+      devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
+        clearConsole: false,
+        compilationSuccessInfo: {
+          messages: [
+            `Your application is running here: ` +
+            `http://localhost:${port}`
+          ],
+        },
+        onErrors: config.dev.notifyOnErrors ?
+          utils.createNotifierCallback() : undefined,
+      }))
+
+      resolve(devWebpackConfig)
+    }
+  })
 })
