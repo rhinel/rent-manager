@@ -1,15 +1,7 @@
 {
-  "presets": [
-    ["@babel/env", {
-      "modules": false,
-      "targets": {
-        "ie": "11"
-      },
-      "useBuiltIns": "usage"
-    }]
-  ],
+  "presets": ["@babel/preset-env"],
   "plugins": [
-    "@babel/transform-runtime",
+    "@babel/plugin-transform-runtime",
     "@babel/plugin-syntax-dynamic-import",
     ["component", {
       "libraryName": "element-ui",
@@ -23,7 +15,7 @@
   "comments": false,
   "env": {
     "test": {
-      "presets": ["@babel/env"],
+      "presets": ["@babel/preset-env"],
       "plugins": ["istanbul"]
     }
   }

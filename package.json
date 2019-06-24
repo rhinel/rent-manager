@@ -1,6 +1,6 @@
 {
   "name": "rent-manager",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "rent-manager for ying",
   "author": "rhinel <rhinelkc@hotmail.com>",
   "private": true,
@@ -47,7 +47,7 @@
     "got": "^9.6.0",
     "log4js": "^4.3.2",
     "md5": "^2.2.1",
-    "mongoose": "^5.6.0",
+    "mongoose": "^5.6.1",
     "redis": "^2.8.0",
     "superagent": "^5.1.0"
   },
@@ -70,6 +70,7 @@
     "compression-webpack-plugin": "^3.0.0",
     "connect-history-api-fallback": "^1.6.0",
     "copy-webpack-plugin": "^5.0.3",
+    "core-js": "^3.1.4",
     "css-loader": "^3.0.0",
     "cz-conventional-changelog-chinese": "^2.3.0",
     "element-ui": "^2.9.2",
@@ -103,6 +104,7 @@
     "portfinder": "^1.0.20",
     "preload-webpack-plugin": "^3.0.0-beta.3",
     "progress-bar-webpack-plugin": "^1.12.1",
+    "regenerator-runtime": "^0.13.2",
     "register-service-worker": "^1.6.2",
     "rimraf": "^2.6.3",
     "sass-loader": "^7.1.0",
