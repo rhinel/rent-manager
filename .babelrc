@@ -1,8 +1,11 @@
 {
   "presets": [
     ["@babel/env", {
-        "modules": false,
-        "targets": { "uglify": true }
+      "modules": false,
+      "targets": {
+        "ie": "11"
+      },
+      "useBuiltIns": "usage"
     }]
   ],
   "plugins": [
