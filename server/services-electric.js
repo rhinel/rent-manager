@@ -205,7 +205,7 @@ module.exports = {
       .equals(db.db.Types.ObjectId(req.userId))
       .where('status')
       .equals(1)
-      .sort('-addTime -_id')
+      .sort('-createTime -_id')
       .lean()
       .exec()
 
@@ -253,7 +253,7 @@ module.exports = {
       .equals(db.db.Types.ObjectId(req.userId))
       .where('status')
       .equals(1)
-      .sort('-addTime -_id')
+      .sort('-createTime -_id')
       .lean()
       .exec()
 
@@ -401,7 +401,7 @@ module.exports = {
       .equals(db.db.Types.ObjectId(req.body.haoId))
       .where('status')
       .equals(1)
-      .sort('-addTime')
+      .sort('-createTime -_id')
       .exec()
 
     const electricPrevId = electricPrev ? electricPrev.id : null
@@ -467,7 +467,7 @@ module.exports = {
       .equals(db.db.Types.ObjectId(req.body.haoId))
       .where('status')
       .equals(1)
-      .sort('-addTime')
+      .sort('-createTime -_id')
       .exec()
 
     const electricCalDelPrevId = electricCalDelPrev ? electricCalDelPrev.id : null
