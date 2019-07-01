@@ -30,7 +30,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.ProgressPlugin(),
     new webpack.DefinePlugin({
-      'process.env': config.dev.env
+      'process.env': Object.assign(
+        {}, config.dev.env,
+        { BASE_URL: config.dev.assetsPublicPath }
+      )
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),

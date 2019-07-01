@@ -35,7 +35,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     new ProgressBarPlugin(),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': config.build.env
+      'process.env': Object.assign(
+        {}, config.build.env,
+        { BASE_URL: config.build.assetsPublicPath }
+      )
     }),
     // replace officially maintained compression tools
     new TerserPlugin({
