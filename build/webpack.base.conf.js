@@ -147,8 +147,10 @@ module.exports = {
     /* config.plugin('preload') */
     new PreloadPlugin({
       rel: 'preload',
-      include: ['pcside'],
-      excludeHtmlNames: ['mobileside.html'],
+      include: process.env.NODE_ENV === 'production'
+        ? ['chunk-vendors-pc', 'chunk-common-pc', 'pcside']
+        : ['pcside'],
+      excludeHtmlNames: ['mobileside/index.html', 'mobileside.html'],
       fileBlacklist: [
         /\.map$/,
         /hot-update\.js$/
@@ -156,8 +158,10 @@ module.exports = {
     ),
     new PreloadPlugin({
       rel: 'preload',
-      include: ['mobileside'],
-      excludeHtmlNames: ['pcside.html'],
+      include: process.env.NODE_ENV === 'production'
+        ? ['chunk-vendors-mb', 'chunk-common-mb', 'mobileside']
+        : ['mobileside'],
+      excludeHtmlNames: ['pcside/index.html', 'pcside.html'],
       fileBlacklist: [
         /\.map$/,
         /hot-update\.js$/
