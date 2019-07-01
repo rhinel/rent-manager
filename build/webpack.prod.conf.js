@@ -37,7 +37,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': Object.assign(
         {}, config.build.env,
-        { BASE_URL: config.build.assetsPublicPath }
+        { BASE_URL: JSON.stringify(config.build.assetsPublicPath) }
       )
     }),
     // replace officially maintained compression tools
