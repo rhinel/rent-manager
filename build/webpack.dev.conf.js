@@ -32,7 +32,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': Object.assign(
         {}, config.dev.env,
-        { BASE_URL: config.dev.assetsPublicPath }
+        { BASE_URL: JSON.stringify(config.dev.assetsPublicPath) }
       )
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
