@@ -73,7 +73,7 @@ module.exports = {
         exclude: /node_modules/,
         include: [resolve('src'), resolve('server')],
         options: {
-          cache: true,
+          cache: process.env.NODE_ENV === 'production',
           cacheIdentifier: packageConfig.name + ':{version} {process.env.NODE_ENV}',
           formatter: require('eslint-friendly-formatter')
         }
@@ -135,9 +135,7 @@ module.exports = {
       id: 'happyBabel',
       loaders: [{
         loader: 'babel-loader',
-        options: {
-          cacheDirectory: true
-        }
+        options: { cacheDirectory: true }
       }],
       threadPool: happyThreadPool,
       verbose: true
