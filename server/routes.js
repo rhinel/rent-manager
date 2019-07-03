@@ -58,6 +58,7 @@ module.exports = app => {
 
   // 处理页面, 动态加载
   // 返回文件，该处不默认处理错误 / 或认为不会存在错误
+  app.use('/service-worker.js', express.static(path.resolve(__dirname, '../dist/service-worker.js')))
   app.use('/static', express.static(path.resolve(__dirname, '../dist/static')))
   app.use('/404', express.static(path.resolve(__dirname, '../404')))
   app.get('*', (req, res) => {
