@@ -7,6 +7,9 @@
     <canvas id="index-canvas" />
     <el-card class="login-wrap">
       <div class="login-hello">
+        Rent Manager
+      </div>
+      <div class="login-hello">
         Hello {{ logininfo.name }} <i />
       </div>
       <el-form
@@ -37,8 +40,9 @@
       </el-form>
       <div class="beian">
         <div>v{{ version }}</div>
+        <div>幻想万国科技旗下产品，版权所有</div>
         <a
-          href="http://www.miitbeian.gov.cn/"
+          href="http://beian.miit.gov.cn/"
           target="_blank">
           粤ICP备17164727号
         </a>
