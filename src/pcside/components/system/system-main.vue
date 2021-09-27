@@ -368,7 +368,7 @@
                     auto-complete="off"
                     placeholder="输入最低消费">
                     <template slot="append">
-                      吨
+                      方
                     </template>
                   </el-input>
                 </el-form-item>
@@ -408,7 +408,7 @@
                     ￥
                   </template>
                   <template slot="append">
-                    元/吨
+                    元/方
                   </template>
                 </el-input>
               </el-col>
@@ -434,7 +434,7 @@
                       auto-complete="off"
                       placeholder="本阶梯最大值">
                       <template slot="append">
-                        吨
+                        方
                       </template>
                     </el-input>
                   </el-form-item>
@@ -557,7 +557,7 @@
         activeNames: [],
         submitLoading: false,
 
-        labelWidth: '90px',
+        labelWidth: '100px',
 
         // 水费编辑表单
         calWaterPrice: {},

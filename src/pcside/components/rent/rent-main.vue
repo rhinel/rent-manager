@@ -119,14 +119,14 @@
                 低消：{{ addMonthList.defaultCalGasPrice.minPrice || 0 }}方
               </div>
               <div v-if="addMonthList.defaultCalGasPrice.calType == 'single'">
-                单价：{{ addMonthList.defaultCalGasPrice.singlePrice || 0 }}方/吨
+                单价：{{ addMonthList.defaultCalGasPrice.singlePrice || 0 }}元/方
               </div>
               <div v-else-if="addMonthList.defaultCalGasPrice.calType == 'step'">
                 阶梯：
                 <div
                   v-for="(item, index) in addMonthList.defaultCalGasPrice.stepPrice"
                   :key="index">
-                  {{ item.step }}吨及以下￥{{ item.price }}方/吨；
+                  {{ item.step }}方及以下￥{{ item.price }}/元方；
                 </div>
                 超出按最后阶梯计算。
               </div>
@@ -444,3 +444,12 @@
     },
   }
 </script>
+
+<style lang="scss">
+.rent-main {
+  /* 弹窗表单样式 */
+  .add-month-list-dialog {
+    max-width: 1200px;
+  }
+}
+</style>

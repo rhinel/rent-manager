@@ -843,7 +843,7 @@
         dialogId: Date.now(),
         // 入住弹窗
         lidDialogTitle: '入住',
-        lidLabelWidth: '90px',
+        lidLabelWidth: '100px',
         leaseInflag: false,
         // 入住数据对象
         lease: {},
@@ -967,7 +967,7 @@
 
         // 搬出弹窗
         lodDialogTitle: '搬出',
-        lodLabelWidth: '90px',
+        lodLabelWidth: '100px',
         leaseOutflag: false,
         out: {
           _id: '',
@@ -1294,6 +1294,8 @@
 .lease-main {
   /* 弹窗样式 */
   .lease-in-dialog {
+    max-width: 1200px;
+
     .el-date-editor--daterange.el-input__inner {
       width: 100%;
     }
