@@ -56,7 +56,7 @@
             auto-complete="off"
             placeholder="输入燃气表数">
             <template slot="append">
-              吨
+              方
             </template>
           </el-input>
         </el-form-item>
@@ -127,7 +127,7 @@
                 auto-complete="off"
                 placeholder="输入抄表数">
                 <template slot="append">
-                  吨
+                  方
                 </template>
               </el-input>
             </el-form-item>
@@ -170,7 +170,7 @@
                 auto-complete="off"
                 placeholder="输入底表数">
                 <template slot="append">
-                  吨
+                  方
                 </template>
               </el-input>
             </el-form-item>
@@ -215,7 +215,7 @@
                 auto-complete="off"
                 placeholder="输入最低消费">
                 <template slot="append">
-                  吨
+                  方
                 </template>
               </el-input>
             </el-form-item>
@@ -253,7 +253,7 @@
               ￥
             </template>
             <template slot="append">
-              元/吨
+              元/方
             </template>
           </el-input>
         </el-form-item>
@@ -277,7 +277,7 @@
                   auto-complete="off"
                   placeholder="本阶梯最大值">
                   <template slot="append">
-                    吨
+                    方
                   </template>
                 </el-input>
               </el-form-item>
@@ -401,7 +401,7 @@
         width="120" />
       <el-table-column
         prop="gasId.gas"
-        label="最新抄表数(吨)"
+        label="最新抄表数(方)"
         width="160">
         <template slot-scope="scope">
           <span
@@ -423,7 +423,7 @@
       </el-table-column>
       <el-table-column
         prop="calGasId.gas"
-        label="上计底表数(吨)"
+        label="上计底表数(方)"
         width="160">
         <template slot-scope="scope">
           <span
@@ -445,7 +445,7 @@
       </el-table-column>
       <el-table-column
         prop="gap"
-        label="本期实用数(吨)"
+        label="本期实用数(方)"
         width="160">
         <template slot-scope="scope">
           <span
@@ -473,7 +473,7 @@
         <template slot-scope="scope">
           <table-eandw-cal-price-view-item
             type="leaseId"
-            unit="吨"
+            unit="方"
             :lease="scope.row" />
         </template>
       </el-table-column>

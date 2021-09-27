@@ -35,7 +35,7 @@
             width="180" />
           <el-table-column
             prop="gas"
-            label="抄表数(吨)"
+            label="抄表数(方)"
             width="180" />
           <el-table-column
             prop="addTime"
@@ -128,7 +128,7 @@
             label="房屋"
             width="180" />
           <el-table-column
-            label="今次(吨)">
+            label="今次(方)">
             <el-table-column
               prop="tnew.gas"
               label="抄表数"
@@ -143,7 +143,7 @@
             </el-table-column>
           </el-table-column>
           <el-table-column
-            label="前次(吨)">
+            label="前次(方)">
             <el-table-column
               prop="old.gas"
               label="底表数"
@@ -159,7 +159,7 @@
           </el-table-column>
           <el-table-column
             prop="gap"
-            label="小计(吨)"
+            label="小计(方)"
             width="110" />
           <el-table-column
             label="计费">
@@ -193,12 +193,12 @@
                   <div>
                     低消：
                     {{ scope.row.calGas.minPrice }}
-                    吨
+                    方
                   </div>
                   <div v-if="scope.row.calGas.calType == 'single'">
                     单价：￥
                     {{ scope.row.calGas.singlePrice }}
-                    元/吨
+                    元/方
                   </div>
                   <div
                     class="history-step-p-wrap"
@@ -210,7 +210,7 @@
                       <div
                         v-for="(item, index) in scope.row.calGas.stepPrice"
                         :key="index">
-                        阶梯{{ item.step }}吨及以下￥{{ item.price }}元/吨
+                        阶梯{{ item.step }}方及以下￥{{ item.price }}元/方
                       </div>
                     </div>
                   </div>

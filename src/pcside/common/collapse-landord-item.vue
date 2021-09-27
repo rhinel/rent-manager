@@ -10,7 +10,7 @@
       </span>
       <span>[房租合计￥{{ landord[type] }}元]</span>
       <span>[租金合计￥{{ landord[`${type}Rent`] }}元]</span>
-      <span>[水电合计￥{{ landord[`${type}Cost`] }}元]</span>
+      <span>[水电燃气合计￥{{ landord[`${type}Cost`] }}元]</span>
     </div>
 
     <!-- 租单信息 -->

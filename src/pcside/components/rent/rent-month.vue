@@ -99,13 +99,13 @@
                       addRent.calGas.calGas.calType == 'single' ?
                         '单一价格' : '阶梯价格'
                     }}<br>
-                    最低消费：{{ addRent.calGas.calGas.minPrice }}吨<br>
-                    本次表数：{{ addRent.calGas.tnew.gas }}吨<br>
+                    最低消费：{{ addRent.calGas.calGas.minPrice }}方<br>
+                    本次表数：{{ addRent.calGas.tnew.gas }}方<br>
                     （{{ getTime(addRent.calGas.tnew.addTime) }}）<br>
-                    上次表数：{{ addRent.calGas.old.gas }}吨<br>
+                    上次表数：{{ addRent.calGas.old.gas }}方<br>
                     （{{ getTime(addRent.calGas.old.addTime) }}）<br>
-                    计费单价：￥{{ eandwCalGetPrice(addRent, 'gas', 'calGas') }}元/吨<br>
-                    水费：￥{{
+                    计费单价：￥{{ eandwCalGetPrice(addRent, 'gas', 'calGas') }}元/方<br>
+                    燃气费：￥{{
                       addRent.calGas.calGasResult
                     }}元（{{
                       addRent.calGas.fix ? '修' : '计'
@@ -373,7 +373,7 @@
                     <table-expand-eandw-item
                       type="gas"
                       cal-type="calGas"
-                      unit="吨"
+                      unit="方"
                       :rent="getRent(props)"
                       v-if="props.row.rents.length" />
                   </template>
@@ -799,7 +799,7 @@
 
         // 计租
         ardDialogTitle: '计租',
-        ardLabelWidth: '90px',
+        ardLabelWidth: '100px',
         addRent: {},
         addRentClear: {
           calWater: {}, // 水费计费信息
@@ -828,7 +828,7 @@
 
         // 修改状态
         ctdDialogTitle: '状态修改',
-        ctdLabelWidth: '90px',
+        ctdLabelWidth: '100px',
         types: [
           { label: '已交', value: 1 },
           { label: '给单', value: 2 },

@@ -235,7 +235,7 @@
                 type="gas"
                 cal-type="calGas"
                 result-type="calGasResult"
-                unit="吨"
+                unit="方"
                 :rent="getRent(scope)" />
             </template>
           </el-table-column>

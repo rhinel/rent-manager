@@ -843,7 +843,7 @@
         dialogId: Date.now(),
         // 入住弹窗
         lidDialogTitle: '入住',
-        lidLabelWidth: '90px',
+        lidLabelWidth: '100px',
         leaseInflag: false,
         // 入住数据对象
         lease: {},
@@ -967,7 +967,7 @@
 
         // 搬出弹窗
         lodDialogTitle: '搬出',
-        lodLabelWidth: '90px',
+        lodLabelWidth: '100px',
         leaseOutflag: false,
         out: {
           _id: '',
@@ -1101,24 +1101,13 @@
           // 时间
           this.lease.addTime = (row.leaseId.addTime && new Date(row.leaseId.addTime)) || new Date()
 
-          // 水费电费燃气初始化
-          if (!row.leaseId || !row.leaseId._id) {
+          // 水费
+          if (!this.lease.calWaterPrice) {
             this.lease.calWaterPrice = Object.assign(
               {},
               JSON.parse(JSON.stringify(this.defaultCalWaterPrice))
             )
-            this.lease.calElePrice = Object.assign(
-              {},
-              JSON.parse(JSON.stringify(this.defaultCalElePrice))
-            )
-            this.lease.calGasPrice = Object.assign(
-              {},
-              JSON.parse(JSON.stringify(this.defaultCalGasPrice))
-            )
-            return
           }
-
-          // 水费
           Object.keys(this.lease.calWaterPrice).forEach(key => {
             if (
               this.lease.calWaterPrice[key].constructor === Array
@@ -1134,6 +1123,12 @@
           if (!this.lease.calWaterPrice.stepPrice.length) this.addStep(this.lease.calWaterPrice)
 
           // 电费
+          if (!this.lease.calElePrice) {
+            this.lease.calElePrice = Object.assign(
+              {},
+              JSON.parse(JSON.stringify(this.defaultCalElePrice))
+            )
+          }
           Object.keys(this.lease.calElePrice).forEach(key => {
             if (
               this.lease.calElePrice[key].constructor === Array
@@ -1147,6 +1142,12 @@
           if (!this.lease.calElePrice.stepPrice.length) this.addStep(this.lease.calElePrice)
 
           // 燃气费
+          if (!this.lease.calGasPrice) {
+            this.lease.calGasPrice = Object.assign(
+              {},
+              JSON.parse(JSON.stringify(this.defaultCalGasPrice))
+            )
+          }
           Object.keys(this.lease.calGasPrice).forEach(key => {
             if (
               this.lease.calGasPrice[key].constructor === Array
@@ -1294,6 +1295,8 @@
 .lease-main {
   /* 弹窗样式 */
   .lease-in-dialog {
+    max-width: 1200px;
+
     .el-date-editor--daterange.el-input__inner {
       width: 100%;
     }
