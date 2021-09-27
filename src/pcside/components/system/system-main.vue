@@ -349,6 +349,161 @@
         </el-collapse-item>
 
         <el-collapse-item
+          name="defaultCalGasPrice"
+          :title="'默认燃气费计费方式'
+            + '（修改后将在下次新建月度/入住时生效）'">
+          <el-form
+            :model="calGasPrice"
+            :rules="calrules"
+            ref="calGasPrice">
+            <!-- 燃气费 -->
+            <el-row :gutter="20">
+              <el-col :span="7">
+                <el-form-item
+                  label="燃气费低消"
+                  prop="minPrice"
+                  :label-width="labelWidth">
+                  <el-input
+                    v-model.number="calGasPrice.minPrice"
+                    auto-complete="off"
+                    placeholder="输入最低消费">
+                    <template slot="append">
+                      吨
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="14">
+                <el-form-item
+                  label="燃气费方式"
+                  :label-width="labelWidth">
+                  <el-radio
+                    v-model="calGasPrice.calType"
+                    label="single">
+                    单一价格
+                  </el-radio>
+                  <el-radio
+                    v-model="calGasPrice.calType"
+                    label="step">
+                    阶梯价格
+                  </el-radio>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <!-- 单价燃气费计费 -->
+            <el-form-item
+              label="燃气费单价"
+              prop="singlePrice"
+              :label-width="labelWidth"
+              :rules="calrules.singlePrice[0]"
+              v-if="calGasPrice.calType == 'single'"
+              key="watSingle">
+              <el-col :span="13">
+                <el-input
+                  v-model.number="calGasPrice.singlePrice"
+                  auto-complete="off"
+                  placeholder="输入单价">
+                  <template slot="prepend">
+                    ￥
+                  </template>
+                  <template slot="append">
+                    元/吨
+                  </template>
+                </el-input>
+              </el-col>
+            </el-form-item>
+
+            <!-- 燃气费阶梯计费 -->
+            <div v-if="calGasPrice.calType == 'step'">
+              <el-form-item
+                required
+                :label="'阶梯' + (index + 1)"
+                :label-width="labelWidth"
+                v-for="(step, index) in calGasPrice.stepPrice"
+                :key="'calGasPrice' + index"
+                :ref="'calGasPrice' + index">
+                <el-col :span="5">
+                  <el-form-item
+                    :prop="'stepPrice.' + index + '.step'"
+                    :rules="{
+                      type: 'number', required: true, message: '请填写', trigger: 'blur'
+                    }">
+                    <el-input
+                      v-model.number="step.step"
+                      auto-complete="off"
+                      placeholder="本阶梯最大值">
+                      <template slot="append">
+                        吨
+                      </template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
+                <el-col :span="7">
+                  <el-form-item
+                    :prop="'stepPrice.' + index + '.price'"
+                    :rules="{
+                      type: 'number', required: true, message: '请填写', trigger: 'blur'
+                    }">
+                    <el-input
+                      v-model.number="step.price"
+                      auto-complete="off"
+                      placeholder="本阶梯单价">
+                      <template slot="prepend">
+                        ￥
+                      </template>
+                      <template slot="append">
+                        元
+                      </template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
+                <el-col :span="5">
+                  <el-button
+                    @click.prevent="removeStep(calGasPrice, step)">
+                    删除
+                  </el-button>
+                </el-col>
+              </el-form-item>
+            </div>
+            <el-form-item
+              :label-width="labelWidth"
+              v-if="calGasPrice.calType == 'step'"
+              key="watStep">
+              <el-button
+                type="primary"
+                @click="addStep(calGasPrice)">
+                新增阶梯
+              </el-button>
+            </el-form-item>
+
+            <!-- 提交按钮 -->
+            <el-form-item
+              :label-width="labelWidth"
+              v-if="calGasEdit || !defaultKeysHasSet.defaultCalGasPrice"
+              key="watBtn">
+              <el-button
+                type="danger"
+                :loading="submitLoading"
+                @click="submit">
+                提交修改
+              </el-button>
+              <el-button
+                :loading="submitLoading"
+                @click="cancel('gas')">
+                取消
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </el-collapse-item>
+
+        <el-collapse-item
           title="系统用户信息"
           name="defaultElseInfo">
           <el-form
@@ -410,6 +565,9 @@
         // 电费编辑表单
         calElePrice: {},
 
+        // 燃气费编辑表单
+        calGasPrice: {},
+
         // 其他信息表单
         elseInfo: {},
 
@@ -436,6 +594,7 @@
         typesVal: state => state.config.typesVal,
         defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
         defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultCalGasPrice: state => state.config.defaultCalGasPrice,
         defaultElseInfo: state => state.config.defaultElseInfo,
         defaultStep: state => state.config.defaultStep,
         defaultKeysHasSet: state => state.defaultKeysHasSet,
@@ -448,6 +607,11 @@
       calEleEdit() {
         const local = JSON.stringify(this.calElePrice)
         const def = JSON.stringify(this.defaultCalElePrice)
+        return local !== def
+      },
+      calGasEdit() {
+        const local = JSON.stringify(this.calGasPrice)
+        const def = JSON.stringify(this.defaultCalGasPrice)
         return local !== def
       },
       elseEdit() {
@@ -464,6 +628,9 @@
       defaultCalElePrice() {
         this.cancel('ele')
       },
+      defaultCalGasPrice() {
+        this.cancel('gas')
+      },
       defaultElseInfo() {
         this.cancel('else')
       },
@@ -474,6 +641,7 @@
     created() {
       this.cancel('water')
       this.cancel('ele')
+      this.cancel('gas')
       this.cancel('else')
     },
     mounted() {
@@ -506,6 +674,12 @@
             {},
             JSON.parse(JSON.stringify(this.defaultCalElePrice))
           )
+        } else if (type === 'gas') {
+          if (this.$refs.calGasPrice) this.$refs.calGasPrice.resetFields()
+          this.calGasPrice = Object.assign(
+            {},
+            JSON.parse(JSON.stringify(this.defaultCalGasPrice))
+          )
         } else if (type === 'else') {
           if (this.$refs.elseInfo) this.$refs.elseInfo.resetFields()
           this.elseInfo = Object.assign(
@@ -521,6 +695,7 @@
         try {
           await this.$refs.calWaterPrice.validate()
           await this.$refs.calElePrice.validate()
+          await this.$refs.calGasPrice.validate()
           await this.$refs.elseInfo.validate()
         } catch (err) {
           return
@@ -532,11 +707,13 @@
         const {
           calWaterPrice,
           calElePrice,
+          calGasPrice,
           elseInfo,
         } = this
         const postData = Object.assign({}, {
           defaultCalWaterPrice: calWaterPrice,
           defaultCalElePrice: calElePrice,
+          defaultCalGasPrice: calGasPrice,
           defaultElseInfo: elseInfo,
         })
 

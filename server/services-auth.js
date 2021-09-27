@@ -143,6 +143,7 @@ module.exports = {
     const {
       defaultCalWaterPrice,
       defaultCalElePrice,
+      defaultCalGasPrice,
       defaultElseInfo,
     } = req.body
 
@@ -150,6 +151,7 @@ module.exports = {
       .dbModel('admin', {//* //标记，更新默认计费方式，修改类型
         defaultCalWaterPrice: Object, // 默认水费计费，全拼
         defaultCalElePrice: Object, // 默认电费计费，全拼
+        defaultCalGasPrice: Object, // 默认燃气费计费，全拼
         defaultElseInfo: Object, // 默认用户信息，全拼
       })
       .findOneAndUpdate({
@@ -158,6 +160,7 @@ module.exports = {
         $set: {
           defaultCalWaterPrice,
           defaultCalElePrice,
+          defaultCalGasPrice,
           defaultElseInfo,
         },
       })

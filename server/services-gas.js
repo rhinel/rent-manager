@@ -5,7 +5,7 @@ const servicesHouse = require('./services-house')
 
 module.exports = {
 
-  electricAdd: async req => {
+  gasAdd: async req => {
     // 校验数据，错误退出
     // 1插入数据，错误退出
     // 2更新房屋挂载ID，错误退出
@@ -15,8 +15,8 @@ module.exports = {
       return Promise.reject(new FoundError('请选择房屋'))
     }
 
-    if (!req.body.electric) {
-      return Promise.reject(new FoundError('请填写电表数'))
+    if (!req.body.gas) {
+      return Promise.reject(new FoundError('请填写燃气表数'))
     }
 
     if (!req.body.addTime) {
@@ -27,12 +27,12 @@ module.exports = {
     await servicesHouse
       .houseFind(req)
 
-    // 1插入电表抄表记录
+    // 1插入燃气表抄表记录
     const addData = await db
-      .dbModel('electric', {//* //标记，初始电表数数据类，新增类型
+      .dbModel('gas', {//* //标记，初始燃气表数数据类，新增类型
         userId: db.db.Schema.Types.ObjectId, // 用户ID
         haoId: db.db.Schema.Types.ObjectId, // 房屋ID
-        electric: Number, // 电表数，全拼
+        gas: Number, // 燃气表数，全拼
         remark: String, // 备注，全拼
         addTime: String, // 抄表时间
         status: Number, // 状态
@@ -41,7 +41,7 @@ module.exports = {
       .create({
         userId: req.userId,
         haoId: req.body.haoId,
-        electric: req.body.electric,
+        gas: req.body.gas,
         remark: req.body.remark || '',
         addTime: req.body.addTime,
         status: 1,
@@ -52,34 +52,34 @@ module.exports = {
       return Promise.reject(new FoundError('抄表失败'))
     }
 
-    // 2更新房屋最新电表数信息
+    // 2更新房屋最新燃气表数信息
     const house = await db
       .dbModel('house', {//* //标记，更新房屋数据类，扩增最新抄表数引用类型
-        electricId: db.db.Schema.Types.ObjectId,
+        gasId: db.db.Schema.Types.ObjectId,
         updateTime: Number, // 更新时间
       })
       .findOneAndUpdate({ _id: req.body.haoId }, {
-        electricId: addData._id,
+        gasId: addData._id,
         updateTime: Date.now(),
       })
       .exec()
 
     if (!house) {
-      return Promise.reject(new FoundError('房屋不存在，无法更新抄电表ID'))
+      return Promise.reject(new FoundError('房屋不存在，无法更新抄燃气表ID'))
     }
 
     // 3返回数据
     return { _id: addData._id }
   },
 
-  electricMainList: async req => {
-    // 查询房屋数据，抄表记录，计费记录，租户信息
-    // 1电费小计计费
-    // 2返回list对象
+  gasMainList: async req => {
+    // 1查询房屋数据，抄表记录，计费记录，租户信息
+    // 2燃气费小计计费
+    // 3返回list对象
 
     // 初始化该库
-    db.dbModel('electric')
-    db.dbModel('electriccal')
+    db.dbModel('gas')
+    db.dbModel('gascal')
     db.dbModel('lease')
 
     // 1数据库查询
@@ -88,26 +88,26 @@ module.exports = {
       .find({}, {
         fang: 1,
         hao: 1,
-        electricId: 1,
-        calElectricId: 1,
+        gasId: 1,
+        calGasId: 1,
         leaseId: 1,
       })
       .populate({
-        path: 'electricId',
-        model: 'electric',
-        select: 'electric remark addTime',
+        path: 'gasId',
+        model: 'gas',
+        select: 'gas remark addTime',
         match: { status: 1 },
       })
       .populate({
-        path: 'calElectricId',
-        model: 'electriccal',
+        path: 'calGasId',
+        model: 'gascal',
         select: 'tnew addTime',
         match: { status: 1 },
       })
       .populate({
         path: 'leaseId',
         model: 'lease',
-        select: 'calElePrice',
+        select: 'calGasPrice',
         match: { status: 1 },
       })
       .where('userId')
@@ -124,29 +124,29 @@ module.exports = {
       if (!item.fanghao) {
         item.fanghao = item.fang + item.hao
       }
-      // 上次电费ID初始化
-      if (!item.calElectricId) item.calElectricId = {}
-      if (item.calElectricId.tnew) {
-        item.calElectricId.tnew.addTime = item.calElectricId.addTime
-        item.calElectricId = item.calElectricId.tnew
+      // 上次燃气费ID初始化
+      if (!item.calGasId) item.calGasId = {}
+      if (item.calGasId.tnew) {
+        item.calGasId.tnew.addTime = item.calGasId.addTime
+        item.calGasId = item.calGasId.tnew
       }
-      // 抄电ID初始化
-      if (!item.electricId) item.electricId = {}
+      // 抄燃气ID初始化
+      if (!item.gasId) item.gasId = {}
       // 收费方式初始化
       if (!item.leaseId) item.leaseId = {}
-      if (item.leaseId.calElePrice) {
-        item.leaseId = item.leaseId.calElePrice
+      if (item.leaseId.calGasPrice) {
+        item.leaseId = item.leaseId.calGasPrice
       }
       // 差距计算
       if (!item.gap) {
-        item.gap = (item.electricId.electric || 0) - (item.calElectricId.electric || 0)
+        item.gap = (item.gasId.gas || 0) - (item.calGasId.gas || 0)
       }
       if (item.gap <= 0) {
         item.gap = 0
       }
 
       // 小计计算
-      // 电表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
+      // 燃气表计费，前端计算，后端获取数据时计算，前端入住搬出月结时计算
       let calResult = 0
       let calGap = item.gap
       calGap = Math.max(calGap, item.leaseId.minPrice || 0)
@@ -176,7 +176,7 @@ module.exports = {
     return dbInfo
   },
 
-  electricList: async req => {
+  gasList: async req => {
     // 1查询抄表记录，房屋数据
     // 2返回list对象
 
@@ -193,7 +193,7 @@ module.exports = {
 
     // 1数据库查询
     const dbInfo = await db
-      .dbModel('electric')
+      .dbModel('gas')
       .find({ haoId: db.db.Types.ObjectId(req.body.haoId) })
       .populate({
         path: 'haoId',
@@ -209,14 +209,14 @@ module.exports = {
       .lean()
       .exec()
 
-    dbInfo.forEach(electric => {
+    dbInfo.forEach(gas => {
       // loading字段提供
-      if (!electric.gettingdelElectric) electric.gettingdelElectric = false
+      if (!gas.gettingdelGas) gas.gettingdelGas = false
       // del提示字段提供
-      if (!electric.dElectricPopFlag) electric.dElectricPopFlag = false
+      if (!gas.dGasPopFlag) gas.dGasPopFlag = false
       // 房屋
-      if (electric.haoId && !electric.fanghao) {
-        electric.fanghao = electric.haoId.fang + electric.haoId.hao
+      if (gas.haoId && !gas.fanghao) {
+        gas.fanghao = gas.haoId.fang + gas.haoId.hao
       }
     })
 
@@ -224,7 +224,7 @@ module.exports = {
     return dbInfo
   },
 
-  electricCalList: async req => {
+  gasCalList: async req => {
     // 查询计费记录，房屋数据
     // 返回list对象
 
@@ -241,7 +241,7 @@ module.exports = {
 
     // 1数据库查询
     const dbInfo = await db
-      .dbModel('electriccal')
+      .dbModel('gascal')
       .find({ haoId: db.db.Types.ObjectId(req.body.haoId) })
       .populate({
         path: 'haoId',
@@ -257,27 +257,27 @@ module.exports = {
       .lean()
       .exec()
 
-    dbInfo.forEach(electricCal => {
+    dbInfo.forEach(gasCal => {
       // loading字段提供
-      if (!electricCal.gettingdelCalElectric) electricCal.gettingdelCalElectric = false
+      if (!gasCal.gettingdelCalGas) gasCal.gettingdelCalGas = false
       // del提示字段提供
-      if (!electricCal.dCalElectricPopFlag) electricCal.dCalElectricPopFlag = false
+      if (!gasCal.dCalGasPopFlag) gasCal.dCalGasPopFlag = false
       // 房屋
-      if (electricCal.haoId && !electricCal.fanghao) {
-        electricCal.fanghao = electricCal.haoId.fang + electricCal.haoId.hao
+      if (gasCal.haoId && !gasCal.fanghao) {
+        gasCal.fanghao = gasCal.haoId.fang + gasCal.haoId.hao
       }
       // 小计
-      if (!electricCal.gap) {
-        electricCal.gap = (electricCal.tnew.electric || 0) - (electricCal.old.electric || 0)
+      if (!gasCal.gap) {
+        gasCal.gap = (gasCal.tnew.gas || 0) - (gasCal.old.gas || 0)
       }
-      if (electricCal.gap <= 0) electricCal.gap = 0
+      if (gasCal.gap <= 0) gasCal.gap = 0
     })
 
     // 2返回数据
     return dbInfo
   },
 
-  electriccalElectric: async req => {
+  gascalGas: async req => {
     // 不做数据校验
     // 1插入数据（存储新抄表记录，旧抄表记录，计费信息），错误退出
     // 2更新房屋挂载ID，错误提出
@@ -293,20 +293,20 @@ module.exports = {
 
     // 1插入数据
     const addInfo = await db
-      .dbModel('electriccal', {//* //标记，初始电表计费数数据类，新增类型
+      .dbModel('gascal', {//* //标记，初始燃气表计费数数据类，新增类型
         userId: db.db.Schema.Types.ObjectId, // 用户ID
         haoId: db.db.Schema.Types.ObjectId, // 房屋ID，全拼
         tnew: {
-          electric: Number, // 抄表数
+          gas: Number, // 抄表数
           remark: String, // 抄表备注
           addTime: String, // 抄表时间
         },
         old: {
-          electric: Number, // 底表数
+          gas: Number, // 底表数
           remark: String, // 底表备注
           addTime: String, // 底表时间
         },
-        calElectric: {
+        calGas: {
           minPrice: Number, // 本次计费低消
           calType: String, // 计费类型
           singlePrice: Number, // single单价
@@ -318,7 +318,7 @@ module.exports = {
         remark: String, // 计费备注
         addTime: String, // 计费时间
         fix: Boolean, // 结果是否修正
-        calElectricResult: Number, // 计算结果
+        calGasResult: Number, // 计算结果
         status: Number, // 状态
         createTime: Number, // 创建时间
       })
@@ -327,11 +327,11 @@ module.exports = {
         haoId: req.body.haoId,
         tnew: req.body.tnew,
         old: req.body.old,
-        calElectric: req.body.calElectric,
+        calGas: req.body.calGas,
         remark: req.body.remark,
         addTime: req.body.addTime,
         fix: req.body.fix,
-        calElectricResult: req.body.calElectricResult,
+        calGasResult: req.body.calGasResult,
         status: 1,
         createTime: Date.now(),
       })
@@ -340,27 +340,27 @@ module.exports = {
       return Promise.reject(new FoundError('插入失败'))
     }
 
-    // 2更新房屋最新电表计费数信息
+    // 2更新房屋信息
     const house = await db
       .dbModel('house', {//* //标记，更新房屋数据类，扩增最新计费数据引用类型
-        calElectricId: db.db.Schema.Types.ObjectId,
+        calGasId: db.db.Schema.Types.ObjectId,
         updateTime: Number, // 更新时间
       })
       .findOneAndUpdate({ _id: req.body.haoId }, {
-        calElectricId: addInfo._id,
+        calGasId: addInfo._id,
         updateTime: Date.now(),
       })
       .exec()
 
     if (!house) {
-      return Promise.reject(new FoundError('房屋不存在，无法电费计费更新ID'))
+      return Promise.reject(new FoundError('房屋不存在，无法燃气费计费更新ID'))
     }
 
     // 3返回数据
     return { _id: addInfo._id }
   },
 
-  electricDel: async req => {
+  gasDel: async req => {
     // 校验数据，错误退出
     // 1修改状态，错误退出
     // 2查询上一条数据
@@ -376,8 +376,8 @@ module.exports = {
       .houseFind(req)
 
     // 1根据ID修改状态
-    const electricDel = await db
-      .dbModel('electric', {//* //标记，初始电表类型数据类，删除类型
+    const gasDel = await db
+      .dbModel('gas', {//* //标记，初始燃气表类型数据类，删除类型
         status: Number, // 状态
         updateTime: Number, // 更新时间
       })
@@ -387,13 +387,13 @@ module.exports = {
       })
       .exec()
 
-    if (!electricDel || !electricDel.status) {
+    if (!gasDel || !gasDel.status) {
       return Promise.reject(new FoundError('删除失败'))
     }
 
-    // 查询上一条电表数据
-    const electricPrev = await db
-      .dbModel('electric')
+    // 2查询上一条数据
+    const gasPrev = await db
+      .dbModel('gas')
       .findOne({})
       .where('userId')
       .equals(db.db.Types.ObjectId(req.userId))
@@ -404,29 +404,29 @@ module.exports = {
       .sort('-createTime -_id')
       .exec()
 
-    const electricPrevId = electricPrev ? electricPrev.id : null
+    const gasPrevId = gasPrev ? gasPrev.id : null
 
-    // 3更新房屋最新电表数信息
+    // 3更新房屋信息
     const house = await db
-      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新抄电表数引用类型
-        electricId: db.db.Schema.Types.ObjectId,
+      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新抄燃气表数引用类型
+        gasId: db.db.Schema.Types.ObjectId,
         updateTime: Number, // 更新时间
       })
       .findOneAndUpdate({ _id: req.body.haoId }, {
-        electricId: electricPrevId,
+        gasId: gasPrevId,
         updateTime: Date.now(),
       })
       .exec()
 
     if (!house) {
-      return Promise.reject(new FoundError('房屋不存在，无法删除电度数'))
+      return Promise.reject(new FoundError('房屋不存在，无法删除燃气度数'))
     }
 
     // 4返回ID
     return { _id: req.body._id }
   },
 
-  electricCalDel: async req => {
+  gasCalDel: async req => {
     // 校验数据，错误退出
     // 1修改状态，错误退出
     // 2查询上一条数据
@@ -442,8 +442,8 @@ module.exports = {
       .houseFind(req)
 
     // 1根据ID修改状态
-    const electricCalDel = await db
-      .dbModel('electriccal', {//* //标记，初始电费计费数据类，删除类型
+    const gasCalDel = await db
+      .dbModel('gascal', {//* //标记，初始燃气费计费数据类，删除类型
         status: Number, // 状态
         updateTime: Number, // 更新时间
       })
@@ -453,13 +453,13 @@ module.exports = {
       })
       .exec()
 
-    if (!electricCalDel || !electricCalDel.status) {
+    if (!gasCalDel || !gasCalDel.status) {
       return Promise.reject(new FoundError('删除失败'))
     }
 
     // 2查询上一条数据
-    const electricCalDelPrev = await db
-      .dbModel('electriccal')
+    const gasCalDelPrev = await db
+      .dbModel('gascal')
       .findOne({})
       .where('userId')
       .equals(db.db.Types.ObjectId(req.userId))
@@ -470,35 +470,35 @@ module.exports = {
       .sort('-createTime -_id')
       .exec()
 
-    const electricCalDelPrevId = electricCalDelPrev ? electricCalDelPrev.id : null
+    const gasCalDelPrevId = gasCalDelPrev ? gasCalDelPrev.id : null
 
-    // 3更新房屋最新电表计费信息
+    // 3更新房屋最新燃气表计费信息
     const house = await db
-      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新电表计费引用类型
-        calElectricId: db.db.Schema.Types.ObjectId,
+      .dbModel('house', {//* //标记，更新房屋数据类，扩增最新燃气表计费引用类型
+        calGasId: db.db.Schema.Types.ObjectId,
         updateTime: Number, // 更新时间
       })
       .findOneAndUpdate({ _id: req.body.haoId }, {
-        calElectricId: electricCalDelPrevId,
+        calGasId: gasCalDelPrevId,
         updateTime: Date.now(),
       })
       .exec()
 
     if (!house) {
-      return Promise.reject(new FoundError('房屋不存在，无法删除电费计费'))
+      return Promise.reject(new FoundError('房屋不存在，无法删除燃气费计费'))
     }
 
     // 4返回ID
     return { _id: req.body._id }
   },
 
-  electricFindByDate: async req => {
+  gasFindByDate: async req => {
     // 1获取时间
-    // 2查询电表
+    // 2查询燃气表
 
     // 1获取时间
     const today = new Date().toLocaleDateString()
-    const date = req.body.electricDate || today
+    const date = req.body.gasDate || today
 
     const time = new Date(date).getTime()
     const firstLeft = ' new Date(this.addTime).getTime() >= '
@@ -507,9 +507,9 @@ module.exports = {
 
     db.dbModel('house')
 
-    // 2查询电表
-    const electricByDate = await db
-      .dbModel('electric')
+    // 2查询燃气表
+    const gasByDate = await db
+      .dbModel('gas')
       .find({})
       .populate({
         path: 'haoId',
@@ -527,62 +527,15 @@ module.exports = {
       .lean()
       .exec()
 
-    electricByDate.forEach(electric => {
+    gasByDate.forEach(gas => {
       // 房屋
-      if (electric.haoId && !electric.fanghao) {
-        electric.fanghao = electric.haoId.fang + electric.haoId.hao
+      if (gas.haoId && !gas.fanghao) {
+        gas.fanghao = gas.haoId.fang + gas.haoId.hao
       }
     })
 
     // 3返回数据
-    return electricByDate
-  },
-
-  electricNewestList: async req => {
-    // 查询房屋数据，抄表记录
-    // 2返回list对象
-
-    // 初始化该库
-    db.dbModel('electric')
-
-    // 1数据库查询
-    const dbInfo = await db
-      .dbModel('house')
-      .find({}, {
-        fang: 1,
-        hao: 1,
-        glyhbh: 1,
-        dbjb: 1,
-        electricId: 1,
-      })
-      .populate({
-        path: 'electricId',
-        model: 'electric',
-        select: 'electric remark addTime',
-        match: { status: 1 },
-      })
-      .where('userId')
-      .equals(db.db.Types.ObjectId(req.userId))
-      .where('status')
-      .equals(1)
-      .sort('fang hao')
-      .lean()
-      .exec()
-
-    // 2数据计算
-    dbInfo.forEach((item) => {
-      // 字段提供
-      if (!item.fanghao) {
-        item.fanghao = item.fang + item.hao
-      }
-      // 抄电ID初始化
-      if (!item.electricId) item.electricId = {}
-      // 电力读数初始化
-      if (!item.addElectric) item.addElectric = {}
-    })
-
-    // 3返回数据
-    return dbInfo
+    return gasByDate
   },
 
 }

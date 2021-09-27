@@ -93,6 +93,16 @@ module.exports = {
         }],
       },
 
+      calGasPrice: {
+        minPrice: Number, // 本次计费低消
+        calType: String, // 计费类型
+        singlePrice: Number, // single单价
+        stepPrice: [{ // 阶梯价格
+          step: Number, // 阶梯
+          price: Number, // 单价
+        }],
+      },
+
       rent: Number, // 租金
       deposit: Number, // 押金
       addTime: String, // 入住时间
@@ -165,7 +175,7 @@ module.exports = {
       .exec()
 
     if (!house) {
-      return Promise.reject(new FoundError('房屋不存在，无法删除水度数'))
+      return Promise.reject(new FoundError('房屋不存在，无法删除居住信息'))
     }
 
     // 4返回ID

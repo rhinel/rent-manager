@@ -63,6 +63,7 @@ module.exports = {
         status: Number, // 状态
         defaultCalWaterPrice: Object, // 本月度默认水费计费方式
         defaultCalElePrice: Object, // 本月度默认电费计费方式
+        defaultCalGasPrice: Object, // 本月度默认燃气费计费方式
         createTime: Number, // 创建时间
       })
       .create({
@@ -71,6 +72,7 @@ module.exports = {
         remark: req.body.remark,
         defaultCalWaterPrice: req.body.defaultCalWaterPrice,
         defaultCalElePrice: req.body.defaultCalElePrice,
+        defaultCalGasPrice: req.body.defaultCalGasPrice,
         status: 1,
         createTime: Date.now(),
       })
@@ -95,6 +97,7 @@ module.exports = {
         remark: 1,
         defaultCalWaterPrice: 1,
         defaultCalElePrice: 1,
+        defaultCalGasPrice: 1,
         createTime: 1,
         updateTime: 1,
       })

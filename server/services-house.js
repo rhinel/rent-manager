@@ -238,7 +238,24 @@ module.exports = {
         .lean()
         .exec()
 
-      return { calWaters, calElectrics }
+      // 查询燃气费信息
+      const calGass = await db
+        .dbModel('gascal')
+        .find({ haoId: db.db.Types.ObjectId(house._id) }, {
+          old: 1,
+          tnew: 1,
+          addTime: 1,
+        })
+        .where('userId')
+        .equals(db.db.Types.ObjectId(req.userId))
+        .where('status')
+        .equals(1)
+        .limit(3)
+        .sort('-addTime')
+        .lean()
+        .exec()
+
+      return { calWaters, calElectrics, calGass }
     })
     const dbSearchInfo = await Promise.all(dbSearch)
 
@@ -269,9 +286,20 @@ module.exports = {
         }
       })
 
+      // 计算燃气费小计
+      dbSearchInfo[i].calGass.forEach(l => {
+        if (!l.gap) {
+          l.gap = (l.tnew.gas || 0) - (l.old.gas || 0)
+        }
+        if (l.gap <= 0) {
+          l.gap = 0
+        }
+      })
+
       // 获取数据
       dbInfo[i].calWaters = dbSearchInfo[i].calWaters
       dbInfo[i].calElectrics = dbSearchInfo[i].calElectrics
+      dbInfo[i].calGass = dbSearchInfo[i].calGass
     }
 
     // 3返回数据
@@ -287,6 +315,8 @@ module.exports = {
     db.dbModel('watercal')
     db.dbModel('electric')
     db.dbModel('electriccal')
+    db.dbModel('gas')
+    db.dbModel('gascal')
     db.dbModel('rent')
 
     if (!req.body.haoId) {
@@ -327,6 +357,18 @@ module.exports = {
         model: 'electriccal',
         match: { status: 1 },
       })
+      // 抄燃气表信息
+      .populate({
+        path: 'gasId',
+        model: 'gas',
+        match: { status: 1 },
+      })
+      // 燃气表计费信息
+      .populate({
+        path: 'calGasId',
+        model: 'gascal',
+        match: { status: 1 },
+      })
       // 最新计费信息
       .populate({
         path: 'rentId',
@@ -345,8 +387,10 @@ module.exports = {
     // 3字段初始化
     if (!dbInfo.waterId) dbInfo.waterId = {}
     if (!dbInfo.electricId) dbInfo.electricId = {}
+    if (!dbInfo.gasId) dbInfo.gasId = {}
     if (!dbInfo.calWaterId) dbInfo.calWaterId = {}
     if (!dbInfo.calElectricId) dbInfo.calElectricId = {}
+    if (!dbInfo.calGasId) dbInfo.calGasId = {}
     if (!dbInfo.leaseId) dbInfo.leaseId = {}
     if (!dbInfo.rentId) dbInfo.rentId = {}
 

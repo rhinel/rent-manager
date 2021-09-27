@@ -63,7 +63,7 @@
             '记录以下（已配置）计费方式作为本月' +
             '默认计费方式（存副本），作用于水电张贴计算'" />
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item
               label="水费"
               :label-width="amldLabelWidth">
@@ -87,7 +87,7 @@
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item
               label="电费"
               :label-width="amldLabelWidth">
@@ -103,6 +103,30 @@
                   v-for="(item, index) in addMonthList.defaultCalElePrice.stepPrice"
                   :key="index">
                   {{ item.step }}度及以下￥{{ item.price }}元/度；
+                </div>
+                超出按最后阶梯计算。
+              </div>
+              <div v-else>
+                暂无计费方式
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item
+              label="燃气费"
+              :label-width="amldLabelWidth">
+              <div>
+                低消：{{ addMonthList.defaultCalGasPrice.minPrice || 0 }}方
+              </div>
+              <div v-if="addMonthList.defaultCalGasPrice.calType == 'single'">
+                单价：{{ addMonthList.defaultCalGasPrice.singlePrice || 0 }}方/吨
+              </div>
+              <div v-else-if="addMonthList.defaultCalGasPrice.calType == 'step'">
+                阶梯：
+                <div
+                  v-for="(item, index) in addMonthList.defaultCalGasPrice.stepPrice"
+                  :key="index">
+                  {{ item.step }}吨及以下￥{{ item.price }}方/吨；
                 </div>
                 超出按最后阶梯计算。
               </div>
@@ -254,6 +278,7 @@
           remark: '',
           defaultCalWaterPrice: {},
           defaultCalElePrice: {},
+          defaultCalGasPrice: {},
         },
         addMonthListrules: {
           month: [{
@@ -285,6 +310,7 @@
       ...mapState({
         defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
         defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultCalGasPrice: state => state.config.defaultCalGasPrice,
       }),
     },
     beforeCreate() {
@@ -317,6 +343,7 @@
           this.addMonthList.remark = row.remark
           this.addMonthList.defaultCalWaterPrice = row.defaultCalWaterPrice || {}
           this.addMonthList.defaultCalElePrice = row.defaultCalElePrice || {}
+          this.addMonthList.defaultCalGasPrice = row.defaultCalGasPrice || {}
           this.amldInput = false
           this.amldDialogTitle = '修改收租周期'
         } else if (this.addMonthListflag) {
@@ -330,12 +357,15 @@
         let {
           defaultCalWaterPrice,
           defaultCalElePrice,
+          defaultCalGasPrice,
         } = this
         defaultCalWaterPrice = JSON.parse(JSON.stringify(defaultCalWaterPrice))
         defaultCalElePrice = JSON.parse(JSON.stringify(defaultCalElePrice))
+        defaultCalGasPrice = JSON.parse(JSON.stringify(defaultCalGasPrice))
         this.addMonthList = Object.assign({}, this.addMonthList, this.addMonthListClear, {
           defaultCalWaterPrice,
           defaultCalElePrice,
+          defaultCalGasPrice,
         })
         this.dialogId = Date.now()
       },

@@ -5,6 +5,7 @@ const serviceMonth = require('./services-month')
 const serviceHouse = require('./services-house')
 const serviceWater = require('./services-water')
 const serviceElect = require('./services-electric')
+const serviceGas = require('./services-gas')
 const serviceLease = require('./services-lease')
 const code = require('./config-codes')
 
@@ -193,6 +194,51 @@ const inner = (req, res, next) => {
         .electricFindByDate(req, res)
         .then(data => res.json(code(req, 0, data)))
         .catch(err => res.json(code(req, 3048, err)))
+    } else {
+      next()
+    }
+  } else if (req.params.class === 'gas') {
+    // 添加燃气表数接口
+    if (req.params.function === 'add') {
+      serviceGas
+        .gasAdd(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3021, err)))
+    } else if (req.params.function === 'mainList') {
+      serviceGas
+        .gasMainList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3022, err)))
+    } else if (req.params.function === 'cal') {
+      serviceGas
+        .gascalGas(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3023, err)))
+    } else if (req.params.function === 'list') {
+      serviceGas
+        .gasList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3024, err)))
+    } else if (req.params.function === 'calList') {
+      serviceGas
+        .gasCalList(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3025, err)))
+    } else if (req.params.function === 'del') {
+      serviceGas
+        .gasDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3026, err)))
+    } else if (req.params.function === 'delCal') {
+      serviceGas
+        .gasCalDel(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3027, err)))
+    } else if (req.params.function === 'findByDate') {
+      serviceGas
+        .gasFindByDate(req, res)
+        .then(data => res.json(code(req, 0, data)))
+        .catch(err => res.json(code(req, 3028, err)))
     } else {
       next()
     }

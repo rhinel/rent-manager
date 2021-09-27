@@ -52,6 +52,17 @@ export default {
           },
         ],
       },
+      // 默认燃气费计费规则
+      defaultCalGasPrice: {},
+      defaultCalGasPriceClear: {
+        minPrice: 0,
+        calType: 'single',
+        singlePrice: 6,
+        stepPrice: [{
+          step: 0,
+          price: 0,
+        }],
+      },
       // 默认阶梯步长
       defaultStep: {
         step: 0,
@@ -95,6 +106,12 @@ export default {
           icon: 'el-icon-menu',
         },
         {
+          index: '/inner/gas/index',
+          name: '燃气费管理',
+          check: 'inner/gas/',
+          icon: 'el-icon-menu',
+        },
+        {
           index: '/inner/rent/index',
           name: '收租管理',
           check: 'inner/rent/',
@@ -115,11 +132,13 @@ export default {
     defaultKeys: [
       'defaultCalWaterPrice',
       'defaultCalElePrice',
+      'defaultCalGasPrice',
       'defaultElseInfo',
     ],
     defaultKeysHasSet: {
       defaultCalWaterPrice: false,
       defaultCalElePrice: false,
+      defaultCalGasPrice: false,
       defaultElseInfo: false,
     },
   },

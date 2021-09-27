@@ -166,6 +166,17 @@
                   :rent="getRent(props)" />
               </template>
             </el-form-item>
+            <el-form-item
+              label="燃气表本次用数/单价"
+              min-width="150">
+              <template>
+                <table-expand-eandw-item
+                  type="gas"
+                  cal-type="calGas"
+                  unit="方"
+                  :rent="getRent(props)" />
+              </template>
+            </el-form-item>
           </el-form>
         </template>
       </el-table-column>
@@ -211,6 +222,20 @@
                 cal-type="calElectric"
                 result-type="calElectricResult"
                 unit="度"
+                :rent="getRent(scope)" />
+            </template>
+          </el-table-column>
+        </el-table-column>
+        <el-table-column label="燃气费信息">
+          <el-table-column
+            label="本次计费/时间"
+            width="200">
+            <template slot-scope="scope">
+              <table-rent-eandw-item
+                type="gas"
+                cal-type="calGas"
+                result-type="calGasResult"
+                unit="吨"
                 :rent="getRent(scope)" />
             </template>
           </el-table-column>

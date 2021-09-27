@@ -6,7 +6,7 @@ const servicesHouse = require('./services-house')
 module.exports = {
 
   rentListByMonth: async req => {
-    // 通过房屋查询所有最新挂载信息：电费计费，水费计费，租约信息
+    // 通过房屋查询所有最新挂载信息：电费计费，水费计费，燃气费计费，租约信息
     // 0初始化字段后
     // 1再根据monthId查询月度信息
     // 1根据房屋Id插入monthId信息
@@ -19,6 +19,7 @@ module.exports = {
     // 初始化该库
     db.dbModel('watercal')
     db.dbModel('electriccal')
+    db.dbModel('gascal')
     db.dbModel('lease')
 
     // 1数据库查询
@@ -29,6 +30,7 @@ module.exports = {
         hao: 1,
         calWaterId: 1,
         calElectricId: 1,
+        calGasId: 1,
         leaseId: 1,
       })
       .populate({
@@ -39,6 +41,11 @@ module.exports = {
       .populate({
         path: 'calElectricId',
         model: 'electriccal',
+        match: { status: 1 },
+      })
+      .populate({
+        path: 'calGasId',
+        model: 'gascal',
         match: { status: 1 },
       })
       .populate({
@@ -73,6 +80,7 @@ module.exports = {
       // 字段初始化
       if (!house.calWaterId) house.calWaterId = {}
       if (!house.calElectricId) house.calElectricId = {}
+      if (!house.calGasId) house.calGasId = {}
       if (!house.leaseId) house.leaseId = {}
       // loading字段提供
       if (!house.gettingdelRent) house.gettingdelRent = false
@@ -92,7 +100,7 @@ module.exports = {
 
   rentAdd: async req => {
     // 不做数据校验
-    // 1插入数据（存储新水费记录，电费记录，租住信息），错误退出
+    // 1插入数据（存储新水费记录，电费记录，燃气费记录，租住信息），错误退出
     // 2更新房屋挂载ID，错误提出
     // 3返回add对象
 
@@ -116,6 +124,7 @@ module.exports = {
         monthId: db.db.Schema.Types.ObjectId, // 月度周期ID，全拼
         calWater: Object, // 水费计费
         calElectric: Object, // 电费计费
+        calGas: Object, // 燃气费计费
         lease: Object, // 租住信息
         fanghao: String, // 房屋
         remark: String, // 计费备注
@@ -131,6 +140,7 @@ module.exports = {
         monthId: req.body.monthId,
         calWater: req.body.calWater,
         calElectric: req.body.calElectric,
+        calGas: req.body.calGas,
         lease: req.body.lease,
         fanghao: req.body.fanghao,
         remark: req.body.remark,
@@ -605,14 +615,16 @@ module.exports = {
       // 分类统计
       list[time][rent.lease.payType] += rent.calRentResult
       list[time].all += rent.calRentResult
-      // 非房租都认为是水电费
+      // 非房租都认为是水电燃气费
       // (rent.calWater ? rent.calWater.calWaterResult : 0) +
-      // (rent.calElectric ? rent.calElectric.calElectricResult : 0)
+      // (rent.calElectric ? rent.calElectric.calElectricResult : 0) +
+      // (rent.calGas ? rent.calGas.calGasResult : 0)
       rent.cost = rent.calRentResult - rent.lease.rent
-      // 修复不足整月时应收小于房租的问题，反推计算水电数和房租数
+      // 修复不足整月时应收小于房租的问题，反推计算水电燃气数和房租数
       if (rent.cost < 0) {
         const cost = (rent.calWater ? rent.calWater.calWaterResult : 0)
           + (rent.calElectric ? rent.calElectric.calElectricResult : 0)
+          + (rent.calGas ? rent.calGas.calGasResult : 0)
         rent.lease.rent = rent.calRentResult - cost
         rent.cost = cost
       }
@@ -706,9 +718,10 @@ module.exports = {
     dbInfo.forEach(rent => {
       list[rent.lease.payType] += rent.calRentResult
       list.all += rent.calRentResult
-      // 非房租都认为是水电费
+      // 非房租都认为是水电燃气费
       // (i.calWater ? i.calWater.calWaterResult : 0) +
-      // (i.calElectric ? i.calElectric.calElectricResult : 0)
+      // (i.calElectric ? i.calElectric.calElectricResult : 0) +
+      // (i.calGas ? i.calGas.calGasResult : 0)
       rent.cost = rent.calRentResult - rent.lease.rent
       // 默认字段提供
       if (!rent.checkBill) rent.checkBill = false
