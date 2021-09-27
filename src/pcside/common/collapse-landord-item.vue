@@ -33,7 +33,7 @@
 
       <span>[房租￥{{ i.calRentResult }}元]</span>
       <span>[租金￥{{ i.lease.rent }}元]</span>
-      <span>[水电￥{{ i.cost }}元]</span>
+      <span>[水电燃气￥{{ i.cost }}元]</span>
 
       <div class="landord-check">
         <el-checkbox
