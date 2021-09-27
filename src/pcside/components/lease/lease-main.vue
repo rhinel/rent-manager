@@ -396,6 +396,135 @@
               </el-button>
             </el-form-item>
 
+            <!-- 燃气费 -->
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item
+                  label="燃气费低消"
+                  prop="calGasPrice.minPrice"
+                  :label-width="lidLabelWidth">
+                  <el-input
+                    v-model.number="lease.calGasPrice.minPrice"
+                    auto-complete="off"
+                    placeholder="输入最低消费">
+                    <template slot="append">
+                      方
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  label="燃气费方式"
+                  :label-width="lidLabelWidth">
+                  <el-radio
+                    v-model="lease.calGasPrice.calType"
+                    label="single">
+                    单一价格
+                  </el-radio>
+                  <el-radio
+                    v-model="lease.calGasPrice.calType"
+                    label="step">
+                    阶梯价格
+                  </el-radio>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <!-- 单价燃气费计费 -->
+            <el-form-item
+              label="燃气费单价"
+              prop="calGasPrice.singlePrice"
+              :label-width="lidLabelWidth"
+              :rules="leaserules[`calGasPrice.singlePrice`][0]"
+              v-if="lease.calGasPrice.calType == 'single'"
+              key="watSingle">
+              <el-col :span="24">
+                <el-input
+                  v-model.number="lease.calGasPrice.singlePrice"
+                  auto-complete="off"
+                  placeholder="输入单价">
+                  <template slot="prepend">
+                    ￥
+                  </template>
+                  <template slot="append">
+                    元/方
+                  </template>
+                </el-input>
+              </el-col>
+            </el-form-item>
+
+            <!-- 燃气费阶梯计费 -->
+            <div v-if="lease.calGasPrice.calType == 'step'">
+              <el-form-item
+                required
+                :label="'阶梯' + (index + 1)"
+                :label-width="lidLabelWidth"
+                v-for="(step, index) in lease.calGasPrice.stepPrice"
+                :key="'calGasPrice' + index"
+                :ref="'calGasPrice' + index">
+                <el-col :span="10">
+                  <el-form-item
+                    :prop="'calGasPrice.stepPrice.' + index + '.step'"
+                    :rules="{
+                      type: 'number', required: true, message: '请填写', trigger: 'blur'
+                    }">
+                    <el-input
+                      v-model.number="step.step"
+                      auto-complete="off"
+                      placeholder="本阶梯最大值">
+                      <template slot="append">
+                        方
+                      </template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
+                <el-col :span="9">
+                  <el-form-item
+                    :prop="'calGasPrice.stepPrice.' + index + '.price'"
+                    :rules="{
+                      type: 'number', required: true, message: '请填写', trigger: 'blur'
+                    }">
+                    <el-input
+                      v-model.number="step.price"
+                      auto-complete="off"
+                      placeholder="本阶梯单价">
+                      <template slot="prepend">
+                        ￥
+                      </template>
+                      <template slot="append">
+                        元
+                      </template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  class="line"
+                  :span="1" />
+                <el-col
+                  class="step-btn"
+                  :span="3">
+                  <el-button
+                    @click.prevent="removeStep(lease.calGasPrice, step)">
+                    删除
+                  </el-button>
+                </el-col>
+              </el-form-item>
+            </div>
+            <el-form-item
+              :label-width="lidLabelWidth"
+              v-if="lease.calGasPrice.calType == 'step'"
+              key="watStep">
+              <el-button
+                type="primary"
+                @click="addStep(lease.calGasPrice)">
+                新增阶梯
+              </el-button>
+            </el-form-item>
+
             <!-- 押金租金 -->
             <el-row :gutter="20">
               <el-col :span="12">
@@ -590,6 +719,16 @@
                   :lease="scope.row.leaseId" />
               </template>
             </el-table-column>
+            <el-table-column
+              label="燃气费"
+              width="150">
+              <template slot-scope="scope">
+                <table-eandw-cal-price-view-item
+                  type="calGasPrice"
+                  unit="方"
+                  :lease="scope.row.leaseId" />
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column label="租户信息">
             <el-table-column
@@ -739,6 +878,16 @@
             }],
           },
 
+          calGasPrice: {
+            minPrice: 0,
+            calType: 'single',
+            singlePrice: 0,
+            stepPrice: [{
+              step: 0,
+              price: 0,
+            }],
+          },
+
           rent: 0,
           deposit: 0,
           addTime: '',
@@ -763,6 +912,12 @@
             type: 'number', required: true, message: '请填写', trigger: 'blur',
           }],
           'calElePrice.singlePrice': [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          'calGasPrice.minPrice': [{
+            type: 'number', required: true, message: '请填写', trigger: 'blur',
+          }],
+          'calGasPrice.singlePrice': [{
             type: 'number', required: true, message: '请填写', trigger: 'blur',
           }],
           rent: [{
@@ -853,6 +1008,7 @@
         typesVal: state => state.config.typesVal,
         defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
         defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultCalGasPrice: state => state.config.defaultCalGasPrice,
         defaultStep: state => state.config.defaultStep,
       }),
     },
@@ -945,7 +1101,7 @@
           // 时间
           this.lease.addTime = (row.leaseId.addTime && new Date(row.leaseId.addTime)) || new Date()
 
-          // 水费电费初始化
+          // 水费电费燃气初始化
           if (!row.leaseId || !row.leaseId._id) {
             this.lease.calWaterPrice = Object.assign(
               {},
@@ -954,6 +1110,10 @@
             this.lease.calElePrice = Object.assign(
               {},
               JSON.parse(JSON.stringify(this.defaultCalElePrice))
+            )
+            this.lease.calGasPrice = Object.assign(
+              {},
+              JSON.parse(JSON.stringify(this.defaultCalGasPrice))
             )
             return
           }
@@ -985,6 +1145,21 @@
             }
           })
           if (!this.lease.calElePrice.stepPrice.length) this.addStep(this.lease.calElePrice)
+
+          // 燃气费
+          Object.keys(this.lease.calGasPrice).forEach(key => {
+            if (
+              this.lease.calGasPrice[key].constructor === Array
+              && row.leaseId.calGasPrice[key]
+            ) {
+              this.lease.calGasPrice[key] = JSON.parse(
+                JSON.stringify(row.leaseId.calGasPrice[key])
+              )
+            } else if (row.leaseId.calGasPrice[key]) {
+              this.lease.calGasPrice[key] = row.leaseId.calGasPrice[key]
+            }
+          })
+          if (!this.lease.calGasPrice.stepPrice.length) this.addStep(this.lease.calGasPrice)
         }
         await new Promise(r => setTimeout(r, 300))
       },

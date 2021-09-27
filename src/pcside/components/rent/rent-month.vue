@@ -36,7 +36,7 @@
               title="请确认计租信息，保存计租副本"
               type="info" />
             <el-row :gutter="20">
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item
                   label="水费信息"
                   :label-width="ardLabelWidth">
@@ -63,7 +63,7 @@
                   </div>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item
                   label="电费信息"
                   :label-width="ardLabelWidth">
@@ -84,6 +84,33 @@
                       addRent.calElectric.fix ? '修' : '计'
                     }}）<br>
                     计费时间：{{ getTime(addRent.calElectric.addTime) }}
+                  </div>
+                  <div v-else>
+                    暂无
+                  </div>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="燃气费信息"
+                  :label-width="ardLabelWidth">
+                  <div v-if="addRent.calGas.calGas">
+                    计费方式：{{
+                      addRent.calGas.calGas.calType == 'single' ?
+                        '单一价格' : '阶梯价格'
+                    }}<br>
+                    最低消费：{{ addRent.calGas.calGas.minPrice }}吨<br>
+                    本次表数：{{ addRent.calGas.tnew.gas }}吨<br>
+                    （{{ getTime(addRent.calGas.tnew.addTime) }}）<br>
+                    上次表数：{{ addRent.calGas.old.gas }}吨<br>
+                    （{{ getTime(addRent.calGas.old.addTime) }}）<br>
+                    计费单价：￥{{ eandwCalGetPrice(addRent, 'gas', 'calGas') }}元/吨<br>
+                    水费：￥{{
+                      addRent.calGas.calGasResult
+                    }}元（{{
+                      addRent.calGas.fix ? '修' : '计'
+                    }}）<br>
+                    计费时间：{{ getTime(addRent.calGas.addTime) }}
                   </div>
                   <div v-else>
                     暂无
@@ -339,6 +366,18 @@
                       v-if="props.row.rents.length" />
                   </template>
                 </el-form-item>
+                <el-form-item
+                  label="燃气表本次用数/单价"
+                  min-width="150">
+                  <template>
+                    <table-expand-eandw-item
+                      type="gas"
+                      cal-type="calGas"
+                      unit="吨"
+                      :rent="getRent(props)"
+                      v-if="props.row.rents.length" />
+                  </template>
+                </el-form-item>
               </el-form>
             </template>
           </el-table-column>
@@ -396,6 +435,21 @@
                     cal-type="calElectric"
                     result-type="calElectricResult"
                     unit="度"
+                    :rent="getRent(scope)"
+                    v-if="scope.row.rents.length" />
+                </template>
+              </el-table-column>
+            </el-table-column>
+            <el-table-column label="燃气费信息">
+              <el-table-column
+                label="本次计费/时间"
+                width="200">
+                <template slot-scope="scope">
+                  <table-rent-eandw-item
+                    type="gas"
+                    cal-type="calGas"
+                    result-type="calGasResult"
+                    unit="方"
                     :rent="getRent(scope)"
                     v-if="scope.row.rents.length" />
                 </template>
@@ -677,7 +731,7 @@
       </el-tab-pane>
 
       <el-tab-pane
-        label="6坊65栋水电张贴"
+        label="6坊65栋水电燃气张贴"
         name="waterandeleCal6">
         <print-cal-table
           type-string="6坊65栋"
@@ -686,7 +740,7 @@
       </el-tab-pane>
 
       <el-tab-pane
-        label="8坊68栋水电张贴"
+        label="8坊68栋水电燃气张贴"
         name="waterandeleCal8">
         <print-cal-table
           type-string="8坊68栋"
@@ -750,6 +804,7 @@
         addRentClear: {
           calWater: {}, // 水费计费信息
           calElectric: {}, // 电费计费信息
+          calGas: {}, // 燃气费计费信息
           lease: { rent: 0 }, // 租户信息
           fanghao: '',
           haoId: '',
@@ -864,6 +919,7 @@
         // 房租计算
         result = (add.calWater.calWaterResult || 0)
           + (add.calElectric.calElectricResult || 0)
+          + (add.calGas.calGasResult || 0)
           + (add.lease.rent || 0)
         return result
       },
@@ -872,6 +928,7 @@
         typesVal: state => state.config.typesVal,
         defaultCalWaterPrice: state => state.config.defaultCalWaterPrice,
         defaultCalElePrice: state => state.config.defaultCalElePrice,
+        defaultCalGasPrice: state => state.config.defaultCalGasPrice,
       }),
     },
     watch: {
@@ -965,6 +1022,7 @@
           // 用于展示
           this.addRent.calWater = row.calWaterId
           this.addRent.calElectric = row.calElectricId
+          this.addRent.calGas = row.calGasId
           // 编辑部分
           this.addRent.lease = {}.hasOwnProperty.call(row.leaseId, 'rent')
             ? JSON.parse(JSON.stringify(row.leaseId)) : this.addRent.lease
@@ -1307,6 +1365,10 @@
 <style lang="scss">
 .rent-month {
   /* 弹窗表单样式 */
+  .add-month-det-dialog {
+    max-width: 1200px;
+  }
+
   .add-month-det-dialog,
   .change-type-dialog {
     .el-input,

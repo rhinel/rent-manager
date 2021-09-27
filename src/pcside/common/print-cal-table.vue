@@ -51,7 +51,6 @@
               : '--'
           }}元
         </th>
-        <th />
         <th>
           {{
             item.rents[0].calElectric
@@ -78,6 +77,35 @@
           {{
             item.rents[0].calElectric
               ? getCal(item.rents[0].calElectric, 'ele')
+              : '--'
+          }}元
+        </th>
+        <th>
+          {{
+            item.rents[0].calGas
+              ? item.rents[0].calGas.tnew.gas
+              : '--'
+          }}方
+        </th>
+        <th>
+          {{
+            item.rents[0].calGas
+              ? item.rents[0].calGas.old.gas
+              : '--'
+          }}方
+        </th>
+        <th>
+          {{
+            item.rents[0].calGas
+              ? item.rents[0].calGas.tnew.gas
+                - item.rents[0].calGas.old.gas
+              : '--'
+          }}方
+        </th>
+        <th>
+          {{
+            item.rents[0].calGas
+              ? getCal(item.rents[0].calGas, 'gas')
               : '--'
           }}元
         </th>
@@ -122,22 +150,27 @@
       // 计算张贴的价格
       getCal(rent, type) {
         // 用于张贴展示，不做真实计费，所有计费按月度周期来计算
-        const {
-          calType,
-          minPrice,
-          singlePrice,
-          stepPrice,
-        } = type === 'water' ? (
+        let defaultCal = type === 'water' ? (
           this.monthDet.defaultCalWaterPrice
           || this.defaultCalWaterPrice
         ) : (
           this.monthDet.defaultCalElePrice
           || this.defaultCalElePrice
         )
+        defaultCal = type === 'gas' ? (
+          this.monthDet.defaultCalGasPrice
+          || this.defaultCalGasPrice
+        ) : defaultCal
+        const {
+          calType, minPrice, singlePrice, stepPrice,
+        } = defaultCal
 
         let gap = type === 'water'
           ? (rent.tnew.water - rent.old.water)
           : (rent.tnew.electric - rent.old.electric)
+        gap = type === 'gas'
+          ? (rent.tnew.gas - rent.old.gas)
+          : gap
         gap = Math.max(0, gap, minPrice)
 
         let result = 0

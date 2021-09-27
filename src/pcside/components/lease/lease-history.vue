@@ -113,6 +113,16 @@
               :lease="scope.row" />
           </template>
         </el-table-column>
+        <el-table-column
+          label="燃气费"
+          width="150">
+          <template slot-scope="scope">
+            <table-eandw-cal-price-view-item
+              type="calGasPrice"
+              unit="方"
+              :lease="scope.row" />
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column
         label="操作"

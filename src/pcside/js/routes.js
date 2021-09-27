@@ -16,6 +16,10 @@ const ElectricIndex = () => import('../components/electric/electric-main')
 const ElectricHistory = () => import('../components/electric/electric-history')
 const ElectricRemoteRead = () => import('../components/electric/electric-remote-read')
 
+const Gas = () => import('../components/gas/gas-index')
+const GasIndex = () => import('../components/gas/gas-main')
+const GasHistory = () => import('../components/gas/gas-history')
+
 const Lease = () => import('../components/lease/lease-index')
 const LeaseIndex = () => import('../components/lease/lease-main')
 const LeaseHistory = () => import('../components/lease/lease-history')
@@ -101,6 +105,23 @@ export default {
               path: 'remote-read',
               meta: { name: '电费远程抄表' },
               component: ElectricRemoteRead,
+            },
+          ],
+        },
+        {// 燃气费管理
+          path: 'gas',
+          component: Gas,
+          children: [
+            {
+              path: 'index',
+              meta: { name: '燃气费管理' },
+              component: GasIndex,
+              alias: '',
+            },
+            {
+              path: 'history',
+              meta: { name: '燃气费历史' },
+              component: GasHistory,
             },
           ],
         },
