@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="print-cal-title">
-      <div>{{ typeString }}{{ getCalMonth(monthDet.month) }}水电</div>
+      <div>{{ typeString }}{{ getCalMonth(monthDet.month) }}水电燃气</div>
       <div>抄表日期：{{ getTnewTime() }}</div>
     </div>
 

@@ -61,7 +61,7 @@
           type="info"
           :title="(addMonthList._id ? '已' : '将') +
             '记录以下（已配置）计费方式作为本月' +
-            '默认计费方式（存副本），作用于水电张贴计算'" />
+            '默认计费方式（存副本），作用于水电燃气张贴计算'" />
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item
