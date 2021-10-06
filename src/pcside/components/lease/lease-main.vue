@@ -1149,6 +1149,11 @@
 
           // 燃气费
           if (!row.leaseId.calGasPrice) {
+            this.lease.calGasPrice = Object.assign(
+              {},
+              JSON.parse(JSON.stringify(this.defaultCalGasPrice))
+            )
+          } else {
             Object.keys(this.lease.calGasPrice).forEach(key => {
               if (
                 this.lease.calGasPrice[key].constructor === Array
