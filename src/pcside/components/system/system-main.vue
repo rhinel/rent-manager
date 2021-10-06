@@ -557,7 +557,7 @@
         activeNames: [],
         submitLoading: false,
 
-        labelWidth: '100px',
+        labelWidth: '90px',
 
         // 水费编辑表单
         calWaterPrice: {},
