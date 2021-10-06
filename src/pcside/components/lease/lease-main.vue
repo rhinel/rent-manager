@@ -1101,70 +1101,84 @@
           // 时间
           this.lease.addTime = (row.leaseId.addTime && new Date(row.leaseId.addTime)) || new Date()
 
-          // 水费
-          if (!this.lease.calWaterPrice) {
+          // 水费电费燃气初始化
+          if (!row.leaseId || !row.leaseId._id) {
             this.lease.calWaterPrice = Object.assign(
               {},
               JSON.parse(JSON.stringify(this.defaultCalWaterPrice))
             )
-          } else {
-            Object.keys(this.lease.calWaterPrice).forEach(key => {
-              if (
-                this.lease.calWaterPrice[key].constructor === Array
-                && row.leaseId.calWaterPrice[key]
-              ) {
-                this.lease.calWaterPrice[key] = JSON.parse(
-                  JSON.stringify(row.leaseId.calWaterPrice[key])
-                )
-              } else if (row.leaseId.calWaterPrice[key]) {
-                this.lease.calWaterPrice[key] = row.leaseId.calWaterPrice[key]
-              }
-            })
-            if (!this.lease.calWaterPrice.stepPrice.length) this.addStep(this.lease.calWaterPrice)
-          }
-
-          // 电费
-          if (!this.lease.calElePrice) {
             this.lease.calElePrice = Object.assign(
               {},
               JSON.parse(JSON.stringify(this.defaultCalElePrice))
             )
-          } else {
-            Object.keys(this.lease.calElePrice).forEach(key => {
-              if (
-                this.lease.calElePrice[key].constructor === Array
-                && row.leaseId.calElePrice[key]
-              ) {
-                this.lease.calElePrice[key] = JSON.parse(
-                  JSON.stringify(row.leaseId.calElePrice[key])
-                )
-              } else if (row.leaseId.calElePrice[key]) {
-                this.lease.calElePrice[key] = row.leaseId.calElePrice[key]
-              }
-            })
-            if (!this.lease.calElePrice.stepPrice.length) this.addStep(this.lease.calElePrice)
-          }
-
-          // 燃气费
-          if (!this.lease.calGasPrice) {
             this.lease.calGasPrice = Object.assign(
               {},
               JSON.parse(JSON.stringify(this.defaultCalGasPrice))
             )
-          } else {
-            Object.keys(this.lease.calGasPrice).forEach(key => {
-              if (
-                this.lease.calGasPrice[key].constructor === Array
-                && row.leaseId.calGasPrice[key]
-              ) {
-                this.lease.calGasPrice[key] = JSON.parse(
-                  JSON.stringify(row.leaseId.calGasPrice[key])
-                )
-              } else if (row.leaseId.calGasPrice[key]) {
-                this.lease.calGasPrice[key] = row.leaseId.calGasPrice[key]
-              }
-            })
-            if (!this.lease.calGasPrice.stepPrice.length) this.addStep(this.lease.calGasPrice)
+            return
+          }
+
+          // 水费
+          Object.keys(this.lease.calWaterPrice).forEach(key => {
+            if (
+              !row.leaseId.calWaterPrice
+              || !row.leaseId.calWaterPrice[key]
+            ) return
+
+            if (
+              this.lease.calWaterPrice[key].constructor === Array
+            ) {
+              this.lease.calWaterPrice[key] = JSON.parse(
+                JSON.stringify(row.leaseId.calWaterPrice[key])
+              )
+            } else {
+              this.lease.calWaterPrice[key] = row.leaseId.calWaterPrice[key]
+            }
+          })
+          if (!this.lease.calWaterPrice.stepPrice.length) {
+            this.addStep(this.lease.calWaterPrice)
+          }
+
+          // 电费
+          Object.keys(this.lease.calElePrice).forEach(key => {
+            if (
+              !row.leaseId.calElePrice
+              || !row.leaseId.calElePrice[key]
+            ) return
+
+            if (
+              this.lease.calElePrice[key].constructor === Array
+            ) {
+              this.lease.calElePrice[key] = JSON.parse(
+                JSON.stringify(row.leaseId.calElePrice[key])
+              )
+            } else {
+              this.lease.calElePrice[key] = row.leaseId.calElePrice[key]
+            }
+          })
+          if (!this.lease.calElePrice.stepPrice.length) {
+            this.addStep(this.lease.calElePrice)
+          }
+
+          // 燃气费
+          Object.keys(this.lease.calGasPrice).forEach(key => {
+            if (
+              !row.leaseId.calGasPrice
+              || !row.leaseId.calGasPrice[key]
+            ) return
+
+            if (
+              this.lease.calGasPrice[key].constructor === Array
+            ) {
+              this.lease.calGasPrice[key] = JSON.parse(
+                JSON.stringify(row.leaseId.calGasPrice[key])
+              )
+            } else {
+              this.lease.calGasPrice[key] = row.leaseId.calGasPrice[key]
+            }
+          })
+          if (!this.lease.calGasPrice.stepPrice.length) {
+            this.addStep(this.lease.calGasPrice)
           }
         }
         await new Promise(r => setTimeout(r, 300))

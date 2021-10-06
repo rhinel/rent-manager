@@ -2,7 +2,7 @@
 
 | Master|Test |
 |:-----:|:-----:|
-| [![Build Status](https://travis-ci.org/rhinel/rent-manager.svg?branch=master)](https://travis-ci.org/rhinel/rent-manager)|[![Build Status](https://travis-ci.org/rhinel/rent-manager.svg?branch=test)](https://travis-ci.org/rhinel/rent-manager) |
+|[![Build Status](https://app.travis-ci.com/rhinel/rent-manager.svg?branch=master)](https://app.travis-ci.com/rhinel/rent-manager)|[![Build Status](https://app.travis-ci.com/rhinel/rent-manager.svg?branch=test)](https://app.travis-ci.com/rhinel/rent-manager)|
 
 > rent-manager for ying
 >
