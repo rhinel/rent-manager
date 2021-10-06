@@ -967,7 +967,7 @@
 
         // 搬出弹窗
         lodDialogTitle: '搬出',
-        lodLabelWidth: '100px',
+        lodLabelWidth: '90px',
         leaseOutflag: false,
         out: {
           _id: '',

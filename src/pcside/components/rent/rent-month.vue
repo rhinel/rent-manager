@@ -799,7 +799,7 @@
 
         // 计租
         ardDialogTitle: '计租',
-        ardLabelWidth: '100px',
+        ardLabelWidth: '90px',
         addRent: {},
         addRentClear: {
           calWater: {}, // 水费计费信息
@@ -828,7 +828,7 @@
 
         // 修改状态
         ctdDialogTitle: '状态修改',
-        ctdLabelWidth: '100px',
+        ctdLabelWidth: '90px',
         types: [
           { label: '已交', value: 1 },
           { label: '给单', value: 2 },
