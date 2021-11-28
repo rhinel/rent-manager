@@ -27,9 +27,9 @@ module.exports = function() {
   // 查询是否是CI
   const gitHEAD = fs.readFileSync('./.git/HEAD', 'utf-8').trim();
   let ref = gitHEAD.split(': ')[1];
-  console.log('gitHEAD: ', gitHEAD);
+  const isSkip = !!process.env.npm_config_skipcheck;
 
-  if (!ref) {
+  if (!ref || isSkip) {
     console.log('CI detected, skipping Git hooks check. ');
     console.log('');
     return;
