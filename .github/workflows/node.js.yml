@@ -32,5 +32,12 @@ jobs:
     - run: npm run lint:css
     - run: npm run build --skipcheck
     - run: tar -jcf dist.tar.bz2 dist/*
-    - run: echo -e "Host $txsl\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-    - run: scp dist.tar.bz2 root@${{ secrets.TXSL }}:~/gitcode/rent-manager/
+    - name: Deploy to Staging server
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        ARGS: "-rltgoDzvO"
+        SOURCE: "dist.tar.bz2"
+        REMOTE_HOST: ${{ secrets.TXSL }}
+        REMOTE_USER: ${{ secrets.TXSL_USER }}
+        TARGET: ${{ secrets.REMOTE_TARGET }}
