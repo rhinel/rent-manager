@@ -15,7 +15,7 @@ module.exports = {
       return Promise.reject(new FoundError('请选择房屋'))
     }
 
-    if (!req.body.electric) {
+    if (typeof req.body.electric !== 'number') {
       return Promise.reject(new FoundError('请填写电表数'))
     }
 
