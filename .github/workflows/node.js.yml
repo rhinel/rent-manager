@@ -30,6 +30,6 @@ jobs:
     - run: yarn
     - run: npm run lint
     - run: npm run lint:css
-    - run: npm run build
+    - run: npm run build --skipcheck
     - run: tar -jcf dist.tar.bz2 dist/*
     - run: scp dist.tar.bz2 root@${{ secrets.TXSL }}:~/gitcode/rent-manager/
