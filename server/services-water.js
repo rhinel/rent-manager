@@ -15,7 +15,7 @@ module.exports = {
       return Promise.reject(new FoundError('请选择房屋'))
     }
 
-    if (typeof req.body.water !== 'number') {
+    if (!req.body.water && typeof req.body.water !== 'number') {
       return Promise.reject(new FoundError('请填写水表数'))
     }
 
