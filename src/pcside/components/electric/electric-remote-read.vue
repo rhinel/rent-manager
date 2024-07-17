@@ -36,7 +36,7 @@
         type="primary"
         :disabled="!canGetLogin"
         @click="getLogin">
-        登陆电力局系统
+        登录电力局系统
       </el-button>
 
       <div class="table-btn-input">
@@ -358,7 +358,7 @@
           }
 
           // status 2 & 3
-          // 已经登陆
+          // 已经登录
           if (data.data.status > 1) {
             this.code = data.data.code
 
@@ -444,7 +444,7 @@
       },
       getLogin() {
         if (ws.readyState === 3) return
-        this.logFormat('client-INFO', '系统登陆中 ...')
+        this.logFormat('client-INFO', '系统登录中 ...')
         ws.send(JSON.stringify({
           type: 'getLogin',
           data: { loginCode: this.code },

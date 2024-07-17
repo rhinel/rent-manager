@@ -27,7 +27,7 @@ const request = function request(_path, _body) {
       const { code, msg, data } = res.body
 
       // 非正常情况，返回错误
-      // 非auth接口，登陆失效或者未登陆，先报错后，清除旧登陆信息，跳转
+      // 非auth接口，登录失效或者未登录，先报错后，清除旧登录信息，跳转
       if (code === 2001 && !path.includes('/auth')) {
         Message({
           type: 'error',

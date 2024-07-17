@@ -28,7 +28,7 @@ module.exports = {
       backups: 1024,
     },
 
-    // 登陆日志，所有登录登出等的日志
+    // 登录日志，所有登录登出等的日志
     login: {
       type: 'dateFile',
       filename: `${path.resolve(__dirname, '../logs/loginLogs/logs')}Login.log`,

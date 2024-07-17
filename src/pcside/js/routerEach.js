@@ -10,14 +10,14 @@ const beforeEach = async (router, to, from, next) => {
   }
 
   if (to.path.includes('/inner') && !localStorage.getItem('token')) {
-    // 不存在token，进入登陆页，中断后继续
+    // 不存在token，进入登录页，中断后继续
     Message.error({
-      message: '请重新登陆',
+      message: '请重新登录',
       duration: 2000,
     })
     next(nextConfig)
   } else if (to.path.includes('/inner')) {
-    // 校验token，进入登陆页，中断后继续
+    // 校验token，进入登录页，中断后继续
     await Ajax('/inner/auth/check')
       .then(() => {
         const { defaultGot, defaultGetting } = router.app.$store.state
@@ -38,7 +38,7 @@ const beforeEach = async (router, to, from, next) => {
         next(nextConfig)
       })
   } else if (to.path.includes('/login') && localStorage.getItem('token')) {
-    // 登陆页面校验token，进入主页
+    // 登录页面校验token，进入主页
     await Ajax('/inner/auth/check')
       .then(() => {
         if (to.query.backurl) {
@@ -55,7 +55,7 @@ const beforeEach = async (router, to, from, next) => {
         next()
       })
   } else {
-    // 非处理outer和无状态登陆页
+    // 非处理outer和无状态登录页
     next()
   }
 }

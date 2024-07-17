@@ -41,7 +41,7 @@ const DefuserData = class {
     this.codeTime = '' // 验证码发送时间，用于计算间隔
     this.secureString = '' // secureString
     this.code = '' // 验证码缓存
-    this.cookie = '' // 登陆后cookie缓存
+    this.cookie = '' // 登录后cookie缓存
     this.day = '' // 当前请求的日期
     this.cacheData = {} // 缓存的抄表数据
     this.status = 0 // 任务阶段
@@ -239,7 +239,7 @@ const DefuserData = class {
     })
   }
 
-  // 登陆方法
+  // 登录方法
   async getLogin({ loginCode }) {
     // 校验
     if (!loginCode) {
@@ -249,7 +249,7 @@ const DefuserData = class {
       })
     }
 
-    //  执行登陆
+    //  执行登录
     const theGet = await got(
       `/yhdl.do${this.secureString}`,
       await this._defaultPostOptions({
@@ -270,7 +270,7 @@ const DefuserData = class {
     if (!isRightPage) {
       return this._send('getLogin', {
         type: 'ERR',
-        message: '登陆失败，可能验证码错误，请重试！',
+        message: '登录失败，可能验证码错误，请重试！',
       })
     }
 
@@ -279,7 +279,7 @@ const DefuserData = class {
       .headers['set-cookie'].join(',')
 
     // 缓存数据
-    // 已经登陆系统的状态
+    // 已经登录系统的状态
     // 后面根据cookie处理
     this.code = loginCode
     this.cookie = setCookie
@@ -287,7 +287,7 @@ const DefuserData = class {
 
     // 返回数据
     return this._send('getLogin', {
-      message: '登陆成功。',
+      message: '登录成功。',
     })
   }
 
@@ -476,8 +476,8 @@ module.exports = {
 
     // 2 本用户Data缓存
     // 根据用户ID来缓存会话
-    // 重新登陆后仍可继续会话
-    // 关闭连接执行前重新登陆也可继续会话
+    // 重新登录后仍可继续会话
+    // 关闭连接执行前重新登录也可继续会话
     const { userId } = req
     let userData
 
@@ -502,7 +502,7 @@ module.exports = {
       }))
     } else {
       // 更新存在数据 / 并返回缓存数据
-      // 登陆后则无需处理mobile，因为是和会话绑定
+      // 登录后则无需处理mobile，因为是和会话绑定
       userData = userList[userId]
       userData._updateData({
         ws,

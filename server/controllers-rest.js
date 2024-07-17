@@ -15,7 +15,7 @@ const code = require('./config-codes')
 
 // outer类，失败则跳过
 const outer = (req, res, next) => {
-  // 登陆类
+  // 登录类
   if (req.params.class === 'log') {
     // 登录接口
     if (req.params.function === 'login') {

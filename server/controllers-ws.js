@@ -30,7 +30,7 @@ const auth = (ws, req, next) => {
 
 // inner类，失败则跳过
 const inner = (ws, req, next) => {
-  // 登陆类
+  // 登录类
   if (req.params.class === 'electric') {
     // 登录接口
     if (req.params.function === 'remoteRead') {

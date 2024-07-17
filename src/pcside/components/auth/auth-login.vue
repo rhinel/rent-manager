@@ -35,12 +35,12 @@
           type="primary"
           :loading="logininfo.loading"
           @click="getLogin">
-          登陆
+          登录
         </el-button>
       </el-form>
       <div class="beian">
         <div>v{{ version }}</div>
-        <div>幻想万国科技旗下产品，版权所有</div>
+        <div>幻想万国（深圳）科技有限公司，版权所有</div>
         <a
           href="http://beian.miit.gov.cn/"
           target="_blank">
@@ -122,7 +122,7 @@
           .then(() => {
             this.$message({
               type: 'success',
-              message: '登陆成功',
+              message: '登录成功',
               duration: 2000,
             })
             if (this.$route.query.backurl) {

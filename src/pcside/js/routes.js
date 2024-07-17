@@ -35,7 +35,7 @@ const SystemIndex = () => import('../components/system/system-main')
 export default {
   routes: [
     // outer层，默认层
-    {// 登陆层
+    {// 登录层
       path: '/login',
       component: AuthLogin,
       alias: '',

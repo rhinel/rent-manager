@@ -10,7 +10,7 @@ module.exports = {
     // 校验字段，错误退出
     // 0根据MD5(IP，用户名，密码，时间)生成token
     // 1查询数据库用户名密码，错误退出
-    // 2查出登陆缓存
+    // 2查出登录缓存
     // 3失效旧缓存，写入缓存新token
     // 4返回token
 
@@ -30,7 +30,7 @@ module.exports = {
     const ipCheck = await db
       .redisGet(req.ip)
     if (ipCheck && ipCheck >= 5) {
-      return Promise.reject(new FoundError('用户名/密码错误超过5次，请等待5分钟后再次登陆'))
+      return Promise.reject(new FoundError('用户名/密码错误超过5次，请等待5分钟后再次登录'))
     }
 
     // 2数据库查询用户名和密码校验
@@ -55,7 +55,7 @@ module.exports = {
     await db
       .redisDelKeys(req.ip)
 
-    // 3查出已有的登陆态，更新状态
+    // 3查出已有的登录态，更新状态
     const userId = dbInfo._id.toString()
     // let allTokens = await db
     //   .redisGetKeys(`${userId}$*`)
